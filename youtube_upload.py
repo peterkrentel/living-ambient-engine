@@ -67,7 +67,7 @@ def get_tags(metadata: dict) -> list:
 
 
 @click.command()
-@click.option('--video', '-v', required=True, help='Path to video file')
+@click.option('--video', '-v', help='Path to video file')
 @click.option('--metadata', '-m', help='Path to metadata JSON (auto-detected if not provided)')
 @click.option('--privacy', '-p', default='public', type=click.Choice(['public', 'private', 'unlisted']))
 @click.option('--auth', is_flag=True, help='Just authenticate (for first-time setup)')
@@ -98,7 +98,12 @@ def main(video: str, metadata: str, privacy: str, auth: bool, batch: str):
         uploader.authenticate()
         click.echo("✅ Authentication successful! Token saved.")
         return
-    
+
+    # Require video or batch if not just authenticating
+    if not video and not batch:
+        click.echo("❌ Either --video or --batch is required (or use --auth for setup)")
+        return
+
     if batch:
         # Batch upload from manifest
         manifest_path = Path(batch) / "manifest.json"

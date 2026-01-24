@@ -76,3 +76,5 @@ tmp/
 temp/
 *.tmp
 
+client*
+youtube*
