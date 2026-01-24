@@ -55,6 +55,11 @@ class Orchestrator:
         if variation_config is None:
             variation_config = config
 
+        # Keys that should never be negative
+        non_negative_keys = {'frequency', 'amplitude', 'speed', 'complexity', 'drop_rate',
+                            'crackle_rate', 'wave_period', 'tempo', 'carrier', 'beat',
+                            'base_frequency', 'binaural_beat', 'pulse_frequency', 'bird_rate'}
+
         def apply_to_dict(d, var_d):
             for key, value in list(d.items()):
                 if isinstance(value, dict):
@@ -65,7 +70,11 @@ class Orchestrator:
                         var_range = var_d[var_key]
                         if isinstance(var_range, (int, float)):
                             # Apply +/- variation
-                            d[key] = value + random.uniform(-var_range, var_range)
+                            new_val = value + random.uniform(-var_range, var_range)
+                            # Ensure non-negative for certain keys
+                            if key in non_negative_keys:
+                                new_val = max(0.001, new_val)  # Small positive minimum
+                            d[key] = new_val
                             # Keep same type
                             if isinstance(value, int):
                                 d[key] = int(round(d[key]))
@@ -167,8 +176,11 @@ class Orchestrator:
             final_path = output_path / f"{filename_base}.mp4"
 
             # Generate title from template
-            rhythm_name = mood_config.get('audio', {}).get('rhythm', 'Ambient')
-            rhythm_name = rhythm_name.replace('_', ' ').title()
+            rhythm_name = mood_config.get('audio', {}).get('rhythm', None)
+            if rhythm_name is None:
+                rhythm_name = 'Ambient'
+            else:
+                rhythm_name = rhythm_name.replace('_', ' ').title()
             rhythm_origin = mood_config.get('rhythm_origin', '')
             duration_str = self._format_duration(duration)
 

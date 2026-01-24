@@ -4,6 +4,8 @@ Creates procedural animations designed to capture attention and induce trance st
 Features fractal zooms, color cycling, and psychedelic effects.
 """
 
+import os
+import sys
 import numpy as np
 from PIL import Image, ImageDraw, ImageFilter, ImageEnhance
 import cv2
@@ -13,6 +15,10 @@ import math
 from numba import jit
 import colorsys
 from tqdm import tqdm
+
+# Disable tqdm progress bars in non-interactive environments (like CI)
+# to avoid printing each update as a new line
+TQDM_DISABLE = not sys.stdout.isatty() or os.environ.get('CI') == 'true'
 
 
 # JIT-compiled fractal functions for speed
@@ -37,9 +43,12 @@ def mandelbrot_set(width, height, x_min, x_max, y_min, y_max, max_iter):
 
             # Smooth coloring
             if iteration < max_iter:
-                log_zn = math.log(x*x + y*y) / 2
-                nu = math.log(log_zn / math.log(2)) / math.log(2)
-                iteration = iteration + 1 - nu
+                zn_sq = x*x + y*y
+                if zn_sq > 1:  # Avoid log of values <= 1
+                    log_zn = math.log(zn_sq) / 2
+                    if log_zn > 0:  # Avoid log of non-positive
+                        nu = math.log(log_zn / math.log(2)) / math.log(2)
+                        iteration = iteration + 1 - nu
 
             result[py, px] = iteration
 
@@ -65,9 +74,12 @@ def julia_set(width, height, x_min, x_max, y_min, y_max, c_real, c_imag, max_ite
                 iteration += 1
 
             if iteration < max_iter:
-                log_zn = math.log(x*x + y*y) / 2
-                nu = math.log(log_zn / math.log(2)) / math.log(2)
-                iteration = iteration + 1 - nu
+                zn_sq = x*x + y*y
+                if zn_sq > 1:  # Avoid log of values <= 1
+                    log_zn = math.log(zn_sq) / 2
+                    if log_zn > 0:  # Avoid log of non-positive
+                        nu = math.log(log_zn / math.log(2)) / math.log(2)
+                        iteration = iteration + 1 - nu
 
             result[py, px] = iteration
 
@@ -505,7 +517,7 @@ class VisualGenerator:
         print(f"  Rendering {loop_duration}s seamless loop...")
         loop_buffer = []
 
-        for frame in tqdm(range(loop_frames), desc="Rendering loop", unit="frame"):
+        for frame in tqdm(range(loop_frames), desc="Rendering loop", unit="frame", disable=TQDM_DISABLE):
             # Use sine-based animation for seamless looping
             t = frame / loop_frames  # 0 to 1 over the loop
 
@@ -536,7 +548,7 @@ class VisualGenerator:
         print(f"  Writing {num_loops} loops to fill {duration}s...")
 
         frames_written = 0
-        for loop_num in tqdm(range(num_loops), desc="Writing loops", unit="loop"):
+        for loop_num in tqdm(range(num_loops), desc="Writing loops", unit="loop", disable=TQDM_DISABLE):
             for frame_cv in loop_buffer:
                 if frames_written >= total_frames:
                     break
@@ -733,7 +745,7 @@ class VisualGenerator:
         bg_top = np.array([10, 15, 30], dtype=np.float32)
         bg_bottom = np.array([20, 30, 50], dtype=np.float32)
 
-        for frame in tqdm(range(loop_frames), desc="Rendering rain", unit="frame"):
+        for frame in tqdm(range(loop_frames), desc="Rendering rain", unit="frame", disable=TQDM_DISABLE):
             # Create gradient background
             img = np.zeros((self.height, self.width, 3), dtype=np.uint8)
             for y in range(self.height):
@@ -776,7 +788,7 @@ class VisualGenerator:
         num_loops = (total_frames + loop_frames - 1) // loop_frames
         print(f"  Writing {num_loops} loops to fill {duration}s...")
         frames_written = 0
-        for _ in tqdm(range(num_loops), desc="Writing loops", unit="loop"):
+        for _ in tqdm(range(num_loops), desc="Writing loops", unit="loop", disable=TQDM_DISABLE):
             for frame_cv in loop_buffer:
                 if frames_written >= total_frames:
                     break
@@ -807,7 +819,7 @@ class VisualGenerator:
         for _ in range(num_particles):
             particles.append(self._create_fire_particle())
 
-        for frame in tqdm(range(loop_frames), desc="Rendering fire", unit="frame"):
+        for frame in tqdm(range(loop_frames), desc="Rendering fire", unit="frame", disable=TQDM_DISABLE):
             # Dark background
             img = np.zeros((self.height, self.width, 3), dtype=np.uint8)
             img[:, :] = [10, 5, 2]  # Very dark brown/black
@@ -877,7 +889,7 @@ class VisualGenerator:
         num_loops = (total_frames + loop_frames - 1) // loop_frames
         print(f"  Writing {num_loops} loops to fill {duration}s...")
         frames_written = 0
-        for _ in tqdm(range(num_loops), desc="Writing loops", unit="loop"):
+        for _ in tqdm(range(num_loops), desc="Writing loops", unit="loop", disable=TQDM_DISABLE):
             for frame_cv in loop_buffer:
                 if frames_written >= total_frames:
                     break
@@ -928,7 +940,7 @@ class VisualGenerator:
                 'twinkle_phase': np.random.rand() * 2 * math.pi
             })
 
-        for frame in tqdm(range(loop_frames), desc="Rendering stars", unit="frame"):
+        for frame in tqdm(range(loop_frames), desc="Rendering stars", unit="frame", disable=TQDM_DISABLE):
             t = frame / loop_frames
 
             # Dark space background with subtle gradient
@@ -978,7 +990,7 @@ class VisualGenerator:
         num_loops = (total_frames + loop_frames - 1) // loop_frames
         print(f"  Writing {num_loops} loops to fill {duration}s...")
         frames_written = 0
-        for _ in tqdm(range(num_loops), desc="Writing loops", unit="loop"):
+        for _ in tqdm(range(num_loops), desc="Writing loops", unit="loop", disable=TQDM_DISABLE):
             for frame_cv in loop_buffer:
                 if frames_written >= total_frames:
                     break
