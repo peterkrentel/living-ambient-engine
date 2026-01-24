@@ -68,16 +68,14 @@ jobs:
           path: ./generated/
           retention-days: 7
       
-      - name: Restore YouTube token
+      - name: Restore YouTube credentials
         if: ${{ github.event.inputs.upload == 'true' || github.event_name == 'schedule' }}
         run: |
-          echo "${{ secrets.YOUTUBE_TOKEN_B64 }}" | base64 -d > youtube_token.pickle
-      
+          echo "${{ secrets.YOUTUBE_TOKEN_PICKLE }}" | base64 -d > youtube_token.pickle
+          echo '${{ secrets.YOUTUBE_CLIENT_SECRETS }}' > client_secrets.json
+
       - name: Upload to YouTube
         if: ${{ github.event.inputs.upload == 'true' || github.event_name == 'schedule' }}
-        env:
-          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
         run: |
           python youtube_upload.py --batch ./generated
       
