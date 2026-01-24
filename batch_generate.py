@@ -24,14 +24,16 @@ def load_moods(config_dir: str = "config") -> list:
 
 
 def parse_duration(duration_str: str) -> int:
-    """Parse duration string like '1h', '30m', '2h' to seconds."""
+    """Parse duration string like '1h', '30m', '2h', '10min' to seconds."""
     duration_str = duration_str.strip().lower()
-    if duration_str.endswith('h'):
-        return int(duration_str[:-1]) * 3600
+    if duration_str.endswith('h') or duration_str.endswith('hr') or duration_str.endswith('hour'):
+        return int(duration_str.rstrip('hour').rstrip('hr').rstrip('h')) * 3600
+    elif duration_str.endswith('min'):
+        return int(duration_str[:-3]) * 60
     elif duration_str.endswith('m'):
         return int(duration_str[:-1]) * 60
-    elif duration_str.endswith('s'):
-        return int(duration_str[:-1])
+    elif duration_str.endswith('s') or duration_str.endswith('sec'):
+        return int(duration_str.rstrip('sec').rstrip('s'))
     else:
         return int(duration_str)
 
