@@ -12,6 +12,7 @@ from typing import Dict, Tuple, List
 import math
 from numba import jit
 import colorsys
+from tqdm import tqdm
 
 
 # JIT-compiled fractal functions for speed
@@ -467,7 +468,11 @@ class VisualGenerator:
         return self._generate_fractal_zoom(duration, output_path, fractal_type='julia')
 
     def _generate_fractal_zoom(self, duration: int, output_path: str, fractal_type: str = 'mandelbrot') -> str:
-        """Generate zooming fractal animation with psychedelic color cycling."""
+        """Generate zooming fractal animation with psychedelic color cycling.
+
+        Uses a loop-and-repeat strategy: renders a short seamless loop, then
+        repeats it to fill the full duration. Much faster for long videos.
+        """
         total_frames = duration * self.fps
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         out = cv2.VideoWriter(output_path, fourcc, self.fps, (self.width, self.height))
@@ -488,21 +493,30 @@ class VisualGenerator:
         render_width = self.width // 4
         render_height = self.height // 4
 
-        # Skip frames for speed (render every Nth frame, duplicate others)
-        frame_skip = 2  # Render every 2nd frame
+        # Loop strategy: render a short loop, repeat it
+        # Loop duration: 15 seconds (or full duration if shorter)
+        loop_duration = min(15, duration)
+        loop_frames = loop_duration * self.fps
 
-        for frame in range(total_frames):
-            # Exponential zoom for smooth infinite zoom effect
-            zoom = math.exp(frame * speed * 0.02)
+        # Pre-render the loop frames into memory
+        print(f"  Rendering {loop_duration}s seamless loop...")
+        loop_buffer = []
+
+        for frame in tqdm(range(loop_frames), desc="Rendering loop", unit="frame"):
+            # Use sine-based animation for seamless looping
+            t = frame / loop_frames  # 0 to 1 over the loop
+
+            # Smooth zoom that returns to start (breathing effect)
+            zoom = 1.0 + 0.5 * math.sin(t * 2 * math.pi) * speed * 10
 
             # Render fractal
             if fractal_type == 'julia':
-                # Animate Julia set c parameter
-                t = frame / total_frames
+                # Animate Julia set c parameter in a loop
                 c_real = -0.7 + 0.1 * math.sin(t * 2 * math.pi)
                 c_imag = 0.27015 + 0.1 * math.cos(t * 2 * math.pi)
                 img = self._render_julia_fast(zoom, frame, c_real, c_imag, render_width, render_height)
             else:
+                # Color cycling creates the movement for Mandelbrot
                 img = self._render_mandelbrot_fast(zoom, frame, target_x, target_y, render_width, render_height)
 
             # Upscale to full resolution
@@ -512,7 +526,19 @@ class VisualGenerator:
             img = self._add_bloom(img)
 
             frame_cv = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
-            out.write(frame_cv)
+            loop_buffer.append(frame_cv)
+
+        # Write the loop repeatedly to fill duration
+        num_loops = (total_frames + loop_frames - 1) // loop_frames
+        print(f"  Writing {num_loops} loops to fill {duration}s...")
+
+        frames_written = 0
+        for loop_num in tqdm(range(num_loops), desc="Writing loops", unit="loop"):
+            for frame_cv in loop_buffer:
+                if frames_written >= total_frames:
+                    break
+                out.write(frame_cv)
+                frames_written += 1
 
         out.release()
         return output_path
