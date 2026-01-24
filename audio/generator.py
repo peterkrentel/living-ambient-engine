@@ -221,6 +221,14 @@ class AudioGenerator:
             return self._generate_arpeggio(layer_config, num_samples, amplitude)
         elif layer_type == 'pad':
             return self._generate_pad(layer_config, num_samples, amplitude)
+        elif layer_type == 'rain':
+            return self._generate_rain(layer_config, num_samples, amplitude)
+        elif layer_type == 'fire':
+            return self._generate_fire(layer_config, num_samples, amplitude)
+        elif layer_type == 'ocean':
+            return self._generate_ocean(layer_config, num_samples, amplitude)
+        elif layer_type == 'forest':
+            return self._generate_forest(layer_config, num_samples, amplitude)
         else:
             return np.zeros((num_samples, self.channels))
     
@@ -548,6 +556,194 @@ class AudioGenerator:
         # Heavy reverb for pad
         audio[:, 0] = self._add_reverb(audio[:, 0], decay=0.5, mix=0.6)
         audio[:, 1] = self._add_reverb(audio[:, 1], decay=0.5, mix=0.6)
+
+        return audio
+
+    def _generate_rain(self, config: Dict, num_samples: int, amplitude: float) -> np.ndarray:
+        """Generate realistic rain sounds using filtered noise + droplet impacts."""
+        audio = np.zeros((num_samples, self.channels))
+
+        # Base: pink noise filtered to sound like rain
+        pink = self._generate_pink_noise(num_samples, amplitude * 0.6)[:, 0]
+
+        # Apply bandpass-like filtering for rain characteristics
+        # Rain is mostly mid-high frequency (1kHz - 8kHz)
+        # Simple approach: high-pass filter the pink noise
+        filtered = np.zeros(num_samples)
+        alpha = 0.95  # High-pass coefficient
+        for i in range(1, num_samples):
+            filtered[i] = alpha * (filtered[i-1] + pink[i] - pink[i-1])
+
+        # Add rain intensity variation (waves of heavy/light rain)
+        t = np.arange(num_samples) / self.sample_rate
+        rain_intensity = 0.7 + 0.3 * np.sin(2 * np.pi * 0.02 * t)  # ~50 sec cycle
+        filtered = filtered * rain_intensity
+
+        # Add individual droplet impacts for realism
+        drop_rate = config.get('drop_rate', 50)  # drops per second
+        num_drops = int(num_samples / self.sample_rate * drop_rate)
+
+        for _ in range(num_drops):
+            # Random position
+            pos = np.random.randint(0, num_samples - 500)
+            # Droplet sound: short burst of filtered noise
+            drop_len = np.random.randint(200, 500)
+            drop_freq = np.random.uniform(2000, 6000)
+            drop_t = np.arange(drop_len) / self.sample_rate
+            drop = np.sin(2 * np.pi * drop_freq * drop_t) * np.exp(-drop_t * 40)
+            drop *= np.random.uniform(0.3, 1.0) * amplitude * 0.3
+
+            # Add slight stereo variation
+            pan = np.random.uniform(0.3, 0.7)
+            end_pos = min(pos + drop_len, num_samples)
+            actual_len = end_pos - pos
+            audio[pos:end_pos, 0] += drop[:actual_len] * (1 - pan)
+            audio[pos:end_pos, 1] += drop[:actual_len] * pan
+
+        # Mix in the base rain
+        audio[:, 0] += filtered
+        audio[:, 1] += filtered
+
+        return audio
+
+    def _generate_fire(self, config: Dict, num_samples: int, amplitude: float) -> np.ndarray:
+        """Generate crackling fire sounds."""
+        audio = np.zeros((num_samples, self.channels))
+
+        # Base: low rumble (the fire's breath)
+        t = np.arange(num_samples) / self.sample_rate
+        rumble_freq = 80
+        rumble = np.sin(2 * np.pi * rumble_freq * t) * amplitude * 0.2
+
+        # Add slow modulation for breathing fire effect
+        breath = 0.5 + 0.5 * np.sin(2 * np.pi * 0.1 * t)
+        rumble *= breath
+
+        # Low frequency filtered noise for the roar
+        white = np.random.randn(num_samples)
+        # Simple low-pass filter
+        roar = np.zeros(num_samples)
+        alpha = 0.05  # Low-pass coefficient (cuts high freqs)
+        for i in range(1, num_samples):
+            roar[i] = alpha * white[i] + (1 - alpha) * roar[i-1]
+        roar *= amplitude * 0.4 * breath
+
+        audio[:, 0] = rumble + roar
+        audio[:, 1] = rumble + roar
+
+        # Add crackles and pops
+        crackle_rate = config.get('crackle_rate', 8)  # crackles per second
+        num_crackles = int(num_samples / self.sample_rate * crackle_rate)
+
+        for _ in range(num_crackles):
+            pos = np.random.randint(0, num_samples - 2000)
+
+            # Crackle: burst of noise with fast decay
+            crackle_len = np.random.randint(500, 2000)
+            crackle_t = np.arange(crackle_len) / self.sample_rate
+
+            # Mix of noise and high-frequency pop
+            noise = np.random.randn(crackle_len)
+            pop_freq = np.random.uniform(1500, 4000)
+            pop = np.sin(2 * np.pi * pop_freq * crackle_t)
+            crackle = (noise * 0.7 + pop * 0.3) * np.exp(-crackle_t * 30)
+            crackle *= np.random.uniform(0.5, 1.0) * amplitude * 0.5
+
+            # Stereo placement
+            pan = np.random.uniform(0.3, 0.7)
+            end_pos = min(pos + crackle_len, num_samples)
+            actual_len = end_pos - pos
+            audio[pos:end_pos, 0] += crackle[:actual_len] * (1 - pan)
+            audio[pos:end_pos, 1] += crackle[:actual_len] * pan
+
+        return audio
+
+    def _generate_ocean(self, config: Dict, num_samples: int, amplitude: float) -> np.ndarray:
+        """Generate ocean waves sounds."""
+        audio = np.zeros((num_samples, self.channels))
+        t = np.arange(num_samples) / self.sample_rate
+
+        # Wave cycle period (seconds between waves)
+        wave_period = config.get('wave_period', 8)
+
+        # Create wave envelope: slow rise and fall
+        wave_phase = (t / wave_period) % 1.0
+        # Wave envelope: builds up slowly, crashes, then recedes
+        wave_env = np.sin(wave_phase * np.pi) ** 2
+
+        # Base: filtered pink noise for the ocean body
+        pink = self._generate_pink_noise(num_samples, 1.0)[:, 0]
+        ocean = pink * wave_env * amplitude * 0.5
+
+        # Add white noise for the foam/crash
+        white = np.random.randn(num_samples) * amplitude * 0.3
+        # Foam is loudest at wave peak
+        foam_env = np.where(wave_phase > 0.4, np.sin((wave_phase - 0.4) / 0.3 * np.pi), 0)
+        foam_env = np.clip(foam_env, 0, 1) ** 2
+        foam = white * foam_env
+
+        # Low frequency rumble for power
+        rumble_freq = 40
+        rumble = np.sin(2 * np.pi * rumble_freq * t) * wave_env * amplitude * 0.15
+
+        # Combine
+        combined = ocean + foam + rumble
+
+        # Stereo with slight variation
+        audio[:, 0] = combined
+        audio[:, 1] = np.roll(combined, int(self.sample_rate * 0.05))  # 50ms delay
+
+        return audio
+
+    def _generate_forest(self, config: Dict, num_samples: int, amplitude: float) -> np.ndarray:
+        """Generate forest ambience with birds and wind."""
+        audio = np.zeros((num_samples, self.channels))
+        t = np.arange(num_samples) / self.sample_rate
+
+        # Base: gentle wind (very soft pink noise with slow modulation)
+        pink = self._generate_pink_noise(num_samples, amplitude * 0.15)[:, 0]
+        wind_mod = 0.5 + 0.5 * np.sin(2 * np.pi * 0.03 * t)  # ~33 sec cycle
+        wind = pink * wind_mod
+
+        audio[:, 0] = wind
+        audio[:, 1] = wind
+
+        # Add bird chirps
+        bird_rate = config.get('bird_rate', 3)  # birds per minute average
+        num_birds = int(num_samples / self.sample_rate / 60 * bird_rate * 10)  # ~10 chirps per bird
+
+        for _ in range(num_birds):
+            pos = np.random.randint(0, num_samples - 10000)
+
+            # Bird chirp: frequency-modulated sine
+            chirp_len = np.random.randint(1000, 4000)
+            chirp_t = np.arange(chirp_len) / self.sample_rate
+
+            # Random bird characteristics
+            base_freq = np.random.uniform(2000, 5000)
+            freq_mod = np.random.uniform(500, 1500)
+            mod_rate = np.random.uniform(10, 30)
+
+            # Frequency modulation for realistic chirp
+            freq = base_freq + freq_mod * np.sin(2 * np.pi * mod_rate * chirp_t)
+            phase = np.cumsum(freq / self.sample_rate) * 2 * np.pi
+            chirp = np.sin(phase)
+
+            # Envelope: quick attack, sustain, quick decay
+            env = np.ones(chirp_len)
+            attack = int(chirp_len * 0.1)
+            decay = int(chirp_len * 0.3)
+            env[:attack] = np.linspace(0, 1, attack)
+            env[-decay:] = np.linspace(1, 0, decay)
+
+            chirp *= env * np.random.uniform(0.3, 0.8) * amplitude * 0.4
+
+            # Stereo placement (birds in different positions)
+            pan = np.random.uniform(0.1, 0.9)
+            end_pos = min(pos + chirp_len, num_samples)
+            actual_len = end_pos - pos
+            audio[pos:end_pos, 0] += chirp[:actual_len] * (1 - pan)
+            audio[pos:end_pos, 1] += chirp[:actual_len] * pan
 
         return audio
 

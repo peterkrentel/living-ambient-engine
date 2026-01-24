@@ -12,13 +12,13 @@ on:
   workflow_dispatch:
     inputs:
       moods:
-        description: 'Moods: deep_focus, sleep, trance, chill, study, energize, ceremony, warrior (comma-separated or "all")'
+        description: 'Moods: rain_sleep, fireplace, ocean_waves, lofi_study, piano_relax, forest_morning, deep_focus, sleep, trance (comma-separated or "all")'
         required: false
-        default: 'deep_focus,sleep,trance'
+        default: 'rain_sleep,fireplace,ocean_waves'
       durations:
-        description: 'Durations: 30s, 1m, 10min, 1h, 2hr (comma-separated)'
+        description: 'Durations: 30s, 10min, 1h, 3h, 8h (longer = more watch time)'
         required: false
-        default: '1h'
+        default: '3h'
       upload:
         description: 'Upload to YouTube after generation'
         required: false
@@ -57,8 +57,8 @@ jobs:
       - name: Generate videos
         run: |
           python batch_generate.py \
-            --moods "${{ github.event.inputs.moods || 'deep_focus,sleep,trance' }}" \
-            --durations "${{ github.event.inputs.durations || '1h' }}" \
+            --moods "${{ github.event.inputs.moods || 'rain_sleep,fireplace,ocean_waves' }}" \
+            --durations "${{ github.event.inputs.durations || '3h' }}" \
             --output ./generated
       
       - name: Upload artifacts

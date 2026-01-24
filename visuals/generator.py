@@ -103,6 +103,9 @@ class VisualGenerator:
             'particle_flow': self._generate_particle_flow,
             'geometric_morph': self._generate_geometric_morph,
             'fractal_zoom': self._generate_fractal_zoom,
+            'rain_window': self._generate_rain_window,
+            'fireplace': self._generate_fireplace,
+            'starfield': self._generate_starfield,
         }
         
         generator = generators.get(pattern_type, self._generate_sacred_geometry)
@@ -693,6 +696,294 @@ class VisualGenerator:
             img = img.filter(ImageFilter.GaussianBlur(radius=1))
             frame_cv = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
             out.write(frame_cv)
+
+        out.release()
+        return output_path
+
+    def _generate_rain_window(self, duration: int, output_path: str) -> str:
+        """Generate rain drops on window with blur - cozy, proven performer.
+
+        Uses loop-and-repeat strategy for efficiency.
+        """
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        out = cv2.VideoWriter(output_path, fourcc, self.fps, (self.width, self.height))
+
+        # Loop strategy
+        loop_duration = min(15, duration)
+        loop_frames = loop_duration * self.fps
+        total_frames = duration * self.fps
+
+        # Pre-render loop
+        print(f"  Rendering {loop_duration}s rain window loop...")
+        loop_buffer = []
+
+        # Initialize raindrops
+        num_drops = 200
+        drops = []
+        for _ in range(num_drops):
+            drops.append({
+                'x': np.random.rand() * self.width,
+                'y': np.random.rand() * self.height,
+                'speed': np.random.uniform(2, 8),
+                'size': np.random.uniform(2, 6),
+                'trail': np.random.uniform(10, 40)
+            })
+
+        # Background: dark blue gradient (night window)
+        bg_top = np.array([10, 15, 30], dtype=np.float32)
+        bg_bottom = np.array([20, 30, 50], dtype=np.float32)
+
+        for frame in tqdm(range(loop_frames), desc="Rendering rain", unit="frame"):
+            # Create gradient background
+            img = np.zeros((self.height, self.width, 3), dtype=np.uint8)
+            for y in range(self.height):
+                ratio = y / self.height
+                color = bg_top * (1 - ratio) + bg_bottom * ratio
+                img[y, :] = color.astype(np.uint8)
+
+            img_pil = Image.fromarray(img)
+            draw = ImageDraw.Draw(img_pil)
+
+            # Draw raindrops with trails
+            for drop in drops:
+                # Update position
+                drop['y'] += drop['speed']
+                drop['x'] += np.random.uniform(-0.5, 0.5)  # Slight wind wobble
+
+                # Wrap around
+                if drop['y'] > self.height + drop['trail']:
+                    drop['y'] = -drop['trail']
+                    drop['x'] = np.random.rand() * self.width
+
+                # Draw trail (gradient from light to transparent)
+                trail_len = int(drop['trail'])
+                for i in range(trail_len):
+                    ty = drop['y'] - i
+                    if 0 <= ty < self.height:
+                        alpha = (trail_len - i) / trail_len
+                        color = (100 + int(80 * alpha), 120 + int(80 * alpha), 180 + int(50 * alpha))
+                        size = drop['size'] * (1 - i / trail_len * 0.5)
+                        draw.ellipse([drop['x'] - size/2, ty - size/2,
+                                     drop['x'] + size/2, ty + size/2], fill=color)
+
+            # Apply blur for the "through window" effect
+            img_pil = img_pil.filter(ImageFilter.GaussianBlur(radius=2))
+
+            frame_cv = cv2.cvtColor(np.array(img_pil), cv2.COLOR_RGB2BGR)
+            loop_buffer.append(frame_cv)
+
+        # Write loops
+        num_loops = (total_frames + loop_frames - 1) // loop_frames
+        print(f"  Writing {num_loops} loops to fill {duration}s...")
+        frames_written = 0
+        for _ in tqdm(range(num_loops), desc="Writing loops", unit="loop"):
+            for frame_cv in loop_buffer:
+                if frames_written >= total_frames:
+                    break
+                out.write(frame_cv)
+                frames_written += 1
+
+        out.release()
+        return output_path
+
+    def _generate_fireplace(self, duration: int, output_path: str) -> str:
+        """Generate cozy fireplace animation - proven high performer.
+
+        Uses loop-and-repeat strategy for efficiency.
+        """
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        out = cv2.VideoWriter(output_path, fourcc, self.fps, (self.width, self.height))
+
+        loop_duration = min(15, duration)
+        loop_frames = loop_duration * self.fps
+        total_frames = duration * self.fps
+
+        print(f"  Rendering {loop_duration}s fireplace loop...")
+        loop_buffer = []
+
+        # Fire particle system
+        num_particles = 150
+        particles = []
+        for _ in range(num_particles):
+            particles.append(self._create_fire_particle())
+
+        for frame in tqdm(range(loop_frames), desc="Rendering fire", unit="frame"):
+            # Dark background
+            img = np.zeros((self.height, self.width, 3), dtype=np.uint8)
+            img[:, :] = [10, 5, 2]  # Very dark brown/black
+
+            img_pil = Image.fromarray(img)
+            draw = ImageDraw.Draw(img_pil)
+
+            # Draw fire base (logs/embers)
+            fire_y = int(self.height * 0.75)
+            fire_width = int(self.width * 0.4)
+            fire_x = (self.width - fire_width) // 2
+
+            # Ember glow
+            for _ in range(20):
+                ex = fire_x + np.random.rand() * fire_width
+                ey = fire_y + np.random.rand() * 50
+                er = np.random.uniform(5, 20)
+                ember_color = (200 + int(np.random.rand() * 55),
+                              80 + int(np.random.rand() * 40),
+                              10 + int(np.random.rand() * 20))
+                draw.ellipse([ex - er, ey - er, ex + er, ey + er], fill=ember_color)
+
+            # Update and draw fire particles
+            for p in particles:
+                # Update particle
+                p['y'] -= p['speed']
+                p['x'] += p['vx']
+                p['life'] -= 1
+                p['size'] *= 0.98  # Shrink
+
+                # Reset dead particles
+                if p['life'] <= 0 or p['y'] < fire_y - self.height * 0.4:
+                    p.update(self._create_fire_particle())
+                    p['y'] = fire_y
+
+                # Draw particle with color based on height
+                height_ratio = (fire_y - p['y']) / (self.height * 0.4)
+                height_ratio = min(1, max(0, height_ratio))
+
+                # Color gradient: yellow -> orange -> red -> dark
+                if height_ratio < 0.3:
+                    r, g, b = 255, 200 + int(55 * (1 - height_ratio/0.3)), 50
+                elif height_ratio < 0.6:
+                    r, g, b = 255, int(200 * (1 - (height_ratio-0.3)/0.3)), 20
+                else:
+                    fade = (height_ratio - 0.6) / 0.4
+                    r = int(255 * (1 - fade * 0.7))
+                    g = int(60 * (1 - fade))
+                    b = 10
+
+                if p['size'] > 0.5:
+                    draw.ellipse([p['x'] - p['size'], p['y'] - p['size'],
+                                 p['x'] + p['size'], p['y'] + p['size']],
+                                fill=(r, g, b))
+
+            # Add glow effect
+            img_pil = img_pil.filter(ImageFilter.GaussianBlur(radius=3))
+
+            # Blend with slightly enhanced version for glow
+            enhancer = ImageEnhance.Brightness(img_pil)
+            img_pil = enhancer.enhance(1.1)
+
+            frame_cv = cv2.cvtColor(np.array(img_pil), cv2.COLOR_RGB2BGR)
+            loop_buffer.append(frame_cv)
+
+        # Write loops
+        num_loops = (total_frames + loop_frames - 1) // loop_frames
+        print(f"  Writing {num_loops} loops to fill {duration}s...")
+        frames_written = 0
+        for _ in tqdm(range(num_loops), desc="Writing loops", unit="loop"):
+            for frame_cv in loop_buffer:
+                if frames_written >= total_frames:
+                    break
+                out.write(frame_cv)
+                frames_written += 1
+
+        out.release()
+        return output_path
+
+    def _create_fire_particle(self) -> dict:
+        """Create a new fire particle."""
+        fire_x = self.width // 2
+        fire_width = int(self.width * 0.3)
+        return {
+            'x': fire_x + (np.random.rand() - 0.5) * fire_width,
+            'y': self.height * 0.75,
+            'vx': (np.random.rand() - 0.5) * 2,
+            'speed': np.random.uniform(2, 6),
+            'size': np.random.uniform(8, 25),
+            'life': np.random.randint(40, 120)
+        }
+
+    def _generate_starfield(self, duration: int, output_path: str) -> str:
+        """Generate slow-moving starfield with twinkling - calming, space theme.
+
+        Uses loop-and-repeat strategy for efficiency.
+        """
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        out = cv2.VideoWriter(output_path, fourcc, self.fps, (self.width, self.height))
+
+        loop_duration = min(30, duration)  # Longer loop for stars (slow movement)
+        loop_frames = loop_duration * self.fps
+        total_frames = duration * self.fps
+
+        print(f"  Rendering {loop_duration}s starfield loop...")
+        loop_buffer = []
+
+        # Create stars
+        num_stars = 300
+        stars = []
+        for _ in range(num_stars):
+            stars.append({
+                'x': np.random.rand() * self.width,
+                'y': np.random.rand() * self.height,
+                'size': np.random.uniform(0.5, 3),
+                'brightness': np.random.uniform(0.3, 1.0),
+                'twinkle_speed': np.random.uniform(0.05, 0.2),
+                'twinkle_phase': np.random.rand() * 2 * math.pi
+            })
+
+        for frame in tqdm(range(loop_frames), desc="Rendering stars", unit="frame"):
+            t = frame / loop_frames
+
+            # Dark space background with subtle gradient
+            img = np.zeros((self.height, self.width, 3), dtype=np.uint8)
+            for y in range(self.height):
+                # Very subtle blue gradient
+                ratio = y / self.height
+                img[y, :] = [2 + int(5 * ratio), 2 + int(3 * ratio), 8 + int(10 * ratio)]
+
+            img_pil = Image.fromarray(img)
+            draw = ImageDraw.Draw(img_pil)
+
+            for star in stars:
+                # Slow drift (for seamless loop, use sine)
+                x = star['x'] + math.sin(t * 2 * math.pi) * 3
+                y = star['y'] + math.sin(t * 2 * math.pi + star['twinkle_phase']) * 2
+
+                # Twinkle
+                twinkle = 0.5 + 0.5 * math.sin(frame * star['twinkle_speed'] + star['twinkle_phase'])
+                brightness = star['brightness'] * twinkle
+
+                # Star color (slightly warm white to cool white)
+                color_temp = np.random.uniform(0.8, 1.0)  # Cache this ideally, but ok for demo
+                r = int(255 * brightness)
+                g = int(240 * brightness * color_temp)
+                b = int(255 * brightness)
+
+                # Draw star with glow
+                size = star['size']
+                if brightness > 0.5:
+                    # Glow for bright stars
+                    glow_size = size * 3
+                    glow_color = (int(r * 0.3), int(g * 0.3), int(b * 0.3))
+                    draw.ellipse([x - glow_size, y - glow_size,
+                                 x + glow_size, y + glow_size], fill=glow_color)
+
+                draw.ellipse([x - size, y - size, x + size, y + size],
+                            fill=(r, g, b))
+
+            # Subtle blur for dreaminess
+            img_pil = img_pil.filter(ImageFilter.GaussianBlur(radius=0.5))
+
+            frame_cv = cv2.cvtColor(np.array(img_pil), cv2.COLOR_RGB2BGR)
+            loop_buffer.append(frame_cv)
+
+        # Write loops
+        num_loops = (total_frames + loop_frames - 1) // loop_frames
+        print(f"  Writing {num_loops} loops to fill {duration}s...")
+        frames_written = 0
+        for _ in tqdm(range(num_loops), desc="Writing loops", unit="loop"):
+            for frame_cv in loop_buffer:
+                if frames_written >= total_frames:
+                    break
+                out.write(frame_cv)
+                frames_written += 1
 
         out.release()
         return output_path

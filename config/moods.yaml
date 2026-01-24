@@ -4,7 +4,7 @@
 
 deep_focus:
   description: "Deep concentration and flow state - Hypnotic fractal journey"
-  title_template: "Deep Focus | Fractal Flow | {duration_str} Concentration Music"
+  title_template: "Deep Focus Music | {duration_str} | Concentration & Flow State Study Music"
   rhythm_origin: "Moroccan Gnawa - spiritual trance music for healing"
   visual:
     type: "fractal_zoom"
@@ -41,7 +41,7 @@ deep_focus:
 
 sleep:
   description: "Deep relaxation and sleep induction - Gentle fractal drift"
-  title_template: "Sleep & Dreams | Fractal Lullaby | {duration_str} Deep Rest"
+  title_template: "Sleep Music | {duration_str} | Relaxing Music for Deep Sleep & Stress Relief"
   rhythm_origin: "Universal Heartbeat - primal rhythm synced to the body"
   visual:
     type: "fractal_zoom"
@@ -80,7 +80,7 @@ sleep:
 
 chill:
   description: "Relaxed and peaceful state - Gamelan rhythm"
-  title_template: "Chill Vibes | {rhythm_name} Groove | {duration_str} Relaxation"
+  title_template: "Chill Music | {duration_str} | Relaxing Ambient Sounds for Stress Relief"
   rhythm_origin: "Indonesian Gamelan - ethereal layered percussion"
   visual:
     type: "particle_flow"
@@ -114,7 +114,7 @@ chill:
 
 study:
   description: "Alert focus and learning state - Taiko rhythm"
-  title_template: "Study Session | {rhythm_name} Focus Beats | {duration_str} Learning Music"
+  title_template: "Study Music | {duration_str} | Focus Beats for Concentration & Learning"
   rhythm_origin: "Japanese Taiko - ceremonial drums for concentration"
   visual:
     type: "geometric_morph"
@@ -148,7 +148,7 @@ study:
 
 energize:
   description: "Energized and motivated state - Kuku rhythm"
-  title_template: "Energy Boost | {rhythm_name} Power Drums | {duration_str} Motivation"
+  title_template: "Motivation Music | {duration_str} | Energizing Beats for Workout & Focus"
   rhythm_origin: "West African Kuku - celebratory energizing rhythm"
   visual:
     type: "fractal_zoom"
@@ -180,7 +180,7 @@ energize:
 # Additional tribal moods
 trance:
   description: "Deep hypnotic trance - Infinite fractal journey"
-  title_template: "Trance State | Infinite Fractal | {duration_str} Hypnotic Journey"
+  title_template: "Hypnotic Trance Music | {duration_str} | Deep Meditation & Altered States"
   rhythm_origin: "New Orleans Bamboula - Caribbean hypnotic groove"
   visual:
     type: "fractal_zoom"
@@ -219,7 +219,7 @@ trance:
 
 ceremony:
   description: "Ritual and ceremony - Candomblé rhythm"
-  title_template: "Sacred Ceremony | {rhythm_name} Ritual | {duration_str} Spiritual Journey"
+  title_template: "Spiritual Music | {duration_str} | Sacred Ceremony & Meditation Sounds"
   rhythm_origin: "Brazilian Candomblé - Afro-Brazilian sacred polyrhythms"
   visual:
     type: "sacred_geometry"
@@ -250,7 +250,7 @@ ceremony:
 
 warrior:
   description: "Power and strength - Burundi rhythm"
-  title_template: "Warrior Spirit | {rhythm_name} Power Drums | {duration_str} Strength & Focus"
+  title_template: "Power Music | {duration_str} | Epic Drums for Workout & Motivation"
   rhythm_origin: "East African Burundi - intense ceremonial drumming"
   visual:
     type: "geometric_morph"
@@ -278,4 +278,204 @@ warrior:
         carrier: 200
         beat: 20
         amplitude: 0.1
+
+# ============================================
+# NATURE SOUNDS - High performing content types
+# Based on market research of top YouTube channels
+# ============================================
+
+rain_sleep:
+  description: "Rain sounds for deep sleep - Proven top performer"
+  title_template: "Rain Sounds for Sleep | {duration_str} | Relaxing Rain on Window"
+  rhythm_origin: "Nature - no tribal drums, pure rain"
+  visual:
+    type: "rain_window"
+    colors:
+      primary: [10, 15, 30]       # Dark blue night
+      secondary: [20, 30, 50]     # Lighter blue
+      accent: [100, 120, 180]     # Rain drop blue
+    pattern: "rain_window"
+    speed: 0.2
+    complexity: 0.5
+    symmetry: 1
+    pulse_frequency: 0.02
+  audio:
+    rhythm: null                  # No drums for rain
+    rhythm_volume: 0
+    base_frequency: 2             # Delta waves (deep sleep)
+    binaural_beat: 2
+    layers:
+      - type: "rain"
+        drop_rate: 80             # Heavy rain
+        amplitude: 0.6
+      - type: "binaural"
+        carrier: 100
+        beat: 2                   # Delta for sleep
+        amplitude: 0.08
+      - type: "pad"
+        frequency: 55             # Very low, subtle pad
+        amplitude: 0.05
+
+fireplace:
+  description: "Cozy fireplace crackling - Comfort content"
+  title_template: "Cozy Fireplace | {duration_str} | Crackling Fire Sounds for Relaxation"
+  rhythm_origin: "Nature - fire crackling"
+  visual:
+    type: "fireplace"
+    colors:
+      primary: [255, 120, 20]     # Orange flame
+      secondary: [255, 80, 0]     # Deep orange
+      accent: [255, 200, 50]      # Yellow flame tips
+    pattern: "fireplace"
+    speed: 0.3
+    complexity: 0.6
+    symmetry: 1
+    pulse_frequency: 0.1
+  audio:
+    rhythm: null                  # No drums
+    rhythm_volume: 0
+    base_frequency: 8             # Alpha/Theta border (relaxation)
+    binaural_beat: 8
+    layers:
+      - type: "fire"
+        crackle_rate: 12          # Medium crackling
+        amplitude: 0.7
+      - type: "pad"
+        frequency: 80             # Warm low pad
+        amplitude: 0.08
+      - type: "binaural"
+        carrier: 120
+        beat: 8
+        amplitude: 0.06
+
+ocean_waves:
+  description: "Ocean waves for sleep and relaxation"
+  title_template: "Ocean Waves | {duration_str} | Relaxing Sea Sounds for Deep Sleep"
+  rhythm_origin: "Nature - ocean waves"
+  visual:
+    type: "starfield"             # Use starfield (night ocean view)
+    colors:
+      primary: [5, 10, 25]        # Deep night blue
+      secondary: [10, 20, 40]     # Dark blue
+      accent: [200, 210, 255]     # Star white
+    pattern: "starfield"
+    speed: 0.1
+    complexity: 0.4
+    symmetry: 1
+    pulse_frequency: 0.015
+  audio:
+    rhythm: null
+    rhythm_volume: 0
+    base_frequency: 4             # Theta waves (meditation)
+    binaural_beat: 4
+    layers:
+      - type: "ocean"
+        wave_period: 10           # 10 second wave cycles
+        amplitude: 0.65
+      - type: "binaural"
+        carrier: 90
+        beat: 4
+        amplitude: 0.08
+
+lofi_study:
+  description: "Lofi beats for studying - Chill hip-hop vibes"
+  title_template: "Lofi Study Beats | {duration_str} | Chill Music to Study/Relax To"
+  rhythm_origin: "Lofi - chill hip-hop inspired"
+  visual:
+    type: "particle_flow"
+    colors:
+      primary: [255, 180, 150]    # Warm peach
+      secondary: [200, 150, 180]  # Dusty pink
+      accent: [150, 200, 220]     # Soft cyan
+    pattern: "particle_flow"
+    speed: 0.25                   # Slow, chill
+    complexity: 0.4
+    symmetry: 1
+    pulse_frequency: 0.08
+  audio:
+    rhythm: "gamelan"             # Soft percussion
+    rhythm_volume: 0.3            # Subtle drums
+    base_frequency: 10            # Alpha (relaxed focus)
+    binaural_beat: 10
+    layers:
+      - type: "melody"
+        scale: "pentatonic_major"
+        root: 196                 # G3 - warm, chill
+        tempo: 70                 # Slow lofi tempo
+        amplitude: 0.2
+      - type: "arpeggio"
+        chord: "major7"
+        root: 98                  # G2
+        tempo: 140                # Double-time arp
+        amplitude: 0.12
+      - type: "pad"
+        frequency: 98             # G2 pad
+        amplitude: 0.1
+      - type: "pink_noise"
+        amplitude: 0.03           # Subtle vinyl crackle feel
+
+piano_relax:
+  description: "Peaceful piano for stress relief"
+  title_template: "Peaceful Piano | {duration_str} | Relaxing Music for Stress Relief & Sleep"
+  rhythm_origin: "Classical inspired - no percussion"
+  visual:
+    type: "starfield"
+    colors:
+      primary: [15, 20, 40]       # Deep blue night
+      secondary: [30, 40, 70]     # Softer blue
+      accent: [220, 200, 180]     # Warm star light
+    pattern: "starfield"
+    speed: 0.08
+    complexity: 0.5
+    symmetry: 1
+    pulse_frequency: 0.02
+  audio:
+    rhythm: null                  # No drums
+    rhythm_volume: 0
+    base_frequency: 6             # Theta (deep relaxation)
+    binaural_beat: 6
+    layers:
+      - type: "melody"
+        scale: "lydian"           # Dreamy, peaceful scale
+        root: 262                 # C4 (middle C)
+        tempo: 50                 # Very slow, contemplative
+        amplitude: 0.25
+      - type: "pad"
+        frequency: 131            # C3 pad
+        amplitude: 0.15
+      - type: "binaural"
+        carrier: 136.1            # Om frequency
+        beat: 6
+        amplitude: 0.07
+
+forest_morning:
+  description: "Forest ambience with birds - Nature immersion"
+  title_template: "Forest Sounds | {duration_str} | Birds Singing & Nature Ambience"
+  rhythm_origin: "Nature - forest soundscape"
+  visual:
+    type: "particle_flow"
+    colors:
+      primary: [30, 60, 30]       # Forest green
+      secondary: [50, 80, 40]     # Lighter green
+      accent: [200, 180, 100]     # Morning light gold
+    pattern: "particle_flow"
+    speed: 0.15
+    complexity: 0.4
+    symmetry: 1
+    pulse_frequency: 0.03
+  audio:
+    rhythm: null
+    rhythm_volume: 0
+    base_frequency: 10            # Alpha (calm awareness)
+    binaural_beat: 10
+    layers:
+      - type: "forest"
+        bird_rate: 4              # Birds per minute
+        amplitude: 0.6
+      - type: "pink_noise"
+        amplitude: 0.08           # Wind rustling
+      - type: "binaural"
+        carrier: 144              # Light, nature
+        beat: 10
+        amplitude: 0.05
 
