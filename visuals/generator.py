@@ -519,10 +519,11 @@ class VisualGenerator:
 
         for frame in tqdm(range(loop_frames), desc="Rendering loop", unit="frame", disable=TQDM_DISABLE):
             # Use sine-based animation for seamless looping
-            t = frame / loop_frames  # 0 to 1 over the loop
+            t = frame / max(loop_frames, 1)  # 0 to 1 over the loop, avoid div by zero
 
             # Smooth zoom that returns to start (breathing effect)
-            zoom = 1.0 + 0.5 * math.sin(t * 2 * math.pi) * speed * 10
+            # Ensure zoom is always positive (minimum 0.1 to avoid division by zero)
+            zoom = max(0.1, 1.0 + 0.5 * math.sin(t * 2 * math.pi) * speed * 10)
 
             # Render fractal
             if fractal_type == 'julia':
@@ -561,9 +562,12 @@ class VisualGenerator:
     def _render_mandelbrot_fast(self, zoom: float, frame: int, center_x: float, center_y: float,
                                  width: int, height: int) -> Image.Image:
         """Render Mandelbrot using JIT-compiled function with color cycling."""
+        # Ensure zoom is positive to avoid division by zero
+        zoom = max(0.1, zoom)
+
         # Calculate view bounds
         width_range = 3.5 / zoom
-        height_range = width_range * height / width
+        height_range = width_range * height / max(width, 1)
 
         x_min = center_x - width_range / 2
         x_max = center_x + width_range / 2
@@ -584,8 +588,11 @@ class VisualGenerator:
     def _render_julia_fast(self, zoom: float, frame: int, c_real: float, c_imag: float,
                            width: int, height: int) -> Image.Image:
         """Render Julia set using JIT-compiled function."""
+        # Ensure zoom is positive to avoid division by zero
+        zoom = max(0.1, zoom)
+
         width_range = 3.5 / zoom
-        height_range = width_range * height / width
+        height_range = width_range * height / max(width, 1)
 
         x_min, x_max = -width_range / 2, width_range / 2
         y_min, y_max = -height_range / 2, height_range / 2
@@ -600,13 +607,11 @@ class VisualGenerator:
 
     def _apply_color_cycling(self, fractal_data: np.ndarray, frame: int, max_iter: int) -> np.ndarray:
         """Apply psychedelic color cycling to fractal data (vectorized for speed)."""
-        height, width = fractal_data.shape
-
         # Color cycle offset based on frame
         color_offset = frame * 0.02
 
-        # Normalize fractal data
-        normalized = fractal_data / max_iter
+        # Normalize fractal data (guard against division by zero)
+        normalized = fractal_data / max(max_iter, 1)
 
         # Create mask for inside the set (black)
         inside_mask = normalized >= 1.0
