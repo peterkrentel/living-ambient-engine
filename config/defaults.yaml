@@ -1,15 +1,15 @@
 # Default settings for Living Ambient Engine
 
-# Video settings
+# Video settings - optimized for small file size
 video:
-  fps: 30
+  fps: 24
   resolution:
-    width: 1920
-    height: 1080
+    width: 1280
+    height: 720
   codec: "libx264"
-  bitrate: "5000k"
-  preset: "medium"  # ultrafast, superfast, veryfast, faster, fast, medium, slow, slower, veryslow
-  crf: 23           # Constant Rate Factor (0-51, lower = better quality)
+  bitrate: "2000k"
+  preset: "faster"  # ultrafast, superfast, veryfast, faster, fast, medium, slow, slower, veryslow
+  crf: 28           # Constant Rate Factor (0-51, lower = better quality, 28 = good for ambient)
 
 # Audio settings
 audio:

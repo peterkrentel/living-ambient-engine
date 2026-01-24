@@ -6,8 +6,11 @@
 |-----------|--------|-------|
 | 1. MVP | ✅ DONE | Local pipeline works |
 | 2. YouTube Publishing | ✅ DONE | Uploader + GitHub Actions |
-| 3. Go Live | 🔄 NEXT | YouTube API credentials needed |
-| 4. Shorts | ⬜ TODO | Auto-cut from long videos |
+| 3. Go Live | ✅ DONE | Pipeline tested, uploads work |
+| 4. Production Channel | 🔄 NEXT | Brand account + re-auth |
+| 5. Content Quality | ⬜ TODO | Better audio/visuals, smaller files |
+| 6. AI Melody Agent | ⬜ TODO | AI-generated ambient melodies |
+| 7. Shorts | ⬜ TODO | Auto-cut from long videos |
 
 ---
 
@@ -28,15 +31,37 @@
 - [x] GitHub Actions workflow (daily 2AM UTC + manual)
 - [x] Codespaces config for cloud dev
 
-## Milestone 3 — Go Live 🔄
+## Milestone 3 — Go Live ✅
 
-- [ ] Google Cloud project + OAuth2 credentials
-- [ ] Run youtube_upload.py --auth in Codespace
-- [ ] Add YOUTUBE_TOKEN_B64 to GitHub Secrets
-- [ ] Test GitHub Actions with manual trigger
-- [ ] First production upload
+- [x] Google Cloud project + OAuth2 credentials
+- [x] Run youtube_upload.py --auth locally
+- [x] Add YOUTUBE_TOKEN_PICKLE + YOUTUBE_CLIENT_SECRETS to GitHub Secrets
+- [x] Test GitHub Actions with manual trigger
+- [x] First test upload (30s × 3 moods)
 
-## Milestone 4 — Shorts ⬜
+## Milestone 4 — Production Channel 🔄
+
+- [ ] Create brand account / dedicated channel
+- [ ] Add new email as test user in GCP
+- [ ] Re-run OAuth flow with new account
+- [ ] Update GitHub secrets with new token
+- [ ] Delete test videos from personal channel
+
+## Milestone 5 — Content Quality ⬜
+
+- [ ] Optimize file size (720p, lower framerate, CRF tuning)
+- [ ] Improve visuals (colors, patterns, smoother animation)
+- [ ] Improve audio (layering, textures, fade in/out)
+- [ ] Add CLI progress bar (tqdm)
+
+## Milestone 6 — AI Melody Agent ⬜
+
+- [ ] Research AI music generation (Suno, MusicGen, etc.)
+- [ ] Integrate melody generation into pipeline
+- [ ] Layer melodies with binaural beats
+- [ ] Mood-specific musical themes
+
+## Milestone 7 — Shorts ⬜
 
 - [ ] Auto-cut 15-60s clips from long videos
 - [ ] Vertical crop + encode (9:16)

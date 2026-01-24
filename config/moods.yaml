@@ -3,69 +3,80 @@
 # Audio now features authentic tribal rhythms for deep trance induction
 
 deep_focus:
-  description: "Deep concentration and flow state - Gnawa trance rhythm"
-  title_template: "Deep Focus | {rhythm_name} Tribal Beats | {duration_str} Concentration Music"
+  description: "Deep concentration and flow state - Hypnotic fractal journey"
+  title_template: "Deep Focus | Fractal Flow | {duration_str} Concentration Music"
   rhythm_origin: "Moroccan Gnawa - spiritual trance music for healing"
   visual:
-    type: "sacred_geometry"
+    type: "fractal_zoom"
     colors:
-      primary: [20, 30, 80]      # Deep blue
-      secondary: [80, 40, 120]   # Purple
-      accent: [100, 200, 255]    # Light blue
-    pattern: "fibonacci_spiral"
-    speed: 0.3                    # Slow movement
-    complexity: 0.7               # Medium-high detail
-    symmetry: 6                   # Hexagonal
-    pulse_frequency: 0.1          # Gentle pulsing
+      primary: [0, 100, 180]      # Electric blue (trust, focus)
+      secondary: [120, 50, 200]   # Violet (creativity, calm)
+      accent: [0, 220, 255]       # Cyan glow (clarity)
+    pattern: "mandelbrot"
+    speed: 0.5                    # Smooth zoom
+    complexity: 0.85              # High detail fractals
+    symmetry: 8                   # Octagonal
+    pulse_frequency: 0.08         # Subtle breathing pulse
   audio:
     rhythm: "gnawa"               # Moroccan trance rhythm
-    rhythm_volume: 0.6            # Drums prominent
+    rhythm_volume: 0.5            # Balanced drums
     base_frequency: 40            # Gamma waves (focus)
     binaural_beat: 40             # 40 Hz (concentration)
     layers:
       - type: "sine"
         frequency: 432            # A=432Hz (natural tuning)
-        amplitude: 0.12           # Reduced drone
-      - type: "pink_noise"
-        amplitude: 0.05
+        amplitude: 0.1
+      - type: "melody"
+        scale: "pentatonic_minor"
+        root: 220                 # A3
+        tempo: 60                 # Slow, hypnotic
+        amplitude: 0.15
+      - type: "pad"
+        frequency: 110            # A2 pad
+        amplitude: 0.08
       - type: "binaural"
         carrier: 200
         beat: 40
-        amplitude: 0.15           # Subtle binaural
+        amplitude: 0.12
 
 sleep:
-  description: "Deep relaxation and sleep induction - Heartbeat rhythm"
-  title_template: "Sleep & Dreams | {rhythm_name} Healing Rhythm | {duration_str} Deep Rest"
+  description: "Deep relaxation and sleep induction - Gentle fractal drift"
+  title_template: "Sleep & Dreams | Fractal Lullaby | {duration_str} Deep Rest"
   rhythm_origin: "Universal Heartbeat - primal rhythm synced to the body"
   visual:
-    type: "flowing_waves"
+    type: "fractal_zoom"
     colors:
-      primary: [10, 10, 30]       # Very dark blue
-      secondary: [30, 20, 50]     # Dark purple
-      accent: [50, 40, 80]        # Muted purple
-    pattern: "slow_waves"
-    speed: 0.1                    # Very slow
-    complexity: 0.3               # Low detail
-    symmetry: 0                   # Organic flow
-    pulse_frequency: 0.05         # Very slow pulse
+      primary: [20, 10, 50]       # Deep indigo (calm, sleep)
+      secondary: [60, 30, 90]     # Soft purple (dreams)
+      accent: [100, 80, 140]      # Lavender glow (peace)
+    pattern: "julia"              # Softer, dreamier fractals
+    speed: 0.2                    # Very slow drift
+    complexity: 0.6               # Medium detail, not overwhelming
+    symmetry: 6                   # Hexagonal harmony
+    pulse_frequency: 0.03         # Very slow breathing
   audio:
     rhythm: "heartbeat"           # Primal heartbeat
-    rhythm_volume: 0.5            # Heartbeat prominent
-    base_frequency: 2             # Delta waves (0.5-4Hz = deep sleep)
-    binaural_beat: 2              # 2Hz Delta - deepest sleep state
+    rhythm_volume: 0.35           # Subtle heartbeat
+    base_frequency: 2             # Delta waves (deep sleep)
+    binaural_beat: 2              # 2Hz Delta
     layers:
       - type: "sine"
-        frequency: 528            # 528Hz "Love/Miracle" frequency - healing/DNA repair
+        frequency: 528            # 528Hz healing frequency
+        amplitude: 0.1
+      - type: "melody"
+        scale: "pentatonic_major"
+        root: 174                 # Low, grounding
+        tempo: 40                 # Very slow lullaby
         amplitude: 0.12
-      - type: "sine"
-        frequency: 174            # 174Hz - pain relief, grounding
-        amplitude: 0.08
+      - type: "pad"
+        frequency: 87             # F2 - warm low pad
+        amplitude: 0.1
       - type: "pink_noise"
-        amplitude: 0.08
+        amplitude: 0.06
       - type: "binaural"
-        carrier: 108              # Low carrier for gentler sound
-        beat: 2                   # 2Hz Delta entrainment
-        amplitude: 0.15
+        carrier: 108
+        beat: 2
+        amplitude: 0.1
 
 chill:
   description: "Relaxed and peaceful state - Gamelan rhythm"
@@ -168,37 +179,42 @@ energize:
 
 # Additional tribal moods
 trance:
-  description: "Deep hypnotic trance - Bamboula rhythm"
-  title_template: "Trance State | {rhythm_name} Ceremony | {duration_str} Hypnotic Journey"
+  description: "Deep hypnotic trance - Infinite fractal journey"
+  title_template: "Trance State | Infinite Fractal | {duration_str} Hypnotic Journey"
   rhythm_origin: "New Orleans Bamboula - Caribbean hypnotic groove"
   visual:
     type: "fractal_zoom"
     colors:
-      primary: [100, 0, 150]      # Deep purple
-      secondary: [200, 50, 100]   # Magenta
-      accent: [255, 100, 200]     # Pink
+      primary: [180, 0, 255]      # Electric violet (altered states)
+      secondary: [255, 0, 150]    # Hot magenta (energy)
+      accent: [0, 255, 200]       # Teal flash (contrast hook)
     pattern: "julia"
-    speed: 0.5
-    complexity: 0.9
+    speed: 0.7                    # Faster, more hypnotic
+    complexity: 0.95              # Maximum detail
     symmetry: 8
-    pulse_frequency: 0.2
+    pulse_frequency: 0.15         # Rhythmic pulse
   audio:
     rhythm: "bamboula"            # New Orleans hypnotic
-    rhythm_volume: 0.7            # Drums very prominent
-    base_frequency: 6             # Theta waves (4-8Hz = deep meditation, trance)
-    binaural_beat: 6              # 6Hz Theta - hypnagogic state, creativity
+    rhythm_volume: 0.6            # Strong drums
+    base_frequency: 6             # Theta waves (trance)
+    binaural_beat: 6              # 6Hz Theta
     layers:
-      - type: "sine"
-        frequency: 528            # 528Hz - transformation, miracle tone
-        amplitude: 0.08
-      - type: "sine"
-        frequency: 417            # 417Hz - facilitating change
-        amplitude: 0.05
-      - type: "pink_noise"
-        amplitude: 0.04
+      - type: "melody"
+        scale: "phrygian"         # Dark, exotic scale
+        root: 165                 # E3
+        tempo: 80                 # Driving tempo
+        amplitude: 0.18
+      - type: "arpeggio"
+        chord: "minor7"
+        root: 110                 # A2
+        tempo: 120                # Fast arpeggio
+        amplitude: 0.12
+      - type: "pad"
+        frequency: 55             # A1 - deep bass pad
+        amplitude: 0.1
       - type: "binaural"
-        carrier: 111              # 111Hz - cell regeneration, endorphins
-        beat: 6                   # 6Hz deep Theta
+        carrier: 111
+        beat: 6
         amplitude: 0.1
 
 ceremony:

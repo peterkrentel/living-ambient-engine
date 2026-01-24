@@ -206,7 +206,7 @@ class AudioGenerator:
         """Generate a single audio layer."""
         layer_type = layer_config.get('type', 'sine')
         amplitude = layer_config.get('amplitude', 0.3)
-        
+
         if layer_type == 'sine':
             return self._generate_sine(layer_config, num_samples, amplitude)
         elif layer_type == 'binaural':
@@ -215,6 +215,12 @@ class AudioGenerator:
             return self._generate_pink_noise(num_samples, amplitude)
         elif layer_type == 'white_noise':
             return self._generate_white_noise(num_samples, amplitude)
+        elif layer_type == 'melody':
+            return self._generate_melody(layer_config, num_samples, amplitude)
+        elif layer_type == 'arpeggio':
+            return self._generate_arpeggio(layer_config, num_samples, amplitude)
+        elif layer_type == 'pad':
+            return self._generate_pad(layer_config, num_samples, amplitude)
         else:
             return np.zeros((num_samples, self.channels))
     
@@ -345,14 +351,203 @@ class AudioGenerator:
     def _apply_fade(self, audio: np.ndarray, fade_duration: float = 2.0) -> np.ndarray:
         """Apply fade in and fade out to prevent clicks."""
         fade_samples = int(fade_duration * self.sample_rate)
-        
+
         # Fade in
         fade_in = np.linspace(0, 1, fade_samples)
         audio[:fade_samples] *= fade_in[:, np.newaxis]
-        
+
         # Fade out
         fade_out = np.linspace(1, 0, fade_samples)
         audio[-fade_samples:] *= fade_out[:, np.newaxis]
-        
+
+        return audio
+
+    def _get_scale_intervals(self, scale_name: str) -> List[int]:
+        """Get semitone intervals for a scale."""
+        scales = {
+            'pentatonic_major': [0, 2, 4, 7, 9],           # Happy, universal
+            'pentatonic_minor': [0, 3, 5, 7, 10],          # Melancholic, soulful
+            'phrygian': [0, 1, 4, 5, 7, 8, 10],            # Dark, exotic, Spanish
+            'lydian': [0, 2, 4, 6, 7, 9, 11],              # Dreamy, ethereal
+            'dorian': [0, 2, 3, 5, 7, 9, 10],              # Jazzy, sophisticated
+            'mixolydian': [0, 2, 4, 5, 7, 9, 10],          # Bluesy, relaxed
+            'harmonic_minor': [0, 2, 3, 5, 7, 8, 11],      # Dramatic, Middle Eastern
+            'whole_tone': [0, 2, 4, 6, 8, 10],             # Dreamy, floating
+        }
+        return scales.get(scale_name, scales['pentatonic_major'])
+
+    def _generate_melody(self, config: Dict, num_samples: int, amplitude: float) -> np.ndarray:
+        """Generate a simple, hypnotic melody using a scale."""
+        root = config.get('root', 220)  # A3
+        scale = config.get('scale', 'pentatonic_minor')
+        tempo = config.get('tempo', 60)  # BPM
+
+        intervals = self._get_scale_intervals(scale)
+
+        # Calculate note duration
+        beat_samples = int(self.sample_rate * 60 / tempo)
+        note_samples = beat_samples * 2  # Half notes for slow, hypnotic feel
+
+        audio = np.zeros((num_samples, self.channels))
+
+        # Generate melody notes
+        current_sample = 0
+        note_index = 0
+        direction = 1
+
+        while current_sample < num_samples:
+            # Get frequency for current note
+            semitones = intervals[note_index % len(intervals)]
+            octave = note_index // len(intervals)
+            freq = root * (2 ** (semitones / 12)) * (2 ** octave)
+
+            # Keep in reasonable range
+            while freq > root * 4:
+                freq /= 2
+            while freq < root / 2:
+                freq *= 2
+
+            # Generate note with envelope
+            note_len = min(note_samples, num_samples - current_sample)
+            t = np.arange(note_len) / self.sample_rate
+
+            # Soft synth tone with harmonics
+            wave = np.sin(2 * np.pi * freq * t)
+            wave += np.sin(2 * np.pi * freq * 2 * t) * 0.3  # Octave
+            wave += np.sin(2 * np.pi * freq * 1.5 * t) * 0.15  # Fifth
+
+            # ADSR envelope
+            attack = int(note_len * 0.1)
+            decay = int(note_len * 0.1)
+            release = int(note_len * 0.3)
+            sustain_level = 0.7
+
+            envelope = np.ones(note_len)
+            envelope[:attack] = np.linspace(0, 1, attack)
+            envelope[attack:attack+decay] = np.linspace(1, sustain_level, decay)
+            envelope[-release:] = np.linspace(sustain_level, 0, release)
+
+            wave = wave * envelope * amplitude
+
+            # Stereo with slight pan variation
+            pan = 0.5 + 0.2 * np.sin(note_index * 0.5)
+            left = wave * (1 - pan)
+            right = wave * pan
+
+            audio[current_sample:current_sample+note_len, 0] += left
+            audio[current_sample:current_sample+note_len, 1] += right
+
+            current_sample += note_samples
+
+            # Move through scale (up and down pattern)
+            note_index += direction
+            if note_index >= len(intervals) * 2 - 1:
+                direction = -1
+            elif note_index <= 0:
+                direction = 1
+
+        # Add reverb for space
+        audio[:, 0] = self._add_reverb(audio[:, 0], decay=0.4, mix=0.5)
+        audio[:, 1] = self._add_reverb(audio[:, 1], decay=0.4, mix=0.5)
+
+        return audio
+
+    def _generate_arpeggio(self, config: Dict, num_samples: int, amplitude: float) -> np.ndarray:
+        """Generate hypnotic arpeggio pattern."""
+        root = config.get('root', 110)  # A2
+        chord = config.get('chord', 'minor7')
+        tempo = config.get('tempo', 120)  # BPM
+
+        # Chord intervals in semitones
+        chords = {
+            'major': [0, 4, 7],
+            'minor': [0, 3, 7],
+            'major7': [0, 4, 7, 11],
+            'minor7': [0, 3, 7, 10],
+            'sus4': [0, 5, 7],
+            'add9': [0, 4, 7, 14],
+        }
+        intervals = chords.get(chord, chords['minor7'])
+
+        # Note duration (16th notes for flowing arpeggio)
+        note_samples = int(self.sample_rate * 60 / tempo / 4)
+
+        audio = np.zeros((num_samples, self.channels))
+        current_sample = 0
+        note_index = 0
+
+        while current_sample < num_samples:
+            # Cycle through chord tones
+            semitones = intervals[note_index % len(intervals)]
+            octave = (note_index // len(intervals)) % 2  # Alternate octaves
+            freq = root * (2 ** (semitones / 12)) * (2 ** octave)
+
+            # Generate note
+            note_len = min(note_samples, num_samples - current_sample)
+            t = np.arange(note_len) / self.sample_rate
+
+            # Soft pluck sound
+            wave = np.sin(2 * np.pi * freq * t)
+            wave += np.sin(2 * np.pi * freq * 2 * t) * 0.2
+
+            # Quick attack, longer decay
+            envelope = np.exp(-t * 8)  # Exponential decay
+            wave = wave * envelope * amplitude
+
+            # Stereo spread
+            pan = 0.3 + 0.4 * (note_index % len(intervals)) / len(intervals)
+            audio[current_sample:current_sample+note_len, 0] += wave * (1 - pan)
+            audio[current_sample:current_sample+note_len, 1] += wave * pan
+
+            current_sample += note_samples
+            note_index += 1
+
+        # Add delay for rhythmic interest
+        delay_samples = int(self.sample_rate * 60 / tempo * 0.75)  # Dotted eighth
+        if delay_samples < num_samples:
+            delayed = np.zeros_like(audio)
+            delayed[delay_samples:] = audio[:-delay_samples] * 0.4
+            audio += delayed
+
+        return audio
+
+    def _generate_pad(self, config: Dict, num_samples: int, amplitude: float) -> np.ndarray:
+        """Generate warm, evolving pad sound."""
+        frequency = config.get('frequency', 110)  # A2
+
+        t = np.arange(num_samples) / self.sample_rate
+
+        # Rich pad with multiple detuned oscillators
+        wave = np.zeros(num_samples)
+
+        # Main oscillators (slightly detuned for richness)
+        detune = [0.98, 0.99, 1.0, 1.01, 1.02]
+        for d in detune:
+            wave += np.sin(2 * np.pi * frequency * d * t) * 0.2
+
+        # Sub bass
+        wave += np.sin(2 * np.pi * frequency * 0.5 * t) * 0.3
+
+        # Fifth above
+        wave += np.sin(2 * np.pi * frequency * 1.5 * t) * 0.1
+
+        # Slow filter sweep (simulated with amplitude modulation of harmonics)
+        lfo = 0.5 + 0.5 * np.sin(2 * np.pi * 0.05 * t)  # Very slow LFO
+        wave = wave * (0.7 + 0.3 * lfo)
+
+        # Slow amplitude modulation (breathing)
+        breath = 0.8 + 0.2 * np.sin(2 * np.pi * 0.08 * t)
+        wave = wave * breath * amplitude
+
+        # Stereo widening
+        left = wave
+        right = np.roll(wave, int(self.sample_rate * 0.015))  # 15ms delay
+
+        audio = np.column_stack([left, right])
+
+        # Heavy reverb for pad
+        audio[:, 0] = self._add_reverb(audio[:, 0], decay=0.5, mix=0.6)
+        audio[:, 1] = self._add_reverb(audio[:, 1], decay=0.5, mix=0.6)
+
         return audio
 
