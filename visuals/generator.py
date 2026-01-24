@@ -472,7 +472,7 @@ class VisualGenerator:
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         out = cv2.VideoWriter(output_path, fourcc, self.fps, (self.width, self.height))
 
-        speed = self.config.get('speed', 0.6)
+        speed = self.config.get('speed', 0.15)  # Slow, hypnotic movement
 
         # Interesting zoom targets for Mandelbrot
         zoom_targets = [
@@ -483,9 +483,13 @@ class VisualGenerator:
         ]
         target_x, target_y = zoom_targets[0]
 
-        # Use lower resolution for speed, then upscale
-        render_width = self.width // 2
-        render_height = self.height // 2
+        # Use much lower resolution for speed, then upscale
+        # GitHub Actions runners are slow - render at 1/4 resolution
+        render_width = self.width // 4
+        render_height = self.height // 4
+
+        # Skip frames for speed (render every Nth frame, duplicate others)
+        frame_skip = 2  # Render every 2nd frame
 
         for frame in range(total_frames):
             # Exponential zoom for smooth infinite zoom effect
