@@ -1,0 +1,40 @@
+# Default settings for Living Ambient Engine
+
+# Video settings
+video:
+  fps: 30
+  resolution:
+    width: 1920
+    height: 1080
+  codec: "libx264"
+  bitrate: "5000k"
+  preset: "medium"  # ultrafast, superfast, veryfast, faster, fast, medium, slow, slower, veryslow
+  crf: 23           # Constant Rate Factor (0-51, lower = better quality)
+
+# Audio settings
+audio:
+  sample_rate: 44100
+  channels: 2
+  codec: "aac"
+  bitrate: "192k"
+
+# Output settings
+output:
+  directory: "./output"
+  artifacts_directory: "./artifacts"
+  filename_template: "{mood}_{duration}s_{timestamp}"
+  save_metadata: true
+  save_thumbnail: true
+  thumbnail_time: 30  # seconds into video for thumbnail
+
+# Rendering settings
+render:
+  temp_directory: "./temp"
+  cleanup_temp: true
+  show_progress: true
+
+# Default job settings
+defaults:
+  duration: 300      # 5 minutes
+  mood: "deep_focus"
+

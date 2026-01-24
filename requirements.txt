@@ -1,0 +1,29 @@
+# Core dependencies
+numpy>=1.24.0
+scipy>=1.10.0
+Pillow>=10.0.0
+opencv-python>=4.8.0
+pyyaml>=6.0
+
+# Audio processing
+pydub>=0.25.1
+soundfile>=0.12.1
+
+# CLI
+click>=8.1.0
+python-dotenv>=1.0.0
+
+# Utilities
+tqdm>=4.65.0
+colorama>=0.4.6
+
+# FFmpeg wrapper (requires FFmpeg installed on system)
+ffmpeg-python>=0.2.0
+
+# JIT compilation for fast fractal rendering
+numba>=0.60.0
+
+# YouTube API (optional - for auto-upload)
+google-auth-oauthlib>=1.0.0
+google-api-python-client>=2.100.0
+

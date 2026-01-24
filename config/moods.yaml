@@ -1,0 +1,265 @@
+# Mood presets for Living Ambient Engine
+# Each mood defines visual and audio parameters for hypnotic content generation
+# Audio now features authentic tribal rhythms for deep trance induction
+
+deep_focus:
+  description: "Deep concentration and flow state - Gnawa trance rhythm"
+  title_template: "Deep Focus | {rhythm_name} Tribal Beats | {duration_str} Concentration Music"
+  rhythm_origin: "Moroccan Gnawa - spiritual trance music for healing"
+  visual:
+    type: "sacred_geometry"
+    colors:
+      primary: [20, 30, 80]      # Deep blue
+      secondary: [80, 40, 120]   # Purple
+      accent: [100, 200, 255]    # Light blue
+    pattern: "fibonacci_spiral"
+    speed: 0.3                    # Slow movement
+    complexity: 0.7               # Medium-high detail
+    symmetry: 6                   # Hexagonal
+    pulse_frequency: 0.1          # Gentle pulsing
+  audio:
+    rhythm: "gnawa"               # Moroccan trance rhythm
+    rhythm_volume: 0.6            # Drums prominent
+    base_frequency: 40            # Gamma waves (focus)
+    binaural_beat: 40             # 40 Hz (concentration)
+    layers:
+      - type: "sine"
+        frequency: 432            # A=432Hz (natural tuning)
+        amplitude: 0.12           # Reduced drone
+      - type: "pink_noise"
+        amplitude: 0.05
+      - type: "binaural"
+        carrier: 200
+        beat: 40
+        amplitude: 0.15           # Subtle binaural
+
+sleep:
+  description: "Deep relaxation and sleep induction - Heartbeat rhythm"
+  title_template: "Sleep & Dreams | {rhythm_name} Healing Rhythm | {duration_str} Deep Rest"
+  rhythm_origin: "Universal Heartbeat - primal rhythm synced to the body"
+  visual:
+    type: "flowing_waves"
+    colors:
+      primary: [10, 10, 30]       # Very dark blue
+      secondary: [30, 20, 50]     # Dark purple
+      accent: [50, 40, 80]        # Muted purple
+    pattern: "slow_waves"
+    speed: 0.1                    # Very slow
+    complexity: 0.3               # Low detail
+    symmetry: 0                   # Organic flow
+    pulse_frequency: 0.05         # Very slow pulse
+  audio:
+    rhythm: "heartbeat"           # Primal heartbeat
+    rhythm_volume: 0.5            # Heartbeat prominent
+    base_frequency: 2             # Delta waves (0.5-4Hz = deep sleep)
+    binaural_beat: 2              # 2Hz Delta - deepest sleep state
+    layers:
+      - type: "sine"
+        frequency: 528            # 528Hz "Love/Miracle" frequency - healing/DNA repair
+        amplitude: 0.12
+      - type: "sine"
+        frequency: 174            # 174Hz - pain relief, grounding
+        amplitude: 0.08
+      - type: "pink_noise"
+        amplitude: 0.08
+      - type: "binaural"
+        carrier: 108              # Low carrier for gentler sound
+        beat: 2                   # 2Hz Delta entrainment
+        amplitude: 0.15
+
+chill:
+  description: "Relaxed and peaceful state - Gamelan rhythm"
+  title_template: "Chill Vibes | {rhythm_name} Groove | {duration_str} Relaxation"
+  rhythm_origin: "Indonesian Gamelan - ethereal layered percussion"
+  visual:
+    type: "particle_flow"
+    colors:
+      primary: [255, 180, 120]    # Warm orange
+      secondary: [255, 120, 150]  # Coral
+      accent: [255, 200, 100]     # Golden
+    pattern: "organic_flow"
+    speed: 0.4                    # Medium-slow
+    complexity: 0.5               # Medium detail
+    symmetry: 3                   # Triangular
+    pulse_frequency: 0.15
+  audio:
+    rhythm: "gamelan"             # Indonesian ethereal
+    rhythm_volume: 0.55           # Drums forward
+    base_frequency: 10            # Alpha waves (8-14Hz = relaxed awareness)
+    binaural_beat: 10             # 10Hz Alpha - calm alertness
+    layers:
+      - type: "sine"
+        frequency: 639            # 639Hz - connection, relationships, harmony
+        amplitude: 0.1
+      - type: "sine"
+        frequency: 528            # 528Hz - love frequency layered
+        amplitude: 0.06
+      - type: "pink_noise"
+        amplitude: 0.05
+      - type: "binaural"
+        carrier: 136.1            # 136.1Hz = "Om" frequency (C# cosmic)
+        beat: 10                  # 10Hz Alpha
+        amplitude: 0.12
+
+study:
+  description: "Alert focus and learning state - Taiko rhythm"
+  title_template: "Study Session | {rhythm_name} Focus Beats | {duration_str} Learning Music"
+  rhythm_origin: "Japanese Taiko - ceremonial drums for concentration"
+  visual:
+    type: "geometric_morph"
+    colors:
+      primary: [100, 150, 100]    # Neutral green
+      secondary: [150, 180, 150]  # Light green
+      accent: [200, 220, 180]     # Pale yellow-green
+    pattern: "platonic_solids"
+    speed: 0.35                   # Medium
+    complexity: 0.6               # Medium-high
+    symmetry: 4                   # Square
+    pulse_frequency: 0.12
+  audio:
+    rhythm: "taiko"               # Japanese ceremonial
+    rhythm_volume: 0.6            # Drums prominent
+    base_frequency: 12            # Alpha/Beta border (12Hz = alert focus)
+    binaural_beat: 12             # 12Hz - learning, memory retention
+    layers:
+      - type: "sine"
+        frequency: 432            # 432Hz - natural tuning, calm concentration
+        amplitude: 0.1
+      - type: "sine"
+        frequency: 528            # 528Hz - transformation, clarity
+        amplitude: 0.05
+      - type: "pink_noise"
+        amplitude: 0.03           # Pink noise helps focus
+      - type: "binaural"
+        carrier: 144              # 144Hz = light, energy
+        beat: 12                  # 12Hz high Alpha/low Beta
+        amplitude: 0.1
+
+energize:
+  description: "Energized and motivated state - Kuku rhythm"
+  title_template: "Energy Boost | {rhythm_name} Power Drums | {duration_str} Motivation"
+  rhythm_origin: "West African Kuku - celebratory energizing rhythm"
+  visual:
+    type: "fractal_zoom"
+    colors:
+      primary: [255, 100, 50]     # Bright orange
+      secondary: [255, 200, 0]    # Yellow
+      accent: [255, 150, 100]     # Light orange
+    pattern: "mandelbrot"
+    speed: 0.6                    # Faster
+    complexity: 0.8               # High detail
+    symmetry: 8                   # Octagonal
+    pulse_frequency: 0.25         # More active pulse
+  audio:
+    rhythm: "kuku"                # West African energy
+    rhythm_volume: 0.7            # Drums very prominent
+    base_frequency: 25            # High beta (energy)
+    binaural_beat: 25
+    layers:
+      - type: "sine"
+        frequency: 639            # Solfeggio (connection)
+        amplitude: 0.1
+      - type: "white_noise"
+        amplitude: 0.05
+      - type: "binaural"
+        carrier: 210
+        beat: 25
+        amplitude: 0.12
+
+# Additional tribal moods
+trance:
+  description: "Deep hypnotic trance - Bamboula rhythm"
+  title_template: "Trance State | {rhythm_name} Ceremony | {duration_str} Hypnotic Journey"
+  rhythm_origin: "New Orleans Bamboula - Caribbean hypnotic groove"
+  visual:
+    type: "fractal_zoom"
+    colors:
+      primary: [100, 0, 150]      # Deep purple
+      secondary: [200, 50, 100]   # Magenta
+      accent: [255, 100, 200]     # Pink
+    pattern: "julia"
+    speed: 0.5
+    complexity: 0.9
+    symmetry: 8
+    pulse_frequency: 0.2
+  audio:
+    rhythm: "bamboula"            # New Orleans hypnotic
+    rhythm_volume: 0.7            # Drums very prominent
+    base_frequency: 6             # Theta waves (4-8Hz = deep meditation, trance)
+    binaural_beat: 6              # 6Hz Theta - hypnagogic state, creativity
+    layers:
+      - type: "sine"
+        frequency: 528            # 528Hz - transformation, miracle tone
+        amplitude: 0.08
+      - type: "sine"
+        frequency: 417            # 417Hz - facilitating change
+        amplitude: 0.05
+      - type: "pink_noise"
+        amplitude: 0.04
+      - type: "binaural"
+        carrier: 111              # 111Hz - cell regeneration, endorphins
+        beat: 6                   # 6Hz deep Theta
+        amplitude: 0.1
+
+ceremony:
+  description: "Ritual and ceremony - Candomblé rhythm"
+  title_template: "Sacred Ceremony | {rhythm_name} Ritual | {duration_str} Spiritual Journey"
+  rhythm_origin: "Brazilian Candomblé - Afro-Brazilian sacred polyrhythms"
+  visual:
+    type: "sacred_geometry"
+    colors:
+      primary: [150, 80, 30]      # Earth brown
+      secondary: [200, 120, 50]   # Amber
+      accent: [255, 180, 80]      # Gold
+    pattern: "sacred_geometry"
+    speed: 0.4
+    complexity: 0.75
+    symmetry: 6
+    pulse_frequency: 0.18
+  audio:
+    rhythm: "candomble"           # Brazilian ceremony
+    rhythm_volume: 0.7            # Drums very prominent
+    base_frequency: 10            # Alpha waves
+    binaural_beat: 10
+    layers:
+      - type: "sine"
+        frequency: 285            # Solfeggio (healing)
+        amplitude: 0.08
+      - type: "pink_noise"
+        amplitude: 0.04
+      - type: "binaural"
+        carrier: 185
+        beat: 10
+        amplitude: 0.1
+
+warrior:
+  description: "Power and strength - Burundi rhythm"
+  title_template: "Warrior Spirit | {rhythm_name} Power Drums | {duration_str} Strength & Focus"
+  rhythm_origin: "East African Burundi - intense ceremonial drumming"
+  visual:
+    type: "geometric_morph"
+    colors:
+      primary: [180, 30, 30]      # Deep red
+      secondary: [255, 80, 0]     # Orange
+      accent: [255, 200, 50]      # Gold
+    pattern: "platonic_solids"
+    speed: 0.55
+    complexity: 0.7
+    symmetry: 4
+    pulse_frequency: 0.22
+  audio:
+    rhythm: "burundi"             # East African power
+    rhythm_volume: 0.75           # Drums dominant
+    base_frequency: 20            # Beta waves (power)
+    binaural_beat: 20
+    layers:
+      - type: "sine"
+        frequency: 741            # Solfeggio (awakening)
+        amplitude: 0.08
+      - type: "white_noise"
+        amplitude: 0.05
+      - type: "binaural"
+        carrier: 200
+        beat: 20
+        amplitude: 0.1
+

@@ -1,0 +1,78 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Secrets & Credentials
+*.pem
+*.key
+*.json
+credentials/
+secrets/
+token*.json
+client_secret*.json
+
+# Output artifacts
+output/
+artifacts/
+*.mp4
+*.avi
+*.mov
+*.wav
+*.mp3
+*.png
+*.jpg
+*.jpeg
+!architecture/*.png
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
