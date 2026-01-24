@@ -38,12 +38,12 @@ def parse_duration(duration_str: str) -> int:
         return int(duration_str)
 
 
-def generate_single(mood: str, duration: int, output_dir: str) -> dict:
+def generate_single(mood: str, duration: int, output_dir: str, seed: int = None) -> dict:
     """Generate a single video (for parallel execution)."""
     try:
         orchestrator = Orchestrator()
-        result = orchestrator.generate(mood=mood, duration=duration, output_dir=output_dir)
-        return {"status": "success", "mood": mood, "duration": duration, "result": result}
+        result = orchestrator.generate(mood=mood, duration=duration, output_dir=output_dir, seed=seed)
+        return {"status": "success", "mood": mood, "duration": duration, "seed": result['metadata']['seed'], "result": result}
     except Exception as e:
         return {"status": "error", "mood": mood, "duration": duration, "error": str(e)}
 
