@@ -12,11 +12,11 @@ on:
   workflow_dispatch:
     inputs:
       moods:
-        description: 'Moods to generate (comma-separated or "all")'
+        description: 'Moods: deep_focus, sleep, trance, chill, study, energize, ceremony, warrior (comma-separated or "all")'
         required: false
         default: 'deep_focus,sleep,trance'
       durations:
-        description: 'Durations (e.g., "1h,2h")'
+        description: 'Durations: 30s, 1m, 10min, 1h, 2hr (comma-separated)'
         required: false
         default: '1h'
       upload:
