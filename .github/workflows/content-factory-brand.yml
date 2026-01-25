@@ -1,0 +1,103 @@
+# Content Factory (Brand Channel) - Living Ambient Engine
+# Generates ambient videos and publishes to the brand YouTube channel
+
+name: Content Factory (Brand)
+
+on:
+  # Manual trigger only (no schedule - you control when to post)
+  workflow_dispatch:
+    inputs:
+      moods:
+        description: 'Moods: rain_sleep, fireplace, ocean_waves, lofi_study, piano_relax, forest_morning, deep_focus, sleep, trance (comma-separated or "all")'
+        required: false
+        default: 'rain_sleep,fireplace,ocean_waves'
+      durations:
+        description: 'Durations: 30s, 10min, 1h, 3h, 8h (longer = more watch time)'
+        required: false
+        default: '3h'
+      upload:
+        description: 'Upload to YouTube after generation'
+        required: false
+        type: boolean
+        default: true
+
+env:
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360  # 6 hours max for long videos
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+      
+      - name: Install FFmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install google-auth-oauthlib google-api-python-client
+      
+      - name: Generate videos
+        run: |
+          python batch_generate.py \
+            --moods "${{ github.event.inputs.moods || 'rain_sleep,fireplace,ocean_waves' }}" \
+            --durations "${{ github.event.inputs.durations || '3h' }}" \
+            --output ./generated
+      
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-videos-brand
+          path: ./generated/
+          retention-days: 7
+      
+      - name: Restore YouTube credentials (Brand Channel)
+        if: ${{ github.event.inputs.upload == 'true' }}
+        run: |
+          echo "${{ secrets.YOUTUBE_TOKEN_PICKLE_BRAND }}" | base64 -d > youtube_token.pickle
+          echo '${{ secrets.YOUTUBE_CLIENT_SECRETS }}' > client_secrets.json
+
+      - name: Upload to YouTube (Brand Channel)
+        if: ${{ github.event.inputs.upload == 'true' }}
+        run: |
+          python youtube_upload.py --batch ./generated
+      
+      - name: Summary
+        run: |
+          echo "## Content Factory (Brand) Run Complete" >> $GITHUB_STEP_SUMMARY
+          echo "**Channel:** Living Ambient Engine" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Generated Videos:" >> $GITHUB_STEP_SUMMARY
+          cat ./generated/manifest.json | python -c "
+          import sys, json
+          data = json.load(sys.stdin)
+          print(f\"- Total: {data['total']}\")
+          print(f\"- Success: {data['success']}\")
+          for v in data.get('videos', []):
+              r = v.get('result', {})
+              print(f\"  - {r.get('video_title', 'Unknown')}\")
+          "
+
+  notify:
+    needs: generate
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+      - name: Send notification
+        run: |
+          echo "Content Factory (Brand) completed with status: ${{ needs.generate.result }}"
+
