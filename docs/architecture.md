@@ -55,38 +55,42 @@ flowchart TB
 ```mermaid
 flowchart LR
     subgraph Trigger["🕐 Triggers"]
-        SCHEDULE["Cron Schedule\nDaily/Weekly"]
+        SCHEDULE["Cron Schedule\nDaily 2AM UTC"]
         MANUAL["Manual Dispatch\nOn-demand"]
     end
-    
+
     subgraph GitHub["⚡ GitHub Actions"]
-        WORKFLOW["content-factory.yml"]
+        WORKFLOW1["content-factory.yml\n(Personal Channel)"]
+        WORKFLOW2["content-factory-brand.yml\n(Brand Channel)"]
         BATCH["batch_generate.py\nGenerate Videos"]
         UPLOAD["youtube_upload.py\nDeploy to YouTube"]
+        ARTIFACT["Artifacts\n7-day retention"]
     end
-    
-    subgraph YouTube["📺 YouTube"]
-        CHANNEL["Your Channel"]
-        VIDEOS["Published Videos"]
-        ANALYTICS["Analytics API"]
+
+    subgraph YouTube["📺 YouTube Channels"]
+        PERSONAL["Personal Channel\n(Scheduled uploads)"]
+        BRAND["Living Ambient Engine\n(Manual uploads)"]
     end
-    
+
     subgraph Revenue["💰 Monetization"]
         ADS["Ad Revenue"]
         WATCH["Watch Time"]
         SUBS["Subscribers"]
     end
-    
-    SCHEDULE --> WORKFLOW
-    MANUAL --> WORKFLOW
-    WORKFLOW --> BATCH
-    BATCH --> |"8 moods × 3 durations\n= 24 videos"| UPLOAD
-    UPLOAD --> |"OAuth2\nAuto-publish"| CHANNEL
-    CHANNEL --> VIDEOS
-    VIDEOS --> WATCH
+
+    SCHEDULE --> WORKFLOW1
+    MANUAL --> WORKFLOW1
+    MANUAL --> WORKFLOW2
+    WORKFLOW1 --> BATCH
+    WORKFLOW2 --> BATCH
+    BATCH --> ARTIFACT
+    BATCH --> UPLOAD
+    UPLOAD --> |"OAuth2\nYOUTUBE_TOKEN_PICKLE"| PERSONAL
+    UPLOAD --> |"OAuth2\nYOUTUBE_TOKEN_PICKLE_BRAND"| BRAND
+    PERSONAL --> WATCH
+    BRAND --> WATCH
     WATCH --> ADS
-    VIDEOS --> SUBS
-    ANALYTICS --> |"Track\nPerformance"| WORKFLOW
+    WATCH --> SUBS
 ```
 
 ## Brainwave Frequency Map
@@ -174,4 +178,3 @@ flowchart TB
     VIEWS --> GROWTH
     GROWTH --> TRIGGER
 ```
-
