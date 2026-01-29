@@ -4,7 +4,7 @@
 
 deep_focus:
   description: "Deep concentration and flow state - Hypnotic fractal journey"
-  title_template: "Deep Focus Music | {duration_str} | Concentration & Flow State Study Music"
+  title_template: "Deep Focus Music | {duration_str} Loop | Concentration & Flow State Study Music"
   rhythm_origin: "Moroccan Gnawa - spiritual trance music for healing"
   visual:
     type: "fractal_zoom"
@@ -41,7 +41,7 @@ deep_focus:
 
 sleep:
   description: "Deep relaxation and sleep induction - Gentle fractal drift"
-  title_template: "Sleep Music | {duration_str} | Relaxing Music for Deep Sleep & Stress Relief"
+  title_template: "Sleep Music | {duration_str} Loop | Relaxing Music for Deep Sleep & Stress Relief"
   rhythm_origin: "Universal Heartbeat - primal rhythm synced to the body"
   visual:
     type: "fractal_zoom"
@@ -80,7 +80,7 @@ sleep:
 
 chill:
   description: "Relaxed and peaceful state - Gamelan rhythm"
-  title_template: "Chill Music | {duration_str} | Relaxing Ambient Sounds for Stress Relief"
+  title_template: "Chill Music | {duration_str} Loop | Relaxing Ambient Sounds for Stress Relief"
   rhythm_origin: "Indonesian Gamelan - ethereal layered percussion"
   visual:
     type: "particle_flow"
@@ -114,7 +114,7 @@ chill:
 
 study:
   description: "Alert focus and learning state - Taiko rhythm"
-  title_template: "Study Music | {duration_str} | Focus Beats for Concentration & Learning"
+  title_template: "Study Music | {duration_str} Loop | Focus Beats for Concentration & Learning"
   rhythm_origin: "Japanese Taiko - ceremonial drums for concentration"
   visual:
     type: "geometric_morph"
@@ -148,7 +148,7 @@ study:
 
 energize:
   description: "Energized and motivated state - Kuku rhythm"
-  title_template: "Motivation Music | {duration_str} | Energizing Beats for Workout & Focus"
+  title_template: "Motivation Music | {duration_str} Loop | Energizing Beats for Workout & Focus"
   rhythm_origin: "West African Kuku - celebratory energizing rhythm"
   visual:
     type: "fractal_zoom"
@@ -180,7 +180,7 @@ energize:
 # Additional tribal moods
 trance:
   description: "Deep hypnotic trance - Infinite fractal journey"
-  title_template: "Hypnotic Trance Music | {duration_str} | Deep Meditation & Altered States"
+  title_template: "Hypnotic Trance Music | {duration_str} Loop | Deep Meditation & Altered States"
   rhythm_origin: "New Orleans Bamboula - Caribbean hypnotic groove"
   visual:
     type: "fractal_zoom"
@@ -219,7 +219,7 @@ trance:
 
 ceremony:
   description: "Ritual and ceremony - Candomblé rhythm"
-  title_template: "Spiritual Music | {duration_str} | Sacred Ceremony & Meditation Sounds"
+  title_template: "Spiritual Music | {duration_str} Loop | Sacred Ceremony & Meditation Sounds"
   rhythm_origin: "Brazilian Candomblé - Afro-Brazilian sacred polyrhythms"
   visual:
     type: "sacred_geometry"
@@ -250,7 +250,7 @@ ceremony:
 
 warrior:
   description: "Power and strength - Burundi rhythm"
-  title_template: "Power Music | {duration_str} | Epic Drums for Workout & Motivation"
+  title_template: "Power Music | {duration_str} Loop | Epic Drums for Workout & Motivation"
   rhythm_origin: "East African Burundi - intense ceremonial drumming"
   visual:
     type: "geometric_morph"
@@ -286,7 +286,7 @@ warrior:
 
 rain_sleep:
   description: "Rain sounds for deep sleep - Proven top performer"
-  title_template: "Rain Sounds for Sleep | {duration_str} | Relaxing Rain on Window"
+  title_template: "Rain Sounds for Sleep | {duration_str} Loop | Relaxing Rain on Window"
   rhythm_origin: "Nature - no tribal drums, pure rain"
   visual:
     type: "rain_window"
@@ -331,7 +331,7 @@ rain_sleep:
 
 fireplace:
   description: "Cozy fireplace crackling - Comfort content"
-  title_template: "Cozy Fireplace | {duration_str} | Crackling Fire Sounds for Relaxation"
+  title_template: "Cozy Fireplace | {duration_str} Loop | Crackling Fire Sounds for Relaxation"
   rhythm_origin: "Nature - fire crackling"
   visual:
     type: "fireplace"
@@ -376,7 +376,7 @@ fireplace:
 
 ocean_waves:
   description: "Ocean waves for sleep and relaxation"
-  title_template: "Ocean Waves | {duration_str} | Relaxing Sea Sounds for Deep Sleep"
+  title_template: "Ocean Waves | {duration_str} Loop | Relaxing Sea Sounds for Deep Sleep"
   rhythm_origin: "Nature - ocean waves"
   visual:
     type: "starfield"             # Use starfield (night ocean view)
@@ -416,7 +416,7 @@ ocean_waves:
 
 lofi_study:
   description: "Lofi beats for studying - Chill hip-hop vibes"
-  title_template: "Lofi Study Beats | {duration_str} | Chill Music to Study/Relax To"
+  title_template: "Lofi Study Beats | {duration_str} Loop | Chill Music to Study/Relax To"
   rhythm_origin: "Lofi - chill hip-hop inspired"
   visual:
     type: "particle_flow"
@@ -453,7 +453,7 @@ lofi_study:
 
 piano_relax:
   description: "Peaceful piano for stress relief"
-  title_template: "Peaceful Piano | {duration_str} | Relaxing Music for Stress Relief & Sleep"
+  title_template: "Peaceful Piano | {duration_str} Loop | Relaxing Music for Stress Relief & Sleep"
   rhythm_origin: "Classical inspired - no percussion"
   visual:
     type: "starfield"
@@ -487,7 +487,7 @@ piano_relax:
 
 forest_morning:
   description: "Forest ambience with birds - Nature immersion"
-  title_template: "Forest Sounds | {duration_str} | Birds Singing & Nature Ambience"
+  title_template: "Forest Sounds | {duration_str} Loop | Birds Singing & Nature Ambience"
   rhythm_origin: "Nature - forest soundscape"
   visual:
     type: "particle_flow"
