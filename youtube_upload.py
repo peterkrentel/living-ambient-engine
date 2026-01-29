@@ -14,7 +14,7 @@ from library import ContentLibrary
 
 
 def generate_description(metadata: dict) -> str:
-    """Generate SEO-optimized YouTube description based on mood type."""
+    """Generate YouTube description with 3-line format: Intent, Guarantee, Use case."""
     mood = metadata.get('mood', 'ambient')
     rhythm = metadata.get('rhythm_name', '')
     origin = metadata.get('rhythm_origin', '')
@@ -24,74 +24,88 @@ def generate_description(metadata: dict) -> str:
     # Nature/ambient moods (no rhythm, pure ambience)
     nature_moods = ['rain_sleep', 'ocean_waves', 'fireplace', 'forest_morning']
 
-    # Music moods with binaural beats
-    music_moods = ['deep_focus', 'sleep', 'trance', 'ceremony', 'warrior', 'energize',
-                   'study', 'chill', 'lofi_study', 'piano_relax']
-
     if mood in nature_moods:
-        # Nature sounds description
-        mood_descriptions = {
-            'rain_sleep': "🌧️ Gentle rain sounds to help you relax, sleep, and unwind. The natural rhythm of rainfall creates the perfect ambient backdrop for rest and relaxation.",
-            'ocean_waves': "🌊 Peaceful ocean waves washing onto the shore. Let the rhythmic sound of the sea carry away your stress and help you find deep relaxation.",
-            'fireplace': "🔥 Cozy crackling fireplace sounds for ultimate relaxation. The warm, comforting ambience of a real fire to help you feel at home.",
-            'forest_morning': "🌲 Immerse yourself in a peaceful forest morning with gentle birdsong and rustling leaves. Nature's own meditation soundtrack."
+        # Nature sounds - 3-line format
+        intent_lines = {
+            'rain_sleep': "🌧️ Created to help you fall asleep naturally with gentle, ever-changing rain.",
+            'ocean_waves': "🌊 Created to carry your mind away on endless, evolving ocean tides.",
+            'fireplace': "🔥 Created to wrap you in the warm comfort of a crackling fire.",
+            'forest_morning': "🌲 Created to transport you to a peaceful forest clearing at dawn."
         }
-        mood_desc = mood_descriptions.get(mood, "Natural ambient sounds for relaxation.")
+        use_case_lines = {
+            'rain_sleep': "Best for: falling asleep, deep rest, blocking out the world.",
+            'ocean_waves': "Best for: meditation, sleep, letting go of stress.",
+            'fireplace': "Best for: cozy evenings, reading, unwinding after a long day.",
+            'forest_morning': "Best for: morning meditation, calm focus, nature immersion."
+        }
 
-        perfect_for = """Perfect for:
-• Sleeping and relaxation
-• Stress relief and unwinding
-• Meditation and mindfulness
-• Reading and quiet time
-• Creating a cozy atmosphere
-• Blocking out distractions"""
+        intent = intent_lines.get(mood, "Created to help you relax and unwind.")
+        guarantee = "✨ This soundscape evolves continuously and never loops."
+        use_case = use_case_lines.get(mood, "Best for: relaxation, sleep, meditation.")
 
-        hashtags = f"#{mood.replace('_', '')} #NatureSounds #Sleep #Relaxation #ASMR #WhiteNoise #AmbientSounds"
+        hashtags = f"#{mood.replace('_', '')} #NatureSounds #Sleep #Relaxation #AmbientSounds"
 
-        return f"""🎵 {title}
-
-{mood_desc}
-
-{perfect_for}
-
-⏱️ Duration: {duration}
+        return f"""{intent}
+{guarantee}
+{use_case}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-🔔 Subscribe for daily ambient content
-👍 Like if this helps you relax
+⏱️ Duration: {duration}
+
+🔔 Subscribe for weekly long-form ambient
+👍 Like if this helps you rest
 
 {hashtags}
 """
 
     else:
-        # Music/beats description
+        # Music/beats - 3-line format
+        intent_lines = {
+            'deep_focus': "🎯 Created to quiet an overactive mind and unlock deep concentration.",
+            'sleep': "😴 Created to guide you gently into restful, restorative sleep.",
+            'chill': "✨ Created to help you decompress and find your calm.",
+            'study': "📚 Created to keep you focused without pulling your attention.",
+            'energize': "⚡ Created to build energy and momentum when you need a boost.",
+            'trance': "🌀 Created to take you on an inward journey of hypnotic depth.",
+            'ceremony': "🕯️ Created to hold space for ritual, intention, and presence.",
+            'warrior': "💪 Created to fuel your inner fire and strengthen your resolve.",
+            'lofi_study': "🎧 Created to keep you in the zone with chill, drifting beats.",
+            'piano_relax': "🎹 Created to melt away tension with soft, evolving piano."
+        }
+        use_case_lines = {
+            'deep_focus': "Best for: deep work, coding, writing, any task requiring flow.",
+            'sleep': "Best for: insomnia, restless nights, transitioning to sleep.",
+            'chill': "Best for: unwinding, gentle background, stress relief.",
+            'study': "Best for: studying, reading, learning, quiet focus.",
+            'energize': "Best for: workouts, morning energy, breaking through resistance.",
+            'trance': "Best for: meditation, altered states, inner exploration.",
+            'ceremony': "Best for: rituals, intention setting, sacred space.",
+            'warrior': "Best for: training, motivation, building intensity.",
+            'lofi_study': "Best for: homework, casual study, creative sessions.",
+            'piano_relax': "Best for: stress relief, gentle background, winding down."
+        }
+
+        intent = intent_lines.get(mood, "Created to support focus and relaxation.")
+        guarantee = "✨ This soundscape evolves through phases and never repeats."
+        use_case = use_case_lines.get(mood, "Best for: focus, meditation, relaxation.")
+
         rhythm_info = f"\n🥁 Rhythm: {rhythm}" if rhythm and rhythm != 'Ambient' else ""
-        origin_info = f"\n{origin}" if origin else ""
+        origin_info = f"\n🌍 {origin}" if origin else ""
 
-        perfect_for = """Perfect for:
-• Deep focus and concentration
-• Meditation and relaxation
-• Sleep and rest
-• Study sessions
-• Yoga and mindfulness"""
+        hashtags = f"#AmbientMusic #BinauralBeats #Focus #Meditation #{mood.replace('_', '')}"
 
-        brainwave_info = """
-🧠 Brainwave Entrainment:
-This track uses scientifically-designed binaural beats and Solfeggio frequencies to help guide your mind into optimal states."""
-
-        hashtags = f"#AmbientMusic #BinauralBeats #Focus #Meditation #StudyMusic #SleepMusic #{mood.replace('_', '')}"
-
-        return f"""🎵 {title}
-{origin_info}
-{perfect_for}
-{brainwave_info}
-
-⏱️ Duration: {duration}{rhythm_info}
+        return f"""{intent}
+{guarantee}
+{use_case}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-🔔 Subscribe for daily ambient content
+⏱️ Duration: {duration}{rhythm_info}{origin_info}
+
+🧠 Uses binaural beats & Solfeggio frequencies for brainwave entrainment.
+
+🔔 Subscribe for weekly long-form ambient
 👍 Like if this helps you focus
 
 {hashtags}

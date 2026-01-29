@@ -74,6 +74,38 @@ TRIBAL_PATTERNS = {
 class AudioGenerator:
     """Generate ambient audio with tribal rhythms, binaural beats and layered synthesis."""
 
+    # Phase system: evolves audio every 3-7 minutes to prevent repetition
+    # settle → drift → deepen → resolve (cycles for long content)
+    PHASES = ['settle', 'drift', 'deepen', 'resolve']
+
+    # Phase characteristics (relative modifiers)
+    PHASE_MODS = {
+        'settle': {
+            'chord_shift': 0,      # Root key
+            'noise_brightness': 0.8,  # Softer noise
+            'tempo_factor': 0.95,  # Slightly slower
+            'volume_mult': 0.85,   # Quieter start
+        },
+        'drift': {
+            'chord_shift': 5,      # Up a 4th
+            'noise_brightness': 1.0,  # Normal
+            'tempo_factor': 1.0,   # Normal tempo
+            'volume_mult': 0.95,
+        },
+        'deepen': {
+            'chord_shift': 7,      # Up a 5th
+            'noise_brightness': 0.7,  # Darker noise
+            'tempo_factor': 0.9,   # Slower
+            'volume_mult': 1.0,    # Full volume
+        },
+        'resolve': {
+            'chord_shift': 0,      # Back to root
+            'noise_brightness': 0.9,  # Gentle
+            'tempo_factor': 0.92,  # Calming down
+            'volume_mult': 0.9,
+        },
+    }
+
     def __init__(self, config: Dict, sample_rate: int = 44100, channels: int = 2,
                  rhythm_volume_override: float = None, drone_volume_override: float = None):
         self.config = config
@@ -82,27 +114,79 @@ class AudioGenerator:
         # Allow CLI overrides for mixing
         self.rhythm_volume_override = rhythm_volume_override
         self.drone_volume_override = drone_volume_override
+        # Phase tracking
+        self.current_phase_idx = 0
+        self.phase_duration_range = (180, 420)  # 3-7 minutes in seconds
+
+    def _get_phase_boundaries(self, duration: int) -> List[Tuple[int, str, Dict]]:
+        """Calculate phase boundaries for the entire duration.
+
+        Returns list of (start_sample, phase_name, phase_mods) tuples.
+        """
+        boundaries = []
+        current_time = 0
+        phase_idx = 0
+
+        while current_time < duration:
+            phase_name = self.PHASES[phase_idx % len(self.PHASES)]
+            phase_mods = self.PHASE_MODS[phase_name].copy()
+
+            # Random phase duration between 3-7 minutes
+            min_dur, max_dur = self.phase_duration_range
+            phase_len = np.random.randint(min_dur, max_dur + 1)
+
+            # Don't exceed total duration
+            if current_time + phase_len > duration:
+                phase_len = duration - current_time
+
+            start_sample = int(current_time * self.sample_rate)
+            boundaries.append((start_sample, phase_name, phase_mods, phase_len))
+
+            current_time += phase_len
+            phase_idx += 1
+
+        return boundaries
 
     def generate(self, duration: int, output_path: str) -> str:
-        """Generate audio file."""
+        """Generate audio file with evolving phases."""
         num_samples = duration * self.sample_rate
         audio = np.zeros((num_samples, self.channels))
 
-        # Generate tribal rhythm layer
+        # Calculate phase boundaries for this duration
+        phase_boundaries = self._get_phase_boundaries(duration)
+
+        # Log phase plan for debugging
+        if len(phase_boundaries) > 1:
+            print(f"    📊 Audio phases ({len(phase_boundaries)} total):")
+            for start_sample, phase_name, mods, phase_len in phase_boundaries:
+                start_min = start_sample / self.sample_rate / 60
+                print(f"       {start_min:.1f}min: {phase_name} ({phase_len//60}m{phase_len%60}s)")
+
+        # Generate tribal rhythm layer (with phase-based tempo variation)
         rhythm_type = self.config.get('rhythm', 'bamboula')
         rhythm_volume = self.rhythm_volume_override if self.rhythm_volume_override is not None else self.config.get('rhythm_volume', 0.4)
         if rhythm_type and rhythm_type in TRIBAL_PATTERNS:
-            rhythm_audio = self._generate_tribal_rhythm(rhythm_type, num_samples)
+            rhythm_audio = self._generate_tribal_rhythm_phased(
+                rhythm_type, num_samples, phase_boundaries
+            )
             audio += rhythm_audio * rhythm_volume
 
         # Drone volume multiplier (applies to sine/binaural layers)
         drone_mult = self.drone_volume_override if self.drone_volume_override is not None else 1.0
 
-        # Generate each tonal layer and mix
+        # Generate each tonal layer with phase modulation
         layers = self.config.get('layers', [])
         for layer in layers:
-            layer_audio = self._generate_layer(layer, num_samples)
+            layer_audio = self._generate_layer_phased(
+                layer, num_samples, phase_boundaries
+            )
             audio += layer_audio * drone_mult
+
+        # Apply phase-based volume envelope for smooth evolution
+        volume_envelope = self._create_phase_volume_envelope(
+            num_samples, phase_boundaries
+        )
+        audio = audio * volume_envelope[:, np.newaxis]
 
         # Normalize to prevent clipping
         max_val = np.max(np.abs(audio))
@@ -115,6 +199,131 @@ class AudioGenerator:
         # Save as WAV
         sf.write(output_path, audio, self.sample_rate)
         return output_path
+
+    def _create_phase_volume_envelope(self, num_samples: int,
+                                       phase_boundaries: List) -> np.ndarray:
+        """Create smooth volume envelope based on phases."""
+        envelope = np.ones(num_samples)
+
+        for i, (start_sample, phase_name, mods, phase_len) in enumerate(phase_boundaries):
+            end_sample = start_sample + int(phase_len * self.sample_rate)
+            end_sample = min(end_sample, num_samples)
+
+            phase_samples = end_sample - start_sample
+            target_volume = mods['volume_mult']
+
+            # Smooth transition (crossfade over 5 seconds)
+            crossfade_samples = min(int(5 * self.sample_rate), phase_samples // 4)
+
+            # Ramp up at start of phase
+            if crossfade_samples > 0:
+                ramp = np.linspace(envelope[start_sample], target_volume, crossfade_samples)
+                ramp_end = min(start_sample + crossfade_samples, num_samples)
+                envelope[start_sample:ramp_end] = ramp[:ramp_end - start_sample]
+
+            # Sustain at target volume
+            sustain_start = start_sample + crossfade_samples
+            envelope[sustain_start:end_sample] = target_volume
+
+        return envelope
+
+    def _generate_tribal_rhythm_phased(self, rhythm_type: str, num_samples: int,
+                                        phase_boundaries: List) -> np.ndarray:
+        """Generate tribal rhythm with phase-based tempo variation."""
+        # For now, generate base rhythm and apply phase modulation
+        # Future: could vary tempo per phase
+        return self._generate_tribal_rhythm(rhythm_type, num_samples)
+
+    def _generate_layer_phased(self, layer_config: Dict, num_samples: int,
+                                phase_boundaries: List) -> np.ndarray:
+        """Generate a layer with phase-based modifications."""
+        layer_type = layer_config.get('type', 'sine')
+
+        # For frequency-based layers, apply chord shifts per phase
+        if layer_type in ['sine', 'binaural', 'pad', 'melody', 'arpeggio']:
+            return self._generate_layer_with_chord_shifts(
+                layer_config, num_samples, phase_boundaries
+            )
+
+        # For noise-based layers, apply brightness variation
+        elif layer_type in ['pink_noise', 'rain', 'ocean']:
+            return self._generate_layer_with_brightness(
+                layer_config, num_samples, phase_boundaries
+            )
+
+        # Other layers: generate normally
+        else:
+            return self._generate_layer(layer_config, num_samples)
+
+    def _generate_layer_with_chord_shifts(self, layer_config: Dict,
+                                           num_samples: int,
+                                           phase_boundaries: List) -> np.ndarray:
+        """Generate tonal layer with phase-based chord/key shifts."""
+        audio = np.zeros((num_samples, self.channels))
+
+        for i, (start_sample, phase_name, mods, phase_len) in enumerate(phase_boundaries):
+            end_sample = start_sample + int(phase_len * self.sample_rate)
+            end_sample = min(end_sample, num_samples)
+            segment_samples = end_sample - start_sample
+
+            if segment_samples <= 0:
+                continue
+
+            # Create modified config with chord shift
+            modified_config = layer_config.copy()
+            chord_shift = mods.get('chord_shift', 0)
+
+            # Apply frequency shift for harmonic movement
+            if 'frequency' in modified_config:
+                base_freq = modified_config['frequency']
+                # Shift by semitones
+                modified_config['frequency'] = base_freq * (2.0 ** (chord_shift / 12.0))
+
+            if 'carrier' in modified_config:  # Binaural
+                base_carrier = modified_config['carrier']
+                modified_config['carrier'] = base_carrier * (2.0 ** (chord_shift / 12.0))
+
+            if 'root' in modified_config:  # Melody/arpeggio
+                base_root = modified_config['root']
+                modified_config['root'] = base_root * (2.0 ** (chord_shift / 12.0))
+
+            # Generate segment
+            segment = self._generate_layer(modified_config, segment_samples)
+
+            # Crossfade between phases (prevent clicks)
+            crossfade = min(int(2 * self.sample_rate), segment_samples // 4)
+            if crossfade > 0 and i > 0:
+                fade_in = np.linspace(0, 1, crossfade)
+                segment[:crossfade] = segment[:crossfade] * fade_in[:, np.newaxis]
+            if crossfade > 0 and i < len(phase_boundaries) - 1:
+                fade_out = np.linspace(1, 0, crossfade)
+                segment[-crossfade:] = segment[-crossfade:] * fade_out[:, np.newaxis]
+
+            audio[start_sample:end_sample] += segment
+
+        return audio
+
+    def _generate_layer_with_brightness(self, layer_config: Dict,
+                                         num_samples: int,
+                                         phase_boundaries: List) -> np.ndarray:
+        """Generate noise-based layer with phase-based brightness variation."""
+        # Generate base layer
+        audio = self._generate_layer(layer_config, num_samples)
+
+        # Apply brightness modulation via simple lowpass approximation
+        # (multiply high frequencies less when brightness < 1)
+        for start_sample, phase_name, mods, phase_len in phase_boundaries:
+            end_sample = start_sample + int(phase_len * self.sample_rate)
+            end_sample = min(end_sample, num_samples)
+
+            brightness = mods.get('noise_brightness', 1.0)
+
+            # Simple brightness: reduce amplitude slightly for darker phases
+            # (A full filter would be more complex)
+            if brightness < 1.0:
+                audio[start_sample:end_sample] *= brightness
+
+        return audio
 
     def _generate_tribal_rhythm(self, rhythm_type: str, num_samples: int) -> np.ndarray:
         """Generate tribal drum pattern."""

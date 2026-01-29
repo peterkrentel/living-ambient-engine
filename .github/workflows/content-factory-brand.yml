@@ -8,9 +8,9 @@ on:
   workflow_dispatch:
     inputs:
       moods:
-        description: 'Moods: rain_sleep, fireplace, ocean_waves, lofi_study, piano_relax, forest_morning, deep_focus, sleep, trance (comma-separated or "all")'
+        description: 'Core moods: rain_sleep, deep_focus, ocean_waves | Other: fireplace, sleep, lofi_study, forest_morning (comma-separated)'
         required: false
-        default: 'rain_sleep,fireplace,ocean_waves'
+        default: 'rain_sleep,deep_focus,ocean_waves'
       durations:
         description: 'Durations: 30s, 10min, 1h, 3h, 8h (longer = more watch time)'
         required: false
@@ -26,71 +26,88 @@ on:
         type: boolean
         default: true
 
+# Prevent overlapping long runs
+concurrency:
+  group: content-factory-brand
+  cancel-in-progress: false
+
 env:
   PYTHON_VERSION: '3.11'
 
 jobs:
+  # Job 1: Generate videos and upload as artifacts
   generate:
     runs-on: ubuntu-latest
     timeout-minutes: 360  # 6 hours max for long videos
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: 'pip'
-      
+
       - name: Install FFmpeg
         run: |
           sudo apt-get update
           sudo apt-get install -y ffmpeg
-      
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install google-auth-oauthlib google-api-python-client
-      
+
       - name: Generate videos
+        env:
+          DUAL: ${{ github.event.inputs.dual }}
         run: |
           DUAL_FLAG=""
-          if [ "${{ github.event.inputs.dual || 'true' }}" = "true" ]; then
+          if [ "$DUAL" = "true" ] || [ "$DUAL" = "True" ] || [ "$DUAL" = "1" ]; then
             DUAL_FLAG="--dual"
           fi
           python batch_generate.py \
-            --moods "${{ github.event.inputs.moods || 'rain_sleep,fireplace,ocean_waves' }}" \
+            --moods "${{ github.event.inputs.moods || 'rain_sleep,deep_focus,ocean_waves' }}" \
             --durations "${{ github.event.inputs.durations || '3h' }}" \
             $DUAL_FLAG \
             --output ./generated
-      
+
+      - name: Validate generated files
+        run: |
+          echo "🔍 Validating generated files..."
+          test -f ./generated/manifest.json || { echo "❌ manifest.json missing"; exit 1; }
+
+          # Check file sizes
+          for f in ./generated/*.mp4; do
+            [ -f "$f" ] || continue
+            SIZE=$(stat -c%s "$f" 2>/dev/null || stat -f%z "$f")
+            if [ "$SIZE" -lt 1000 ]; then
+              echo "❌ File too small: $f ($SIZE bytes)"
+              exit 1
+            fi
+            echo "✅ $f: $SIZE bytes"
+          done
+
+          # Verify video duration with ffprobe
+          for f in ./generated/*.mp4; do
+            [ -f "$f" ] || continue
+            DURATION=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$f" | cut -d. -f1)
+            echo "✅ $f: ${DURATION}s"
+          done
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: generated-videos-brand
           path: ./generated/
           retention-days: 7
-      
-      - name: Restore YouTube credentials (Brand Channel)
-        if: ${{ github.event.inputs.upload == 'true' }}
-        run: |
-          echo "${{ secrets.YOUTUBE_TOKEN_PICKLE_BRAND }}" | base64 -d > youtube_token.pickle
-          echo '${{ secrets.YOUTUBE_CLIENT_SECRETS }}' > client_secrets.json
 
-      - name: Upload to YouTube (Brand Channel)
-        if: ${{ github.event.inputs.upload == 'true' }}
+      - name: Generation summary
         run: |
-          python youtube_upload.py --batch ./generated
-      
-      - name: Summary
-        run: |
-          echo "## Content Factory (Brand) Run Complete" >> $GITHUB_STEP_SUMMARY
-          echo "**Channel:** Living Ambient Engine" >> $GITHUB_STEP_SUMMARY
+          echo "## 🎬 Generation Complete" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Generated Videos:" >> $GITHUB_STEP_SUMMARY
           cat ./generated/manifest.json | python -c "
           import sys, json
           data = json.load(sys.stdin)
@@ -104,13 +121,63 @@ jobs:
               print(f\"  - {r.get('video_title', 'Unknown')}\")
           "
 
-  notify:
+  # Job 2: Download artifacts and upload to YouTube
+  upload:
     needs: generate
     runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.upload == true || github.event.inputs.upload == 'true' }}
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install google-auth-oauthlib google-api-python-client
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: generated-videos-brand
+          path: ./generated
+
+      - name: Restore YouTube credentials (Brand Channel)
+        run: |
+          printf "%s" "${{ secrets.YOUTUBE_TOKEN_PICKLE_BRAND }}" | base64 -d > youtube_token.pickle
+          printf "%s" '${{ secrets.YOUTUBE_CLIENT_SECRETS }}' > client_secrets.json
+
+      - name: Upload to YouTube (Brand Channel)
+        run: |
+          python youtube_upload.py --batch ./generated
+
+      - name: Cleanup credentials
+        if: always()
+        run: |
+          rm -f youtube_token.pickle client_secrets.json
+
+      - name: Upload summary
+        run: |
+          echo "## ✅ YouTube Upload Complete" >> $GITHUB_STEP_SUMMARY
+          echo "**Channel:** Living Ambient Engine (Brand)" >> $GITHUB_STEP_SUMMARY
+
+  notify:
+    needs: [generate, upload]
+    runs-on: ubuntu-latest
     if: always()
-    
+
     steps:
       - name: Send notification
         run: |
-          echo "Content Factory (Brand) completed with status: ${{ needs.generate.result }}"
+          echo "Content Factory (Brand) completed"
+          echo "  - Generate: ${{ needs.generate.result }}"
+          echo "  - Upload: ${{ needs.upload.result }}"
 
