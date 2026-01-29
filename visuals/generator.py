@@ -88,15 +88,21 @@ def julia_set(width, height, x_min, x_max, y_min, y_max, c_real, c_imag, max_ite
 
 class VisualGenerator:
     """Generate hypnotic procedural visuals."""
-    
+
     PHI = (1 + math.sqrt(5)) / 2  # Golden ratio
-    
+
     def __init__(self, config: Dict, width: int = 1920, height: int = 1080, fps: int = 30):
         self.config = config
         self.width = width
         self.height = height
         self.fps = fps
         self.center = (width // 2, height // 2)
+
+        # Visual enhancement settings for hypnotic effect
+        self.transition_duration = config.get('transition_duration', 5.0)  # seconds
+        self.color_shift_speed = config.get('color_shift_speed', 0.02)  # very slow
+        self.opacity_variation = config.get('opacity_variation', 0.15)  # subtle
+        self.animation_speed_factor = config.get('animation_speed_factor', 0.5)  # slowed down
         
     def generate(self, duration: int, output_path: str) -> str:
         """Generate visual video file."""
@@ -124,37 +130,57 @@ class VisualGenerator:
         return generator(duration, output_path)
     
     def _get_color_at_time(self, t: float, total_frames: int) -> Tuple[int, int, int]:
-        """Interpolate colors over time with smooth transitions."""
-        progress = t / total_frames
+        """Interpolate colors over time with very slow, smooth transitions.
+
+        Colors blend gradually for hypnotic, meditative quality.
+        Uses smooth easing curves for imperceptible transitions.
+        """
+        progress = t / max(total_frames, 1)
         primary = np.array(self.config['colors']['primary'])
         secondary = np.array(self.config['colors']['secondary'])
         accent = np.array(self.config['colors']['accent'])
-        
-        # Smooth color cycling
-        if progress < 0.33:
-            ratio = progress / 0.33
+
+        # Use longer color cycle periods (slower transitions)
+        cycle_period = 3.0  # Each color lasts longer
+        cycle_progress = (progress * cycle_period) % 1.0
+
+        # Smooth eased color cycling with longer holds
+        if cycle_progress < 0.4:
+            # Hold primary with slow transition to secondary
+            ratio = self._ease_in_out(cycle_progress / 0.4)
             color = primary * (1 - ratio) + secondary * ratio
-        elif progress < 0.66:
-            ratio = (progress - 0.33) / 0.33
+        elif cycle_progress < 0.7:
+            # Hold secondary with slow transition to accent
+            ratio = self._ease_in_out((cycle_progress - 0.4) / 0.3)
             color = secondary * (1 - ratio) + accent * ratio
         else:
-            ratio = (progress - 0.66) / 0.34
+            # Hold accent with slow transition back to primary
+            ratio = self._ease_in_out((cycle_progress - 0.7) / 0.3)
             color = accent * (1 - ratio) + primary * ratio
-            
-        # Add pulse effect
-        pulse_freq = self.config.get('pulse_frequency', 0.1)
-        pulse = math.sin(t * pulse_freq * 2 * math.pi / self.fps) * 0.2 + 0.8
+
+        # Very subtle pulse effect (much slower than before)
+        pulse_freq = self.config.get('pulse_frequency', 0.05)  # Slower default
+        pulse = math.sin(t * pulse_freq * 2 * math.pi / self.fps) * 0.1 + 0.95  # Subtle
         color = color * pulse
-        
+
         return tuple(np.clip(color, 0, 255).astype(int))
+
+    def _ease_in_out(self, t: float) -> float:
+        """Smooth ease-in-out curve for natural transitions."""
+        return 0.5 - 0.5 * math.cos(t * math.pi)
     
     def _generate_fibonacci_spiral(self, duration: int, output_path: str) -> str:
-        """Generate Fibonacci spiral with golden ratio - highly hypnotic."""
+        """Generate Fibonacci spiral with golden ratio - highly hypnotic.
+
+        Enhanced with slow animations and dreamy opacity variations.
+        """
         total_frames = duration * self.fps
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         out = cv2.VideoWriter(output_path, fourcc, self.fps, (self.width, self.height))
 
-        speed = self.config.get('speed', 0.3)
+        # Slow down animation for meditative quality
+        base_speed = self.config.get('speed', 0.3)
+        speed = base_speed * self.animation_speed_factor
         complexity = self.config.get('complexity', 0.7)
 
         for frame in range(total_frames):
@@ -162,9 +188,15 @@ class VisualGenerator:
             img = self._create_gradient_background(frame, total_frames)
             draw = ImageDraw.Draw(img)
 
-            color = self._get_color_at_time(frame, total_frames)
-            accent = tuple(self.config['colors']['accent'])
-            rotation = frame * speed * 0.02
+            # Use slowly evolving colors
+            base_color = self._get_color_at_time(frame, total_frames)
+            color = self._get_slow_evolving_color(base_color, frame, total_frames)
+            accent = self._get_slow_evolving_color(
+                tuple(self.config['colors']['accent']), frame, total_frames, shift_amount=0.05
+            )
+
+            # Very slow rotation
+            rotation = frame * speed * 0.01  # Slower than before
 
             # Draw multiple layers of spirals
             num_spirals = int(8 * complexity)
@@ -176,11 +208,14 @@ class VisualGenerator:
             # Draw center glow
             self._draw_center_glow(img, color, frame, total_frames)
 
-            # Apply blur for dreamy effect
-            img = img.filter(ImageFilter.GaussianBlur(radius=2))
+            # Apply heavier blur for dreamy effect
+            img = img.filter(ImageFilter.GaussianBlur(radius=2.5))
 
-            # Convert to OpenCV format
-            frame_cv = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+            # Apply opacity variation
+            frame_array = np.array(img)
+            frame_array = self._apply_opacity_variation(frame_array, frame, total_frames)
+
+            frame_cv = cv2.cvtColor(frame_array, cv2.COLOR_RGB2BGR)
             out.write(frame_cv)
 
         out.release()
@@ -214,6 +249,73 @@ class VisualGenerator:
     def _blend_colors(self, c1: Tuple[int, int, int], c2: Tuple[int, int, int], ratio: float) -> Tuple[int, int, int]:
         """Blend two colors."""
         return tuple(int(c1[i] * (1 - ratio) + c2[i] * ratio) for i in range(3))
+
+    def _crossfade_frames(self, frame1: np.ndarray, frame2: np.ndarray, progress: float) -> np.ndarray:
+        """Crossfade between two frames with smooth easing.
+
+        Args:
+            frame1: First frame (numpy array)
+            frame2: Second frame (numpy array)
+            progress: Blend progress from 0.0 (frame1) to 1.0 (frame2)
+        """
+        # Smooth easing curve (sine-based for more natural feel)
+        eased = 0.5 - 0.5 * math.cos(progress * math.pi)
+        return (frame1 * (1 - eased) + frame2 * eased).astype(np.uint8)
+
+    def _get_slow_evolving_color(self, base_color: Tuple[int, int, int], frame: int,
+                                   total_frames: int, shift_amount: float = 0.1) -> Tuple[int, int, int]:
+        """Get a color that slowly evolves over time using HSV shifting.
+
+        Creates dreamy, hypnotic color shifts that are barely perceptible
+        moment-to-moment but create beautiful evolution over time.
+        """
+        # Convert RGB to HSV
+        r, g, b = [c / 255.0 for c in base_color]
+        h, s, v = colorsys.rgb_to_hsv(r, g, b)
+
+        # Very slow hue shift (complete cycle over entire video, times shift_amount)
+        time_progress = frame / max(total_frames, 1)
+        hue_shift = shift_amount * math.sin(time_progress * 2 * math.pi * self.color_shift_speed * 50)
+        h = (h + hue_shift) % 1.0
+
+        # Subtle saturation breathing
+        s_variation = 0.05 * math.sin(time_progress * math.pi * 4)
+        s = max(0, min(1, s + s_variation))
+
+        # Convert back to RGB
+        r, g, b = colorsys.hsv_to_rgb(h, s, v)
+        return (int(r * 255), int(g * 255), int(b * 255))
+
+    def _apply_opacity_variation(self, img: np.ndarray, frame: int, total_frames: int) -> np.ndarray:
+        """Apply subtle opacity/brightness variation for dreamy effect.
+
+        Creates breathing-like intensity changes that add to the hypnotic quality.
+        """
+        time_progress = frame / max(total_frames, 1)
+
+        # Multiple overlapping sine waves for organic feel
+        opacity = 1.0
+        opacity += self.opacity_variation * 0.6 * math.sin(time_progress * 2 * math.pi * 0.5)  # Slow
+        opacity += self.opacity_variation * 0.3 * math.sin(time_progress * 2 * math.pi * 1.3)  # Medium
+        opacity += self.opacity_variation * 0.1 * math.sin(time_progress * 2 * math.pi * 2.7)  # Fast subtle
+
+        opacity = max(0.7, min(1.1, opacity))  # Clamp to reasonable range
+
+        return np.clip(img * opacity, 0, 255).astype(np.uint8)
+
+    def _get_transition_alpha(self, frame: int, transition_start: int, transition_end: int) -> float:
+        """Calculate smooth transition alpha for crossfading between states.
+
+        Returns 0.0 when before transition, 1.0 when after, and smooth value during.
+        """
+        if frame <= transition_start:
+            return 0.0
+        elif frame >= transition_end:
+            return 1.0
+        else:
+            progress = (frame - transition_start) / max(transition_end - transition_start, 1)
+            # Smooth ease-in-out
+            return 0.5 - 0.5 * math.cos(progress * math.pi)
 
     def _draw_center_glow(self, img: Image.Image, color: Tuple[int, int, int], frame: int, total_frames: int):
         """Draw pulsing center glow."""
@@ -252,12 +354,17 @@ class VisualGenerator:
             draw.line(points, fill=final_color, width=4)
 
     def _generate_sacred_geometry(self, duration: int, output_path: str) -> str:
-        """Generate sacred geometry patterns - Flower of Life, Metatron's Cube."""
+        """Generate sacred geometry patterns - Flower of Life, Metatron's Cube.
+
+        Enhanced with slow, hypnotic animations and subtle opacity variations.
+        """
         total_frames = duration * self.fps
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         out = cv2.VideoWriter(output_path, fourcc, self.fps, (self.width, self.height))
 
-        speed = self.config.get('speed', 0.3)
+        # Apply slower animation speed for meditative quality
+        base_speed = self.config.get('speed', 0.3)
+        speed = base_speed * self.animation_speed_factor  # Slowed down
         symmetry = self.config.get('symmetry', 6)
 
         for frame in range(total_frames):
@@ -265,10 +372,18 @@ class VisualGenerator:
             img = self._create_gradient_background(frame, total_frames)
             draw = ImageDraw.Draw(img)
 
-            color = self._get_color_at_time(frame, total_frames)
-            accent = tuple(self.config['colors']['accent'])
-            rotation = frame * speed * 0.015
-            pulse = 0.8 + 0.2 * math.sin(frame * 0.08)
+            # Use slowly evolving colors
+            base_color = self._get_color_at_time(frame, total_frames)
+            color = self._get_slow_evolving_color(base_color, frame, total_frames)
+            accent = self._get_slow_evolving_color(
+                tuple(self.config['colors']['accent']), frame, total_frames, shift_amount=0.05
+            )
+
+            # Very slow rotation for hypnotic effect
+            rotation = frame * speed * 0.008  # Even slower
+
+            # Subtle, slow-breathing pulse
+            pulse = 0.9 + 0.1 * math.sin(frame * 0.02)  # Much slower pulse
 
             # Draw multiple rings of sacred geometry (Flower of Life pattern)
             base_radius = min(self.width, self.height) * 0.12 * pulse
@@ -309,8 +424,14 @@ class VisualGenerator:
                          self.center[0] + base_radius, self.center[1] + base_radius],
                         outline=color, width=4)
 
-            img = img.filter(ImageFilter.GaussianBlur(radius=1))
-            frame_cv = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+            # Apply dreamy blur
+            img = img.filter(ImageFilter.GaussianBlur(radius=1.5))
+
+            # Convert to numpy and apply opacity variation for dreamy effect
+            frame_array = np.array(img)
+            frame_array = self._apply_opacity_variation(frame_array, frame, total_frames)
+
+            frame_cv = cv2.cvtColor(frame_array, cv2.COLOR_RGB2BGR)
             out.write(frame_cv)
 
         out.release()
@@ -606,9 +727,12 @@ class VisualGenerator:
         return Image.fromarray(img)
 
     def _apply_color_cycling(self, fractal_data: np.ndarray, frame: int, max_iter: int) -> np.ndarray:
-        """Apply psychedelic color cycling to fractal data (vectorized for speed)."""
-        # Color cycle offset based on frame
-        color_offset = frame * 0.02
+        """Apply slow, hypnotic color cycling to fractal data (vectorized for speed).
+
+        Colors shift gradually for meditative, dreamy quality.
+        """
+        # Much slower color cycle for hypnotic effect
+        color_offset = frame * 0.005 * self.color_shift_speed * 10  # Slowed down significantly
 
         # Normalize fractal data (guard against division by zero)
         normalized = fractal_data / max(max_iter, 1)
@@ -616,10 +740,10 @@ class VisualGenerator:
         # Create mask for inside the set (black)
         inside_mask = normalized >= 1.0
 
-        # Psychedelic color cycling using HSV (vectorized)
-        hue = (normalized * 3 + color_offset) % 1.0
-        sat = 0.8 + 0.2 * np.sin(normalized * 10)
-        val = 0.5 + 0.5 * normalized
+        # Slow, dreamy color cycling using HSV (vectorized)
+        hue = (normalized * 2 + color_offset) % 1.0  # Reduced multiplier for smoother gradients
+        sat = 0.7 + 0.15 * np.sin(normalized * 6)  # Less saturation variation
+        val = 0.6 + 0.4 * normalized  # Slightly brighter overall
 
         # Convert HSV to RGB (vectorized)
         # Using simplified HSV to RGB conversion
@@ -918,59 +1042,65 @@ class VisualGenerator:
         }
 
     def _generate_starfield(self, duration: int, output_path: str) -> str:
-        """Generate slow-moving starfield with twinkling - calming, space theme.
+        """Generate very slow-moving starfield with gentle twinkling - calming, sleep-inducing.
 
         Uses loop-and-repeat strategy for efficiency.
+        Enhanced with extremely slow movements for maximum relaxation.
         """
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         out = cv2.VideoWriter(output_path, fourcc, self.fps, (self.width, self.height))
 
-        loop_duration = min(30, duration)  # Longer loop for stars (slow movement)
+        loop_duration = min(45, duration)  # Even longer loop for smoother experience
         loop_frames = loop_duration * self.fps
         total_frames = duration * self.fps
 
         print(f"  Rendering {loop_duration}s starfield loop...")
         loop_buffer = []
 
-        # Create stars
-        num_stars = 300
+        # Create stars with cached color temperatures for consistency
+        num_stars = 350  # More stars for richer field
         stars = []
         for _ in range(num_stars):
             stars.append({
                 'x': np.random.rand() * self.width,
                 'y': np.random.rand() * self.height,
-                'size': np.random.uniform(0.5, 3),
-                'brightness': np.random.uniform(0.3, 1.0),
-                'twinkle_speed': np.random.uniform(0.05, 0.2),
-                'twinkle_phase': np.random.rand() * 2 * math.pi
+                'size': np.random.uniform(0.5, 2.5),  # Slightly smaller for subtlety
+                'brightness': np.random.uniform(0.2, 0.9),  # Lower base brightness
+                'twinkle_speed': np.random.uniform(0.02, 0.08),  # Much slower twinkle
+                'twinkle_phase': np.random.rand() * 2 * math.pi,
+                'color_temp': np.random.uniform(0.85, 1.0)  # Cached color temperature
             })
 
         for frame in tqdm(range(loop_frames), desc="Rendering stars", unit="frame", disable=TQDM_DISABLE):
             t = frame / loop_frames
 
-            # Dark space background with subtle gradient
+            # Dark space background with very subtle gradient
             img = np.zeros((self.height, self.width, 3), dtype=np.uint8)
             for y in range(self.height):
-                # Very subtle blue gradient
                 ratio = y / self.height
-                img[y, :] = [2 + int(5 * ratio), 2 + int(3 * ratio), 8 + int(10 * ratio)]
+                # Slightly shifting background for subtle life
+                bg_shift = 0.5 + 0.5 * math.sin(t * 2 * math.pi * 0.5)
+                img[y, :] = [
+                    int(2 + 4 * ratio * bg_shift),
+                    int(2 + 3 * ratio * bg_shift),
+                    int(6 + 8 * ratio)
+                ]
 
             img_pil = Image.fromarray(img)
             draw = ImageDraw.Draw(img_pil)
 
             for star in stars:
-                # Slow drift (for seamless loop, use sine)
-                x = star['x'] + math.sin(t * 2 * math.pi) * 3
-                y = star['y'] + math.sin(t * 2 * math.pi + star['twinkle_phase']) * 2
+                # Very slow, gentle drift
+                x = star['x'] + math.sin(t * 2 * math.pi) * 1.5  # Smaller movement
+                y = star['y'] + math.sin(t * 2 * math.pi + star['twinkle_phase']) * 1.0
 
-                # Twinkle
-                twinkle = 0.5 + 0.5 * math.sin(frame * star['twinkle_speed'] + star['twinkle_phase'])
+                # Very gentle twinkle (breathing effect)
+                twinkle = 0.6 + 0.4 * math.sin(frame * star['twinkle_speed'] + star['twinkle_phase'])
                 brightness = star['brightness'] * twinkle
 
-                # Star color (slightly warm white to cool white)
-                color_temp = np.random.uniform(0.8, 1.0)  # Cache this ideally, but ok for demo
+                # Star color using cached color temperature
                 r = int(255 * brightness)
-                g = int(240 * brightness * color_temp)
+                g = int(240 * brightness * star['color_temp'])
                 b = int(255 * brightness)
 
                 # Draw star with glow

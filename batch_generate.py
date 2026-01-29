@@ -38,12 +38,26 @@ def parse_duration(duration_str: str) -> int:
         return int(duration_str)
 
 
-def generate_single(mood: str, duration: int, output_dir: str, seed: int = None) -> dict:
-    """Generate a single video (for parallel execution)."""
+def generate_single(mood: str, duration: int, output_dir: str, seed: int = None, dual: bool = False) -> dict:
+    """Generate a single video or dual videos (for parallel execution)."""
     try:
         orchestrator = Orchestrator()
-        result = orchestrator.generate(mood=mood, duration=duration, output_dir=output_dir, seed=seed)
-        return {"status": "success", "mood": mood, "duration": duration, "seed": result['metadata']['seed'], "result": result}
+        if dual:
+            result = orchestrator.generate_dual(mood=mood, duration=duration, output_dir=output_dir, seed=seed)
+            # Return info about both versions
+            return {
+                "status": "success",
+                "mood": mood,
+                "duration": duration,
+                "dual": True,
+                "seed": result['ambience']['metadata']['seed'],
+                "result": result['ambience'],  # Primary result for manifest
+                "result_ambience": result['ambience'],
+                "result_melody": result['melody']
+            }
+        else:
+            result = orchestrator.generate(mood=mood, duration=duration, output_dir=output_dir, seed=seed)
+            return {"status": "success", "mood": mood, "duration": duration, "dual": False, "seed": result['metadata']['seed'], "result": result}
     except Exception as e:
         return {"status": "error", "mood": mood, "duration": duration, "error": str(e)}
 
@@ -53,21 +67,25 @@ def generate_single(mood: str, duration: int, output_dir: str, seed: int = None)
 @click.option('--durations', '-d', default='1h,2h', help='Comma-separated durations (e.g., "30m,1h,2h,4h")')
 @click.option('--output', '-o', default='./batch_output', help='Output directory')
 @click.option('--parallel', '-p', default=1, type=int, help='Parallel jobs (default: 1, use with caution)')
+@click.option('--dual', is_flag=True, help='Generate BOTH ambience-only and melody versions for each video')
 @click.option('--dry-run', is_flag=True, help='Show what would be generated without generating')
 @click.option('--list-moods', '-l', is_flag=True, help='List available moods')
-def main(moods: str, durations: str, output: str, parallel: int, dry_run: bool, list_moods: bool):
+def main(moods: str, durations: str, output: str, parallel: int, dual: bool, dry_run: bool, list_moods: bool):
     """
     Batch Video Generator - Content Factory
-    
+
     Generate multiple videos for YouTube automation.
-    
+
     Examples:
         # Generate all moods at 1h and 2h durations
         python batch_generate.py --moods all --durations 1h,2h
-        
+
         # Generate specific moods
         python batch_generate.py --moods deep_focus,sleep,trance --durations 30m,1h
-        
+
+        # Generate DUAL output (both ambience and melody versions)
+        python batch_generate.py --moods rain_sleep,ocean_waves --durations 3h --dual
+
         # Dry run to see what would be generated
         python batch_generate.py --moods all --durations 1h,2h,4h --dry-run
     """
@@ -97,51 +115,84 @@ def main(moods: str, durations: str, output: str, parallel: int, dry_run: bool, 
     # Calculate total jobs
     jobs = [(mood, dur) for mood in selected_moods for dur in duration_list]
     total_jobs = len(jobs)
-    
-    click.echo(f"\n🏭 CONTENT FACTORY - Batch Generator")
-    click.echo(f"{'='*50}")
+    total_videos = total_jobs * 2 if dual else total_jobs
+
+    mode_str = "DUAL (Ambience + Melody)" if dual else "SINGLE"
+    click.echo(f"\n🏭 CONTENT FACTORY - Batch Generator ({mode_str})")
+    click.echo(f"{'='*60}")
     click.echo(f"📋 Moods: {len(selected_moods)} ({', '.join(selected_moods[:3])}{'...' if len(selected_moods) > 3 else ''})")
     click.echo(f"⏱️  Durations: {', '.join(durations.split(','))}")
-    click.echo(f"📦 Total videos: {total_jobs}")
+    click.echo(f"📦 Total jobs: {total_jobs}")
+    if dual:
+        click.echo(f"🔀 Mode: DUAL - generating {total_videos} videos (2 per job)")
     click.echo(f"📁 Output: {output}")
-    
+
     if dry_run:
         click.echo(f"\n🔍 DRY RUN - Would generate:")
         for mood, dur in jobs:
             dur_str = f"{dur//3600}h" if dur >= 3600 else f"{dur//60}m"
-            click.echo(f"  - {mood} @ {dur_str}")
+            if dual:
+                click.echo(f"  - {mood} @ {dur_str} (AMBIENCE + MELODY)")
+            else:
+                click.echo(f"  - {mood} @ {dur_str}")
         return
-    
+
     # Create output directory
     os.makedirs(output, exist_ok=True)
-    
+
     # Generate videos
     click.echo(f"\n🚀 Starting generation...")
     results = []
-    
+
     for i, (mood, dur) in enumerate(jobs, 1):
         dur_str = f"{dur//3600}h" if dur >= 3600 else f"{dur//60}m"
-        click.echo(f"\n[{i}/{total_jobs}] Generating {mood} @ {dur_str}...")
-        
-        result = generate_single(mood, dur, output)
+        mode_label = " (DUAL)" if dual else ""
+        click.echo(f"\n[{i}/{total_jobs}] Generating {mood} @ {dur_str}{mode_label}...")
+
+        result = generate_single(mood, dur, output, dual=dual)
         results.append(result)
-        
+
         if result["status"] == "success":
-            click.echo(f"  ✅ Done: {result['result']['video_path']}")
+            if dual:
+                click.echo(f"  ✅ Ambience: {result['result_ambience']['video_path']}")
+                click.echo(f"  ✅ Melody:   {result['result_melody']['video_path']}")
+            else:
+                click.echo(f"  ✅ Done: {result['result']['video_path']}")
         else:
             click.echo(f"  ❌ Error: {result['error']}")
-    
+
     # Summary
     success = sum(1 for r in results if r["status"] == "success")
-    click.echo(f"\n{'='*50}")
-    click.echo(f"✨ BATCH COMPLETE: {success}/{total_jobs} videos generated")
-    
-    # Save manifest
+    videos_generated = success * 2 if dual else success
+    click.echo(f"\n{'='*60}")
+    click.echo(f"✨ BATCH COMPLETE: {success}/{total_jobs} jobs successful ({videos_generated} videos)")
+
+    # Save manifest - include all video paths for upload
+    manifest_videos = []
+    for r in results:
+        if r["status"] == "success":
+            if r.get("dual"):
+                # Add both versions to manifest
+                manifest_videos.append({
+                    **r,
+                    "result": r["result_ambience"],
+                    "video_title": r["result_ambience"]["metadata"].get("video_title", "Unknown")
+                })
+                manifest_videos.append({
+                    **r,
+                    "result": r["result_melody"],
+                    "video_title": r["result_melody"]["metadata"].get("video_title", "Unknown")
+                })
+            else:
+                manifest_videos.append(r)
+
     manifest = {
         "generated_at": datetime.now().isoformat(),
         "total": total_jobs,
         "success": success,
-        "videos": [r for r in results if r["status"] == "success"]
+        "dual_mode": dual,
+        "total_videos": len(manifest_videos),
+        "videos": manifest_videos
     }
     manifest_path = Path(output) / "manifest.json"
     with open(manifest_path, 'w') as f:

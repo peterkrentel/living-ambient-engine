@@ -237,6 +237,223 @@ class Orchestrator:
             hours = seconds // 3600
             return f"{hours} Hour" if hours == 1 else f"{hours} Hours"
 
+    def _strip_melody_layers(self, audio_config: Dict) -> Dict:
+        """Remove melody/musical layers from audio config for pure ambience version.
+
+        Keeps: rain, fire, ocean, forest, wind, pink_noise, white_noise, binaural, pad (low volume)
+        Removes: melody, arpeggio, progression, polyrhythm, call_response, sine (high freq)
+        """
+        import copy
+        config = copy.deepcopy(audio_config)
+
+        # Layer types to keep for pure ambience
+        ambience_layers = {'rain', 'fire', 'ocean', 'forest', 'wind', 'pink_noise', 'white_noise', 'binaural'}
+
+        if 'layers' in config:
+            filtered_layers = []
+            for layer in config['layers']:
+                layer_type = layer.get('type', '')
+
+                # Keep ambience layers
+                if layer_type in ambience_layers:
+                    filtered_layers.append(layer)
+                # Keep pad but reduce volume for subtle warmth
+                elif layer_type == 'pad':
+                    layer_copy = copy.deepcopy(layer)
+                    layer_copy['amplitude'] = layer_copy.get('amplitude', 0.1) * 0.5
+                    filtered_layers.append(layer_copy)
+                # Skip melody, arpeggio, progression, etc.
+
+            config['layers'] = filtered_layers
+
+        # Remove rhythm for pure ambience (unless it's heartbeat which is ambient)
+        rhythm = config.get('rhythm')
+        if rhythm and rhythm != 'heartbeat':
+            config['rhythm'] = None
+            config['rhythm_volume'] = 0
+
+        return config
+
+    def generate_dual(self, mood: str, duration: int, output_dir: Optional[str] = None,
+                      seed: Optional[int] = None) -> Dict:
+        """
+        Generate BOTH ambience-only and melody versions from the same mood.
+
+        Shares the same visuals between both versions for efficiency.
+
+        Args:
+            mood: Mood preset name
+            duration: Duration in seconds
+            output_dir: Output directory
+            seed: Random seed for reproducibility
+
+        Returns:
+            Dictionary with paths to both generated videos and metadata
+        """
+        # Validate mood
+        if mood not in self.moods:
+            raise ValueError(f"Unknown mood: {mood}. Available: {list(self.moods.keys())}")
+
+        # Setup seed for reproducibility
+        if seed is None:
+            seed = random.randint(0, 2**31 - 1)
+
+        # Set seeds for all random sources
+        random.seed(seed)
+        np.random.seed(seed)
+
+        print(f"🎲 Using seed: {seed} (save this to reproduce these exact videos)")
+        print(f"🎬 Generating DUAL output: Ambience + Melody versions")
+
+        mood_config = self.moods[mood]
+
+        # Apply random variation to visual and audio configs
+        visual_config = self._apply_variation(mood_config['visual'])
+        audio_config_full = self._apply_variation(mood_config['audio'])
+
+        # Create ambience-only version of audio config
+        audio_config_ambience = self._strip_melody_layers(audio_config_full)
+
+        print(f"🎛️  Applied random variations (deterministic with seed)")
+
+        # Setup output paths
+        if output_dir is None:
+            output_dir = self.defaults['output']['directory']
+
+        output_path = Path(output_dir)
+        output_path.mkdir(parents=True, exist_ok=True)
+
+        # Generate filename base
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename_base = f"{mood}_{duration}s_seed{seed}_{timestamp}"
+
+        # Create temp directory for intermediate files
+        temp_dir = Path(tempfile.mkdtemp(prefix="ambient_engine_dual_"))
+
+        try:
+            # Generate visuals ONCE (shared between both versions)
+            print(f"🎨 Generating hypnotic visuals for '{mood}' (shared)...")
+            visual_path = temp_dir / "visual.mp4"
+            visual_gen = VisualGenerator(
+                visual_config,
+                width=self.defaults['video']['resolution']['width'],
+                height=self.defaults['video']['resolution']['height'],
+                fps=self.defaults['video']['fps']
+            )
+            visual_gen.generate(duration, str(visual_path))
+
+            results = {'ambience': None, 'melody': None}
+
+            # Generate AMBIENCE version
+            print(f"\n🌧️  Generating AMBIENCE audio (no melody)...")
+            audio_path_ambience = temp_dir / "audio_ambience.wav"
+            audio_gen_ambience = AudioGenerator(
+                audio_config_ambience,
+                sample_rate=self.defaults['audio']['sample_rate'],
+                channels=self.defaults['audio']['channels']
+            )
+            audio_gen_ambience.generate(duration, str(audio_path_ambience))
+
+            print(f"🎬 Rendering AMBIENCE video...")
+            final_path_ambience = output_path / f"{filename_base}_AMBIENCE.mp4"
+
+            duration_str = self._format_duration(duration)
+            metadata_ambience = self._create_metadata(
+                mood, duration, duration_str, seed, timestamp,
+                mood_config, visual_config, audio_config_ambience,
+                suffix="Pure Ambience"
+            )
+
+            renderer = Renderer(self.defaults)
+            renderer.render(str(visual_path), str(audio_path_ambience), str(final_path_ambience), metadata_ambience)
+
+            results['ambience'] = {
+                'video_path': str(final_path_ambience),
+                'metadata_path': str(final_path_ambience.with_suffix('.json')),
+                'thumbnail_path': str(final_path_ambience.with_suffix('.png')),
+                'metadata': metadata_ambience
+            }
+            print(f"✅ Ambience version saved: {final_path_ambience}")
+
+            # Generate MELODY version
+            print(f"\n🎵 Generating MELODY audio (full musical)...")
+            audio_path_melody = temp_dir / "audio_melody.wav"
+            audio_gen_melody = AudioGenerator(
+                audio_config_full,
+                sample_rate=self.defaults['audio']['sample_rate'],
+                channels=self.defaults['audio']['channels']
+            )
+            audio_gen_melody.generate(duration, str(audio_path_melody))
+
+            print(f"🎬 Rendering MELODY video...")
+            final_path_melody = output_path / f"{filename_base}_MELODY.mp4"
+
+            metadata_melody = self._create_metadata(
+                mood, duration, duration_str, seed, timestamp,
+                mood_config, visual_config, audio_config_full,
+                suffix="With Music"
+            )
+
+            renderer.render(str(visual_path), str(audio_path_melody), str(final_path_melody), metadata_melody)
+
+            results['melody'] = {
+                'video_path': str(final_path_melody),
+                'metadata_path': str(final_path_melody.with_suffix('.json')),
+                'thumbnail_path': str(final_path_melody.with_suffix('.png')),
+                'metadata': metadata_melody
+            }
+            print(f"✅ Melody version saved: {final_path_melody}")
+
+            print(f"\n🎉 DUAL generation complete!")
+            print(f"   📁 Ambience: {final_path_ambience}")
+            print(f"   📁 Melody:   {final_path_melody}")
+
+            return results
+
+        finally:
+            # Cleanup temp directory
+            if self.defaults['render'].get('cleanup_temp', True):
+                shutil.rmtree(temp_dir, ignore_errors=True)
+
+    def _create_metadata(self, mood: str, duration: int, duration_str: str, seed: int,
+                         timestamp: str, mood_config: Dict, visual_config: Dict,
+                         audio_config: Dict, suffix: str = "") -> Dict:
+        """Create metadata dictionary for a video."""
+        rhythm_name = audio_config.get('rhythm', None)
+        if rhythm_name is None:
+            rhythm_name = 'Ambient'
+        else:
+            rhythm_name = rhythm_name.replace('_', ' ').title()
+        rhythm_origin = mood_config.get('rhythm_origin', '')
+
+        title_template = mood_config.get('title_template', '{mood} | {rhythm_name} | {duration_str}')
+        video_title = title_template.format(
+            mood=mood.replace('_', ' ').title(),
+            rhythm_name=rhythm_name,
+            duration_str=duration_str
+        )
+
+        if suffix:
+            video_title = f"{video_title} [{suffix}]"
+
+        return {
+            'mood': mood,
+            'duration': duration,
+            'duration_str': duration_str,
+            'seed': seed,
+            'description': mood_config.get('description', ''),
+            'video_title': video_title,
+            'rhythm': audio_config.get('rhythm', 'ambient'),
+            'rhythm_name': rhythm_name,
+            'rhythm_origin': rhythm_origin,
+            'generated_at': timestamp,
+            'version': suffix.lower().replace(' ', '_') if suffix else 'standard',
+            'visual_config': visual_config,
+            'audio_config': audio_config,
+            'base_visual_config': mood_config['visual'],
+            'base_audio_config': mood_config['audio']
+        }
+
     def list_moods(self) -> Dict[str, str]:
         """List available moods with descriptions."""
         return {

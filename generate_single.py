@@ -39,29 +39,33 @@ def parse_duration(duration_str: str) -> int:
 @click.option('--output', '-o', default='./output', help='Output directory')
 @click.option('--rhythm-volume', type=float, default=None, help='Override rhythm volume (0.0-1.0)')
 @click.option('--drone-volume', type=float, default=None, help='Override drone/ambient volume (0.0-1.0)')
+@click.option('--dual', is_flag=True, help='Generate BOTH ambience-only and melody versions')
 @click.option('--list-moods', '-l', is_flag=True, help='List all available moods')
 @click.option('--show-params', '-p', is_flag=True, help='Show parameters for a mood')
-def main(mood: str, duration: str, seed: int, output: str, rhythm_volume: float, 
-         drone_volume: float, list_moods: bool, show_params: bool):
+def main(mood: str, duration: str, seed: int, output: str, rhythm_volume: float,
+         drone_volume: float, dual: bool, list_moods: bool, show_params: bool):
     """
     Single Video Generator - Generate one video with full control.
-    
+
     Examples:
         # Generate with random seed
         python generate_single.py --mood rain_sleep --duration 1h
-        
+
         # Generate with specific seed (reproducible)
         python generate_single.py --mood rain_sleep --duration 1h --seed 12345
-        
+
+        # Generate BOTH ambience and melody versions (dual output)
+        python generate_single.py --mood rain_sleep --duration 1h --dual
+
         # Reproduce a video from metadata
         python generate_single.py --mood rain_sleep --duration 1h --seed 987654321
-        
+
         # Override volume settings
         python generate_single.py --mood deep_focus --duration 30min --rhythm-volume 0.3
-        
+
         # Show all available moods
         python generate_single.py --list-moods
-        
+
         # Show parameters for a mood
         python generate_single.py --mood rain_sleep --show-params
     """
@@ -110,36 +114,62 @@ def main(mood: str, duration: str, seed: int, output: str, rhythm_volume: float,
     # Parse duration
     duration_seconds = parse_duration(duration)
     duration_display = f"{duration_seconds//3600}h" if duration_seconds >= 3600 else f"{duration_seconds//60}m" if duration_seconds >= 60 else f"{duration_seconds}s"
-    
-    click.echo(f"\n🎬 SINGLE VIDEO GENERATOR")
+
+    mode_str = "DUAL OUTPUT (Ambience + Melody)" if dual else "SINGLE VIDEO"
+    click.echo(f"\n🎬 {mode_str} GENERATOR")
     click.echo("=" * 60)
     click.echo(f"📋 Mood: {mood}")
     click.echo(f"⏱️  Duration: {duration_display} ({duration_seconds}s)")
     click.echo(f"🎲 Seed: {seed if seed else 'Auto-generated'}")
     click.echo(f"📁 Output: {output}")
+    if dual:
+        click.echo(f"🔀 Mode: Generating BOTH ambience-only and melody versions")
     if rhythm_volume is not None:
         click.echo(f"🥁 Rhythm Volume: {rhythm_volume}")
     if drone_volume is not None:
         click.echo(f"🎹 Drone Volume: {drone_volume}")
     click.echo("=" * 60)
-    
+
     # Generate
     orchestrator = Orchestrator()
-    result = orchestrator.generate(
-        mood=mood,
-        duration=duration_seconds,
-        output_dir=output,
-        rhythm_volume=rhythm_volume,
-        drone_volume=drone_volume,
-        seed=seed
-    )
-    
-    click.echo(f"\n✨ VIDEO GENERATED!")
-    click.echo(f"📹 Video: {result['video_path']}")
-    click.echo(f"📋 Metadata: {result['metadata_path']}")
-    click.echo(f"🖼️  Thumbnail: {result['thumbnail_path']}")
-    click.echo(f"\n🎲 Seed used: {result['metadata']['seed']}")
-    click.echo(f"   (Save this seed to reproduce this exact video)")
+
+    if dual:
+        # Generate both versions
+        result = orchestrator.generate_dual(
+            mood=mood,
+            duration=duration_seconds,
+            output_dir=output,
+            seed=seed
+        )
+
+        click.echo(f"\n✨ DUAL VIDEOS GENERATED!")
+        click.echo(f"\n🌧️  AMBIENCE VERSION (no melody - top YouTube performer):")
+        click.echo(f"   📹 Video: {result['ambience']['video_path']}")
+        click.echo(f"   📋 Metadata: {result['ambience']['metadata_path']}")
+        click.echo(f"   🖼️  Thumbnail: {result['ambience']['thumbnail_path']}")
+        click.echo(f"\n🎵 MELODY VERSION (with music):")
+        click.echo(f"   📹 Video: {result['melody']['video_path']}")
+        click.echo(f"   📋 Metadata: {result['melody']['metadata_path']}")
+        click.echo(f"   🖼️  Thumbnail: {result['melody']['thumbnail_path']}")
+        click.echo(f"\n🎲 Seed used: {result['ambience']['metadata']['seed']}")
+        click.echo(f"   (Save this seed to reproduce these exact videos)")
+    else:
+        # Generate single version
+        result = orchestrator.generate(
+            mood=mood,
+            duration=duration_seconds,
+            output_dir=output,
+            rhythm_volume=rhythm_volume,
+            drone_volume=drone_volume,
+            seed=seed
+        )
+
+        click.echo(f"\n✨ VIDEO GENERATED!")
+        click.echo(f"📹 Video: {result['video_path']}")
+        click.echo(f"📋 Metadata: {result['metadata_path']}")
+        click.echo(f"🖼️  Thumbnail: {result['thumbnail_path']}")
+        click.echo(f"\n🎲 Seed used: {result['metadata']['seed']}")
+        click.echo(f"   (Save this seed to reproduce this exact video)")
 
 
 if __name__ == "__main__":

@@ -19,6 +19,11 @@ on:
         description: 'Durations: 30s, 10min, 1h, 3h, 8h (longer = more watch time)'
         required: false
         default: '3h'
+      dual:
+        description: 'Generate BOTH ambience-only and melody versions (2x videos)'
+        required: false
+        type: boolean
+        default: true
       upload:
         description: 'Upload to YouTube after generation'
         required: false
@@ -56,9 +61,14 @@ jobs:
       
       - name: Generate videos
         run: |
+          DUAL_FLAG=""
+          if [ "${{ github.event.inputs.dual || 'true' }}" = "true" ]; then
+            DUAL_FLAG="--dual"
+          fi
           python batch_generate.py \
             --moods "${{ github.event.inputs.moods || 'rain_sleep,fireplace,ocean_waves' }}" \
             --durations "${{ github.event.inputs.durations || '3h' }}" \
+            $DUAL_FLAG \
             --output ./generated
       
       - name: Upload artifacts
@@ -87,8 +97,11 @@ jobs:
           cat ./generated/manifest.json | python -c "
           import sys, json
           data = json.load(sys.stdin)
-          print(f\"- Total: {data['total']}\")
+          dual = data.get('dual_mode', False)
+          print(f\"- Mode: {'DUAL (Ambience + Melody)' if dual else 'Single'}\")
+          print(f\"- Jobs: {data['total']}\")
           print(f\"- Success: {data['success']}\")
+          print(f\"- Total Videos: {data.get('total_videos', data['success'])}\")
           for v in data.get('videos', []):
               r = v.get('result', {})
               print(f\"  - {r.get('video_title', 'Unknown')}\")

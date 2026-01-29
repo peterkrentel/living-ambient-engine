@@ -229,6 +229,14 @@ class AudioGenerator:
             return self._generate_ocean(layer_config, num_samples, amplitude)
         elif layer_type == 'forest':
             return self._generate_forest(layer_config, num_samples, amplitude)
+        elif layer_type == 'wind':
+            return self._generate_wind(layer_config, num_samples, amplitude)
+        elif layer_type == 'progression':
+            return self._generate_progression(layer_config, num_samples, amplitude)
+        elif layer_type == 'polyrhythm':
+            return self._generate_polyrhythm(layer_config, num_samples, amplitude)
+        elif layer_type == 'call_response':
+            return self._generate_call_response(layer_config, num_samples, amplitude)
         else:
             return np.zeros((num_samples, self.channels))
     
@@ -324,31 +332,35 @@ class AudioGenerator:
         return signal * (1 - mix) + reverb * mix
     
     def _generate_pink_noise(self, num_samples: int, amplitude: float) -> np.ndarray:
-        """Generate pink noise (1/f noise) - more natural than white noise."""
-        # Generate white noise
-        white = np.random.randn(num_samples)
-        
-        # Apply pink noise filter (simple approximation)
-        # Use multiple poles for better approximation
-        b0, b1, b2, b3, b4, b5, b6 = 0, 0, 0, 0, 0, 0, 0
-        pink = np.zeros(num_samples)
-        
-        for i in range(num_samples):
-            white_val = white[i]
-            b0 = 0.99886 * b0 + white_val * 0.0555179
-            b1 = 0.99332 * b1 + white_val * 0.0750759
-            b2 = 0.96900 * b2 + white_val * 0.1538520
-            b3 = 0.86650 * b3 + white_val * 0.3104856
-            b4 = 0.55000 * b4 + white_val * 0.5329522
-            b5 = -0.7616 * b5 - white_val * 0.0168980
-            pink[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white_val * 0.5362
-            b6 = white_val * 0.115926
-        
+        """Generate pink noise (1/f noise) using fast Voss-McCartney algorithm."""
+        # Voss-McCartney algorithm - vectorized for speed
+        rows = 16  # Number of random sources
+        cols = num_samples
+
+        # Generate random values for each row
+        array = np.random.randn(rows, cols)
+
+        # Each row gets updated at different rates (powers of 2)
+        # Row 0: every sample, Row 1: every 2 samples, Row 2: every 4 samples, etc.
+        for i in range(rows):
+            step = 2 ** i
+            if step < cols:
+                # Hold values constant between updates
+                indices = np.arange(0, cols, step)
+                held_values = array[i, indices]
+                array[i] = np.repeat(held_values, step)[:cols]
+
+        # Sum all rows
+        pink = np.sum(array, axis=0)
+
         # Normalize
-        pink = pink / np.max(np.abs(pink)) * amplitude
-        
-        # Stereo
-        audio = np.column_stack([pink, pink])
+        max_val = np.max(np.abs(pink))
+        if max_val > 0:
+            pink = pink / max_val * amplitude
+
+        # Stereo with slight variation for width
+        right = np.roll(pink, int(self.sample_rate * 0.02))  # 20ms delay
+        audio = np.column_stack([pink, right])
         return audio
     
     def _generate_white_noise(self, num_samples: int, amplitude: float) -> np.ndarray:
@@ -385,29 +397,58 @@ class AudioGenerator:
         return scales.get(scale_name, scales['pentatonic_major'])
 
     def _generate_melody(self, config: Dict, num_samples: int, amplitude: float) -> np.ndarray:
-        """Generate a simple, hypnotic melody using a scale."""
+        """Generate evolving, hypnotic melody with tempo variation and phrase development."""
         root = config.get('root', 220)  # A3
         scale = config.get('scale', 'pentatonic_minor')
-        tempo = config.get('tempo', 60)  # BPM
+        base_tempo = config.get('tempo', 60)  # BPM
+        evolve = config.get('evolve', True)  # Enable melodic evolution
 
         intervals = self._get_scale_intervals(scale)
-
-        # Calculate note duration
-        beat_samples = int(self.sample_rate * 60 / tempo)
-        note_samples = beat_samples * 2  # Half notes for slow, hypnotic feel
-
         audio = np.zeros((num_samples, self.channels))
+        duration = num_samples / self.sample_rate
 
-        # Generate melody notes
+        # Melodic phrases - patterns of scale degrees (more musical than just up/down)
+        phrases = [
+            [0, 2, 4, 2],           # Simple rise and fall
+            [0, 4, 2, 4, 0],        # Arch shape
+            [4, 2, 0, 2],           # Descending start
+            [0, 1, 2, 4, 2, 1],     # Stepwise with leap
+            [0, 4, 3, 4, 2, 0],     # Call and response feel
+            [2, 4, 2, 0, 1, 0],     # Complex phrase
+        ]
+
         current_sample = 0
-        note_index = 0
-        direction = 1
+        phrase_index = 0
+        note_in_phrase = 0
+        octave_offset = 0
+
+        # Tempo variation parameters
+        tempo_variation_cycle = 120  # seconds for full tempo cycle
+        tempo_variation_amount = 0.15  # +/- 15% tempo variation
 
         while current_sample < num_samples:
-            # Get frequency for current note
-            semitones = intervals[note_index % len(intervals)]
-            octave = note_index // len(intervals)
-            freq = root * (2 ** (semitones / 12)) * (2 ** octave)
+            # Current time for modulation
+            current_time = current_sample / self.sample_rate
+
+            # Tempo variation (accelerando/ritardando)
+            tempo_mod = 1.0 + tempo_variation_amount * np.sin(2 * np.pi * current_time / tempo_variation_cycle)
+            current_tempo = base_tempo * tempo_mod
+
+            # Calculate note duration with tempo variation
+            beat_samples = int(self.sample_rate * 60 / current_tempo)
+
+            # Vary note lengths within phrase (rhythmic interest)
+            rhythm_patterns = [2, 2, 1, 1, 2, 1, 1, 2]  # In beat units
+            rhythm_index = note_in_phrase % len(rhythm_patterns)
+            note_samples = beat_samples * rhythm_patterns[rhythm_index]
+
+            # Get current phrase
+            current_phrase = phrases[phrase_index % len(phrases)]
+            scale_degree = current_phrase[note_in_phrase % len(current_phrase)]
+
+            # Get frequency from scale
+            semitones = intervals[scale_degree % len(intervals)]
+            freq = root * (2 ** (semitones / 12)) * (2 ** octave_offset)
 
             # Keep in reasonable range
             while freq > root * 4:
@@ -415,30 +456,41 @@ class AudioGenerator:
             while freq < root / 2:
                 freq *= 2
 
-            # Generate note with envelope
+            # Generate note
             note_len = min(note_samples, num_samples - current_sample)
+            if note_len <= 0:
+                break
+
             t = np.arange(note_len) / self.sample_rate
 
-            # Soft synth tone with harmonics
-            wave = np.sin(2 * np.pi * freq * t)
-            wave += np.sin(2 * np.pi * freq * 2 * t) * 0.3  # Octave
-            wave += np.sin(2 * np.pi * freq * 1.5 * t) * 0.15  # Fifth
+            # Evolving timbre - harmonics change over time
+            timbre_evolution = 0.5 + 0.5 * np.sin(2 * np.pi * current_time / 180)  # 3 min cycle
 
-            # ADSR envelope
-            attack = int(note_len * 0.1)
+            wave = np.sin(2 * np.pi * freq * t)
+            wave += np.sin(2 * np.pi * freq * 2 * t) * 0.25 * timbre_evolution
+            wave += np.sin(2 * np.pi * freq * 1.5 * t) * 0.15 * (1 - timbre_evolution * 0.5)
+            wave += np.sin(2 * np.pi * freq * 3 * t) * 0.08 * timbre_evolution
+
+            # Dynamic ADSR based on note length and position
+            attack = int(note_len * np.random.uniform(0.08, 0.15))
             decay = int(note_len * 0.1)
-            release = int(note_len * 0.3)
-            sustain_level = 0.7
+            release = int(note_len * np.random.uniform(0.25, 0.4))
+            sustain_level = np.random.uniform(0.6, 0.8)
 
             envelope = np.ones(note_len)
-            envelope[:attack] = np.linspace(0, 1, attack)
-            envelope[attack:attack+decay] = np.linspace(1, sustain_level, decay)
-            envelope[-release:] = np.linspace(sustain_level, 0, release)
+            if attack > 0:
+                envelope[:attack] = np.linspace(0, 1, attack)
+            if decay > 0 and attack + decay < note_len:
+                envelope[attack:attack+decay] = np.linspace(1, sustain_level, decay)
+            if release > 0:
+                envelope[-release:] = np.linspace(sustain_level, 0, release)
 
-            wave = wave * envelope * amplitude
+            # Velocity variation (dynamics)
+            velocity = 0.7 + 0.3 * np.sin(note_in_phrase * 0.8 + phrase_index * 0.3)
+            wave = wave * envelope * amplitude * velocity
 
-            # Stereo with slight pan variation
-            pan = 0.5 + 0.2 * np.sin(note_index * 0.5)
+            # Stereo movement
+            pan = 0.5 + 0.25 * np.sin(current_time * 0.1 + note_in_phrase * 0.3)
             left = wave * (1 - pan)
             right = wave * pan
 
@@ -446,13 +498,16 @@ class AudioGenerator:
             audio[current_sample:current_sample+note_len, 1] += right
 
             current_sample += note_samples
+            note_in_phrase += 1
 
-            # Move through scale (up and down pattern)
-            note_index += direction
-            if note_index >= len(intervals) * 2 - 1:
-                direction = -1
-            elif note_index <= 0:
-                direction = 1
+            # Move to next phrase
+            if note_in_phrase >= len(current_phrase):
+                note_in_phrase = 0
+                phrase_index += 1
+
+                # Occasionally shift octave for evolution
+                if evolve and np.random.random() < 0.2:
+                    octave_offset = np.random.choice([-1, 0, 0, 1])  # Bias toward root octave
 
         # Add reverb for space
         audio[:, 0] = self._add_reverb(audio[:, 0], decay=0.4, mix=0.5)
@@ -560,40 +615,45 @@ class AudioGenerator:
         return audio
 
     def _generate_rain(self, config: Dict, num_samples: int, amplitude: float) -> np.ndarray:
-        """Generate realistic rain sounds using filtered noise + droplet impacts."""
-        audio = np.zeros((num_samples, self.channels))
+        """Generate realistic rain sounds using filtered noise + droplet impacts + thunder.
 
-        # Base: pink noise filtered to sound like rain
+        Based on top-performing YouTube ambient formula:
+        ambient(t) = A(t) * N_pink(t) + sum(thunder_events)
+
+        Uses very slow modulation (0.0005-0.002 Hz) for natural wave patterns.
+        """
+        audio = np.zeros((num_samples, self.channels))
+        t = np.arange(num_samples) / self.sample_rate
+        duration = num_samples / self.sample_rate
+
+        # Base: pink noise for rain texture (proven best for rain ambience)
         pink = self._generate_pink_noise(num_samples, amplitude * 0.6)[:, 0]
 
-        # Apply bandpass-like filtering for rain characteristics
-        # Rain is mostly mid-high frequency (1kHz - 8kHz)
-        # Simple approach: high-pass filter the pink noise
-        filtered = np.zeros(num_samples)
-        alpha = 0.95  # High-pass coefficient
-        for i in range(1, num_samples):
-            filtered[i] = alpha * (filtered[i-1] + pink[i] - pink[i-1])
+        # Very slow amplitude modulation - key to hypnotic quality
+        # Primary wave: ~33 minute cycle (0.0005 Hz) - barely perceptible
+        # Secondary wave: ~5 minute cycle (0.003 Hz) - subtle variation
+        # Tertiary wave: ~1 minute cycle (0.015 Hz) - gentle breathing
+        mod_freq_1 = config.get('mod_freq_slow', 0.0005)  # ~33 min cycle
+        mod_freq_2 = config.get('mod_freq_med', 0.003)    # ~5.5 min cycle
+        mod_freq_3 = config.get('mod_freq_fast', 0.015)   # ~67 sec cycle
 
-        # Add rain intensity variation (waves of heavy/light rain)
-        t = np.arange(num_samples) / self.sample_rate
-        rain_intensity = 0.7 + 0.3 * np.sin(2 * np.pi * 0.02 * t)  # ~50 sec cycle
-        filtered = filtered * rain_intensity
+        rain_intensity = 0.7 + 0.15 * np.sin(2 * np.pi * mod_freq_1 * t)  # Very slow
+        rain_intensity *= 0.9 + 0.1 * np.sin(2 * np.pi * mod_freq_2 * t)  # Medium
+        rain_intensity *= 0.95 + 0.05 * np.sin(2 * np.pi * mod_freq_3 * t)  # Fast subtle
+        filtered = pink * rain_intensity
 
         # Add individual droplet impacts for realism
         drop_rate = config.get('drop_rate', 50)  # drops per second
-        num_drops = int(num_samples / self.sample_rate * drop_rate)
+        num_drops = int(duration * drop_rate)
 
         for _ in range(num_drops):
-            # Random position
-            pos = np.random.randint(0, num_samples - 500)
-            # Droplet sound: short burst of filtered noise
+            pos = np.random.randint(0, max(1, num_samples - 500))
             drop_len = np.random.randint(200, 500)
             drop_freq = np.random.uniform(2000, 6000)
             drop_t = np.arange(drop_len) / self.sample_rate
             drop = np.sin(2 * np.pi * drop_freq * drop_t) * np.exp(-drop_t * 40)
             drop *= np.random.uniform(0.3, 1.0) * amplitude * 0.3
 
-            # Add slight stereo variation
             pan = np.random.uniform(0.3, 0.7)
             end_pos = min(pos + drop_len, num_samples)
             actual_len = end_pos - pos
@@ -603,6 +663,50 @@ class AudioGenerator:
         # Mix in the base rain
         audio[:, 0] += filtered
         audio[:, 1] += filtered
+
+        # Add thunder (brown noise bursts) - configurable
+        thunder_rate = config.get('thunder_rate', 0.5)  # thunders per minute
+        if thunder_rate > 0 and duration > 30:  # Only add thunder for longer tracks
+            num_thunders = max(1, int(duration / 60 * thunder_rate))
+
+            # Generate base brown noise (cumulative sum of white noise)
+            brown_base = np.cumsum(np.random.randn(num_samples))
+            brown_base = brown_base / np.max(np.abs(brown_base))
+
+            for _ in range(num_thunders):
+                # Thunder position (not too close to start/end)
+                pos = np.random.randint(int(self.sample_rate * 5), max(int(self.sample_rate * 6), num_samples - int(self.sample_rate * 10)))
+
+                # Thunder duration: 3-8 seconds
+                thunder_len = int(np.random.uniform(3, 8) * self.sample_rate)
+                thunder_len = min(thunder_len, num_samples - pos)
+
+                # Thunder envelope: slow build, peak, long decay
+                thunder_t = np.arange(thunder_len) / self.sample_rate
+                attack_time = np.random.uniform(0.5, 1.5)
+                decay_time = thunder_len / self.sample_rate - attack_time
+
+                env = np.zeros(thunder_len)
+                attack_samples = int(attack_time * self.sample_rate)
+                env[:attack_samples] = np.linspace(0, 1, attack_samples)
+                env[attack_samples:] = np.exp(-np.arange(thunder_len - attack_samples) / (decay_time * self.sample_rate) * 3)
+
+                # Thunder sound: low-frequency rumble
+                thunder = brown_base[pos:pos + thunder_len] * env * amplitude * np.random.uniform(0.3, 0.6)
+
+                # Add some crackle at the peak
+                crackle_pos = attack_samples
+                crackle_len = min(int(0.3 * self.sample_rate), thunder_len - crackle_pos)
+                if crackle_len > 0:
+                    crackle = np.random.randn(crackle_len) * np.exp(-np.arange(crackle_len) / self.sample_rate * 20)
+                    thunder[crackle_pos:crackle_pos + crackle_len] += crackle * amplitude * 0.2
+
+                # Stereo with slight delay for distance effect
+                audio[pos:pos + thunder_len, 0] += thunder
+                delay = int(np.random.uniform(0.05, 0.15) * self.sample_rate)  # 50-150ms delay
+                delayed_pos = min(pos + delay, num_samples - thunder_len)
+                if delayed_pos + thunder_len <= num_samples:
+                    audio[delayed_pos:delayed_pos + thunder_len, 1] += thunder * 0.9
 
         return audio
 
@@ -659,7 +763,11 @@ class AudioGenerator:
         return audio
 
     def _generate_ocean(self, config: Dict, num_samples: int, amplitude: float) -> np.ndarray:
-        """Generate ocean waves sounds."""
+        """Generate ocean waves sounds.
+
+        Formula: ocean(t) = A(t) * N_pink(t)
+        Uses higher modulation depth (0.5-0.7) and very slow frequency (~0.0003 Hz).
+        """
         audio = np.zeros((num_samples, self.channels))
         t = np.arange(num_samples) / self.sample_rate
 
@@ -671,9 +779,12 @@ class AudioGenerator:
         # Wave envelope: builds up slowly, crashes, then recedes
         wave_env = np.sin(wave_phase * np.pi) ** 2
 
+        # Very slow overall intensity modulation (tide-like, ~55 min cycle)
+        tide_mod = 0.5 + 0.5 * np.sin(2 * np.pi * 0.0003 * t)  # Per Copilot formula
+
         # Base: filtered pink noise for the ocean body
         pink = self._generate_pink_noise(num_samples, 1.0)[:, 0]
-        ocean = pink * wave_env * amplitude * 0.5
+        ocean = pink * wave_env * tide_mod * amplitude * 0.5
 
         # Add white noise for the foam/crash
         white = np.random.randn(num_samples) * amplitude * 0.3
@@ -747,3 +858,304 @@ class AudioGenerator:
 
         return audio
 
+    def _generate_wind(self, config: Dict, num_samples: int, amplitude: float) -> np.ndarray:
+        """Generate wind ambience using white noise with very slow modulation.
+
+        Formula: wind(t) = A(t) * N_white(t)
+        Uses modulation frequency 0.0002-0.002 Hz for natural gusting patterns.
+        """
+        audio = np.zeros((num_samples, self.channels))
+        t = np.arange(num_samples) / self.sample_rate
+
+        # Base: white noise (characteristic of wind/air movement)
+        white = self._generate_white_noise(num_samples, 1.0)[:, 0]
+
+        # Very slow modulation for natural gusting (per Copilot formula)
+        # Primary: ~83 min cycle (0.0002 Hz) - barely perceptible overall intensity
+        # Secondary: ~8 min cycle (0.002 Hz) - slow gusts
+        # Tertiary: ~2 min cycle (0.008 Hz) - individual gusts
+        mod_freq_1 = config.get('mod_freq_slow', 0.0002)
+        mod_freq_2 = config.get('mod_freq_med', 0.002)
+        mod_freq_3 = config.get('mod_freq_fast', 0.008)
+
+        wind_intensity = 0.6 + 0.2 * np.sin(2 * np.pi * mod_freq_1 * t)
+        wind_intensity *= 0.8 + 0.2 * np.sin(2 * np.pi * mod_freq_2 * t)
+        wind_intensity *= 0.85 + 0.15 * np.sin(2 * np.pi * mod_freq_3 * t)
+
+        # Apply modulation
+        wind = white * wind_intensity * amplitude
+
+        # Low-pass filter effect (wind is mostly low frequency)
+        # Simulate by adding more low-frequency content
+        low_rumble = np.sin(2 * np.pi * 50 * t) * wind_intensity * amplitude * 0.1
+        wind += low_rumble
+
+        # Stereo with slight variation for spaciousness
+        audio[:, 0] = wind
+        audio[:, 1] = np.roll(wind, int(self.sample_rate * 0.03))  # 30ms delay
+
+        # Optional: add occasional gusts (stronger wind events)
+        gust_rate = config.get('gust_rate', 0.5)  # gusts per minute
+        duration = num_samples / self.sample_rate
+        if gust_rate > 0 and duration > 30:
+            num_gusts = max(1, int(duration / 60 * gust_rate))
+
+            for _ in range(num_gusts):
+                gust_pos = np.random.randint(int(self.sample_rate * 5),
+                                             max(int(self.sample_rate * 6), num_samples - int(self.sample_rate * 10)))
+                gust_len = int(np.random.uniform(2, 5) * self.sample_rate)
+                gust_len = min(gust_len, num_samples - gust_pos)
+
+                # Gust envelope: gradual build, peak, gradual fade
+                gust_t = np.arange(gust_len) / self.sample_rate
+                gust_env = np.sin(np.pi * gust_t / (gust_len / self.sample_rate)) ** 2
+
+                # Gust sound: extra white noise
+                gust_sound = np.random.randn(gust_len) * gust_env * amplitude * 0.3
+
+                audio[gust_pos:gust_pos + gust_len, 0] += gust_sound
+                audio[gust_pos:gust_pos + gust_len, 1] += gust_sound * 0.9
+
+        return audio
+
+    def _generate_progression(self, config: Dict, num_samples: int, amplitude: float) -> np.ndarray:
+        """Generate harmonic chord progression that evolves over time."""
+        root = config.get('root', 110)  # A2
+        progression_type = config.get('progression', 'ambient')
+        chord_duration = config.get('chord_duration', 16)  # Beats per chord
+        tempo = config.get('tempo', 60)
+
+        # Chord progressions (intervals in semitones from root)
+        progressions = {
+            'ambient': [
+                [0, 7, 12, 16],      # Root maj add9
+                [5, 9, 12, 17],      # IV maj7
+                [7, 11, 14, 19],     # V add9
+                [0, 4, 7, 12],       # I maj
+            ],
+            'dreamy': [
+                [0, 4, 7, 11],       # I maj7
+                [9, 12, 16, 21],     # vi maj7
+                [5, 9, 12, 16],      # IV maj7
+                [7, 11, 14, 17],     # V maj7
+            ],
+            'dark': [
+                [0, 3, 7, 10],       # i min7
+                [5, 8, 12, 15],      # iv min7
+                [3, 7, 10, 14],      # bIII maj7
+                [7, 10, 14, 17],     # v min7
+            ],
+            'ethereal': [
+                [0, 7, 12, 19],      # Open fifth + octaves
+                [5, 12, 17, 24],     # IV open
+                [7, 14, 19, 26],     # V open
+                [0, 7, 14, 21],      # I open high
+            ],
+        }
+
+        chords = progressions.get(progression_type, progressions['ambient'])
+
+        beat_samples = int(self.sample_rate * 60 / tempo)
+        chord_samples = beat_samples * chord_duration
+
+        audio = np.zeros((num_samples, self.channels))
+        current_sample = 0
+        chord_index = 0
+
+        while current_sample < num_samples:
+            chord = chords[chord_index % len(chords)]
+
+            chunk_len = min(chord_samples, num_samples - current_sample)
+            if chunk_len <= 0:
+                break
+
+            t = np.arange(chunk_len) / self.sample_rate
+            chunk = np.zeros(chunk_len)
+
+            for semitones in chord:
+                freq = root * (2 ** (semitones / 12))
+
+                # Detuned oscillators for richness
+                for detune in [-0.02, -0.01, 0, 0.01, 0.02]:
+                    chunk += np.sin(2 * np.pi * freq * (1 + detune * 0.01) * t) * 0.15
+
+            # Slow amplitude envelope for pad-like feel
+            env = np.ones(chunk_len)
+            fade_len = min(int(chord_samples * 0.1), chunk_len // 2)
+            if fade_len > 0:
+                env[:fade_len] = np.linspace(0.5, 1, fade_len)
+                env[-fade_len:] = np.linspace(1, 0.5, fade_len)
+
+            # LFO for movement
+            lfo = 0.8 + 0.2 * np.sin(2 * np.pi * 0.1 * t)
+
+            chunk = chunk * env * lfo * amplitude
+
+            # Stereo spread
+            audio[current_sample:current_sample + chunk_len, 0] += chunk
+            audio[current_sample:current_sample + chunk_len, 1] += np.roll(chunk, int(self.sample_rate * 0.02))
+
+            current_sample += chord_samples
+            chord_index += 1
+
+        # Add heavy reverb
+        audio[:, 0] = self._add_reverb(audio[:, 0], decay=0.6, mix=0.7)
+        audio[:, 1] = self._add_reverb(audio[:, 1], decay=0.6, mix=0.7)
+
+        return audio
+
+    def _generate_polyrhythm(self, config: Dict, num_samples: int, amplitude: float) -> np.ndarray:
+        """Generate polyrhythmic patterns with different time signatures layered."""
+        root = config.get('root', 110)
+        tempo = config.get('tempo', 80)
+        patterns = config.get('patterns', [3, 4])  # e.g., 3 against 4
+
+        audio = np.zeros((num_samples, self.channels))
+        beat_samples = int(self.sample_rate * 60 / tempo)
+
+        # Cycle length = LCM of patterns * beat_samples
+        cycle_beats = np.lcm.reduce(patterns)
+        cycle_samples = cycle_beats * beat_samples
+
+        for layer_idx, pattern in enumerate(patterns):
+            # Each pattern divides the cycle differently
+            layer_beat_samples = cycle_samples // pattern
+
+            # Different pitch for each layer
+            layer_root = root * (2 ** (layer_idx * 7 / 12))  # Stack fifths
+
+            current_sample = 0
+            beat_in_pattern = 0
+
+            while current_sample < num_samples:
+                # Generate note
+                note_len = min(layer_beat_samples, num_samples - current_sample)
+                if note_len <= 0:
+                    break
+
+                t = np.arange(note_len) / self.sample_rate
+
+                # Accent first beat of each pattern cycle
+                accent = 1.2 if beat_in_pattern == 0 else 0.8
+
+                # Soft mallet-like tone
+                freq = layer_root
+                wave = np.sin(2 * np.pi * freq * t)
+                wave += np.sin(2 * np.pi * freq * 2 * t) * 0.3
+
+                # Quick attack, medium decay
+                env = np.exp(-t * 4) * accent
+                wave = wave * env * amplitude * 0.5
+
+                # Pan each layer differently
+                pan = 0.3 + 0.4 * (layer_idx / max(1, len(patterns) - 1))
+
+                audio[current_sample:current_sample + note_len, 0] += wave * (1 - pan)
+                audio[current_sample:current_sample + note_len, 1] += wave * pan
+
+                current_sample += layer_beat_samples
+                beat_in_pattern = (beat_in_pattern + 1) % pattern
+
+        return audio
+
+    def _generate_call_response(self, config: Dict, num_samples: int, amplitude: float) -> np.ndarray:
+        """Generate call-and-response melodic patterns between two voices."""
+        root = config.get('root', 220)
+        scale = config.get('scale', 'pentatonic_minor')
+        tempo = config.get('tempo', 70)
+
+        intervals = self._get_scale_intervals(scale)
+        audio = np.zeros((num_samples, self.channels))
+
+        beat_samples = int(self.sample_rate * 60 / tempo)
+        phrase_beats = 4  # 4 beats per phrase
+        phrase_samples = beat_samples * phrase_beats
+
+        # Call phrases (lower voice, left-panned)
+        call_phrases = [
+            [(0, 2), (2, 1), (4, 1)],           # Simple ascending
+            [(4, 2), (2, 1), (0, 1)],           # Simple descending
+            [(0, 1), (2, 1), (4, 1), (2, 1)],   # Up and back
+            [(0, 2), (4, 2)],                   # Leap
+        ]
+
+        # Response phrases (higher voice, right-panned)
+        response_phrases = [
+            [(4, 1), (5, 1), (4, 1), (2, 1)],   # Ornamental response
+            [(2, 1), (0, 1), (-1, 2)],          # Descending answer
+            [(4, 2), (5, 1), (4, 1)],           # Echo with variation
+            [(7, 1), (5, 1), (4, 1), (2, 1)],   # Higher answer
+        ]
+
+        current_sample = 0
+        phrase_index = 0
+        is_call = True  # Alternate between call and response
+
+        while current_sample < num_samples:
+            phrases = call_phrases if is_call else response_phrases
+            phrase = phrases[phrase_index % len(phrases)]
+
+            # Voice characteristics
+            voice_root = root if is_call else root * 2  # Response an octave higher
+            pan = 0.25 if is_call else 0.75  # Left for call, right for response
+
+            phrase_pos = 0
+            for scale_deg, duration in phrase:
+                if current_sample + phrase_pos >= num_samples:
+                    break
+
+                note_samples = beat_samples * duration
+                note_len = min(note_samples, num_samples - current_sample - phrase_pos)
+                if note_len <= 0:
+                    break
+
+                # Get frequency
+                actual_deg = scale_deg % len(intervals)
+                octave = scale_deg // len(intervals)
+                semitones = intervals[actual_deg]
+                freq = voice_root * (2 ** (semitones / 12)) * (2 ** octave)
+
+                t = np.arange(note_len) / self.sample_rate
+
+                # Different timbres for call vs response
+                if is_call:
+                    # Warmer, fuller sound for call
+                    wave = np.sin(2 * np.pi * freq * t)
+                    wave += np.sin(2 * np.pi * freq * 0.5 * t) * 0.3  # Sub
+                    wave += np.sin(2 * np.pi * freq * 2 * t) * 0.2
+                else:
+                    # Brighter, lighter sound for response
+                    wave = np.sin(2 * np.pi * freq * t)
+                    wave += np.sin(2 * np.pi * freq * 2 * t) * 0.35
+                    wave += np.sin(2 * np.pi * freq * 3 * t) * 0.15
+
+                # ADSR envelope
+                attack = int(note_len * 0.1)
+                release = int(note_len * 0.3)
+                envelope = np.ones(note_len)
+                if attack > 0:
+                    envelope[:attack] = np.linspace(0, 1, attack)
+                if release > 0:
+                    envelope[-release:] = np.linspace(1, 0, release)
+
+                wave = wave * envelope * amplitude * 0.7
+
+                pos = current_sample + phrase_pos
+                end_pos = pos + note_len
+                audio[pos:end_pos, 0] += wave * (1 - pan)
+                audio[pos:end_pos, 1] += wave * pan
+
+                phrase_pos += note_samples
+
+            current_sample += phrase_samples
+
+            # Alternate call/response
+            if not is_call:
+                phrase_index += 1  # Move to next phrase pair after response
+            is_call = not is_call
+
+        # Add reverb
+        audio[:, 0] = self._add_reverb(audio[:, 0], decay=0.5, mix=0.5)
+        audio[:, 1] = self._add_reverb(audio[:, 1], decay=0.5, mix=0.5)
+
+        return audio
