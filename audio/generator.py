@@ -448,7 +448,7 @@ class AudioGenerator:
 
             # Get frequency from scale
             semitones = intervals[scale_degree % len(intervals)]
-            freq = root * (2 ** (semitones / 12)) * (2 ** octave_offset)
+            freq = root * (2.0 ** (semitones / 12.0)) * (2.0 ** float(octave_offset))
 
             # Keep in reasonable range
             while freq > root * 4:
@@ -543,7 +543,7 @@ class AudioGenerator:
             # Cycle through chord tones
             semitones = intervals[note_index % len(intervals)]
             octave = (note_index // len(intervals)) % 2  # Alternate octaves
-            freq = root * (2 ** (semitones / 12)) * (2 ** octave)
+            freq = root * (2.0 ** (semitones / 12.0)) * (2.0 ** float(octave))
 
             # Generate note
             note_len = min(note_samples, num_samples - current_sample)
@@ -1113,7 +1113,7 @@ class AudioGenerator:
                 actual_deg = scale_deg % len(intervals)
                 octave = scale_deg // len(intervals)
                 semitones = intervals[actual_deg]
-                freq = voice_root * (2 ** (semitones / 12)) * (2 ** octave)
+                freq = voice_root * (2.0 ** (semitones / 12.0)) * (2.0 ** float(octave))
 
                 t = np.arange(note_len) / self.sample_rate
 

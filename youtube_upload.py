@@ -13,56 +13,136 @@ from youtube.uploader import YouTubeUploader, GOOGLE_API_AVAILABLE
 
 
 def generate_description(metadata: dict) -> str:
-    """Generate SEO-optimized YouTube description."""
+    """Generate SEO-optimized YouTube description based on mood type."""
     mood = metadata.get('mood', 'ambient')
-    rhythm = metadata.get('rhythm_name', 'Tribal')
+    rhythm = metadata.get('rhythm_name', '')
     origin = metadata.get('rhythm_origin', '')
     duration = metadata.get('duration_str', '')
-    
-    return f"""🎵 {metadata.get('video_title', 'Ambient Music')}
+    title = metadata.get('video_title', 'Ambient Music')
 
-{origin}
+    # Nature/ambient moods (no rhythm, pure ambience)
+    nature_moods = ['rain_sleep', 'ocean_waves', 'fireplace', 'forest_morning']
 
-Perfect for:
+    # Music moods with binaural beats
+    music_moods = ['deep_focus', 'sleep', 'trance', 'ceremony', 'warrior', 'energize',
+                   'study', 'chill', 'lofi_study', 'piano_relax']
+
+    if mood in nature_moods:
+        # Nature sounds description
+        mood_descriptions = {
+            'rain_sleep': "🌧️ Gentle rain sounds to help you relax, sleep, and unwind. The natural rhythm of rainfall creates the perfect ambient backdrop for rest and relaxation.",
+            'ocean_waves': "🌊 Peaceful ocean waves washing onto the shore. Let the rhythmic sound of the sea carry away your stress and help you find deep relaxation.",
+            'fireplace': "🔥 Cozy crackling fireplace sounds for ultimate relaxation. The warm, comforting ambience of a real fire to help you feel at home.",
+            'forest_morning': "🌲 Immerse yourself in a peaceful forest morning with gentle birdsong and rustling leaves. Nature's own meditation soundtrack."
+        }
+        mood_desc = mood_descriptions.get(mood, "Natural ambient sounds for relaxation.")
+
+        perfect_for = """Perfect for:
+• Sleeping and relaxation
+• Stress relief and unwinding
+• Meditation and mindfulness
+• Reading and quiet time
+• Creating a cozy atmosphere
+• Blocking out distractions"""
+
+        hashtags = f"#{mood.replace('_', '')} #NatureSounds #Sleep #Relaxation #ASMR #WhiteNoise #AmbientSounds"
+
+        return f"""🎵 {title}
+
+{mood_desc}
+
+{perfect_for}
+
+⏱️ Duration: {duration}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔔 Subscribe for daily ambient content
+👍 Like if this helps you relax
+
+{hashtags}
+"""
+
+    else:
+        # Music/beats description
+        rhythm_info = f"\n🥁 Rhythm: {rhythm}" if rhythm and rhythm != 'Ambient' else ""
+        origin_info = f"\n{origin}" if origin else ""
+
+        perfect_for = """Perfect for:
 • Deep focus and concentration
 • Meditation and relaxation
 • Sleep and rest
 • Study sessions
-• Yoga and mindfulness
+• Yoga and mindfulness"""
 
+        brainwave_info = """
 🧠 Brainwave Entrainment:
-This track uses scientifically-designed binaural beats and Solfeggio frequencies to help guide your mind into optimal states.
+This track uses scientifically-designed binaural beats and Solfeggio frequencies to help guide your mind into optimal states."""
 
-⏱️ Duration: {duration}
-🥁 Rhythm: {rhythm}
+        hashtags = f"#AmbientMusic #BinauralBeats #Focus #Meditation #StudyMusic #SleepMusic #{mood.replace('_', '')}"
+
+        return f"""🎵 {title}
+{origin_info}
+{perfect_for}
+{brainwave_info}
+
+⏱️ Duration: {duration}{rhythm_info}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 🔔 Subscribe for daily ambient content
 👍 Like if this helps you focus
 
-#AmbientMusic #BinauralBeats #Focus #Meditation #StudyMusic #SleepMusic #TribalBeats #{mood.replace('_', '')}
+{hashtags}
 """
 
 
 def get_tags(metadata: dict) -> list:
-    """Generate YouTube tags for SEO."""
-    base_tags = [
-        "ambient music", "binaural beats", "focus music", "study music",
-        "meditation music", "relaxation", "concentration", "sleep music",
-        "tribal drums", "healing frequencies", "432 hz", "528 hz",
-        "theta waves", "alpha waves", "deep focus", "work music"
-    ]
-    
+    """Generate YouTube tags for SEO based on mood type."""
     mood = metadata.get('mood', '')
     rhythm = metadata.get('rhythm_name', '')
-    
+
+    # Nature sound moods
+    nature_moods = ['rain_sleep', 'fireplace', 'ocean_waves', 'forest_morning']
+
+    # Lofi/chill moods
+    chill_moods = ['lofi_study', 'piano_relax']
+
+    if mood in nature_moods:
+        # Nature-specific tags (no binaural/rhythm mentions)
+        mood_tags = {
+            'rain_sleep': ["rain sounds", "rain for sleep", "rain sounds for sleeping", "rain asmr", "rain noise", "thunderstorm sounds", "rain on window"],
+            'fireplace': ["fireplace sounds", "crackling fire", "fire asmr", "cozy fireplace", "fireplace ambience", "fire sounds for sleep"],
+            'ocean_waves': ["ocean sounds", "ocean waves", "beach sounds", "sea sounds", "waves for sleep", "ocean asmr", "beach waves"],
+            'forest_morning': ["forest sounds", "nature sounds", "bird sounds", "forest ambience", "morning birds", "nature asmr"],
+        }
+        base_tags = mood_tags.get(mood, ["ambient sounds", "nature sounds"])
+        base_tags.extend(["relaxation", "sleep sounds", "white noise", "asmr", "ambient", "stress relief", "meditation sounds"])
+
+    elif mood in chill_moods:
+        # Lofi/chill tags
+        base_tags = [
+            "lofi", "lofi beats", "chill beats", "study music", "lofi hip hop",
+            "relaxing music", "background music", "chill music", "beats to study to",
+            "lofi chill", "homework music", "work music"
+        ]
+
+    else:
+        # Music with rhythm/binaural tags
+        base_tags = [
+            "ambient music", "binaural beats", "focus music", "study music",
+            "meditation music", "relaxation", "concentration", "sleep music",
+            "healing frequencies", "432 hz", "528 hz",
+            "theta waves", "alpha waves", "deep focus", "work music"
+        ]
+        if rhythm and rhythm != 'Ambient':
+            base_tags.append(f"{rhythm} rhythm")
+            base_tags.append(f"{rhythm} drums")
+
+    # Add mood-specific tag
     if mood:
         base_tags.append(mood.replace('_', ' '))
-    if rhythm:
-        base_tags.append(f"{rhythm} rhythm")
-        base_tags.append(f"{rhythm} drums")
-    
+
     return base_tags[:30]  # YouTube limit
 
 
