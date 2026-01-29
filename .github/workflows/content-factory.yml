@@ -89,6 +89,29 @@ jobs:
         run: |
           python youtube_upload.py --batch ./generated
       
+      - name: Commit catalog updates
+        if: ${{ github.event.inputs.upload == 'true' || github.event_name == 'schedule' }}
+        run: |
+          git config user.name "Content Factory Bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Add catalog files if they exist
+          if [ -f content_catalog.json ]; then
+            git add content_catalog.json
+          fi
+          if [ -f CONTENT_LIBRARY.md ]; then
+            git add CONTENT_LIBRARY.md
+          fi
+          
+          # Commit if there are changes
+          if git diff --staged --quiet; then
+            echo "No catalog changes to commit"
+          else
+            git commit -m "📚 Update content library catalog [automated]"
+            git push
+            echo "✅ Catalog updated and pushed to repository"
+          fi
+      
       - name: Summary
         run: |
           echo "## Content Factory Run Complete" >> $GITHUB_STEP_SUMMARY
@@ -106,6 +129,17 @@ jobs:
               r = v.get('result', {})
               print(f\"  - {r.get('video_title', 'Unknown')}\")
           "
+          
+          # Add catalog stats if available
+          if [ -f content_catalog.json ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Content Library:" >> $GITHUB_STEP_SUMMARY
+            if python library_cli.py stats > /tmp/catalog_stats.txt 2>&1; then
+              tail -n +2 /tmp/catalog_stats.txt >> $GITHUB_STEP_SUMMARY
+            else
+              echo "⚠️  Catalog stats unavailable" >> $GITHUB_STEP_SUMMARY
+            fi
+          fi
 
   # Optional: Notify on completion
   notify:

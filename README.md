@@ -41,6 +41,11 @@ python batch_generate.py --moods all --durations 1h,2h
 
 # Upload to YouTube
 python youtube_upload.py --batch ./batch_output
+
+# View content library
+python library_cli.py stats
+python library_cli.py search --mood deep_focus
+python library_cli.py export
 ```
 
 ## 8 Mood Presets
@@ -62,6 +67,7 @@ Automated pipeline via GitHub Actions:
 1. **Scheduled generation** - Daily at 2 AM UTC
 2. **Batch processing** - Multiple moods x durations
 3. **Auto-upload** - Direct to YouTube with SEO
+4. **Content Library** - Automatic catalog with YouTube links and metadata
 
 See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for diagrams.
 
@@ -71,9 +77,12 @@ See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for diagrams.
 run_job.py           # Single video CLI
 batch_generate.py    # Batch generation
 youtube_upload.py    # YouTube upload CLI
+library_cli.py       # Content library browser
+content_catalog.json # Persistent video catalog with YouTube links
 audio/               # Audio synthesis
 visuals/             # Fractal/geometry generation  
 render/              # FFmpeg pipeline
+library/             # Content library management
 config/moods.yaml    # Mood presets
 .github/workflows/   # CI/CD automation
 ```
@@ -93,6 +102,7 @@ See [docs/youtube-auth.md](docs/youtube-auth.md) for detailed instructions.
 
 - 📚 **[Getting Started Guide](docs/GETTING_STARTED.md)** - Complete tutorial with examples
 - ⚡ **[Quick Reference](docs/QUICK_REFERENCE.md)** - Command cheat sheet
+- 📖 **[Content Library](docs/CONTENT_LIBRARY.md)** - Track videos with YouTube links
 - ❓ **[FAQ](docs/FAQ.md)** - Common questions answered
 - 💡 **[Use Cases](docs/USE_CASES.md)** - Real-world applications
 - 🏗️ **[Architecture](docs/architecture.md)** - System design and diagrams

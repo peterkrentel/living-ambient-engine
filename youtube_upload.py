@@ -10,6 +10,7 @@ import os
 from pathlib import Path
 
 from youtube.uploader import YouTubeUploader, GOOGLE_API_AVAILABLE
+from library import ContentLibrary
 
 
 def generate_description(metadata: dict) -> str:
@@ -152,7 +153,9 @@ def get_tags(metadata: dict) -> list:
 @click.option('--privacy', '-p', default='public', type=click.Choice(['public', 'private', 'unlisted']))
 @click.option('--auth', is_flag=True, help='Just authenticate (for first-time setup)')
 @click.option('--batch', '-b', help='Upload all videos from manifest.json in directory')
-def main(video: str, metadata: str, privacy: str, auth: bool, batch: str):
+@click.option('--update-catalog/--no-update-catalog', default=True, help='Update content catalog with YouTube links')
+@click.option('--catalog-path', help='Path to catalog file (default: content_catalog.json)')
+def main(video: str, metadata: str, privacy: str, auth: bool, batch: str, update_catalog: bool, catalog_path: str):
     """
     Upload videos to YouTube.
     
@@ -197,17 +200,49 @@ def main(video: str, metadata: str, privacy: str, auth: bool, batch: str):
         videos = manifest.get('videos', [])
         click.echo(f"📦 Found {len(videos)} videos to upload")
         
+        # Initialize content library if catalog updates enabled
+        library = None
+        if update_catalog:
+            library = ContentLibrary(catalog_path=catalog_path)
+            click.echo(f"📚 Content catalog: {library.catalog_path}")
+        
+        uploaded_count = 0
         for i, v in enumerate(videos, 1):
             result = v.get('result', {})
             video_path = result.get('video_path')
-            meta = result
+            meta = result.get('metadata', result)  # Use nested metadata if available
             
             if not video_path or not os.path.exists(video_path):
                 click.echo(f"  [{i}] ⏭️  Skipping (file not found)")
                 continue
             
             click.echo(f"  [{i}/{len(videos)}] Uploading {Path(video_path).name}...")
-            upload_single(uploader, video_path, meta, privacy)
+            
+            try:
+                upload_result = upload_single(uploader, video_path, meta, privacy)
+                
+                # Add to content library
+                if library and upload_result:
+                    library.add_video(
+                        youtube_id=upload_result['video_id'],
+                        youtube_url=upload_result['url'],
+                        title=upload_result['title'],
+                        metadata=meta
+                    )
+                    uploaded_count += 1
+            except Exception as e:
+                click.echo(f"  ❌ Upload failed: {e}")
+                continue
+        
+        # Export markdown summary if catalog was updated
+        if library and uploaded_count > 0:
+            try:
+                md_path = library.export_markdown()
+                click.echo(f"\n📄 Content library updated: {library.catalog_path}")
+                click.echo(f"📄 Markdown export: {md_path}")
+            except Exception as e:
+                click.echo(f"\n⚠️  Warning: Could not export markdown: {e}")
+        
         return
     
     # Single video upload
@@ -224,11 +259,27 @@ def main(video: str, metadata: str, privacy: str, auth: bool, batch: str):
         with open(metadata) as f:
             meta = json.load(f)
     
-    upload_single(uploader, video, meta, privacy)
+    upload_result = upload_single(uploader, video, meta, privacy)
+    
+    # Add to content library
+    if update_catalog and upload_result:
+        try:
+            library = ContentLibrary(catalog_path=catalog_path)
+            library.add_video(
+                youtube_id=upload_result['video_id'],
+                youtube_url=upload_result['url'],
+                title=upload_result['title'],
+                metadata=meta
+            )
+            md_path = library.export_markdown()
+            click.echo(f"\n📚 Added to content library: {library.catalog_path}")
+            click.echo(f"📄 Markdown export: {md_path}")
+        except Exception as e:
+            click.echo(f"\n⚠️  Warning: Could not update catalog: {e}")
 
 
-def upload_single(uploader: YouTubeUploader, video_path: str, meta: dict, privacy: str):
-    """Upload a single video."""
+def upload_single(uploader: YouTubeUploader, video_path: str, meta: dict, privacy: str) -> dict:
+    """Upload a single video and return the result."""
     title = meta.get('video_title', Path(video_path).stem)
     description = generate_description(meta)
     tags = get_tags(meta)
@@ -244,6 +295,7 @@ def upload_single(uploader: YouTubeUploader, video_path: str, meta: dict, privac
     )
     
     click.echo(f"  ✅ Uploaded: {result['url']}")
+    return result
 
 
 if __name__ == "__main__":

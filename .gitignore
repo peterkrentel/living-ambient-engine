@@ -34,11 +34,13 @@ ENV/
 # Secrets & Credentials
 *.pem
 *.key
-*.json
 credentials/
 secrets/
 token*.json
 client_secret*.json
+
+# EXCEPT: Content catalog files (tracked)
+!content_catalog.json
 
 # Output artifacts
 output/
