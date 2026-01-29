@@ -2,7 +2,7 @@
 
 Automated hypnotic video factory for YouTube monetization.
 
-> **New User?** Start here: [📚 Getting Started Guide](docs/GETTING_STARTED.md) | [⚡ Quick Reference](docs/QUICK_REFERENCE.md) | [❓ FAQ](docs/FAQ.md)
+> **New User?** Start here: [📚 Getting Started Guide](docs/GETTING_STARTED.md) | [⚡ Quick Reference](docs/QUICK_REFERENCE.md) | [🎨 Art Creator](docs/ART_CREATOR.md) | [❓ FAQ](docs/FAQ.md)
 
 ## What It Does
 
@@ -11,6 +11,20 @@ Generates ambient videos with:
 - 🥁 **Tribal rhythms** - 8 authentic patterns (Bamboula, Kuku, Gnawa, etc.)
 - 🧠 **Brainwave entrainment** - Binaural beats tuned to Delta/Theta/Alpha/Beta/Gamma
 - 🎵 **Solfeggio frequencies** - 432Hz, 528Hz, 639Hz healing tones
+
+## 🎨 NEW: Art Creator
+
+**Your digital artist's palette** - Create unique parameterized videos with:
+- 🎭 **9 Art historical periods** - From cave art to futuristic
+- 🖼️ **7 Visual patterns** - Fractals, particles, sacred geometry
+- 🎨 **11 Color palettes** - Or create your own with custom RGB
+- 🎵 **9 Music styles** - World rhythms from heartbeat to tribal drums
+- ⚡ **Full parameter control** - Speed, complexity, tempo, frequencies
+- 🎲 **Reproducible seeds** - Recreate or share your exact creations
+
+👉 **[Start Creating Art Now →](docs/ART_CREATOR.md)**
+
+*Anyone can run the Art Creator workflow—no coding required!*
 
 ## Quick Start
 
@@ -100,6 +114,7 @@ See [docs/youtube-auth.md](docs/youtube-auth.md) for detailed instructions.
 
 ## Documentation
 
+- 🎨 **[Art Creator Guide](docs/ART_CREATOR.md)** - Your digital artist's palette
 - 📚 **[Getting Started Guide](docs/GETTING_STARTED.md)** - Complete tutorial with examples
 - ⚡ **[Quick Reference](docs/QUICK_REFERENCE.md)** - Command cheat sheet
 - 📖 **[Content Library](docs/CONTENT_LIBRARY.md)** - Track videos with YouTube links

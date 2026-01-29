@@ -1,0 +1,445 @@
+# Art Creator - Parameterized Artistic Video Generation
+# An artist's palette for creating unique ambient videos
+# Inspired by the premise that anyone can be an artist with the right tools
+
+name: Art Creator
+
+on:
+  # Manual trigger - OPEN TO PUBLIC
+  # Anyone can run this workflow with their own artistic choices
+  workflow_dispatch:
+    inputs:
+      # ===== ART HISTORICAL PERIOD =====
+      art_period:
+        description: 'Art Historical Period (visual inspiration)'
+        required: false
+        type: choice
+        default: 'modern'
+        options:
+          - 'cave_art'           # Prehistoric cave paintings
+          - 'ancient'            # Ancient civilizations (Egypt, Greece, Rome)
+          - 'medieval'           # Medieval illuminated manuscripts
+          - 'renaissance'        # Renaissance masters
+          - 'baroque'            # Baroque drama and movement
+          - 'impressionist'      # Impressionist light and color
+          - 'modern'             # Modern abstract art
+          - 'contemporary'       # Contemporary mixed media
+          - 'future'             # Futuristic digital art
+      
+      # ===== VISUAL PARAMETERS =====
+      visual_pattern:
+        description: 'Visual Pattern Type'
+        required: false
+        type: choice
+        default: 'fractal_zoom'
+        options:
+          - 'fractal_zoom'       # Mandelbrot/Julia set zoom
+          - 'particle_flow'      # Flowing particles
+          - 'geometric_morph'    # Morphing geometric shapes
+          - 'sacred_geometry'    # Sacred geometric patterns
+          - 'starfield'          # Starfield journey
+          - 'rain_window'        # Rain on window
+          - 'fireplace'          # Flickering fireplace
+      
+      visual_speed:
+        description: 'Visual Speed (0.1=very slow, 1.0=fast)'
+        required: false
+        default: '0.5'
+      
+      visual_complexity:
+        description: 'Visual Complexity (0.1=simple, 1.0=intricate)'
+        required: false
+        default: '0.7'
+      
+      color_palette:
+        description: 'Color Palette'
+        required: false
+        type: choice
+        default: 'psychedelic'
+        options:
+          - 'cave_earth'         # Earth tones (browns, ochres)
+          - 'ancient_gold'       # Gold and jewel tones
+          - 'medieval_rich'      # Deep reds, blues, gold
+          - 'renaissance_warm'   # Warm, natural tones
+          - 'impressionist_soft' # Soft, pastel colors
+          - 'psychedelic'        # Vibrant, electric colors
+          - 'cyberpunk'          # Neon and dark contrasts
+          - 'sunset'             # Personal sunset photography tones
+          - 'ocean'              # Deep blues and teals
+          - 'forest'             # Greens and earth
+          - 'custom'             # Use custom RGB values
+      
+      # Custom colors (used when color_palette='custom')
+      custom_primary_rgb:
+        description: 'Custom Primary Color (R,G,B e.g., "100,150,200")'
+        required: false
+        default: '100,150,200'
+      
+      custom_secondary_rgb:
+        description: 'Custom Secondary Color (R,G,B e.g., "200,100,150")'
+        required: false
+        default: '200,100,150'
+      
+      custom_accent_rgb:
+        description: 'Custom Accent Color (R,G,B e.g., "255,255,100")'
+        required: false
+        default: '255,255,100'
+      
+      # ===== AUDIO PARAMETERS =====
+      music_style:
+        description: 'Music Style / Rhythm Pattern'
+        required: false
+        type: choice
+        default: 'gnawa'
+        options:
+          - 'heartbeat'          # Primal heartbeat
+          - 'taiko'              # Japanese ceremonial drums
+          - 'gamelan'            # Indonesian ethereal percussion
+          - 'gnawa'              # Moroccan spiritual trance
+          - 'bamboula'           # Caribbean hypnotic groove
+          - 'candomble'          # Brazilian sacred polyrhythms
+          - 'burundi'            # East African power drums
+          - 'kuku'               # West African celebration
+          - 'none'               # No percussion (pure ambient)
+      
+      tempo:
+        description: 'Tempo / Rhythm Speed (40=very slow, 120=fast)'
+        required: false
+        default: '60'
+      
+      brainwave_frequency:
+        description: 'Brainwave Frequency Hz (2=sleep, 10=relax, 40=focus)'
+        required: false
+        default: '10'
+      
+      solfeggio_frequency:
+        description: 'Solfeggio Healing Frequency Hz'
+        required: false
+        type: choice
+        default: '528'
+        options:
+          - '174'  # Pain reduction
+          - '285'  # Natural healing
+          - '396'  # Liberation from fear
+          - '417'  # Facilitating change
+          - '528'  # Transformation and miracles (DNA repair)
+          - '639'  # Connection and relationships
+          - '741'  # Awakening intuition
+          - '852'  # Spiritual order
+          - '963'  # Divine consciousness
+      
+      rhythm_volume:
+        description: 'Rhythm/Drums Volume (0.0=off, 1.0=full)'
+        required: false
+        default: '0.5'
+      
+      ambient_volume:
+        description: 'Ambient/Drone Volume (0.0=off, 1.0=full)'
+        required: false
+        default: '1.0'
+      
+      # ===== GENERATION PARAMETERS =====
+      duration:
+        description: 'Duration (e.g., 30s, 5min, 1h, 3h)'
+        required: false
+        default: '5min'
+      
+      seed:
+        description: 'Random Seed (for reproducibility, leave empty for random)'
+        required: false
+        default: ''
+      
+      title:
+        description: 'Custom Video Title (optional, auto-generated if empty)'
+        required: false
+        default: ''
+      
+      description:
+        description: 'Custom Video Description (optional)'
+        required: false
+        default: ''
+
+env:
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  create_art:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+      
+      - name: Install FFmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Generate custom configuration
+        run: |
+          # Create a custom configuration file based on workflow inputs
+          cat > /tmp/art_creator_config.yaml << 'EOF'
+          custom_creation:
+            description: "Custom artistic creation"
+            title_template: "${{ github.event.inputs.title }}"
+            art_period: "${{ github.event.inputs.art_period || 'modern' }}"
+            visual:
+              type: "${{ github.event.inputs.visual_pattern || 'fractal_zoom' }}"
+              speed: ${{ github.event.inputs.visual_speed || 0.5 }}
+              complexity: ${{ github.event.inputs.visual_complexity || 0.7 }}
+              symmetry: 6
+              pulse_frequency: 0.1
+              pattern: "mandelbrot"
+            audio:
+              rhythm: "${{ github.event.inputs.music_style }}"
+              rhythm_volume: ${{ github.event.inputs.rhythm_volume || 0.5 }}
+              base_frequency: ${{ github.event.inputs.brainwave_frequency || 10 }}
+              binaural_beat: ${{ github.event.inputs.brainwave_frequency || 10 }}
+              layers:
+                - type: "sine"
+                  frequency: ${{ github.event.inputs.solfeggio_frequency || 528 }}
+                  amplitude: 0.1
+                - type: "binaural"
+                  carrier: 200
+                  beat: ${{ github.event.inputs.brainwave_frequency || 10 }}
+                  amplitude: 0.12
+          EOF
+          
+          echo "📋 Custom configuration created"
+          cat /tmp/art_creator_config.yaml
+      
+      - name: Apply color palette
+        run: |
+          # Map art periods and color palettes to RGB values
+          python3 << 'PYTHON_SCRIPT'
+          import yaml
+          
+          # Color palette definitions
+          PALETTES = {
+              'cave_earth': {
+                  'primary': [80, 50, 30],
+                  'secondary': [120, 90, 60],
+                  'accent': [180, 140, 100]
+              },
+              'ancient_gold': {
+                  'primary': [180, 140, 20],
+                  'secondary': [220, 180, 40],
+                  'accent': [255, 220, 100]
+              },
+              'medieval_rich': {
+                  'primary': [120, 20, 30],
+                  'secondary': [20, 40, 120],
+                  'accent': [220, 180, 40]
+              },
+              'renaissance_warm': {
+                  'primary': [140, 100, 70],
+                  'secondary': [180, 120, 80],
+                  'accent': [220, 180, 140]
+              },
+              'impressionist_soft': {
+                  'primary': [180, 200, 220],
+                  'secondary': [220, 180, 200],
+                  'accent': [255, 240, 200]
+              },
+              'psychedelic': {
+                  'primary': [180, 0, 255],
+                  'secondary': [255, 0, 150],
+                  'accent': [0, 255, 200]
+              },
+              'cyberpunk': {
+                  'primary': [255, 0, 100],
+                  'secondary': [0, 255, 255],
+                  'accent': [255, 100, 255]
+              },
+              'sunset': {
+                  'primary': [255, 120, 60],
+                  'secondary': [255, 180, 100],
+                  'accent': [255, 220, 180]
+              },
+              'ocean': {
+                  'primary': [0, 50, 100],
+                  'secondary': [0, 100, 150],
+                  'accent': [100, 180, 220]
+              },
+              'forest': {
+                  'primary': [30, 60, 30],
+                  'secondary': [50, 100, 50],
+                  'accent': [100, 150, 80]
+              }
+          }
+          
+          palette = "${{ github.event.inputs.color_palette }}"
+          
+          # Load the config
+          with open('/tmp/art_creator_config.yaml', 'r') as f:
+              config = yaml.safe_load(f)
+          
+          # Apply colors
+          if palette == 'custom':
+              primary = [int(x) for x in "${{ github.event.inputs.custom_primary_rgb }}".split(',')]
+              secondary = [int(x) for x in "${{ github.event.inputs.custom_secondary_rgb }}".split(',')]
+              accent = [int(x) for x in "${{ github.event.inputs.custom_accent_rgb }}".split(',')]
+          else:
+              colors = PALETTES.get(palette, PALETTES['psychedelic'])
+              primary = colors['primary']
+              secondary = colors['secondary']
+              accent = colors['accent']
+          
+          config['custom_creation']['visual']['colors'] = {
+              'primary': primary,
+              'secondary': secondary,
+              'accent': accent
+          }
+          
+          # Save updated config
+          with open('/tmp/art_creator_config.yaml', 'w') as f:
+              yaml.dump(config, f, default_flow_style=False)
+          
+          print(f"🎨 Applied {palette} palette: primary={primary}, secondary={secondary}, accent={accent}")
+          PYTHON_SCRIPT
+      
+      - name: Merge custom config with moods
+        run: |
+          # Append custom config to moods.yaml temporarily for this run
+          cat /tmp/art_creator_config.yaml >> config/moods.yaml
+          echo "✅ Custom mood 'custom_creation' added to config"
+      
+      - name: Generate artistic video
+        run: |
+          SEED_FLAG=""
+          if [ -n "${{ github.event.inputs.seed }}" ]; then
+            SEED_FLAG="--seed ${{ github.event.inputs.seed }}"
+          fi
+          
+          echo "🎨 Creating your unique artistic video..."
+          echo "   Art Period: ${{ github.event.inputs.art_period || 'modern' }}"
+          echo "   Visual: ${{ github.event.inputs.visual_pattern || 'fractal_zoom' }}"
+          echo "   Colors: ${{ github.event.inputs.color_palette || 'psychedelic' }}"
+          echo "   Music: ${{ github.event.inputs.music_style || 'gnawa' }}"
+          echo "   Duration: ${{ github.event.inputs.duration || '5min' }}"
+          
+          # Use a Python script to generate with custom parameters
+          python3 << 'PYTHON_SCRIPT'
+          import sys
+          from orchestrator import Orchestrator
+          from pathlib import Path
+          
+          # Parse duration
+          duration_str = "${{ github.event.inputs.duration }}"
+          if duration_str.endswith('h'):
+              duration = int(duration_str[:-1]) * 3600
+          elif duration_str.endswith('min'):
+              duration = int(duration_str[:-3]) * 60
+          elif duration_str.endswith('s'):
+              duration = int(duration_str[:-1])
+          else:
+              duration = int(duration_str)
+          
+          # Setup orchestrator
+          orchestrator = Orchestrator()
+          
+          # Parse seed
+          seed_str = "${{ github.event.inputs.seed }}"
+          seed = int(seed_str) if seed_str else None
+          
+          # Parse volumes
+          rhythm_vol = float("${{ github.event.inputs.rhythm_volume }}" or "0.5")
+          ambient_vol = float("${{ github.event.inputs.ambient_volume }}" or "1.0")
+          
+          # Generate
+          output_dir = "./art_output"
+          Path(output_dir).mkdir(exist_ok=True)
+          
+          result = orchestrator.generate(
+              mood='custom_creation',
+              duration=duration,
+              output_dir=output_dir,
+              rhythm_volume=rhythm_vol,
+              drone_volume=ambient_vol,
+              seed=seed
+          )
+          
+          print(f"✨ Video created: {result['video_path']}")
+          
+          # Save metadata
+          import json
+          with open(f"{output_dir}/creation_info.json", 'w') as f:
+              json.dump({
+                  'art_period': "${{ github.event.inputs.art_period }}",
+                  'visual_pattern': "${{ github.event.inputs.visual_pattern }}",
+                  'color_palette': "${{ github.event.inputs.color_palette }}",
+                  'music_style': "${{ github.event.inputs.music_style }}",
+                  'tempo': "${{ github.event.inputs.tempo }}",
+                  'brainwave_hz': "${{ github.event.inputs.brainwave_frequency }}",
+                  'solfeggio_hz': "${{ github.event.inputs.solfeggio_frequency }}",
+                  'seed': result['metadata'].get('seed'),
+                  'created_by': "${{ github.actor }}",
+                  'result': {
+                      'video': result['video_path'],
+                      'thumbnail': result['thumbnail_path'],
+                      'metadata': result['metadata_path']
+                  }
+              }, f, indent=2)
+          PYTHON_SCRIPT
+      
+      - name: Upload artwork
+        uses: actions/upload-artifact@v4
+        with:
+          name: artistic-creation-${{ github.run_number }}
+          path: ./art_output/
+          retention-days: 30
+      
+      - name: Creation Summary
+        run: |
+          echo "## 🎨 Artistic Creation Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Your unique creation is ready!**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🎭 Your Artistic Choices:" >> $GITHUB_STEP_SUMMARY
+          echo "- **Art Period**: ${{ github.event.inputs.art_period || 'modern' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Visual Pattern**: ${{ github.event.inputs.visual_pattern || 'fractal_zoom' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Visual Speed**: ${{ github.event.inputs.visual_speed || '0.5' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Complexity**: ${{ github.event.inputs.visual_complexity || '0.7' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Color Palette**: ${{ github.event.inputs.color_palette || 'psychedelic' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🎵 Audio Configuration:" >> $GITHUB_STEP_SUMMARY
+          echo "- **Music Style**: ${{ github.event.inputs.music_style || 'gnawa' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tempo**: ${{ github.event.inputs.tempo || '60' }} BPM" >> $GITHUB_STEP_SUMMARY
+          echo "- **Brainwave**: ${{ github.event.inputs.brainwave_frequency || '10' }} Hz" >> $GITHUB_STEP_SUMMARY
+          echo "- **Solfeggio**: ${{ github.event.inputs.solfeggio_frequency || '528' }} Hz" >> $GITHUB_STEP_SUMMARY
+          echo "- **Rhythm Volume**: ${{ github.event.inputs.rhythm_volume || '0.5' }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 📦 Output:" >> $GITHUB_STEP_SUMMARY
+          echo "- **Duration**: ${{ github.event.inputs.duration || '5min' }}" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -n "${{ github.event.inputs.seed }}" ]; then
+            echo "- **Seed**: ${{ github.event.inputs.seed }} (reproducible)" >> $GITHUB_STEP_SUMMARY
+          else
+            # Extract seed from creation_info.json if available
+            if [ -f ./art_output/creation_info.json ]; then
+              SEED=$(python3 -c "import json; print(json.load(open('./art_output/creation_info.json'))['seed'])" 2>/dev/null || echo "auto-generated")
+              echo "- **Seed**: ${SEED} (save this to recreate)" >> $GITHUB_STEP_SUMMARY
+            fi
+          fi
+          
+          echo "- **Created by**: @${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "---" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "*Like an artist with their palette, you've created something unique.*" >> $GITHUB_STEP_SUMMARY
+          echo "*Each combination of parameters produces a one-of-a-kind creation.*" >> $GITHUB_STEP_SUMMARY
+          echo "*The thrill is in the creative process itself, not the expectation of the result.*" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "💡 **Tip**: Use the seed value to recreate this exact video, or try new parameters for a completely different experience!" >> $GITHUB_STEP_SUMMARY
