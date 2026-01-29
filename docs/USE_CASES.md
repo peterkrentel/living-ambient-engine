@@ -1,5 +1,7 @@
 # Use Cases & Success Stories
 
+> **Disclaimer:** Revenue projections in this document are hypothetical examples based on industry averages and should not be considered guarantees. Actual results vary significantly based on content quality, audience engagement, SEO optimization, upload consistency, niche competition, and many other factors. Your experience may differ.
+
 ## Real-World Applications
 
 ### 1. 💰 YouTube Content Creator
@@ -27,7 +29,9 @@ python youtube_upload.py --batch ./batch_output
 - 60-90 videos/month
 - Growing passive view count
 - YouTube Partner Program eligibility in 3-6 months
-- Potential $500-2000/month after monetization
+- Potential $500-2000/month after monetization*
+
+*Results vary widely. These are example projections, not guarantees.
 
 ---
 
@@ -265,11 +269,15 @@ python run_job.py --mood research_beta --duration 1800
 
 ## Success Metrics
 
-### YouTube Creator Benchmarks
+> **Note:** These metrics are illustrative examples based on industry observations and should not be considered typical or guaranteed results. Your actual results will vary based on many factors.
+
+### YouTube Creator Benchmarks (Example Timeline)
 - **Month 1-3:** Build content library (30-90 videos)
 - **Month 3-6:** Reach YPP eligibility (1k subs, 4k hours)
-- **Month 6-12:** Grow to $500-1000/month
-- **Year 2+:** Scale to $2000-5000/month
+- **Month 6-12:** Grow to $500-1000/month*
+- **Year 2+:** Scale to $2000-5000/month*
+
+*Estimates only. Actual earnings vary widely.
 
 ### Content Strategy Wins
 - **Consistency:** Daily uploads = algorithm favor

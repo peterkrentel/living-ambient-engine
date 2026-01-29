@@ -80,7 +80,7 @@ def run_example(mood, duration, description):
     try:
         result = subprocess.run(
             ["python", "run_job.py", "--mood", mood, "--duration", str(duration)],
-            capture_output=False,
+            capture_output=True,
             text=True
         )
         
@@ -90,6 +90,9 @@ def run_example(mood, duration, description):
         else:
             print(f"\n❌ Error: Command failed with code {result.returncode}")
             print("   Make sure you've run: pip install -r requirements.txt")
+            if result.stderr:
+                print("\nError details:")
+                print(result.stderr)
             
     except FileNotFoundError:
         print("\n❌ Error: Python not found or script not in current directory")

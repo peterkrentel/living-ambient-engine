@@ -263,7 +263,7 @@ Varies widely based on:
 - **Volume:** More videos = more revenue
 - **Optimization:** SEO, titles, thumbnails
 
-Some ambient channels earn $500-5000/month with consistent uploads.
+**Note:** While some ambient channels reportedly earn $500-5000/month with consistent uploads, these are not typical results. Your actual earnings will depend on many factors including content quality, audience engagement, competition, and market conditions. There are no guarantees of specific income levels.
 
 ### Do I need a business license?
 Depends on your jurisdiction. YouTube income is taxable. Consult a tax professional.
