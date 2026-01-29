@@ -327,7 +327,7 @@ Art shouldn't require expensive tools or years of training:
 
 ### Limitations
 
-- Max duration: Limited by GitHub Actions timeout (2 hours)
+- Max duration: 2 hours (configurable in workflow, but limited by GitHub Actions timeout)
 - Artifact storage: 30 days retention
 - Concurrent runs: Limited by GitHub Actions quotas
 - File size: Large videos (8h+) may hit size limits

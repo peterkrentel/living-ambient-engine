@@ -292,7 +292,7 @@ Color Palette: ocean
 Music Style: none
 Tempo: 40
 Brainwave: 8 Hz (Alpha)
-Solfeggio: 136.1 Hz (if available, else 639)
+Solfeggio: 639 Hz
 Rhythm Volume: 0.0
 Ambient Volume: 0.8
 Duration: 1h

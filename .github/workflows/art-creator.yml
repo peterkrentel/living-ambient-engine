@@ -187,11 +187,62 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       
-      - name: Generate custom configuration
+      - name: Validate inputs
         run: |
-          # Create a custom configuration file based on workflow inputs
+          # Validate numeric inputs are in valid ranges
+          python3 << 'PYTHON_VALIDATION'
+          import sys
+          
+          def validate_float(name, value, min_val, max_val):
+              try:
+                  val = float(value)
+                  if val < min_val or val > max_val:
+                      print(f"❌ Error: {name} must be between {min_val} and {max_val}, got {val}")
+                      return False
+                  return True
+              except ValueError:
+                  print(f"❌ Error: {name} must be a valid number, got '{value}'")
+                  return False
+          
+          def validate_int(name, value, min_val, max_val):
+              try:
+                  val = int(value)
+                  if val < min_val or val > max_val:
+                      print(f"❌ Error: {name} must be between {min_val} and {max_val}, got {val}")
+                      return False
+                  return True
+              except ValueError:
+                  print(f"❌ Error: {name} must be a valid integer, got '{value}'")
+                  return False
+          
+          valid = True
+          valid &= validate_float("visual_speed", "${{ github.event.inputs.visual_speed }}", 0.01, 1.5)
+          valid &= validate_float("visual_complexity", "${{ github.event.inputs.visual_complexity }}", 0.1, 1.0)
+          valid &= validate_int("tempo", "${{ github.event.inputs.tempo }}", 20, 200)
+          valid &= validate_int("brainwave_frequency", "${{ github.event.inputs.brainwave_frequency }}", 1, 50)
+          valid &= validate_float("rhythm_volume", "${{ github.event.inputs.rhythm_volume }}", 0.0, 1.0)
+          valid &= validate_float("ambient_volume", "${{ github.event.inputs.ambient_volume }}", 0.0, 1.0)
+          
+          if not valid:
+              sys.exit(1)
+          
+          print("✅ All input parameters are valid")
+          PYTHON_VALIDATION
+      
+      - name: Generate custom configuration
+        env:
+          ART_PERIOD: ${{ github.event.inputs.art_period || 'modern' }}
+          VISUAL_PATTERN: ${{ github.event.inputs.visual_pattern || 'fractal_zoom' }}
+          VISUAL_SPEED: ${{ github.event.inputs.visual_speed || '0.5' }}
+          VISUAL_COMPLEXITY: ${{ github.event.inputs.visual_complexity || '0.7' }}
+          MUSIC_STYLE: ${{ github.event.inputs.music_style || 'gnawa' }}
+          RHYTHM_VOLUME: ${{ github.event.inputs.rhythm_volume || '0.5' }}
+          BRAINWAVE_FREQ: ${{ github.event.inputs.brainwave_frequency || '10' }}
+          SOLFEGGIO_FREQ: ${{ github.event.inputs.solfeggio_frequency || '528' }}
+        run: |
+          # Create a custom configuration file based on workflow inputs using env vars
           # Handle 'none' rhythm by setting it to null
-          RHYTHM_VALUE="${{ github.event.inputs.music_style }}"
+          RHYTHM_VALUE="$MUSIC_STYLE"
           if [ "$RHYTHM_VALUE" = "none" ]; then
             RHYTHM_VALUE="null"
           else
@@ -202,26 +253,26 @@ jobs:
           custom_creation:
             description: "Custom artistic creation"
             title_template: "${{ github.event.inputs.title }}"
-            art_period: "${{ github.event.inputs.art_period || 'modern' }}"
+            art_period: "$ART_PERIOD"
             visual:
-              type: "${{ github.event.inputs.visual_pattern || 'fractal_zoom' }}"
-              speed: ${{ github.event.inputs.visual_speed || 0.5 }}
-              complexity: ${{ github.event.inputs.visual_complexity || 0.7 }}
+              type: "$VISUAL_PATTERN"
+              speed: $VISUAL_SPEED
+              complexity: $VISUAL_COMPLEXITY
               symmetry: 6
               pulse_frequency: 0.1
               pattern: "mandelbrot"
             audio:
               rhythm: $RHYTHM_VALUE
-              rhythm_volume: ${{ github.event.inputs.rhythm_volume || 0.5 }}
-              base_frequency: ${{ github.event.inputs.brainwave_frequency || 10 }}
-              binaural_beat: ${{ github.event.inputs.brainwave_frequency || 10 }}
+              rhythm_volume: $RHYTHM_VOLUME
+              base_frequency: $BRAINWAVE_FREQ
+              binaural_beat: $BRAINWAVE_FREQ
               layers:
                 - type: "sine"
-                  frequency: ${{ github.event.inputs.solfeggio_frequency || 528 }}
+                  frequency: $SOLFEGGIO_FREQ
                   amplitude: 0.1
                 - type: "binaural"
                   carrier: 200
-                  beat: ${{ github.event.inputs.brainwave_frequency || 10 }}
+                  beat: $BRAINWAVE_FREQ
                   amplitude: 0.12
           EOF
           
@@ -229,10 +280,17 @@ jobs:
           cat /tmp/art_creator_config.yaml
       
       - name: Apply color palette
+        env:
+          COLOR_PALETTE: ${{ github.event.inputs.color_palette || 'psychedelic' }}
+          CUSTOM_PRIMARY: ${{ github.event.inputs.custom_primary_rgb || '100,150,200' }}
+          CUSTOM_SECONDARY: ${{ github.event.inputs.custom_secondary_rgb || '200,100,150' }}
+          CUSTOM_ACCENT: ${{ github.event.inputs.custom_accent_rgb || '255,255,100' }}
         run: |
-          # Map art periods and color palettes to RGB values
+          # Map art periods and color palettes to RGB values using env vars
           python3 << 'PYTHON_SCRIPT'
           import yaml
+          import os
+          import sys
           
           # Color palette definitions
           PALETTES = {
@@ -288,7 +346,7 @@ jobs:
               }
           }
           
-          palette = "${{ github.event.inputs.color_palette }}"
+          palette = os.environ.get('COLOR_PALETTE', 'psychedelic')
           
           # Load the config
           with open('/tmp/art_creator_config.yaml', 'r') as f:
@@ -296,9 +354,23 @@ jobs:
           
           # Apply colors
           if palette == 'custom':
-              primary = [int(x) for x in "${{ github.event.inputs.custom_primary_rgb }}".split(',')]
-              secondary = [int(x) for x in "${{ github.event.inputs.custom_secondary_rgb }}".split(',')]
-              accent = [int(x) for x in "${{ github.event.inputs.custom_accent_rgb }}".split(',')]
+              try:
+                  primary = [int(x.strip()) for x in os.environ.get('CUSTOM_PRIMARY', '100,150,200').split(',')]
+                  secondary = [int(x.strip()) for x in os.environ.get('CUSTOM_SECONDARY', '200,100,150').split(',')]
+                  accent = [int(x.strip()) for x in os.environ.get('CUSTOM_ACCENT', '255,255,100').split(',')]
+                  
+                  # Validate RGB values
+                  for color_name, color in [('primary', primary), ('secondary', secondary), ('accent', accent)]:
+                      if len(color) != 3:
+                          print(f"❌ Error: {color_name} color must have exactly 3 values (R,G,B), got {len(color)}")
+                          sys.exit(1)
+                      for i, val in enumerate(color):
+                          if val < 0 or val > 255:
+                              print(f"❌ Error: {color_name}[{i}] must be between 0-255, got {val}")
+                              sys.exit(1)
+              except ValueError as e:
+                  print(f"❌ Error parsing custom RGB values: {e}")
+                  sys.exit(1)
           else:
               colors = PALETTES.get(palette, PALETTES['psychedelic'])
               primary = colors['primary']
@@ -325,66 +397,85 @@ jobs:
           echo "✅ Custom mood 'custom_creation' added to config"
       
       - name: Generate artistic video
+        env:
+          DURATION_INPUT: ${{ github.event.inputs.duration || '5min' }}
+          SEED_INPUT: ${{ github.event.inputs.seed }}
+          RHYTHM_VOLUME_INPUT: ${{ github.event.inputs.rhythm_volume || '0.5' }}
+          AMBIENT_VOLUME_INPUT: ${{ github.event.inputs.ambient_volume || '1.0' }}
         run: |
-          SEED_FLAG=""
-          if [ -n "${{ github.event.inputs.seed }}" ]; then
-            SEED_FLAG="--seed ${{ github.event.inputs.seed }}"
-          fi
-          
           echo "🎨 Creating your unique artistic video..."
           echo "   Art Period: ${{ github.event.inputs.art_period || 'modern' }}"
           echo "   Visual: ${{ github.event.inputs.visual_pattern || 'fractal_zoom' }}"
           echo "   Colors: ${{ github.event.inputs.color_palette || 'psychedelic' }}"
           echo "   Music: ${{ github.event.inputs.music_style || 'gnawa' }}"
-          echo "   Duration: ${{ github.event.inputs.duration || '5min' }}"
+          echo "   Duration: $DURATION_INPUT"
           
           # Use a Python script to generate with custom parameters
           python3 << 'PYTHON_SCRIPT'
           import sys
+          import os
           from orchestrator import Orchestrator
           from pathlib import Path
           
-          # Parse duration
-          duration_str = "${{ github.event.inputs.duration }}"
-          if duration_str.endswith('h'):
-              duration = int(duration_str[:-1]) * 3600
-          elif duration_str.endswith('min'):
-              duration = int(duration_str[:-3]) * 60
-          elif duration_str.endswith('s'):
-              duration = int(duration_str[:-1])
-          else:
-              duration = int(duration_str)
+          # Parse duration with error handling
+          duration_str = os.environ.get('DURATION_INPUT', '5min')
+          try:
+              if duration_str.endswith('h'):
+                  duration = int(duration_str[:-1]) * 3600
+              elif duration_str.endswith('min'):
+                  duration = int(duration_str[:-3]) * 60
+              elif duration_str.endswith('s'):
+                  duration = int(duration_str[:-1])
+              else:
+                  duration = int(duration_str)
+              
+              if duration < 1 or duration > 28800:  # Max 8 hours
+                  print(f"❌ Error: Duration must be between 1 second and 8 hours, got {duration} seconds")
+                  sys.exit(1)
+          except ValueError as e:
+              print(f"❌ Error: Invalid duration format '{duration_str}'. Use formats like: 30s, 5min, 1h")
+              sys.exit(1)
           
           # Setup orchestrator
           orchestrator = Orchestrator()
           
           # Parse seed
-          seed_str = "${{ github.event.inputs.seed }}"
-          seed = int(seed_str) if seed_str else None
+          seed_str = os.environ.get('SEED_INPUT', '')
+          seed = None
+          if seed_str:
+              try:
+                  seed = int(seed_str)
+              except ValueError:
+                  print(f"❌ Error: Seed must be an integer, got '{seed_str}'")
+                  sys.exit(1)
           
           # Parse volumes
-          rhythm_vol = float("${{ github.event.inputs.rhythm_volume }}" or "0.5")
-          ambient_vol = float("${{ github.event.inputs.ambient_volume }}" or "1.0")
+          try:
+              rhythm_vol = float(os.environ.get('RHYTHM_VOLUME_INPUT', '0.5'))
+              ambient_vol = float(os.environ.get('AMBIENT_VOLUME_INPUT', '1.0'))
+          except ValueError as e:
+              print(f"❌ Error parsing volumes: {e}")
+              sys.exit(1)
           
           # Generate
           output_dir = "./art_output"
           Path(output_dir).mkdir(exist_ok=True)
           
-          result = orchestrator.generate(
-              mood='custom_creation',
-              duration=duration,
-              output_dir=output_dir,
-              rhythm_volume=rhythm_vol,
-              drone_volume=ambient_vol,
-              seed=seed
-          )
-          
-          print(f"✨ Video created: {result['video_path']}")
-          
-          # Save metadata
-          import json
-          with open(f"{output_dir}/creation_info.json", 'w') as f:
-              json.dump({
+          try:
+              result = orchestrator.generate(
+                  mood='custom_creation',
+                  duration=duration,
+                  output_dir=output_dir,
+                  rhythm_volume=rhythm_vol,
+                  drone_volume=ambient_vol,
+                  seed=seed
+              )
+              
+              print(f"✨ Video created: {result['video_path']}")
+              
+              # Save metadata
+              import json
+              creation_info = {
                   'art_period': "${{ github.event.inputs.art_period }}",
                   'visual_pattern': "${{ github.event.inputs.visual_pattern }}",
                   'color_palette': "${{ github.event.inputs.color_palette }}",
@@ -399,7 +490,16 @@ jobs:
                       'thumbnail': result['thumbnail_path'],
                       'metadata': result['metadata_path']
                   }
-              }, f, indent=2)
+              }
+              
+              with open(f"{output_dir}/creation_info.json", 'w') as f:
+                  json.dump(creation_info, f, indent=2)
+                  
+          except Exception as e:
+              print(f"❌ Error during video generation: {type(e).__name__}: {e}")
+              import traceback
+              traceback.print_exc()
+              sys.exit(1)
           PYTHON_SCRIPT
       
       - name: Upload artwork

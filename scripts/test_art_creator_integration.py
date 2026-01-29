@@ -184,7 +184,7 @@ if __name__ == '__main__':
         print("\nThe Art Creator workflow configuration is ready to use!")
         
     except Exception as e:
-        print(f"\n❌ TEST FAILED: {e}")
+        print(f"\n❌ TEST FAILED: {type(e).__name__}: {e}")
         import traceback
         traceback.print_exc()
-        exit(1)
+        sys.exit(1)
