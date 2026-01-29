@@ -257,13 +257,15 @@ See [GitHub Issues](https://github.com/peterkrentel/living-ambient-engine/issues
 ## Business Questions
 
 ### What's the earning potential?
-Varies widely based on:
+**Important:** Actual earnings vary widely and there are no guarantees of specific income levels.
+
+Earnings depend on many factors:
 - **Niche:** Sleep/study videos perform well
 - **Quality:** Better visuals = more watch time
 - **Volume:** More videos = more revenue
 - **Optimization:** SEO, titles, thumbnails
 
-**Note:** While some ambient channels reportedly earn $500-5000/month with consistent uploads, these are not typical results. Your actual earnings will depend on many factors including content quality, audience engagement, competition, and market conditions. There are no guarantees of specific income levels.
+While some ambient channels reportedly earn $500-5000/month with consistent uploads, these are not typical results and your experience may differ significantly based on content quality, audience engagement, competition, and market conditions.
 
 ### Do I need a business license?
 Depends on your jurisdiction. YouTube income is taxable. Consult a tax professional.

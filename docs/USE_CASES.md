@@ -29,9 +29,9 @@ python youtube_upload.py --batch ./batch_output
 - 60-90 videos/month
 - Growing passive view count
 - YouTube Partner Program eligibility in 3-6 months
-- Potential $500-2000/month after monetization*
+- Potential $500-2000/month after monetization (example projection only)*
 
-*Results vary widely. These are example projections, not guarantees.
+*Results vary widely. These are hypothetical projections, not typical or guaranteed results.
 
 ---
 
@@ -274,10 +274,10 @@ python run_job.py --mood research_beta --duration 1800
 ### YouTube Creator Benchmarks (Example Timeline)
 - **Month 1-3:** Build content library (30-90 videos)
 - **Month 3-6:** Reach YPP eligibility (1k subs, 4k hours)
-- **Month 6-12:** Grow to $500-1000/month*
-- **Year 2+:** Scale to $2000-5000/month*
+- **Month 6-12:** Grow to $500-1000/month (example estimate)*
+- **Year 2+:** Scale to $2000-5000/month (example estimate)*
 
-*Estimates only. Actual earnings vary widely.
+*These are hypothetical projections. Actual earnings vary widely and may be significantly different.
 
 ### Content Strategy Wins
 - **Consistency:** Daily uploads = algorithm favor

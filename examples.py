@@ -75,6 +75,13 @@ def run_example(mood, duration, description):
     print(f"Duration: {duration} seconds")
     print("\nCommand being run:")
     print(f"  python run_job.py --mood {mood} --duration {duration}")
+    
+    # Check if run_job.py exists
+    if not Path("run_job.py").exists():
+        print("\n❌ Error: run_job.py not found")
+        print("   Make sure you're in the project root directory")
+        return
+    
     print("\nGenerating... (this may take a few minutes)")
     
     try:
