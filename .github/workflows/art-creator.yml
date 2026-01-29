@@ -190,7 +190,15 @@ jobs:
       - name: Generate custom configuration
         run: |
           # Create a custom configuration file based on workflow inputs
-          cat > /tmp/art_creator_config.yaml << 'EOF'
+          # Handle 'none' rhythm by setting it to null
+          RHYTHM_VALUE="${{ github.event.inputs.music_style }}"
+          if [ "$RHYTHM_VALUE" = "none" ]; then
+            RHYTHM_VALUE="null"
+          else
+            RHYTHM_VALUE="\"$RHYTHM_VALUE\""
+          fi
+          
+          cat > /tmp/art_creator_config.yaml << EOF
           custom_creation:
             description: "Custom artistic creation"
             title_template: "${{ github.event.inputs.title }}"
@@ -203,7 +211,7 @@ jobs:
               pulse_frequency: 0.1
               pattern: "mandelbrot"
             audio:
-              rhythm: "${{ github.event.inputs.music_style }}"
+              rhythm: $RHYTHM_VALUE
               rhythm_volume: ${{ github.event.inputs.rhythm_volume || 0.5 }}
               base_frequency: ${{ github.event.inputs.brainwave_frequency || 10 }}
               binaural_beat: ${{ github.event.inputs.brainwave_frequency || 10 }}
