@@ -72,11 +72,21 @@ def example_display_videos():
     print(f"\n📚 Showing {min(5, len(videos))} most recent videos:\n")
     
     for video in videos[-5:]:  # Show last 5
-        version_tag = f" [{video['version']}]" if video['version'] != 'standard' else ""
-        print(f"📹 {video['title']}{version_tag}")
-        print(f"   🔗 {video['youtube_url']}")
-        print(f"   ⏱️  {video['duration_str']} | 🎨 {video['mood']} | 🥁 {video['rhythm_name']}")
-        print(f"   🎲 Seed: {video['seed']} | 📅 {video['uploaded_at'][:10]}")
+        version = video.get('version', 'standard')
+        version_tag = f" [{version}]" if version != 'standard' else ""
+        
+        title = video.get('title', 'Unknown')
+        youtube_url = video.get('youtube_url', '#')
+        duration_str = video.get('duration_str', 'Unknown')
+        mood = video.get('mood', 'unknown')
+        rhythm_name = video.get('rhythm_name', 'Unknown')
+        uploaded_at = video.get('uploaded_at', '')[:10] if video.get('uploaded_at') else 'Unknown'
+        seed = video.get('seed', 'Unknown')
+        
+        print(f"📹 {title}{version_tag}")
+        print(f"   🔗 {youtube_url}")
+        print(f"   ⏱️  {duration_str} | 🎨 {mood} | 🥁 {rhythm_name}")
+        print(f"   🎲 Seed: {seed} | 📅 {uploaded_at}")
         print()
 
 
@@ -147,7 +157,9 @@ def example_by_mood():
         videos = library.get_by_mood(mood)
         print(f"{mood.replace('_', ' ').title()}: {len(videos)} videos")
         for video in videos[:2]:  # Show first 2
-            print(f"  • {video['title']} ({video['duration_str']})")
+            title = video.get('title', 'Unknown')
+            duration_str = video.get('duration_str', 'Unknown')
+            print(f"  • {title} ({duration_str})")
 
 
 def main():

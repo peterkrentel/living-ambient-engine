@@ -29,24 +29,37 @@ class ContentLibrary:
     def _load_catalog(self) -> Dict:
         """Load existing catalog or create new one."""
         if self.catalog_path.exists():
-            with open(self.catalog_path, 'r') as f:
-                return json.load(f)
-        else:
-            return {
-                "catalog_version": "1.0",
-                "created_at": datetime.now().isoformat(),
-                "last_updated": datetime.now().isoformat(),
-                "total_videos": 0,
-                "videos": []
-            }
+            try:
+                with open(self.catalog_path, 'r') as f:
+                    return json.load(f)
+            except (json.JSONDecodeError, IOError) as e:
+                # Backup corrupted file and create new catalog
+                backup_path = self.catalog_path.with_suffix('.json.backup')
+                try:
+                    self.catalog_path.rename(backup_path)
+                    print(f"⚠️  Warning: Corrupted catalog backed up to {backup_path}")
+                except Exception:
+                    pass
+                # Return new catalog
+        return {
+            "catalog_version": "1.0",
+            "created_at": datetime.now().isoformat(),
+            "last_updated": datetime.now().isoformat(),
+            "total_videos": 0,
+            "videos": []
+        }
     
     def _save_catalog(self):
         """Save catalog to disk."""
         self.catalog["last_updated"] = datetime.now().isoformat()
         self.catalog["total_videos"] = len(self.catalog["videos"])
         
-        with open(self.catalog_path, 'w') as f:
-            json.dump(self.catalog, f, indent=2, default=str)
+        try:
+            with open(self.catalog_path, 'w') as f:
+                json.dump(self.catalog, f, indent=2, default=str)
+        except (IOError, OSError) as e:
+            print(f"❌ Error saving catalog: {e}")
+            raise
     
     def add_video(
         self,
@@ -98,16 +111,19 @@ class ContentLibrary:
         return entry
     
     def _generate_catalog_id(self) -> str:
-        """Generate a unique catalog ID."""
+        """Generate a unique catalog ID with random component."""
+        import uuid
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         count = len(self.catalog["videos"]) + 1
-        return f"video_{count:04d}_{timestamp}"
+        # Add short random suffix to prevent collisions in parallel operations
+        random_suffix = str(uuid.uuid4())[:8]
+        return f"video_{count:04d}_{timestamp}_{random_suffix}"
     
     def _is_duplicate(self, entry: Dict) -> bool:
-        """Check if video already exists in catalog."""
+        """Check if video already exists in catalog by YouTube ID."""
         youtube_id = entry["youtube_id"]
         
-        # Check by YouTube ID
+        # Check by YouTube ID (primary uniqueness constraint)
         for video in self.catalog["videos"]:
             if video["youtube_id"] == youtube_id:
                 return True
@@ -155,22 +171,22 @@ class ContentLibrary:
         Returns:
             List of matching videos
         """
-        results = self.catalog["videos"]
-        
-        if mood:
-            results = [v for v in results if v["mood"] == mood]
-        
-        if rhythm:
-            results = [v for v in results if v["rhythm"] == rhythm]
-        
-        if min_duration is not None:
-            results = [v for v in results if v["duration"] >= min_duration]
-        
-        if max_duration is not None:
-            results = [v for v in results if v["duration"] <= max_duration]
-        
-        if version:
-            results = [v for v in results if v["version"] == version]
+        # Single-pass filtering for efficiency
+        results = []
+        for video in self.catalog["videos"]:
+            # Apply all filters in one pass
+            if mood and video.get("mood") != mood:
+                continue
+            if rhythm and video.get("rhythm") != rhythm:
+                continue
+            if min_duration is not None and video.get("duration", 0) < min_duration:
+                continue
+            if max_duration is not None and video.get("duration", 0) > max_duration:
+                continue
+            if version and video.get("version") != version:
+                continue
+            
+            results.append(video)
         
         return results
     
@@ -234,7 +250,7 @@ class ContentLibrary:
         # Group videos by mood
         videos_by_mood = {}
         for video in self.catalog["videos"]:
-            mood = video["mood"]
+            mood = video.get("mood", "unknown")
             if mood not in videos_by_mood:
                 videos_by_mood[mood] = []
             videos_by_mood[mood].append(video)
@@ -246,22 +262,37 @@ class ContentLibrary:
             ])
             
             for video in videos_by_mood[mood]:
-                version_tag = f" `{video['version']}`" if video['version'] != 'standard' else ""
+                version = video.get('version', 'standard')
+                version_tag = f" `{version}`" if version != 'standard' else ""
+                
+                # Safe field access with defaults
+                title = video.get('title', 'Unknown')
+                youtube_url = video.get('youtube_url', '#')
+                duration_str = video.get('duration_str', 'Unknown')
+                rhythm_name = video.get('rhythm_name', 'Unknown')
+                uploaded_at = video.get('uploaded_at', '')[:10] if video.get('uploaded_at') else 'Unknown'
+                seed = video.get('seed', 'Unknown')
+                catalog_id = video.get('catalog_id', 'Unknown')
+                
                 md_lines.extend([
-                    f"#### {video['title']}{version_tag}",
+                    f"#### {title}{version_tag}",
                     "",
-                    f"🔗 **Watch:** [{video['youtube_url']}]({video['youtube_url']})",
+                    f"🔗 **Watch:** [{youtube_url}]({youtube_url})",
                     "",
-                    f"- **Duration:** {video['duration_str']}",
-                    f"- **Rhythm:** {video['rhythm_name']}",
-                    f"- **Uploaded:** {video['uploaded_at'][:10]}",
-                    f"- **Seed:** `{video['seed']}`",
-                    f"- **Catalog ID:** `{video['catalog_id']}`",
+                    f"- **Duration:** {duration_str}",
+                    f"- **Rhythm:** {rhythm_name}",
+                    f"- **Uploaded:** {uploaded_at}",
+                    f"- **Seed:** `{seed}`",
+                    f"- **Catalog ID:** `{catalog_id}`",
                     ""
                 ])
         
-        # Write to file
-        with open(output_path, 'w') as f:
-            f.write('\n'.join(md_lines))
+        # Write to file with error handling
+        try:
+            with open(output_path, 'w') as f:
+                f.write('\n'.join(md_lines))
+        except (IOError, OSError) as e:
+            print(f"❌ Error exporting markdown: {e}")
+            raise
         
         return output_path
