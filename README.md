@@ -102,6 +102,7 @@ See [docs/youtube-auth.md](docs/youtube-auth.md) for detailed instructions.
 
 - 📚 **[Getting Started Guide](docs/GETTING_STARTED.md)** - Complete tutorial with examples
 - ⚡ **[Quick Reference](docs/QUICK_REFERENCE.md)** - Command cheat sheet
+- 📖 **[Content Library](docs/CONTENT_LIBRARY.md)** - Track videos with YouTube links
 - ❓ **[FAQ](docs/FAQ.md)** - Common questions answered
 - 💡 **[Use Cases](docs/USE_CASES.md)** - Real-world applications
 - 🏗️ **[Architecture](docs/architecture.md)** - System design and diagrams
