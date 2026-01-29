@@ -2,6 +2,8 @@
 
 Automated hypnotic video factory for YouTube monetization.
 
+> **New User?** Start here: [📚 Getting Started Guide](docs/GETTING_STARTED.md) | [⚡ Quick Reference](docs/QUICK_REFERENCE.md) | [❓ FAQ](docs/FAQ.md)
+
 ## What It Does
 
 Generates ambient videos with:
@@ -19,7 +21,10 @@ cd living-ambient-engine
 python3 -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
 
-# Generate a video
+# Try interactive examples
+python examples.py
+
+# Or generate a video directly
 python run_job.py --mood trance --duration 60
 ```
 
@@ -81,6 +86,36 @@ config/moods.yaml    # Mood presets
 4. Download client_secrets.json to project root
 5. Run: python youtube_upload.py --auth
 6. Add token to GitHub Secrets as YOUTUBE_TOKEN_B64
+
+See [docs/youtube-auth.md](docs/youtube-auth.md) for detailed instructions.
+
+## Documentation
+
+- 📚 **[Getting Started Guide](docs/GETTING_STARTED.md)** - Complete tutorial with examples
+- ⚡ **[Quick Reference](docs/QUICK_REFERENCE.md)** - Command cheat sheet
+- ❓ **[FAQ](docs/FAQ.md)** - Common questions answered
+- 💡 **[Use Cases](docs/USE_CASES.md)** - Real-world applications
+- 🏗️ **[Architecture](docs/architecture.md)** - System design and diagrams
+- 📺 **[YouTube Setup](docs/youtube-auth.md)** - Authentication guide
+- 🗺️ **[Master Plan](docs/master-plan.md)** - Roadmap and milestones
+- 🤝 **[Contributing](CONTRIBUTING.md)** - How to contribute
+
+## What Can I Do With This?
+
+**Living Ambient Engine helps you:**
+- ✅ Generate professional ambient videos for YouTube
+- ✅ Create content for meditation, focus, sleep niches
+- ✅ Automate video production with CI/CD
+- ✅ Monetize through YouTube Partner Program
+- ✅ Build a passive income content library
+
+**Perfect for:**
+- Content creators looking to scale
+- Meditation/wellness creators
+- YouTube automation enthusiasts
+- Anyone interested in algorithmic art
+
+👉 **[See What You Can Create →](docs/GETTING_STARTED.md#examples-gallery)**
 
 ## License
 
