@@ -3,11 +3,27 @@
 Interactive Examples for Living Ambient Engine
 
 Run this script to see demonstrations of what you can create!
+Make sure dependencies are installed first: pip install -r requirements.txt
 """
 
 import sys
 import subprocess
 from pathlib import Path
+
+
+def check_dependencies():
+    """Check if the project dependencies are installed."""
+    try:
+        import click
+        import yaml
+        return True
+    except ImportError as e:
+        print("\n⚠️  Warning: Some dependencies are not installed.")
+        print(f"   Missing: {e.name}")
+        print("\nPlease run:")
+        print("   pip install -r requirements.txt")
+        print("\nThen try again.\n")
+        return False
 
 
 def print_header(text):
@@ -149,6 +165,10 @@ def show_advanced():
 
 def main():
     """Main interactive loop."""
+    # Check dependencies first
+    if not check_dependencies():
+        sys.exit(1)
+    
     show_welcome()
     
     while True:
