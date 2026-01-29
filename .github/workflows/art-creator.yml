@@ -162,6 +162,10 @@ on:
 env:
   PYTHON_VERSION: '3.11'
 
+permissions:
+  contents: read
+  actions: read
+
 jobs:
   create_art:
     runs-on: ubuntu-latest
