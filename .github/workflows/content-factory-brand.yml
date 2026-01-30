@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       moods:
-        description: 'Core moods: rain_sleep, deep_focus, ocean_waves | Other: fireplace, sleep, lofi_study, forest_morning (comma-separated)'
+        description: 'Nature: rain_sleep, ocean_waves, fireplace, forest_morning | Music: deep_focus, sleep, chill, study, lofi_study, piano_relax | Tribal: warrior, ceremony, trance, energize'
         required: false
         default: 'rain_sleep,deep_focus,ocean_waves'
       durations:

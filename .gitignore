@@ -80,3 +80,4 @@ temp/
 
 client_secrets.json
 youtube_token.pickle
+youtube_token_personal.pickle

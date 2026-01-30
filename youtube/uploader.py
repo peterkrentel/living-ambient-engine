@@ -29,7 +29,7 @@ except ImportError:
 
 
 SCOPES = ['https://www.googleapis.com/auth/youtube.upload']
-TOKEN_FILE = 'youtube_token.pickle'
+TOKEN_FILE = os.environ.get('YOUTUBE_TOKEN_FILE', 'youtube_token.pickle')
 CLIENT_SECRETS_FILE = 'client_secrets.json'
 
 
