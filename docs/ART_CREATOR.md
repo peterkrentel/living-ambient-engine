@@ -382,6 +382,41 @@ Have ideas for new parameters? Consider:
 - Regional variations (Japanese, African, Indigenous)
 - Genre-specific styles (Surrealism, Cubism, Art Deco)
 
+## Testing All Input Combinations
+
+For developers and testing purposes, a dedicated workflow is available to test all combinations of input parameters.
+
+### Test Art Creator Workflow
+
+The **Test Art Creator** workflow (`test-art-creator.yml`) automatically runs the Art Creator with 16 different parameter combinations:
+
+**To run tests:**
+1. Go to **Actions** tab
+2. Select **Test Art Creator - All Combinations**
+3. Click **Run workflow**
+4. Wait for all 16 test jobs to complete
+
+**What gets tested:**
+- All 9 art periods (cave_art → future)
+- All 9 solfeggio frequencies (174Hz → 963Hz)
+- All 9 music styles (heartbeat → none)
+- Representative visual patterns (15 patterns)
+- Representative color palettes (10 palettes)
+
+**Test characteristics:**
+- Duration: 10 seconds per test (fast validation)
+- YouTube upload: Disabled (tests only)
+- Parallel execution: All 16 tests run simultaneously
+- Total test time: ~10-15 minutes
+
+**Use cases:**
+- Validate code changes don't break generation
+- Test new visual patterns or audio features
+- Ensure all parameter combinations work
+- Quick regression testing
+
+**Note:** Tests create artifacts but do not upload to YouTube, making them ideal for validation without cluttering your channel.
+
 ## FAQ
 
 **Q: Can I use this commercially?**  
