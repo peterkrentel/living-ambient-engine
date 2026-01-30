@@ -158,6 +158,12 @@ on:
         description: 'Custom Video Description (optional)'
         required: false
         default: ''
+      
+      upload_to_brand:
+        description: 'Upload to Brand YouTube Channel'
+        required: false
+        type: boolean
+        default: false
 
 env:
   PYTHON_VERSION: '3.11'
@@ -506,7 +512,7 @@ jobs:
               sys.exit(1)
           PYTHON_SCRIPT
       
-      - name: Upload artwork
+      - name: Upload artwork as artifact
         uses: actions/upload-artifact@v4
         with:
           name: artistic-creation-${{ github.run_number }}
@@ -555,3 +561,158 @@ jobs:
           echo "*The thrill is in the creative process itself, not the expectation of the result.*" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "💡 **Tip**: Use the seed value to recreate this exact video, or try new parameters for a completely different experience!" >> $GITHUB_STEP_SUMMARY
+  
+  # Job 2: Upload to YouTube (Brand Channel)
+  upload:
+    needs: create_art
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.upload_to_brand == true || github.event.inputs.upload_to_brand == 'true' }}
+    timeout-minutes: 30
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install google-auth-oauthlib google-api-python-client
+      
+      - name: Download artwork artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: artistic-creation-${{ github.run_number }}
+          path: ./art_output
+      
+      - name: Restore YouTube credentials (Brand Channel)
+        run: |
+          printf "%s" "${{ secrets.YOUTUBE_TOKEN_PICKLE_BRAND }}" | base64 -d > youtube_token.pickle
+          printf "%s" '${{ secrets.YOUTUBE_CLIENT_SECRETS }}' > client_secrets.json
+      
+      - name: Upload to YouTube (Brand Channel)
+        env:
+          CUSTOM_TITLE: ${{ github.event.inputs.title }}
+          CUSTOM_DESCRIPTION: ${{ github.event.inputs.description }}
+          GITHUB_ACTOR: ${{ github.actor }}
+        run: |
+          # Upload the created art video to YouTube
+          python3 << 'PYTHON_UPLOAD'
+          import os
+          import json
+          from pathlib import Path
+          from youtube.uploader import YouTubeUploader
+          
+          # Find the video file
+          art_output = Path('./art_output')
+          video_files = list(art_output.glob('*.mp4'))
+          
+          if not video_files:
+              print("❌ No video files found in art_output")
+              exit(1)
+          
+          video_path = video_files[0]
+          print(f"📹 Found video: {video_path}")
+          
+          # Load creation info
+          creation_info_path = art_output / 'creation_info.json'
+          if creation_info_path.exists():
+              with open(creation_info_path, 'r') as f:
+                  info = json.load(f)
+          else:
+              info = {}
+          
+          # Generate title and description
+          title = os.environ.get('CUSTOM_TITLE', '')
+          if not title or title.strip() == "":
+              # Auto-generate title from parameters
+              art_period = info.get('art_period', 'modern')
+              visual = info.get('visual_pattern', 'fractal_zoom')
+              music = info.get('music_style', 'ambient')
+              title = f"{art_period.replace('_', ' ').title()} {visual.replace('_', ' ').title()} - {music.replace('_', ' ').title()}"
+          
+          description = os.environ.get('CUSTOM_DESCRIPTION', '')
+          if not description or description.strip() == "":
+              # Auto-generate description
+              parts = [
+                  "Unique algorithmic art created with Living Ambient Engine.",
+                  "",
+                  "🎨 Art Configuration:",
+                  f"- Period: {info.get('art_period', 'N/A')}",
+                  f"- Visual Pattern: {info.get('visual_pattern', 'N/A')}",
+                  f"- Color Palette: {info.get('color_palette', 'N/A')}",
+                  "",
+                  "🎵 Audio Configuration:",
+                  f"- Music Style: {info.get('music_style', 'N/A')}",
+                  f"- Tempo: {info.get('tempo', 'N/A')} BPM",
+                  f"- Brainwave: {info.get('brainwave_hz', 'N/A')} Hz",
+                  f"- Solfeggio: {info.get('solfeggio_hz', 'N/A')} Hz",
+                  "",
+                  f"Seed: {info.get('seed', 'N/A')}",
+                  f"Created by: @{info.get('created_by', os.environ.get('GITHUB_ACTOR', 'N/A'))}",
+                  "",
+                  "#ambient #meditation #focus #algorithmicart"
+              ]
+              description = "\n".join(parts)
+          
+          # Generate tags
+          tags = [
+              'ambient',
+              'meditation',
+              'focus',
+              'algorithmic art',
+              info.get('art_period', ''),
+              info.get('visual_pattern', ''),
+              info.get('music_style', '')
+          ]
+          tags = [t for t in tags if t]  # Remove empty strings
+          
+          # Find thumbnail
+          thumbnail_files = list(art_output.glob('*.png'))
+          thumbnail_path = str(thumbnail_files[0]) if thumbnail_files else None
+          
+          # Upload
+          uploader = YouTubeUploader()
+          uploader.authenticate()
+          
+          print(f"📤 Uploading: {title}")
+          result = uploader.upload(
+              video_path=str(video_path),
+              title=title,
+              description=description,
+              tags=tags,
+              category_id="10",  # Music
+              privacy="public",
+              thumbnail_path=thumbnail_path
+          )
+          
+          print(f"✅ Upload successful!")
+          print(f"   Video ID: {result['video_id']}")
+          print(f"   URL: {result['url']}")
+          
+          # Save upload result
+          with open(art_output / 'youtube_upload.json', 'w') as f:
+              json.dump(result, f, indent=2)
+          PYTHON_UPLOAD
+      
+      - name: Cleanup credentials
+        if: always()
+        run: |
+          rm -f youtube_token.pickle client_secrets.json
+      
+      - name: Upload summary
+        run: |
+          echo "## ✅ YouTube Upload Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -f ./art_output/youtube_upload.json ]; then
+            VIDEO_URL=$(python3 -c "import json; print(json.load(open('./art_output/youtube_upload.json'))['url'])" 2>/dev/null || echo "N/A")
+            echo "**Channel:** Living Ambient Engine (Brand)" >> $GITHUB_STEP_SUMMARY
+            echo "**Video URL:** ${VIDEO_URL}" >> $GITHUB_STEP_SUMMARY
+          fi
