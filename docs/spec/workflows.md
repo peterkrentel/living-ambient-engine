@@ -5,7 +5,7 @@
 
 ## Overview
 
-Three workflows automate video generation and YouTube deployment.
+Four workflows automate video generation, YouTube deployment, and testing.
 
 ## Workflow Index
 
@@ -13,7 +13,8 @@ Three workflows automate video generation and YouTube deployment.
 |----------|---------|---------|---------|
 | `content-factory.yml` | Schedule + Manual | Batch generation + upload | Personal |
 | `content-factory-brand.yml` | Manual | Batch generation + upload | Brand |
-| `art-creator.yml` | Manual | Single custom video | Brand (optional) |
+| `art-creator.yml` | Manual + workflow_call | Single custom video | Brand (optional) |
+| `test-art-creator.yml` | Manual | Test art-creator with matrix | None (test only) |
 
 ## content-factory.yml
 
@@ -50,8 +51,22 @@ Same as `content-factory.yml` but uses:
 
 ### Trigger
 ```yaml
-workflow_dispatch:  # Manual only
+workflow_dispatch:  # Manual trigger
+workflow_call:      # Can be called by test-art-creator
 ```
+
+### Execution Modes
+
+**Manual (workflow_dispatch):**
+- Runs with user-provided inputs
+- Executes only test_id 1 from matrix (for validation)
+- Can upload to YouTube if enabled
+
+**Test Mode (workflow_call):**
+- Triggered by test-art-creator workflow
+- Runs all 5 matrix test combinations
+- Never uploads to YouTube
+- Tests journey presets and parameter combinations
 
 ### Input Categories
 
@@ -84,6 +99,78 @@ workflow_dispatch:  # Manual only
 | Secret | Purpose |
 |--------|---------|
 | `YOUTUBE_TOKEN_PICKLE_BRAND` | Brand channel OAuth (if uploading) |
+
+### Test Matrix
+
+The workflow includes a matrix strategy for comprehensive testing:
+
+| Test ID | Art Period | Visual Pattern | Music Style | Solfeggio | Journey | Intensity |
+|---------|------------|----------------|-------------|-----------|---------|-----------|
+| 1 | modern | fractal_zoom | gnawa | 528 Hz | steady | moderate |
+| 2 | cave_art | organic_flow | heartbeat | 174 Hz | awakening | subtle |
+| 3 | renaissance | fibonacci_spiral | taiko | 639 Hz | deep_dive | moderate |
+| 4 | future | starfield | none | 963 Hz | crescendo | dramatic |
+| 5 | impressionist | flowing_waves | gamelan | 417 Hz | waves | moderate |
+
+**Journey Coverage:** Tests 5 of 7 journey presets:
+- ✅ `steady` - Traditional constant tempo
+- ✅ `awakening` - Gradual energy rise
+- ✅ `deep_dive` - Descending into calm
+- ✅ `crescendo` - Build to peak then release
+- ✅ `waves` - Ocean-like swells
+- ⚠️ `breathing` - Not in matrix (similar to waves)
+- ⚠️ `trance` - Not in matrix (similar to awakening)
+
+## test-art-creator.yml
+
+### Purpose
+Automated testing workflow that triggers the art-creator workflow with matrix expansion to validate all parameter combinations including journey presets.
+
+### Trigger
+```yaml
+workflow_dispatch:  # Manual only
+```
+
+### How It Works
+1. Calls `art-creator.yml` using `workflow_call`
+2. Art-creator runs all 5 matrix test combinations in parallel
+3. Each test generates a 10-second video
+4. No uploads occur (test mode)
+5. Artifacts saved for inspection
+
+### Use Cases
+- **Pre-release validation:** Test all combinations before merging changes
+- **Journey preset validation:** Ensure all journey curves work correctly
+- **Configuration testing:** Validate art period and color palette mappings
+- **Integration testing:** Test orchestrator with various input combinations
+
+### Running Tests
+```bash
+# Via GitHub UI
+Actions → Test Art Creator - All Combinations → Run workflow
+
+# Enter optional reason for test run
+```
+
+### Test Duration
+- Each test: ~2-3 minutes (10s video generation + setup)
+- Total: ~10-15 minutes (parallel execution)
+
+### Test Artifacts
+Each matrix test produces:
+- Video file (10s MP4)
+- Creation metadata JSON
+- Retention: 30 days
+
+### Adding Test Cases
+
+To add a new test combination to the matrix:
+
+1. Edit `.github/workflows/art-creator.yml`
+2. Add new entry to `matrix.include`
+3. Ensure journey preset is specified
+4. Update this spec with new test case
+5. Update total count in `test-art-creator.yml` comments
 
 ## Invariants
 
