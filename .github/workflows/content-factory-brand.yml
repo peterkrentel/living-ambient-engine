@@ -164,10 +164,42 @@ jobs:
         run: |
           rm -f youtube_token.pickle client_secrets.json
 
+      - name: Commit catalog updates
+        run: |
+          git config user.name "Content Factory Bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Add catalog files if they exist
+          if [ -f content_catalog.json ]; then
+            git add content_catalog.json
+          fi
+          if [ -f CONTENT_LIBRARY.md ]; then
+            git add CONTENT_LIBRARY.md
+          fi
+
+          # Commit if there are changes
+          if git diff --staged --quiet; then
+            echo "No catalog changes to commit"
+          else
+            git commit -m "📚 Update content library catalog [automated]"
+            git push
+            echo "✅ Catalog updated and pushed to repository"
+          fi
+
       - name: Upload summary
         run: |
           echo "## ✅ YouTube Upload Complete" >> $GITHUB_STEP_SUMMARY
           echo "**Channel:** Living Ambient Engine (Brand)" >> $GITHUB_STEP_SUMMARY
+
+          # Add catalog stats if available
+          if [ -f content_catalog.json ]; then
+            echo "### Content Library:" >> $GITHUB_STEP_SUMMARY
+            if python library_cli.py stats > /tmp/catalog_stats.txt 2>&1; then
+              tail -n +2 /tmp/catalog_stats.txt >> $GITHUB_STEP_SUMMARY
+            else
+              echo "⚠️  Catalog stats unavailable" >> $GITHUB_STEP_SUMMARY
+            fi
+          fi
 
   notify:
     needs: [generate, upload]
