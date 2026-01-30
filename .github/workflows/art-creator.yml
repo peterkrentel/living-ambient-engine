@@ -50,14 +50,14 @@ on:
           - 'fireplace'          # Flickering fireplace
       
       visual_speed:
-        description: 'Visual Speed (0.1=very slow, 1.0=fast)'
+        description: 'Visual Speed (auto=from art period, or 0.1=very slow to 1.0=fast)'
         required: false
-        default: '0.5'
-      
+        default: 'auto'
+
       visual_complexity:
-        description: 'Visual Complexity (0.1=simple, 1.0=intricate)'
+        description: 'Visual Complexity (auto=from art period, or 0.1=simple to 1.0=intricate)'
         required: false
-        default: '0.7'
+        default: 'auto'
       
       color_palette:
         description: 'Color Palette (auto = inherit from art period)'
@@ -239,9 +239,14 @@ jobs:
                   print(f"❌ Error: {name} must be a valid integer, got '{value}'")
                   return False
           
+          def validate_float_or_auto(name, value, min_val, max_val):
+              if value == 'auto':
+                  return True
+              return validate_float(name, value, min_val, max_val)
+
           valid = True
-          valid &= validate_float("visual_speed", "${{ github.event.inputs.visual_speed }}", 0.01, 1.5)
-          valid &= validate_float("visual_complexity", "${{ github.event.inputs.visual_complexity }}", 0.1, 1.0)
+          valid &= validate_float_or_auto("visual_speed", "${{ github.event.inputs.visual_speed }}", 0.01, 1.5)
+          valid &= validate_float_or_auto("visual_complexity", "${{ github.event.inputs.visual_complexity }}", 0.1, 1.0)
           valid &= validate_int("tempo", "${{ github.event.inputs.tempo }}", 20, 200)
           valid &= validate_int("brainwave_frequency", "${{ github.event.inputs.brainwave_frequency }}", 1, 50)
           valid &= validate_float("rhythm_volume", "${{ github.event.inputs.rhythm_volume }}", 0.0, 1.0)
@@ -256,13 +261,14 @@ jobs:
       - name: Generate custom configuration
         env:
           ART_PERIOD: ${{ github.event.inputs.art_period || 'modern' }}
-          VISUAL_PATTERN: ${{ github.event.inputs.visual_pattern || 'fractal_zoom' }}
-          VISUAL_SPEED: ${{ github.event.inputs.visual_speed || '0.5' }}
-          VISUAL_COMPLEXITY: ${{ github.event.inputs.visual_complexity || '0.7' }}
+          VISUAL_PATTERN: ${{ github.event.inputs.visual_pattern || 'auto' }}
+          VISUAL_SPEED: ${{ github.event.inputs.visual_speed || 'auto' }}
+          VISUAL_COMPLEXITY: ${{ github.event.inputs.visual_complexity || 'auto' }}
           MUSIC_STYLE: ${{ github.event.inputs.music_style || 'gnawa' }}
           RHYTHM_VOLUME: ${{ github.event.inputs.rhythm_volume || '0.5' }}
           BRAINWAVE_FREQ: ${{ github.event.inputs.brainwave_frequency || '10' }}
           SOLFEGGIO_FREQ: ${{ github.event.inputs.solfeggio_frequency || '528' }}
+          TEMPO: ${{ github.event.inputs.tempo || '60' }}
         run: |
           # Create a custom configuration file based on workflow inputs using env vars
           # Handle 'none' rhythm by setting it to null
@@ -272,7 +278,18 @@ jobs:
           else
             RHYTHM_VALUE="\"$RHYTHM_VALUE\""
           fi
-          
+
+          # Handle 'auto' for speed/complexity - use placeholder that will be replaced
+          SPEED_VALUE="$VISUAL_SPEED"
+          if [ "$SPEED_VALUE" = "auto" ]; then
+            SPEED_VALUE="0.5"  # Placeholder, will be overwritten by art period
+          fi
+
+          COMPLEXITY_VALUE="$VISUAL_COMPLEXITY"
+          if [ "$COMPLEXITY_VALUE" = "auto" ]; then
+            COMPLEXITY_VALUE="0.7"  # Placeholder, will be overwritten by art period
+          fi
+
           cat > /tmp/art_creator_config.yaml << EOF
           custom_creation:
             description: "Custom artistic creation"
@@ -280,14 +297,15 @@ jobs:
             art_period: "$ART_PERIOD"
             visual:
               type: "$VISUAL_PATTERN"
-              speed: $VISUAL_SPEED
-              complexity: $VISUAL_COMPLEXITY
+              speed: $SPEED_VALUE
+              complexity: $COMPLEXITY_VALUE
               symmetry: 6
               pulse_frequency: 0.1
               pattern: "mandelbrot"
             audio:
               rhythm: $RHYTHM_VALUE
               rhythm_volume: $RHYTHM_VOLUME
+              tempo: $TEMPO
               base_frequency: $BRAINWAVE_FREQ
               binaural_beat: $BRAINWAVE_FREQ
               layers:
@@ -299,7 +317,7 @@ jobs:
                   beat: $BRAINWAVE_FREQ
                   amplitude: 0.12
           EOF
-          
+
           echo "📋 Custom configuration created"
           cat /tmp/art_creator_config.yaml
       
@@ -307,6 +325,9 @@ jobs:
         env:
           ART_PERIOD: ${{ github.event.inputs.art_period || 'modern' }}
           VISUAL_PATTERN: ${{ github.event.inputs.visual_pattern || 'auto' }}
+          VISUAL_SPEED: ${{ github.event.inputs.visual_speed || 'auto' }}
+          VISUAL_COMPLEXITY: ${{ github.event.inputs.visual_complexity || 'auto' }}
+          TEMPO: ${{ github.event.inputs.tempo || '60' }}
           COLOR_PALETTE: ${{ github.event.inputs.color_palette || 'auto' }}
           CUSTOM_PRIMARY: ${{ github.event.inputs.custom_primary_rgb || '100,150,200' }}
           CUSTOM_SECONDARY: ${{ github.event.inputs.custom_secondary_rgb || '200,100,150' }}
@@ -401,6 +422,9 @@ jobs:
 
           art_period = os.environ.get('ART_PERIOD', 'modern')
           visual_pattern = os.environ.get('VISUAL_PATTERN', 'auto')
+          visual_speed = os.environ.get('VISUAL_SPEED', 'auto')
+          visual_complexity = os.environ.get('VISUAL_COMPLEXITY', 'auto')
+          tempo = os.environ.get('TEMPO', '60')
           palette = os.environ.get('COLOR_PALETTE', 'auto')
 
           # Load the config
@@ -410,10 +434,25 @@ jobs:
           # Get art period preset (defaults to modern)
           period_preset = ART_PERIODS.get(art_period, ART_PERIODS['modern'])
 
-          # Apply art period visual characteristics
-          config['custom_creation']['visual']['complexity'] = period_preset['complexity']
+          # Apply art period visual characteristics (with user overrides)
+          # Symmetry always comes from art period
           config['custom_creation']['visual']['symmetry'] = period_preset['symmetry']
-          config['custom_creation']['visual']['speed'] = period_preset['speed']
+
+          # Speed: use user value if not 'auto', otherwise use art period
+          if visual_speed != 'auto':
+              config['custom_creation']['visual']['speed'] = float(visual_speed)
+              print(f"⚡ Using custom speed: {visual_speed}")
+          else:
+              config['custom_creation']['visual']['speed'] = period_preset['speed']
+              print(f"⚡ Using {art_period} period speed: {period_preset['speed']}")
+
+          # Complexity: use user value if not 'auto', otherwise use art period
+          if visual_complexity != 'auto':
+              config['custom_creation']['visual']['complexity'] = float(visual_complexity)
+              print(f"🔧 Using custom complexity: {visual_complexity}")
+          else:
+              config['custom_creation']['visual']['complexity'] = period_preset['complexity']
+              print(f"🔧 Using {art_period} period complexity: {period_preset['complexity']}")
 
           # Determine pattern: auto uses art period's pattern, otherwise use explicit choice
           if visual_pattern == 'auto':
@@ -425,7 +464,11 @@ jobs:
 
           config['custom_creation']['visual']['pattern'] = pattern
 
-          print(f"🎭 Applied {art_period} period: complexity={period_preset['complexity']}, symmetry={period_preset['symmetry']}, speed={period_preset['speed']}, pattern={pattern}")
+          # Apply tempo to audio config
+          config['custom_creation']['audio']['tempo'] = int(tempo)
+          print(f"🎵 Tempo set to: {tempo} BPM")
+
+          print(f"🎭 Applied {art_period} period with final values: complexity={config['custom_creation']['visual']['complexity']}, symmetry={period_preset['symmetry']}, speed={config['custom_creation']['visual']['speed']}, pattern={pattern}")
 
           # Determine colors
           if palette == 'auto':
