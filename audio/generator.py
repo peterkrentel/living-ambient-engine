@@ -203,7 +203,7 @@ class AudioGenerator:
     def _create_phase_volume_envelope(self, num_samples: int,
                                        phase_boundaries: List) -> np.ndarray:
         """Create smooth volume envelope based on phases."""
-        envelope = np.ones(num_samples)
+        envelope = np.ones(num_samples, dtype=np.float32)
 
         for i, (start_sample, phase_name, mods, phase_len) in enumerate(phase_boundaries):
             end_sample = start_sample + int(phase_len * self.sample_rate)
@@ -686,7 +686,7 @@ class AudioGenerator:
             release = int(note_len * np.random.uniform(0.25, 0.4))
             sustain_level = np.random.uniform(0.6, 0.8)
 
-            envelope = np.ones(note_len)
+            envelope = np.ones(note_len, dtype=np.float32)
             if attack > 0:
                 envelope[:attack] = np.linspace(0, 1, attack)
             if decay > 0 and attack + decay < note_len:
@@ -1050,7 +1050,7 @@ class AudioGenerator:
             chirp = np.sin(phase)
 
             # Envelope: quick attack, sustain, quick decay
-            env = np.ones(chirp_len)
+            env = np.ones(chirp_len, dtype=np.float32)
             attack = int(chirp_len * 0.1)
             decay = int(chirp_len * 0.3)
             env[:attack] = np.linspace(0, 1, attack)
@@ -1189,7 +1189,7 @@ class AudioGenerator:
                     chunk += np.sin(2 * np.pi * freq * (1 + detune * 0.01) * t) * 0.15
 
             # Slow amplitude envelope for pad-like feel
-            env = np.ones(chunk_len)
+            env = np.ones(chunk_len, dtype=np.float32)
             fade_len = min(int(chord_samples * 0.1), chunk_len // 2)
             if fade_len > 0:
                 env[:fade_len] = np.linspace(0.5, 1, fade_len)
@@ -1341,7 +1341,7 @@ class AudioGenerator:
                 # ADSR envelope
                 attack = int(note_len * 0.1)
                 release = int(note_len * 0.3)
-                envelope = np.ones(note_len)
+                envelope = np.ones(note_len, dtype=np.float32)
                 if attack > 0:
                     envelope[:attack] = np.linspace(0, 1, attack)
                 if release > 0:
