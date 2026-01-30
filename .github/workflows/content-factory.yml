@@ -38,6 +38,9 @@ concurrency:
 env:
   PYTHON_VERSION: '3.11'
 
+permissions:
+  contents: write  # Required for catalog commit
+
 jobs:
   # Job 1: Generate videos and upload as artifacts
   generate:
