@@ -28,16 +28,24 @@ on:
       
       # ===== VISUAL PARAMETERS =====
       visual_pattern:
-        description: 'Visual Pattern Type'
+        description: 'Visual Pattern Type (auto = inherit from art period)'
         required: false
         type: choice
-        default: 'fractal_zoom'
+        default: 'auto'
         options:
+          - 'auto'               # Inherit from art period
           - 'fractal_zoom'       # Mandelbrot/Julia set zoom
-          - 'particle_flow'      # Flowing particles
+          - 'mandelbrot'         # Mandelbrot fractal
+          - 'julia'              # Julia set fractal
+          - 'fibonacci_spiral'   # Golden ratio spiral
+          - 'sacred_geometry'    # Flower of Life, Metatron's Cube
+          - 'particle_flow'      # Flowing organic particles
+          - 'organic_flow'       # Organic flowing patterns
           - 'geometric_morph'    # Morphing geometric shapes
-          - 'sacred_geometry'    # Sacred geometric patterns
-          - 'starfield'          # Starfield journey
+          - 'platonic_solids'    # 3D geometric solids
+          - 'slow_waves'         # Sine wave patterns
+          - 'flowing_waves'      # Wave patterns
+          - 'starfield'          # Starfield space journey
           - 'rain_window'        # Rain on window
           - 'fireplace'          # Flickering fireplace
       
@@ -298,12 +306,13 @@ jobs:
       - name: Apply art period presets and color palette
         env:
           ART_PERIOD: ${{ github.event.inputs.art_period || 'modern' }}
+          VISUAL_PATTERN: ${{ github.event.inputs.visual_pattern || 'auto' }}
           COLOR_PALETTE: ${{ github.event.inputs.color_palette || 'auto' }}
           CUSTOM_PRIMARY: ${{ github.event.inputs.custom_primary_rgb || '100,150,200' }}
           CUSTOM_SECONDARY: ${{ github.event.inputs.custom_secondary_rgb || '200,100,150' }}
           CUSTOM_ACCENT: ${{ github.event.inputs.custom_accent_rgb || '255,255,100' }}
         run: |
-          # Apply art period presets (colors, complexity, symmetry, speed) with optional palette override
+          # Apply art period presets (colors, complexity, symmetry, speed, pattern) with optional overrides
           python3 << 'PYTHON_SCRIPT'
           import yaml
           import os
@@ -315,64 +324,64 @@ jobs:
                   'colors': {'primary': [80, 50, 30], 'secondary': [120, 90, 60], 'accent': [180, 140, 100]},
                   'complexity': 0.3,    # Simple, primal
                   'symmetry': 2,        # Minimal symmetry
-                  'speed': 0.3,         # Slow, meditative
-                  'pattern': 'mandelbrot'
+                  'speed': 0.25,        # Very slow, meditative
+                  'pattern': 'organic_flow'  # Organic, natural movement
               },
               'ancient': {
                   'colors': {'primary': [180, 140, 20], 'secondary': [220, 180, 40], 'accent': [255, 220, 100]},
                   'complexity': 0.5,    # Structured
                   'symmetry': 4,        # Geometric
-                  'speed': 0.4,         # Deliberate
-                  'pattern': 'mandelbrot'
+                  'speed': 0.35,        # Deliberate
+                  'pattern': 'sacred_geometry'  # Egyptian/Greek geometry
               },
               'medieval': {
                   'colors': {'primary': [120, 20, 30], 'secondary': [20, 40, 120], 'accent': [220, 180, 40]},
-                  'complexity': 0.6,    # Ornate
+                  'complexity': 0.65,   # Ornate
                   'symmetry': 8,        # Octagonal (rose windows)
-                  'speed': 0.35,        # Slow, reverent
-                  'pattern': 'mandelbrot'
+                  'speed': 0.3,         # Slow, reverent
+                  'pattern': 'sacred_geometry'  # Cathedral rose windows
               },
               'renaissance': {
                   'colors': {'primary': [140, 100, 70], 'secondary': [180, 120, 80], 'accent': [220, 180, 140]},
                   'complexity': 0.8,    # High detail
-                  'symmetry': 6,        # Balanced
-                  'speed': 0.5,         # Measured
-                  'pattern': 'mandelbrot'
+                  'symmetry': 6,        # Balanced, harmonious
+                  'speed': 0.4,         # Measured
+                  'pattern': 'fibonacci_spiral'  # Golden ratio, Da Vinci
               },
               'baroque': {
                   'colors': {'primary': [100, 40, 60], 'secondary': [180, 120, 80], 'accent': [255, 200, 100]},
                   'complexity': 0.85,   # Dramatic detail
                   'symmetry': 6,        # Dynamic balance
-                  'speed': 0.6,         # Movement
-                  'pattern': 'julia'
+                  'speed': 0.55,        # Movement, drama
+                  'pattern': 'julia'    # Complex, dramatic swirls
               },
               'impressionist': {
                   'colors': {'primary': [180, 200, 220], 'secondary': [220, 180, 200], 'accent': [255, 240, 200]},
-                  'complexity': 0.6,    # Soft edges
-                  'symmetry': 4,        # Loose
-                  'speed': 0.55,        # Flowing
-                  'pattern': 'mandelbrot'
+                  'complexity': 0.55,   # Soft edges
+                  'symmetry': 3,        # Loose, natural
+                  'speed': 0.45,        # Flowing like brushstrokes
+                  'pattern': 'flowing_waves'  # Soft, flowing light
               },
               'modern': {
                   'colors': {'primary': [180, 0, 255], 'secondary': [255, 0, 150], 'accent': [0, 255, 200]},
                   'complexity': 0.7,    # Abstract
-                  'symmetry': 6,        # Geometric
+                  'symmetry': 4,        # Geometric abstraction
                   'speed': 0.5,         # Moderate
-                  'pattern': 'mandelbrot'
+                  'pattern': 'geometric_morph'  # Abstract shapes
               },
               'contemporary': {
                   'colors': {'primary': [100, 100, 120], 'secondary': [180, 180, 200], 'accent': [255, 100, 50]},
-                  'complexity': 0.75,   # Mixed
+                  'complexity': 0.75,   # Mixed media feel
                   'symmetry': 5,        # Unconventional
                   'speed': 0.6,         # Dynamic
-                  'pattern': 'julia'
+                  'pattern': 'particle_flow'  # Digital particles
               },
               'future': {
                   'colors': {'primary': [255, 0, 100], 'secondary': [0, 255, 255], 'accent': [255, 100, 255]},
                   'complexity': 0.9,    # High tech
                   'symmetry': 8,        # Complex
-                  'speed': 0.7,         # Fast
-                  'pattern': 'julia'
+                  'speed': 0.7,         # Fast, dynamic
+                  'pattern': 'starfield'  # Space, future tech
               }
           }
 
@@ -391,6 +400,7 @@ jobs:
           }
 
           art_period = os.environ.get('ART_PERIOD', 'modern')
+          visual_pattern = os.environ.get('VISUAL_PATTERN', 'auto')
           palette = os.environ.get('COLOR_PALETTE', 'auto')
 
           # Load the config
@@ -404,9 +414,18 @@ jobs:
           config['custom_creation']['visual']['complexity'] = period_preset['complexity']
           config['custom_creation']['visual']['symmetry'] = period_preset['symmetry']
           config['custom_creation']['visual']['speed'] = period_preset['speed']
-          config['custom_creation']['visual']['pattern'] = period_preset['pattern']
 
-          print(f"🎭 Applied {art_period} period: complexity={period_preset['complexity']}, symmetry={period_preset['symmetry']}, speed={period_preset['speed']}, pattern={period_preset['pattern']}")
+          # Determine pattern: auto uses art period's pattern, otherwise use explicit choice
+          if visual_pattern == 'auto':
+              pattern = period_preset['pattern']
+              print(f"🎭 Using {art_period} period pattern: {pattern}")
+          else:
+              pattern = visual_pattern
+              print(f"🎭 Overriding pattern with: {pattern}")
+
+          config['custom_creation']['visual']['pattern'] = pattern
+
+          print(f"🎭 Applied {art_period} period: complexity={period_preset['complexity']}, symmetry={period_preset['symmetry']}, speed={period_preset['speed']}, pattern={pattern}")
 
           # Determine colors
           if palette == 'auto':
