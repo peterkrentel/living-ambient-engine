@@ -25,9 +25,10 @@ This feature is inspired by the creative process itself:
 2. Click **Art Creator** in the left sidebar
 3. Click **Run workflow** button
 4. Select your parameters (or use defaults)
-5. Click **Run workflow** to start
-6. Wait for completion (~5-30 minutes depending on duration)
-7. Download your unique creation from the Artifacts section
+5. **Optional**: Enable "Upload to Brand YouTube Channel" to publish directly
+6. Click **Run workflow** to start
+7. Wait for completion (~5-30 minutes depending on duration)
+8. Download your unique creation from the Artifacts section (or view on YouTube if uploaded)
 
 ### Access
 
@@ -35,6 +36,7 @@ This feature is inspired by the creative process itself:
 - You don't need to be a repository owner
 - Works on public repositories
 - Perfect for collaborative art projects
+- **Note**: Only repository owners/collaborators can upload to the brand YouTube channel
 
 ## Parameters Guide
 
@@ -170,6 +172,16 @@ Ancient healing frequencies:
 - Optional text fields
 - Leave empty for auto-generated titles
 - Use for personal annotations or video metadata
+
+#### Upload to Brand YouTube Channel
+- **Toggle**: Enable to automatically upload to your brand YouTube channel
+- **Default**: Off (disabled)
+- **Requirements**: 
+  - YouTube API credentials must be configured as repository secrets
+  - Only works for repository owners/collaborators with access to secrets
+- **What happens**: After video generation, it's automatically uploaded to YouTube with metadata
+- **Benefits**: Instantly publish your art to your channel without manual download/upload
+- **Note**: Video is still saved as an artifact for download
 
 ## Example Workflows
 
