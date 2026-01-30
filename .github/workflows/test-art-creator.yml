@@ -1,0 +1,36 @@
+# Test Art Creator - Triggers all input combinations
+# This workflow calls the art-creator workflow to test all parameter combinations
+name: Test Art Creator - All Combinations
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for running tests (optional)'
+        required: false
+        default: 'Manual test run'
+  # Can also be triggered on PR or push if desired
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - '.github/workflows/art-creator.yml'
+  #     - 'orchestrator/**'
+  #     - 'visuals/**'
+  #     - 'audio/**'
+
+jobs:
+  trigger-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Art Creator Tests
+        run: |
+          echo "🚀 Triggering Art Creator workflow with matrix strategy"
+          echo "This will test 5 different input combinations"
+          echo "Reason: ${{ github.event.inputs.reason || 'Automated test run' }}"
+  
+  # Call the art-creator workflow
+  # The matrix in art-creator will automatically expand to test all combinations
+  call-art-creator:
+    uses: ./.github/workflows/art-creator.yml
+    secrets: inherit
