@@ -375,12 +375,12 @@ jobs:
               return validate_float(name, value, min_val, max_val)
 
           valid = True
-          valid &= validate_float_or_auto("visual_speed", "${{ github.event.inputs.visual_speed }}", 0.01, 1.5)
-          valid &= validate_float_or_auto("visual_complexity", "${{ github.event.inputs.visual_complexity }}", 0.1, 1.0)
-          valid &= validate_int("tempo", "${{ github.event.inputs.tempo }}", 20, 200)
-          valid &= validate_int("brainwave_frequency", "${{ github.event.inputs.brainwave_frequency }}", 1, 50)
-          valid &= validate_float("rhythm_volume", "${{ github.event.inputs.rhythm_volume }}", 0.0, 1.0)
-          valid &= validate_float("ambient_volume", "${{ github.event.inputs.ambient_volume }}", 0.0, 1.0)
+          valid &= validate_float_or_auto("visual_speed", "${{ steps.inputs.outputs.visual_speed }}", 0.01, 1.5)
+          valid &= validate_float_or_auto("visual_complexity", "${{ steps.inputs.outputs.visual_complexity }}", 0.1, 1.0)
+          valid &= validate_int("tempo", "${{ steps.inputs.outputs.tempo }}", 20, 200)
+          valid &= validate_int("brainwave_frequency", "${{ steps.inputs.outputs.brainwave_frequency }}", 1, 50)
+          valid &= validate_float("rhythm_volume", "${{ steps.inputs.outputs.rhythm_volume }}", 0.0, 1.0)
+          valid &= validate_float("ambient_volume", "${{ steps.inputs.outputs.ambient_volume }}", 0.0, 1.0)
           
           if not valid:
               sys.exit(1)
@@ -652,14 +652,15 @@ jobs:
         env:
           DURATION_INPUT: ${{ steps.inputs.outputs.duration }}
           SEED_INPUT: ${{ steps.inputs.outputs.seed }}
-          RHYTHM_VOLUME_INPUT: ${{ github.event.inputs.rhythm_volume || '0.5' }}
-          AMBIENT_VOLUME_INPUT: ${{ github.event.inputs.ambient_volume || '1.0' }}
+          RHYTHM_VOLUME_INPUT: ${{ steps.inputs.outputs.rhythm_volume }}
+          AMBIENT_VOLUME_INPUT: ${{ steps.inputs.outputs.ambient_volume }}
         run: |
           echo "🎨 Creating your unique artistic video..."
-          echo "   Art Period: ${{ github.event.inputs.art_period || 'modern' }}"
-          echo "   Visual: ${{ github.event.inputs.visual_pattern || 'fractal_zoom' }}"
-          echo "   Colors: ${{ github.event.inputs.color_palette || 'psychedelic' }}"
-          echo "   Music: ${{ github.event.inputs.music_style || 'gnawa' }}"
+          echo "   Art Period: ${{ steps.inputs.outputs.art_period }}"
+          echo "   Visual: ${{ steps.inputs.outputs.visual_pattern }}"
+          echo "   Colors: ${{ steps.inputs.outputs.color_palette }}"
+          echo "   Music: ${{ steps.inputs.outputs.music_style }}"
+          echo "   Journey: ${{ steps.inputs.outputs.journey }} (${{ steps.inputs.outputs.journey_intensity }})"
           echo "   Duration: $DURATION_INPUT"
           
           # Use a Python script to generate with custom parameters
@@ -728,13 +729,15 @@ jobs:
               # Save metadata
               import json
               creation_info = {
-                  'art_period': "${{ github.event.inputs.art_period }}",
-                  'visual_pattern': "${{ github.event.inputs.visual_pattern }}",
-                  'color_palette': "${{ github.event.inputs.color_palette }}",
-                  'music_style': "${{ github.event.inputs.music_style }}",
-                  'tempo': "${{ github.event.inputs.tempo }}",
-                  'brainwave_hz': "${{ github.event.inputs.brainwave_frequency }}",
-                  'solfeggio_hz': "${{ github.event.inputs.solfeggio_frequency }}",
+                  'art_period': "${{ steps.inputs.outputs.art_period }}",
+                  'visual_pattern': "${{ steps.inputs.outputs.visual_pattern }}",
+                  'color_palette': "${{ steps.inputs.outputs.color_palette }}",
+                  'music_style': "${{ steps.inputs.outputs.music_style }}",
+                  'tempo': "${{ steps.inputs.outputs.tempo }}",
+                  'brainwave_hz': "${{ steps.inputs.outputs.brainwave_frequency }}",
+                  'solfeggio_hz': "${{ steps.inputs.outputs.solfeggio_frequency }}",
+                  'journey': "${{ steps.inputs.outputs.journey }}",
+                  'journey_intensity': "${{ steps.inputs.outputs.journey_intensity }}",
                   'seed': result['metadata'].get('seed'),
                   'created_by': "${{ github.actor }}",
                   'result': {
@@ -757,7 +760,7 @@ jobs:
       - name: Upload artwork as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: artistic-creation-${{ github.run_number }}
+          name: artistic-creation-${{ github.run_number }}-${{ matrix.test_id }}
           path: ./art_output/
           retention-days: 30
       
@@ -846,8 +849,8 @@ jobs:
       
       - name: Upload to YouTube (Brand Channel)
         env:
-          CUSTOM_TITLE: ${{ steps.inputs.outputs.title }}
-          CUSTOM_DESCRIPTION: ${{ steps.inputs.outputs.description }}
+          CUSTOM_TITLE: ${{ github.event.inputs.title }}
+          CUSTOM_DESCRIPTION: ${{ github.event.inputs.description }}
           GITHUB_ACTOR: ${{ github.actor }}
         run: |
           # Upload the created art video to YouTube

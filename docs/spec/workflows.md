@@ -104,13 +104,13 @@ workflow_call:      # Can be called by test-art-creator
 
 The workflow includes a matrix strategy for comprehensive testing:
 
-| Test ID | Art Period | Visual Pattern | Music Style | Solfeggio | Journey | Intensity |
-|---------|------------|----------------|-------------|-----------|---------|-----------|
-| 1 | modern | fractal_zoom | gnawa | 528 Hz | steady | moderate |
-| 2 | cave_art | organic_flow | heartbeat | 174 Hz | awakening | subtle |
-| 3 | renaissance | fibonacci_spiral | taiko | 639 Hz | deep_dive | moderate |
-| 4 | future | starfield | none | 963 Hz | crescendo | dramatic |
-| 5 | impressionist | flowing_waves | gamelan | 417 Hz | waves | moderate |
+| Test ID | Art Period | Visual Pattern | Color Palette | Music Style | Solfeggio | Journey | Intensity |
+|---------|------------|----------------|---------------|-------------|-----------|---------|-----------|
+| 1 | modern | fractal_zoom | psychedelic | gnawa | 528 Hz | steady | moderate |
+| 2 | cave_art | organic_flow | cave_earth | heartbeat | 174 Hz | awakening | subtle |
+| 3 | renaissance | fibonacci_spiral | renaissance_warm | taiko | 639 Hz | deep_dive | moderate |
+| 4 | future | starfield | cyberpunk | none | 963 Hz | crescendo | dramatic |
+| 5 | impressionist | flowing_waves | auto | gamelan | 417 Hz | waves | moderate |
 
 **Journey Coverage:** Tests 5 of 7 journey presets:
 - ✅ `steady` - Traditional constant tempo
@@ -208,6 +208,6 @@ python run_job.py --mood trance --duration 30
 ## Security Notes
 
 - Secrets are masked in logs
-- Token pickes are base64 encoded in secrets
+- Token pickles are base64 encoded in secrets
 - Never echo secrets or write to artifacts
 
