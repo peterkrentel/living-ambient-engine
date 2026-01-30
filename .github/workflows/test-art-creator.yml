@@ -19,6 +19,10 @@ on:
   #     - 'visuals/**'
   #     - 'audio/**'
 
+permissions:
+  contents: read
+  actions: read
+
 jobs:
   trigger-tests:
     runs-on: ubuntu-latest
