@@ -52,11 +52,12 @@ on:
         default: '0.7'
       
       color_palette:
-        description: 'Color Palette'
+        description: 'Color Palette (auto = inherit from art period)'
         required: false
         type: choice
-        default: 'psychedelic'
+        default: 'auto'
         options:
+          - 'auto'               # Inherit from art period
           - 'cave_earth'         # Earth tones (browns, ochres)
           - 'ancient_gold'       # Gold and jewel tones
           - 'medieval_rich'      # Deep reds, blues, gold
@@ -294,115 +295,155 @@ jobs:
           echo "📋 Custom configuration created"
           cat /tmp/art_creator_config.yaml
       
-      - name: Apply color palette
+      - name: Apply art period presets and color palette
         env:
-          COLOR_PALETTE: ${{ github.event.inputs.color_palette || 'psychedelic' }}
+          ART_PERIOD: ${{ github.event.inputs.art_period || 'modern' }}
+          COLOR_PALETTE: ${{ github.event.inputs.color_palette || 'auto' }}
           CUSTOM_PRIMARY: ${{ github.event.inputs.custom_primary_rgb || '100,150,200' }}
           CUSTOM_SECONDARY: ${{ github.event.inputs.custom_secondary_rgb || '200,100,150' }}
           CUSTOM_ACCENT: ${{ github.event.inputs.custom_accent_rgb || '255,255,100' }}
         run: |
-          # Map art periods and color palettes to RGB values using env vars
+          # Apply art period presets (colors, complexity, symmetry, speed) with optional palette override
           python3 << 'PYTHON_SCRIPT'
           import yaml
           import os
           import sys
-          
-          # Color palette definitions
-          PALETTES = {
-              'cave_earth': {
-                  'primary': [80, 50, 30],
-                  'secondary': [120, 90, 60],
-                  'accent': [180, 140, 100]
+
+          # Art period presets - each defines a complete visual style
+          ART_PERIODS = {
+              'cave_art': {
+                  'colors': {'primary': [80, 50, 30], 'secondary': [120, 90, 60], 'accent': [180, 140, 100]},
+                  'complexity': 0.3,    # Simple, primal
+                  'symmetry': 2,        # Minimal symmetry
+                  'speed': 0.3,         # Slow, meditative
+                  'pattern': 'mandelbrot'
               },
-              'ancient_gold': {
-                  'primary': [180, 140, 20],
-                  'secondary': [220, 180, 40],
-                  'accent': [255, 220, 100]
+              'ancient': {
+                  'colors': {'primary': [180, 140, 20], 'secondary': [220, 180, 40], 'accent': [255, 220, 100]},
+                  'complexity': 0.5,    # Structured
+                  'symmetry': 4,        # Geometric
+                  'speed': 0.4,         # Deliberate
+                  'pattern': 'mandelbrot'
               },
-              'medieval_rich': {
-                  'primary': [120, 20, 30],
-                  'secondary': [20, 40, 120],
-                  'accent': [220, 180, 40]
+              'medieval': {
+                  'colors': {'primary': [120, 20, 30], 'secondary': [20, 40, 120], 'accent': [220, 180, 40]},
+                  'complexity': 0.6,    # Ornate
+                  'symmetry': 8,        # Octagonal (rose windows)
+                  'speed': 0.35,        # Slow, reverent
+                  'pattern': 'mandelbrot'
               },
-              'renaissance_warm': {
-                  'primary': [140, 100, 70],
-                  'secondary': [180, 120, 80],
-                  'accent': [220, 180, 140]
+              'renaissance': {
+                  'colors': {'primary': [140, 100, 70], 'secondary': [180, 120, 80], 'accent': [220, 180, 140]},
+                  'complexity': 0.8,    # High detail
+                  'symmetry': 6,        # Balanced
+                  'speed': 0.5,         # Measured
+                  'pattern': 'mandelbrot'
               },
-              'impressionist_soft': {
-                  'primary': [180, 200, 220],
-                  'secondary': [220, 180, 200],
-                  'accent': [255, 240, 200]
+              'baroque': {
+                  'colors': {'primary': [100, 40, 60], 'secondary': [180, 120, 80], 'accent': [255, 200, 100]},
+                  'complexity': 0.85,   # Dramatic detail
+                  'symmetry': 6,        # Dynamic balance
+                  'speed': 0.6,         # Movement
+                  'pattern': 'julia'
               },
-              'psychedelic': {
-                  'primary': [180, 0, 255],
-                  'secondary': [255, 0, 150],
-                  'accent': [0, 255, 200]
+              'impressionist': {
+                  'colors': {'primary': [180, 200, 220], 'secondary': [220, 180, 200], 'accent': [255, 240, 200]},
+                  'complexity': 0.6,    # Soft edges
+                  'symmetry': 4,        # Loose
+                  'speed': 0.55,        # Flowing
+                  'pattern': 'mandelbrot'
               },
-              'cyberpunk': {
-                  'primary': [255, 0, 100],
-                  'secondary': [0, 255, 255],
-                  'accent': [255, 100, 255]
+              'modern': {
+                  'colors': {'primary': [180, 0, 255], 'secondary': [255, 0, 150], 'accent': [0, 255, 200]},
+                  'complexity': 0.7,    # Abstract
+                  'symmetry': 6,        # Geometric
+                  'speed': 0.5,         # Moderate
+                  'pattern': 'mandelbrot'
               },
-              'sunset': {
-                  'primary': [255, 120, 60],
-                  'secondary': [255, 180, 100],
-                  'accent': [255, 220, 180]
+              'contemporary': {
+                  'colors': {'primary': [100, 100, 120], 'secondary': [180, 180, 200], 'accent': [255, 100, 50]},
+                  'complexity': 0.75,   # Mixed
+                  'symmetry': 5,        # Unconventional
+                  'speed': 0.6,         # Dynamic
+                  'pattern': 'julia'
               },
-              'ocean': {
-                  'primary': [0, 50, 100],
-                  'secondary': [0, 100, 150],
-                  'accent': [100, 180, 220]
-              },
-              'forest': {
-                  'primary': [30, 60, 30],
-                  'secondary': [50, 100, 50],
-                  'accent': [100, 150, 80]
+              'future': {
+                  'colors': {'primary': [255, 0, 100], 'secondary': [0, 255, 255], 'accent': [255, 100, 255]},
+                  'complexity': 0.9,    # High tech
+                  'symmetry': 8,        # Complex
+                  'speed': 0.7,         # Fast
+                  'pattern': 'julia'
               }
           }
-          
-          palette = os.environ.get('COLOR_PALETTE', 'psychedelic')
-          
+
+          # Standalone color palettes (for override)
+          PALETTES = {
+              'cave_earth': {'primary': [80, 50, 30], 'secondary': [120, 90, 60], 'accent': [180, 140, 100]},
+              'ancient_gold': {'primary': [180, 140, 20], 'secondary': [220, 180, 40], 'accent': [255, 220, 100]},
+              'medieval_rich': {'primary': [120, 20, 30], 'secondary': [20, 40, 120], 'accent': [220, 180, 40]},
+              'renaissance_warm': {'primary': [140, 100, 70], 'secondary': [180, 120, 80], 'accent': [220, 180, 140]},
+              'impressionist_soft': {'primary': [180, 200, 220], 'secondary': [220, 180, 200], 'accent': [255, 240, 200]},
+              'psychedelic': {'primary': [180, 0, 255], 'secondary': [255, 0, 150], 'accent': [0, 255, 200]},
+              'cyberpunk': {'primary': [255, 0, 100], 'secondary': [0, 255, 255], 'accent': [255, 100, 255]},
+              'sunset': {'primary': [255, 120, 60], 'secondary': [255, 180, 100], 'accent': [255, 220, 180]},
+              'ocean': {'primary': [0, 50, 100], 'secondary': [0, 100, 150], 'accent': [100, 180, 220]},
+              'forest': {'primary': [30, 60, 30], 'secondary': [50, 100, 50], 'accent': [100, 150, 80]}
+          }
+
+          art_period = os.environ.get('ART_PERIOD', 'modern')
+          palette = os.environ.get('COLOR_PALETTE', 'auto')
+
           # Load the config
           with open('/tmp/art_creator_config.yaml', 'r') as f:
               config = yaml.safe_load(f)
-          
-          # Apply colors
-          if palette == 'custom':
+
+          # Get art period preset (defaults to modern)
+          period_preset = ART_PERIODS.get(art_period, ART_PERIODS['modern'])
+
+          # Apply art period visual characteristics
+          config['custom_creation']['visual']['complexity'] = period_preset['complexity']
+          config['custom_creation']['visual']['symmetry'] = period_preset['symmetry']
+          config['custom_creation']['visual']['speed'] = period_preset['speed']
+          config['custom_creation']['visual']['pattern'] = period_preset['pattern']
+
+          print(f"🎭 Applied {art_period} period: complexity={period_preset['complexity']}, symmetry={period_preset['symmetry']}, speed={period_preset['speed']}, pattern={period_preset['pattern']}")
+
+          # Determine colors
+          if palette == 'auto':
+              # Use art period's colors
+              colors = period_preset['colors']
+              print(f"🎨 Using {art_period} period colors (auto)")
+          elif palette == 'custom':
               try:
                   primary = [int(x.strip()) for x in os.environ.get('CUSTOM_PRIMARY', '100,150,200').split(',')]
                   secondary = [int(x.strip()) for x in os.environ.get('CUSTOM_SECONDARY', '200,100,150').split(',')]
                   accent = [int(x.strip()) for x in os.environ.get('CUSTOM_ACCENT', '255,255,100').split(',')]
-                  
-                  # Validate RGB values
+
                   for color_name, color in [('primary', primary), ('secondary', secondary), ('accent', accent)]:
                       if len(color) != 3:
-                          print(f"❌ Error: {color_name} color must have exactly 3 values (R,G,B), got {len(color)}")
+                          print(f"❌ Error: {color_name} must have 3 values (R,G,B), got {len(color)}")
                           sys.exit(1)
                       for i, val in enumerate(color):
                           if val < 0 or val > 255:
-                              print(f"❌ Error: {color_name}[{i}] must be between 0-255, got {val}")
+                              print(f"❌ Error: {color_name}[{i}] must be 0-255, got {val}")
                               sys.exit(1)
+                  colors = {'primary': primary, 'secondary': secondary, 'accent': accent}
+                  print(f"🎨 Using custom colors")
               except ValueError as e:
-                  print(f"❌ Error parsing custom RGB values: {e}")
+                  print(f"❌ Error parsing custom RGB: {e}")
                   sys.exit(1)
           else:
-              colors = PALETTES.get(palette, PALETTES['psychedelic'])
-              primary = colors['primary']
-              secondary = colors['secondary']
-              accent = colors['accent']
-          
-          config['custom_creation']['visual']['colors'] = {
-              'primary': primary,
-              'secondary': secondary,
-              'accent': accent
-          }
-          
+              # Use explicit palette override
+              colors = PALETTES.get(palette, period_preset['colors'])
+              print(f"🎨 Overriding with {palette} palette")
+
+          config['custom_creation']['visual']['colors'] = colors
+
           # Save updated config
           with open('/tmp/art_creator_config.yaml', 'w') as f:
               yaml.dump(config, f, default_flow_style=False)
-          
-          print(f"🎨 Applied {palette} palette: primary={primary}, secondary={secondary}, accent={accent}")
+
+          print(f"   Colors: primary={colors['primary']}, secondary={colors['secondary']}, accent={colors['accent']}")
           PYTHON_SCRIPT
       
       - name: Merge custom config with moods
