@@ -173,10 +173,13 @@ on:
         required: false
         type: boolean
         default: false
+  
+  # Automatic test trigger - tests all input combinations
+  workflow_call:
 
 # Prevent overlapping runs and resource contention
 concurrency:
-  group: art-creator
+  group: art-creator-${{ github.event_name == 'workflow_call' && matrix.test_id || 'manual' }}
   cancel-in-progress: false
 
 env:
@@ -190,10 +193,163 @@ jobs:
   create_art:
     runs-on: ubuntu-latest
     timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        # Test all combinations of key input parameters
+        # This creates a comprehensive test matrix when workflow_call is triggered
+        include:
+          # Art Periods (9 options)
+          - test_id: 1
+            art_period: 'cave_art'
+            visual_pattern: 'organic_flow'
+            color_palette: 'cave_earth'
+            music_style: 'heartbeat'
+            solfeggio_frequency: '174'
+          - test_id: 2
+            art_period: 'ancient'
+            visual_pattern: 'sacred_geometry'
+            color_palette: 'ancient_gold'
+            music_style: 'taiko'
+            solfeggio_frequency: '285'
+          - test_id: 3
+            art_period: 'medieval'
+            visual_pattern: 'sacred_geometry'
+            color_palette: 'medieval_rich'
+            music_style: 'gamelan'
+            solfeggio_frequency: '396'
+          - test_id: 4
+            art_period: 'renaissance'
+            visual_pattern: 'fibonacci_spiral'
+            color_palette: 'renaissance_warm'
+            music_style: 'gnawa'
+            solfeggio_frequency: '417'
+          - test_id: 5
+            art_period: 'baroque'
+            visual_pattern: 'julia'
+            color_palette: 'auto'
+            music_style: 'bamboula'
+            solfeggio_frequency: '528'
+          - test_id: 6
+            art_period: 'impressionist'
+            visual_pattern: 'flowing_waves'
+            color_palette: 'impressionist_soft'
+            music_style: 'candomble'
+            solfeggio_frequency: '639'
+          - test_id: 7
+            art_period: 'modern'
+            visual_pattern: 'geometric_morph'
+            color_palette: 'psychedelic'
+            music_style: 'burundi'
+            solfeggio_frequency: '741'
+          - test_id: 8
+            art_period: 'contemporary'
+            visual_pattern: 'particle_flow'
+            color_palette: 'cyberpunk'
+            music_style: 'kuku'
+            solfeggio_frequency: '852'
+          - test_id: 9
+            art_period: 'future'
+            visual_pattern: 'starfield'
+            color_palette: 'auto'
+            music_style: 'none'
+            solfeggio_frequency: '963'
+          # Additional Visual Pattern Tests
+          - test_id: 10
+            art_period: 'modern'
+            visual_pattern: 'fractal_zoom'
+            color_palette: 'sunset'
+            music_style: 'gnawa'
+            solfeggio_frequency: '528'
+          - test_id: 11
+            art_period: 'modern'
+            visual_pattern: 'mandelbrot'
+            color_palette: 'ocean'
+            music_style: 'gnawa'
+            solfeggio_frequency: '528'
+          - test_id: 12
+            art_period: 'contemporary'
+            visual_pattern: 'platonic_solids'
+            color_palette: 'forest'
+            music_style: 'gamelan'
+            solfeggio_frequency: '639'
+          - test_id: 13
+            art_period: 'impressionist'
+            visual_pattern: 'slow_waves'
+            color_palette: 'auto'
+            music_style: 'none'
+            solfeggio_frequency: '417'
+          - test_id: 14
+            art_period: 'medieval'
+            visual_pattern: 'rain_window'
+            color_palette: 'medieval_rich'
+            music_style: 'heartbeat'
+            solfeggio_frequency: '174'
+          - test_id: 15
+            art_period: 'cave_art'
+            visual_pattern: 'fireplace'
+            color_palette: 'cave_earth'
+            music_style: 'taiko'
+            solfeggio_frequency: '285'
+          # Auto mode tests
+          - test_id: 16
+            art_period: 'renaissance'
+            visual_pattern: 'auto'
+            color_palette: 'auto'
+            music_style: 'gnawa'
+            solfeggio_frequency: '528'
     
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      
+      - name: Set input values
+        id: inputs
+        run: |
+          # Use matrix values for workflow_call, manual inputs for workflow_dispatch
+          if [ "${{ github.event_name }}" = "workflow_call" ]; then
+            echo "Using matrix values for testing"
+            echo "art_period=${{ matrix.art_period }}" >> $GITHUB_OUTPUT
+            echo "visual_pattern=${{ matrix.visual_pattern }}" >> $GITHUB_OUTPUT
+            echo "visual_speed=0.5" >> $GITHUB_OUTPUT
+            echo "visual_complexity=0.7" >> $GITHUB_OUTPUT
+            echo "color_palette=${{ matrix.color_palette }}" >> $GITHUB_OUTPUT
+            echo "music_style=${{ matrix.music_style }}" >> $GITHUB_OUTPUT
+            echo "tempo=60" >> $GITHUB_OUTPUT
+            echo "brainwave_frequency=10" >> $GITHUB_OUTPUT
+            echo "solfeggio_frequency=${{ matrix.solfeggio_frequency }}" >> $GITHUB_OUTPUT
+            echo "rhythm_volume=0.5" >> $GITHUB_OUTPUT
+            echo "ambient_volume=1.0" >> $GITHUB_OUTPUT
+            echo "duration=10s" >> $GITHUB_OUTPUT
+            echo "seed=" >> $GITHUB_OUTPUT
+            echo "title=" >> $GITHUB_OUTPUT
+            echo "description=" >> $GITHUB_OUTPUT
+            echo "upload_to_brand=false" >> $GITHUB_OUTPUT
+            echo "custom_primary_rgb=100,150,200" >> $GITHUB_OUTPUT
+            echo "custom_secondary_rgb=200,100,150" >> $GITHUB_OUTPUT
+            echo "custom_accent_rgb=255,255,100" >> $GITHUB_OUTPUT
+          else
+            echo "Using manual workflow_dispatch inputs"
+            echo "art_period=${{ github.event.inputs.art_period || 'modern' }}" >> $GITHUB_OUTPUT
+            echo "visual_pattern=${{ github.event.inputs.visual_pattern || 'auto' }}" >> $GITHUB_OUTPUT
+            echo "visual_speed=${{ github.event.inputs.visual_speed || '0.5' }}" >> $GITHUB_OUTPUT
+            echo "visual_complexity=${{ github.event.inputs.visual_complexity || '0.7' }}" >> $GITHUB_OUTPUT
+            echo "color_palette=${{ github.event.inputs.color_palette || 'auto' }}" >> $GITHUB_OUTPUT
+            echo "music_style=${{ github.event.inputs.music_style || 'gnawa' }}" >> $GITHUB_OUTPUT
+            echo "tempo=${{ github.event.inputs.tempo || '60' }}" >> $GITHUB_OUTPUT
+            echo "brainwave_frequency=${{ github.event.inputs.brainwave_frequency || '10' }}" >> $GITHUB_OUTPUT
+            echo "solfeggio_frequency=${{ github.event.inputs.solfeggio_frequency || '528' }}" >> $GITHUB_OUTPUT
+            echo "rhythm_volume=${{ github.event.inputs.rhythm_volume || '0.5' }}" >> $GITHUB_OUTPUT
+            echo "ambient_volume=${{ github.event.inputs.ambient_volume || '1.0' }}" >> $GITHUB_OUTPUT
+            echo "duration=${{ github.event.inputs.duration || '5min' }}" >> $GITHUB_OUTPUT
+            echo "seed=${{ github.event.inputs.seed || '' }}" >> $GITHUB_OUTPUT
+            echo "title=${{ github.event.inputs.title || '' }}" >> $GITHUB_OUTPUT
+            echo "description=${{ github.event.inputs.description || '' }}" >> $GITHUB_OUTPUT
+            echo "upload_to_brand=${{ github.event.inputs.upload_to_brand || 'false' }}" >> $GITHUB_OUTPUT
+            echo "custom_primary_rgb=${{ github.event.inputs.custom_primary_rgb || '100,150,200' }}" >> $GITHUB_OUTPUT
+            echo "custom_secondary_rgb=${{ github.event.inputs.custom_secondary_rgb || '200,100,150' }}" >> $GITHUB_OUTPUT
+            echo "custom_accent_rgb=${{ github.event.inputs.custom_accent_rgb || '255,255,100' }}" >> $GITHUB_OUTPUT
+          fi
       
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -240,12 +396,12 @@ jobs:
                   return False
           
           valid = True
-          valid &= validate_float("visual_speed", "${{ github.event.inputs.visual_speed }}", 0.01, 1.5)
-          valid &= validate_float("visual_complexity", "${{ github.event.inputs.visual_complexity }}", 0.1, 1.0)
-          valid &= validate_int("tempo", "${{ github.event.inputs.tempo }}", 20, 200)
-          valid &= validate_int("brainwave_frequency", "${{ github.event.inputs.brainwave_frequency }}", 1, 50)
-          valid &= validate_float("rhythm_volume", "${{ github.event.inputs.rhythm_volume }}", 0.0, 1.0)
-          valid &= validate_float("ambient_volume", "${{ github.event.inputs.ambient_volume }}", 0.0, 1.0)
+          valid &= validate_float("visual_speed", "${{ steps.inputs.outputs.visual_speed }}", 0.01, 1.5)
+          valid &= validate_float("visual_complexity", "${{ steps.inputs.outputs.visual_complexity }}", 0.1, 1.0)
+          valid &= validate_int("tempo", "${{ steps.inputs.outputs.tempo }}", 20, 200)
+          valid &= validate_int("brainwave_frequency", "${{ steps.inputs.outputs.brainwave_frequency }}", 1, 50)
+          valid &= validate_float("rhythm_volume", "${{ steps.inputs.outputs.rhythm_volume }}", 0.0, 1.0)
+          valid &= validate_float("ambient_volume", "${{ steps.inputs.outputs.ambient_volume }}", 0.0, 1.0)
           
           if not valid:
               sys.exit(1)
@@ -255,14 +411,14 @@ jobs:
       
       - name: Generate custom configuration
         env:
-          ART_PERIOD: ${{ github.event.inputs.art_period || 'modern' }}
-          VISUAL_PATTERN: ${{ github.event.inputs.visual_pattern || 'fractal_zoom' }}
-          VISUAL_SPEED: ${{ github.event.inputs.visual_speed || '0.5' }}
-          VISUAL_COMPLEXITY: ${{ github.event.inputs.visual_complexity || '0.7' }}
-          MUSIC_STYLE: ${{ github.event.inputs.music_style || 'gnawa' }}
-          RHYTHM_VOLUME: ${{ github.event.inputs.rhythm_volume || '0.5' }}
-          BRAINWAVE_FREQ: ${{ github.event.inputs.brainwave_frequency || '10' }}
-          SOLFEGGIO_FREQ: ${{ github.event.inputs.solfeggio_frequency || '528' }}
+          ART_PERIOD: ${{ steps.inputs.outputs.art_period }}
+          VISUAL_PATTERN: ${{ steps.inputs.outputs.visual_pattern }}
+          VISUAL_SPEED: ${{ steps.inputs.outputs.visual_speed }}
+          VISUAL_COMPLEXITY: ${{ steps.inputs.outputs.visual_complexity }}
+          MUSIC_STYLE: ${{ steps.inputs.outputs.music_style }}
+          RHYTHM_VOLUME: ${{ steps.inputs.outputs.rhythm_volume }}
+          BRAINWAVE_FREQ: ${{ steps.inputs.outputs.brainwave_frequency }}
+          SOLFEGGIO_FREQ: ${{ steps.inputs.outputs.solfeggio_frequency }}
         run: |
           # Create a custom configuration file based on workflow inputs using env vars
           # Handle 'none' rhythm by setting it to null
@@ -276,7 +432,7 @@ jobs:
           cat > /tmp/art_creator_config.yaml << EOF
           custom_creation:
             description: "Custom artistic creation"
-            title_template: "${{ github.event.inputs.title }}"
+            title_template: "${{ steps.inputs.outputs.title }}"
             art_period: "$ART_PERIOD"
             visual:
               type: "$VISUAL_PATTERN"
@@ -305,12 +461,12 @@ jobs:
       
       - name: Apply art period presets and color palette
         env:
-          ART_PERIOD: ${{ github.event.inputs.art_period || 'modern' }}
-          VISUAL_PATTERN: ${{ github.event.inputs.visual_pattern || 'auto' }}
-          COLOR_PALETTE: ${{ github.event.inputs.color_palette || 'auto' }}
-          CUSTOM_PRIMARY: ${{ github.event.inputs.custom_primary_rgb || '100,150,200' }}
-          CUSTOM_SECONDARY: ${{ github.event.inputs.custom_secondary_rgb || '200,100,150' }}
-          CUSTOM_ACCENT: ${{ github.event.inputs.custom_accent_rgb || '255,255,100' }}
+          ART_PERIOD: ${{ steps.inputs.outputs.art_period }}
+          VISUAL_PATTERN: ${{ steps.inputs.outputs.visual_pattern }}
+          COLOR_PALETTE: ${{ steps.inputs.outputs.color_palette }}
+          CUSTOM_PRIMARY: ${{ steps.inputs.outputs.custom_primary_rgb }}
+          CUSTOM_SECONDARY: ${{ steps.inputs.outputs.custom_secondary_rgb }}
+          CUSTOM_ACCENT: ${{ steps.inputs.outputs.custom_accent_rgb }}
         run: |
           # Apply art period presets (colors, complexity, symmetry, speed, pattern) with optional overrides
           python3 << 'PYTHON_SCRIPT'
@@ -473,16 +629,16 @@ jobs:
       
       - name: Generate artistic video
         env:
-          DURATION_INPUT: ${{ github.event.inputs.duration || '5min' }}
-          SEED_INPUT: ${{ github.event.inputs.seed }}
-          RHYTHM_VOLUME_INPUT: ${{ github.event.inputs.rhythm_volume || '0.5' }}
-          AMBIENT_VOLUME_INPUT: ${{ github.event.inputs.ambient_volume || '1.0' }}
+          DURATION_INPUT: ${{ steps.inputs.outputs.duration }}
+          SEED_INPUT: ${{ steps.inputs.outputs.seed }}
+          RHYTHM_VOLUME_INPUT: ${{ steps.inputs.outputs.rhythm_volume }}
+          AMBIENT_VOLUME_INPUT: ${{ steps.inputs.outputs.ambient_volume }}
         run: |
           echo "🎨 Creating your unique artistic video..."
-          echo "   Art Period: ${{ github.event.inputs.art_period || 'modern' }}"
-          echo "   Visual: ${{ github.event.inputs.visual_pattern || 'fractal_zoom' }}"
-          echo "   Colors: ${{ github.event.inputs.color_palette || 'psychedelic' }}"
-          echo "   Music: ${{ github.event.inputs.music_style || 'gnawa' }}"
+          echo "   Art Period: ${{ steps.inputs.outputs.art_period }}"
+          echo "   Visual: ${{ steps.inputs.outputs.visual_pattern }}"
+          echo "   Colors: ${{ steps.inputs.outputs.color_palette }}"
+          echo "   Music: ${{ steps.inputs.outputs.music_style }}"
           echo "   Duration: $DURATION_INPUT"
           
           # Use a Python script to generate with custom parameters
@@ -551,13 +707,13 @@ jobs:
               # Save metadata
               import json
               creation_info = {
-                  'art_period': "${{ github.event.inputs.art_period }}",
-                  'visual_pattern': "${{ github.event.inputs.visual_pattern }}",
-                  'color_palette': "${{ github.event.inputs.color_palette }}",
-                  'music_style': "${{ github.event.inputs.music_style }}",
-                  'tempo': "${{ github.event.inputs.tempo }}",
-                  'brainwave_hz': "${{ github.event.inputs.brainwave_frequency }}",
-                  'solfeggio_hz': "${{ github.event.inputs.solfeggio_frequency }}",
+                  'art_period': "${{ steps.inputs.outputs.art_period }}",
+                  'visual_pattern': "${{ steps.inputs.outputs.visual_pattern }}",
+                  'color_palette': "${{ steps.inputs.outputs.color_palette }}",
+                  'music_style': "${{ steps.inputs.outputs.music_style }}",
+                  'tempo': "${{ steps.inputs.outputs.tempo }}",
+                  'brainwave_hz': "${{ steps.inputs.outputs.brainwave_frequency }}",
+                  'solfeggio_hz': "${{ steps.inputs.outputs.solfeggio_frequency }}",
                   'seed': result['metadata'].get('seed'),
                   'created_by': "${{ github.actor }}",
                   'result': {
@@ -591,24 +747,24 @@ jobs:
           echo "**Your unique creation is ready!**" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 🎭 Your Artistic Choices:" >> $GITHUB_STEP_SUMMARY
-          echo "- **Art Period**: ${{ github.event.inputs.art_period || 'modern' }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Visual Pattern**: ${{ github.event.inputs.visual_pattern || 'fractal_zoom' }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Visual Speed**: ${{ github.event.inputs.visual_speed || '0.5' }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Complexity**: ${{ github.event.inputs.visual_complexity || '0.7' }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Color Palette**: ${{ github.event.inputs.color_palette || 'psychedelic' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Art Period**: ${{ steps.inputs.outputs.art_period }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Visual Pattern**: ${{ steps.inputs.outputs.visual_pattern }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Visual Speed**: ${{ steps.inputs.outputs.visual_speed }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Complexity**: ${{ steps.inputs.outputs.visual_complexity }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Color Palette**: ${{ steps.inputs.outputs.color_palette }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 🎵 Audio Configuration:" >> $GITHUB_STEP_SUMMARY
-          echo "- **Music Style**: ${{ github.event.inputs.music_style || 'gnawa' }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Tempo**: ${{ github.event.inputs.tempo || '60' }} BPM" >> $GITHUB_STEP_SUMMARY
-          echo "- **Brainwave**: ${{ github.event.inputs.brainwave_frequency || '10' }} Hz" >> $GITHUB_STEP_SUMMARY
-          echo "- **Solfeggio**: ${{ github.event.inputs.solfeggio_frequency || '528' }} Hz" >> $GITHUB_STEP_SUMMARY
-          echo "- **Rhythm Volume**: ${{ github.event.inputs.rhythm_volume || '0.5' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Music Style**: ${{ steps.inputs.outputs.music_style }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tempo**: ${{ steps.inputs.outputs.tempo }} BPM" >> $GITHUB_STEP_SUMMARY
+          echo "- **Brainwave**: ${{ steps.inputs.outputs.brainwave_frequency }} Hz" >> $GITHUB_STEP_SUMMARY
+          echo "- **Solfeggio**: ${{ steps.inputs.outputs.solfeggio_frequency }} Hz" >> $GITHUB_STEP_SUMMARY
+          echo "- **Rhythm Volume**: ${{ steps.inputs.outputs.rhythm_volume }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 📦 Output:" >> $GITHUB_STEP_SUMMARY
-          echo "- **Duration**: ${{ github.event.inputs.duration || '5min' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Duration**: ${{ steps.inputs.outputs.duration }}" >> $GITHUB_STEP_SUMMARY
           
-          if [ -n "${{ github.event.inputs.seed }}" ]; then
-            echo "- **Seed**: ${{ github.event.inputs.seed }} (reproducible)" >> $GITHUB_STEP_SUMMARY
+          if [ -n "${{ steps.inputs.outputs.seed }}" ]; then
+            echo "- **Seed**: ${{ steps.inputs.outputs.seed }} (reproducible)" >> $GITHUB_STEP_SUMMARY
           else
             # Extract seed from creation_info.json if available
             if [ -f ./art_output/creation_info.json ]; then
@@ -631,7 +787,7 @@ jobs:
   upload:
     needs: create_art
     runs-on: ubuntu-latest
-    if: ${{ github.event.inputs.upload_to_brand == true || github.event.inputs.upload_to_brand == 'true' }}
+    if: ${{ github.event_name == 'workflow_dispatch' && (github.event.inputs.upload_to_brand == true || github.event.inputs.upload_to_brand == 'true') }}
     timeout-minutes: 30
     
     steps:
