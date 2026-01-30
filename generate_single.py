@@ -5,6 +5,8 @@ Generate one video at a time with full parameter control and reproducibility.
 """
 
 import click
+import sys
+import re
 import yaml
 from pathlib import Path
 from orchestrator.orchestrator import Orchestrator
@@ -18,18 +20,29 @@ def load_moods(config_dir: str = "config") -> dict:
 
 
 def parse_duration(duration_str: str) -> int:
-    """Parse duration string like '1h', '30m', '2h', '10min' to seconds."""
+    """Parse duration string like '1h', '30m', '2h', '10min', '1.5h' to seconds.
+
+    Supports: 30s, 5sec, 10m, 10min, 1h, 1hr, 1hour, 1.5h, plain integers (seconds)
+    """
     duration_str = duration_str.strip().lower()
-    if duration_str.endswith('h') or duration_str.endswith('hr') or duration_str.endswith('hour'):
-        return int(duration_str.rstrip('hour').rstrip('hr').rstrip('h')) * 3600
-    elif duration_str.endswith('min'):
-        return int(duration_str[:-3]) * 60
-    elif duration_str.endswith('m'):
-        return int(duration_str[:-1]) * 60
-    elif duration_str.endswith('s') or duration_str.endswith('sec'):
-        return int(duration_str.rstrip('sec').rstrip('s'))
+
+    # Regex pattern: optional float/int followed by unit
+    match = re.match(r'^(\d+(?:\.\d+)?)\s*(h|hr|hour|hours|m|min|mins|minutes|s|sec|secs|seconds)?$', duration_str)
+
+    if not match:
+        raise ValueError(f"Invalid duration format: '{duration_str}'. Use formats like: 30s, 10min, 1h, 1.5h")
+
+    value = float(match.group(1))
+    unit = match.group(2) or 's'  # Default to seconds if no unit
+
+    if unit in ('h', 'hr', 'hour', 'hours'):
+        return int(value * 3600)
+    elif unit in ('m', 'min', 'mins', 'minutes'):
+        return int(value * 60)
+    elif unit in ('s', 'sec', 'secs', 'seconds'):
+        return int(value)
     else:
-        return int(duration_str)
+        return int(value)
 
 
 @click.command()
@@ -81,9 +94,9 @@ def main(mood: str, duration: str, seed: int, output: str, rhythm_volume: float,
     
     if show_params:
         if mood not in moods:
-            click.echo(f"❌ Unknown mood: {mood}")
-            click.echo(f"Available: {', '.join(moods.keys())}")
-            return
+            click.echo(f"❌ Unknown mood: {mood}", err=True)
+            click.echo(f"Available: {', '.join(moods.keys())}", err=True)
+            sys.exit(1)
         
         click.echo(f"\n🎛️  Parameters for '{mood}':")
         click.echo("=" * 60)
@@ -107,12 +120,16 @@ def main(mood: str, duration: str, seed: int, output: str, rhythm_volume: float,
     
     # Validate mood
     if mood not in moods:
-        click.echo(f"❌ Unknown mood: {mood}")
-        click.echo(f"Available: {', '.join(moods.keys())}")
-        return
-    
+        click.echo(f"❌ Unknown mood: {mood}", err=True)
+        click.echo(f"Available: {', '.join(moods.keys())}", err=True)
+        sys.exit(1)
+
     # Parse duration
-    duration_seconds = parse_duration(duration)
+    try:
+        duration_seconds = parse_duration(duration)
+    except ValueError as e:
+        click.echo(f"❌ {e}", err=True)
+        sys.exit(1)
     duration_display = f"{duration_seconds//3600}h" if duration_seconds >= 3600 else f"{duration_seconds//60}m" if duration_seconds >= 60 else f"{duration_seconds}s"
 
     mode_str = "DUAL OUTPUT (Ambience + Melody)" if dual else "SINGLE VIDEO"

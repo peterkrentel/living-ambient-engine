@@ -1,16 +1,16 @@
 # Living Ambient Engine
 
-Automated hypnotic video factory for YouTube monetization.
+*Procedural ambient audiovisual generator producing long-form, continuously evolving, non-repeating pieces.*
 
 > **New User?** Start here: [📚 Getting Started Guide](docs/GETTING_STARTED.md) | [⚡ Quick Reference](docs/QUICK_REFERENCE.md) | [🎨 Art Creator](docs/ART_CREATOR.md) | [❓ FAQ](docs/FAQ.md)
 
-## What It Does
+## What It Creates
 
-Generates ambient videos with:
-- 🌀 **Fractal visuals** - Mandelbrot/Julia zooms with psychedelic color cycling
-- 🥁 **Tribal rhythms** - 8 authentic patterns (Bamboula, Kuku, Gnawa, etc.)
-- 🧠 **Brainwave entrainment** - Binaural beats tuned to Delta/Theta/Alpha/Beta/Gamma
-- 🎵 **Solfeggio frequencies** - 432Hz, 528Hz, 639Hz healing tones
+Generative ambient art with:
+- 🌀 **Evolving visuals** - 14 pattern types including fractals, sacred geometry, particle systems, and organic flows
+- 🎵 **Dynamic soundscapes** - Layered audio that evolves through distinct phases, never loops
+- 🧠 **Brainwave-aligned frequencies** - Delta, Theta, Alpha, Beta, Gamma tuning
+- 🌊 **Nature ambiences** - Rain, ocean, fire, forest with authentic textures
 
 ## 🎨 NEW: Art Creator
 
@@ -75,15 +75,15 @@ python library_cli.py export
 | `ceremony` | 7Hz Theta | 528Hz | Candomble |
 | `warrior` | 20Hz Beta | 741Hz | Burundi |
 
-## Content Factory (CI/CD)
+## Optional: Automated Publishing
 
-Automated pipeline via GitHub Actions:
-1. **Scheduled generation** - Daily at 2 AM UTC
+If you want to publish to YouTube, the project includes CI/CD automation:
+1. **Scheduled generation** - GitHub Actions workflow
 2. **Batch processing** - Multiple moods x durations
-3. **Auto-upload** - Direct to YouTube with SEO
-4. **Content Library** - Automatic catalog with YouTube links and metadata
+3. **Auto-upload** - Direct to YouTube with metadata
+4. **Content Library** - Catalog with links and metadata
 
-See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for diagrams.
+See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for system diagrams.
 
 ## Project Structure
 
@@ -128,17 +128,16 @@ See [docs/youtube-auth.md](docs/youtube-auth.md) for detailed instructions.
 ## What Can I Do With This?
 
 **Living Ambient Engine helps you:**
-- ✅ Generate professional ambient videos for YouTube
-- ✅ Create content for meditation, focus, sleep niches
-- ✅ Automate video production with CI/CD
-- ✅ Monetize through YouTube Partner Program
-- ✅ Build a passive income content library
+- ✅ Create generative ambient art - unique, evolving audiovisual experiences
+- ✅ Produce long-form meditation/focus/sleep content
+- ✅ Explore algorithmic art and procedural generation
+- ✅ Publish to YouTube with automated CI/CD (optional)
 
 **Perfect for:**
-- Content creators looking to scale
-- Meditation/wellness creators
-- YouTube automation enthusiasts
-- Anyone interested in algorithmic art
+- Artists exploring generative/procedural art
+- Meditation and wellness creators
+- Ambient music producers
+- Anyone interested in algorithmic creativity
 
 👉 **[See What You Can Create →](docs/GETTING_STARTED.md#examples-gallery)**
 

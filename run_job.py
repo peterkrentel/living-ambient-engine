@@ -10,6 +10,7 @@ Usage:
     python run_job.py --list-moods
 """
 
+import sys
 import click
 from pathlib import Path
 from dotenv import load_dotenv
@@ -45,12 +46,12 @@ def main(mood, duration, output, list_moods, config_dir, rhythm_volume, drone_vo
     
     # Validate required arguments
     if not mood:
-        click.echo("❌ Error: --mood is required (or use --list-moods to see options)")
-        return
-    
+        click.echo("❌ Error: --mood is required (or use --list-moods to see options)", err=True)
+        sys.exit(1)
+
     if not duration:
-        click.echo("❌ Error: --duration is required (in seconds)")
-        return
+        click.echo("❌ Error: --duration is required (in seconds)", err=True)
+        sys.exit(1)
     
     # Generate video
     try:
@@ -76,10 +77,11 @@ def main(mood, duration, output, list_moods, config_dir, rhythm_volume, drone_vo
         click.echo(f"🖼️  Thumbnail: {result['thumbnail_path']}\n")
         
     except ValueError as e:
-        click.echo(f"❌ Error: {e}")
+        click.echo(f"❌ Error: {e}", err=True)
+        sys.exit(1)
     except Exception as e:
-        click.echo(f"❌ Unexpected error: {e}")
-        raise
+        click.echo(f"❌ Unexpected error: {e}", err=True)
+        sys.exit(1)
 
 
 if __name__ == '__main__':

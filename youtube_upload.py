@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 """
-YouTube Upload CLI - Content Factory
+YouTube Upload CLI - Generative Ambient Art Engine
 Upload generated videos to YouTube with metadata.
 """
 
 import click
 import json
+import sys
 import os
+from datetime import datetime
 from pathlib import Path
 
-from youtube.uploader import YouTubeUploader, GOOGLE_API_AVAILABLE
+from youtube.uploader import YouTubeUploader, GOOGLE_API_AVAILABLE, QuotaExceededError
 from library import ContentLibrary
 
 
@@ -207,34 +209,76 @@ def main(video: str, metadata: str, privacy: str, auth: bool, batch: str, update
         if not manifest_path.exists():
             click.echo(f"❌ Manifest not found: {manifest_path}")
             return
-        
+
         with open(manifest_path) as f:
             manifest = json.load(f)
-        
+
         videos = manifest.get('videos', [])
-        click.echo(f"📦 Found {len(videos)} videos to upload")
-        
+
+        # Count already uploaded (idempotency check)
+        already_uploaded = sum(1 for v in videos if v.get('video_id'))
+        pending = len(videos) - already_uploaded
+
+        click.echo(f"📦 Found {len(videos)} videos in manifest")
+        if already_uploaded > 0:
+            click.echo(f"   ✅ {already_uploaded} already uploaded, {pending} pending")
+
         # Initialize content library if catalog updates enabled
         library = None
         if update_catalog:
             library = ContentLibrary(catalog_path=catalog_path)
             click.echo(f"📚 Content catalog: {library.catalog_path}")
-        
+
+        def save_manifest():
+            """Save manifest to disk (for crash recovery)."""
+            with open(manifest_path, 'w') as f:
+                json.dump(manifest, f, indent=2)
+
         uploaded_count = 0
+        skipped_count = 0
         for i, v in enumerate(videos, 1):
-            result = v.get('result', {})
-            video_path = result.get('video_path')
-            meta = result.get('metadata', result)  # Use nested metadata if available
-            
-            if not video_path or not os.path.exists(video_path):
-                click.echo(f"  [{i}] ⏭️  Skipping (file not found)")
+            # IDEMPOTENCY: Skip already uploaded videos
+            if v.get('video_id'):
+                click.echo(f"  [{i}] ⏭️  Already uploaded: {v.get('video_id')}")
+                skipped_count += 1
                 continue
-            
+
+            # Support both old format (result.video_path) and new slim format (video_path)
+            video_path = v.get('video_path') or v.get('result', {}).get('video_path')
+
+            # Build metadata from slim or old format
+            if 'title' in v:
+                # New slim format - use fields directly
+                meta = {
+                    'video_title': v.get('title'),
+                    'mood': v.get('mood'),
+                    'duration': v.get('duration'),
+                    'description': v.get('description', ''),
+                    'tags': v.get('tags', []),
+                }
+            else:
+                # Old format - use nested result/metadata
+                result = v.get('result', {})
+                meta = result.get('metadata', result)
+
+            if not video_path or not os.path.exists(video_path):
+                click.echo(f"  [{i}] ⏭️  Skipping (file not found: {video_path})")
+                continue
+
             click.echo(f"  [{i}/{len(videos)}] Uploading {Path(video_path).name}...")
-            
+
             try:
                 upload_result = upload_single(uploader, video_path, meta, privacy)
-                
+
+                # Update manifest with video_id (idempotency)
+                v['video_id'] = upload_result['video_id']
+                v['upload_status'] = 'uploaded'
+                v['uploaded_at'] = datetime.now().isoformat()
+                v['youtube_url'] = upload_result['url']
+
+                # Save manifest after each upload (crash recovery)
+                save_manifest()
+
                 # Add to content library
                 if library and upload_result:
                     library.add_video(
@@ -244,10 +288,30 @@ def main(video: str, metadata: str, privacy: str, auth: bool, batch: str, update
                         metadata=meta
                     )
                     uploaded_count += 1
+
+            except QuotaExceededError as e:
+                click.echo(f"\n⚠️  {e}", err=True)
+                click.echo("   Saving progress and exiting. Re-run after quota resets.", err=True)
+                save_manifest()  # Save progress so we can resume
+                sys.exit(2)  # Special exit code for quota exceeded
+
             except Exception as e:
                 click.echo(f"  ❌ Upload failed: {e}")
+                v['upload_status'] = 'failed'
+                v['upload_error'] = str(e)
+                save_manifest()  # Save error state
                 continue
-        
+
+        # Final manifest save
+        save_manifest()
+
+        # Summary
+        click.echo(f"\n{'='*60}")
+        click.echo(f"✨ BATCH UPLOAD COMPLETE")
+        click.echo(f"   Uploaded: {uploaded_count}")
+        click.echo(f"   Skipped (already uploaded): {skipped_count}")
+        click.echo(f"   Failed: {len(videos) - uploaded_count - skipped_count - already_uploaded}")
+
         # Export markdown summary if catalog was updated
         if library and uploaded_count > 0:
             try:
@@ -256,7 +320,7 @@ def main(video: str, metadata: str, privacy: str, auth: bool, batch: str, update
                 click.echo(f"📄 Markdown export: {md_path}")
             except Exception as e:
                 click.echo(f"\n⚠️  Warning: Could not export markdown: {e}")
-        
+
         return
     
     # Single video upload

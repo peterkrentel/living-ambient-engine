@@ -6,10 +6,11 @@ Generates multiple videos across moods and durations for YouTube automation.
 
 import click
 import os
+import sys
+import re
 import json
 from datetime import datetime
 from pathlib import Path
-from concurrent.futures import ProcessPoolExecutor, as_completed
 import yaml
 
 from orchestrator.orchestrator import Orchestrator
@@ -24,18 +25,29 @@ def load_moods(config_dir: str = "config") -> list:
 
 
 def parse_duration(duration_str: str) -> int:
-    """Parse duration string like '1h', '30m', '2h', '10min' to seconds."""
+    """Parse duration string like '1h', '30m', '2h', '10min', '1.5h' to seconds.
+
+    Supports: 30s, 5sec, 10m, 10min, 1h, 1hr, 1hour, 1.5h, plain integers (seconds)
+    """
     duration_str = duration_str.strip().lower()
-    if duration_str.endswith('h') or duration_str.endswith('hr') or duration_str.endswith('hour'):
-        return int(duration_str.rstrip('hour').rstrip('hr').rstrip('h')) * 3600
-    elif duration_str.endswith('min'):
-        return int(duration_str[:-3]) * 60
-    elif duration_str.endswith('m'):
-        return int(duration_str[:-1]) * 60
-    elif duration_str.endswith('s') or duration_str.endswith('sec'):
-        return int(duration_str.rstrip('sec').rstrip('s'))
+
+    # Regex pattern: optional float/int followed by unit
+    match = re.match(r'^(\d+(?:\.\d+)?)\s*(h|hr|hour|hours|m|min|mins|minutes|s|sec|secs|seconds)?$', duration_str)
+
+    if not match:
+        raise ValueError(f"Invalid duration format: '{duration_str}'. Use formats like: 30s, 10min, 1h, 1.5h")
+
+    value = float(match.group(1))
+    unit = match.group(2) or 's'  # Default to seconds if no unit
+
+    if unit in ('h', 'hr', 'hour', 'hours'):
+        return int(value * 3600)
+    elif unit in ('m', 'min', 'mins', 'minutes'):
+        return int(value * 60)
+    elif unit in ('s', 'sec', 'secs', 'seconds'):
+        return int(value)
     else:
-        return int(duration_str)
+        return int(value)
 
 
 def generate_single(mood: str, duration: int, output_dir: str, seed: int = None, dual: bool = False) -> dict:
@@ -64,17 +76,16 @@ def generate_single(mood: str, duration: int, output_dir: str, seed: int = None,
 
 @click.command()
 @click.option('--moods', '-m', default='all', help='Comma-separated moods or "all"')
-@click.option('--durations', '-d', default='1h,2h', help='Comma-separated durations (e.g., "30m,1h,2h,4h")')
+@click.option('--durations', '-d', default='1h,2h', help='Comma-separated durations (e.g., "30m,1h,2h,4h,1.5h")')
 @click.option('--output', '-o', default='./batch_output', help='Output directory')
-@click.option('--parallel', '-p', default=1, type=int, help='Parallel jobs (default: 1, use with caution)')
 @click.option('--dual', is_flag=True, help='Generate BOTH ambience-only and melody versions for each video')
 @click.option('--dry-run', is_flag=True, help='Show what would be generated without generating')
 @click.option('--list-moods', '-l', is_flag=True, help='List available moods')
-def main(moods: str, durations: str, output: str, parallel: int, dual: bool, dry_run: bool, list_moods: bool):
+def main(moods: str, durations: str, output: str, dual: bool, dry_run: bool, list_moods: bool):
     """
-    Batch Video Generator - Content Factory
+    Batch Video Generator - Generative Ambient Art Engine
 
-    Generate multiple videos for YouTube automation.
+    Generate multiple videos for publishing.
 
     Examples:
         # Generate all moods at 1h and 2h durations
@@ -90,13 +101,13 @@ def main(moods: str, durations: str, output: str, parallel: int, dual: bool, dry
         python batch_generate.py --moods all --durations 1h,2h,4h --dry-run
     """
     available_moods = load_moods()
-    
+
     if list_moods:
         click.echo("Available moods:")
         for mood in available_moods:
             click.echo(f"  - {mood}")
         return
-    
+
     # Parse moods
     if moods.lower() == 'all':
         selected_moods = available_moods
@@ -105,12 +116,16 @@ def main(moods: str, durations: str, output: str, parallel: int, dual: bool, dry
         # Validate moods
         for m in selected_moods:
             if m not in available_moods:
-                click.echo(f"❌ Unknown mood: {m}")
-                click.echo(f"Available: {', '.join(available_moods)}")
-                return
-    
+                click.echo(f"❌ Unknown mood: {m}", err=True)
+                click.echo(f"Available: {', '.join(available_moods)}", err=True)
+                sys.exit(1)
+
     # Parse durations
-    duration_list = [parse_duration(d.strip()) for d in durations.split(',')]
+    try:
+        duration_list = [parse_duration(d.strip()) for d in durations.split(',')]
+    except ValueError as e:
+        click.echo(f"❌ {e}", err=True)
+        sys.exit(1)
     
     # Calculate total jobs
     jobs = [(mood, dur) for mood in selected_moods for dur in duration_list]
@@ -167,29 +182,47 @@ def main(moods: str, durations: str, output: str, parallel: int, dual: bool, dry
     click.echo(f"\n{'='*60}")
     click.echo(f"✨ BATCH COMPLETE: {success}/{total_jobs} jobs successful ({videos_generated} videos)")
 
-    # Save manifest - include all video paths for upload
+    # Save manifest - only upload-relevant fields (slim format)
+    def extract_video_info(result_obj, mood, duration, seed, variant="full"):
+        """Extract only upload-relevant fields from generation result."""
+        metadata = result_obj.get("metadata", {})
+        return {
+            "mood": mood,
+            "duration": duration,
+            "seed": seed,
+            "variant": variant,  # "ambience" or "melody" or "full"
+            "video_path": result_obj.get("video_path"),
+            "thumbnail_path": result_obj.get("thumbnail_path"),
+            "metadata_path": result_obj.get("metadata_path"),
+            "title": metadata.get("video_title", "Unknown"),
+            "description": metadata.get("description", ""),
+            "tags": metadata.get("tags", []),
+            "created_at": datetime.now().isoformat(),
+            "upload_status": "pending",
+            "video_id": None  # Filled after upload
+        }
+
     manifest_videos = []
     for r in results:
         if r["status"] == "success":
             if r.get("dual"):
                 # Add both versions to manifest
-                manifest_videos.append({
-                    **r,
-                    "result": r["result_ambience"],
-                    "video_title": r["result_ambience"]["metadata"].get("video_title", "Unknown")
-                })
-                manifest_videos.append({
-                    **r,
-                    "result": r["result_melody"],
-                    "video_title": r["result_melody"]["metadata"].get("video_title", "Unknown")
-                })
+                manifest_videos.append(extract_video_info(
+                    r["result_ambience"], r["mood"], r["duration"], r["seed"], "ambience"
+                ))
+                manifest_videos.append(extract_video_info(
+                    r["result_melody"], r["mood"], r["duration"], r["seed"], "melody"
+                ))
             else:
-                manifest_videos.append(r)
+                manifest_videos.append(extract_video_info(
+                    r["result"], r["mood"], r["duration"], r["seed"], "full"
+                ))
 
     manifest = {
         "generated_at": datetime.now().isoformat(),
-        "total": total_jobs,
-        "success": success,
+        "total_jobs": total_jobs,
+        "successful_jobs": success,
+        "failed_jobs": total_jobs - success,
         "dual_mode": dual,
         "total_videos": len(manifest_videos),
         "videos": manifest_videos
