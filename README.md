@@ -132,6 +132,7 @@ See [docs/youtube-auth.md](docs/youtube-auth.md) for detailed instructions.
 - 📺 **[YouTube Setup](docs/youtube-auth.md)** - Authentication guide
 - 🗺️ **[Master Plan](docs/master-plan.md)** - Roadmap and milestones
 - 🤝 **[Contributing](CONTRIBUTING.md)** - How to contribute
+- 🤖 **[AI Agent Instructions](.github/AGENT_INSTRUCTIONS.md)** - For AI coding assistants
 
 ## What Can I Do With This?
 

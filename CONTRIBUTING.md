@@ -182,12 +182,67 @@ If adding tests:
 4. Test audio quality
 5. Document usage
 
+## Spec-Driven Development
+
+This project uses **spec-driven development** to keep AI agents and humans aligned.
+
+### Spec Structure
+
+```
+docs/spec/
+├── SYSTEM.md           # Canonical system spec (start here)
+├── contracts/          # Component interface contracts
+│   ├── orchestrator-audio.md
+│   ├── orchestrator-visual.md
+│   └── orchestrator-youtube.md
+└── workflows.md        # GitHub Actions specs
+
+audio/SPEC.md           # Audio generator spec
+visuals/SPEC.md         # Visual generator spec
+orchestrator/SPEC.md    # Orchestrator spec
+youtube/SPEC.md         # YouTube uploader spec
+config/SPEC.md          # Configuration spec
+render/SPEC.md          # FFmpeg renderer spec
+```
+
+### The Spec-First Rule
+
+> **Any change to cross-component behavior requires a spec update in the same PR.**
+
+Examples requiring spec updates:
+- New config parameters affecting multiple components
+- Changes to data flow between components
+- New workflow inputs or outputs
+- API/interface changes
+
+### PR Checklist
+
+Every PR should verify:
+
+- [ ] **Spec reviewed** - Read relevant specs before coding
+- [ ] **Spec updated** - Changed behavior = updated spec (or N/A)
+- [ ] **Contract honored** - Component interfaces match contracts
+- [ ] **Tests added** - Acceptance criteria have tests
+- [ ] **Docs updated** - User-facing changes reflected in docs
+
+### Working with AI Agents
+
+When using AI assistants (Copilot, Claude, etc.):
+
+1. **Point to specs first**: "Read `docs/spec/SYSTEM.md` and `audio/SPEC.md`"
+2. **Request spec extraction**: "List requirements you found in the spec"
+3. **Verify alignment**: "Show how each requirement is satisfied"
+4. **Enforce updates**: "Update the spec if behavior changed"
+
+This reduces AI drift and keeps implementations consistent.
+
 ## Code Review Process
 
 ### What We Look For
 - ✅ Functionality works as described
 - ✅ Code is clean and readable
 - ✅ Documentation is updated
+- ✅ Spec is updated (if behavior changed)
 - ✅ No breaking changes (or clearly noted)
 - ✅ Follows project style
 
