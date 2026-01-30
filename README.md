@@ -4,6 +4,13 @@
 
 > **New User?** Start here: [📚 Getting Started Guide](docs/GETTING_STARTED.md) | [⚡ Quick Reference](docs/QUICK_REFERENCE.md) | [🎨 Art Creator](docs/ART_CREATOR.md) | [❓ FAQ](docs/FAQ.md)
 
+## 🎬 Gallery
+
+Watch the outputs live — each piece is procedurally generated, continuously evolving, and never loops:
+
+[![YouTube](https://img.shields.io/badge/YouTube-Living_Ambient_Engine-red?style=for-the-badge&logo=youtube)](https://www.youtube.com/@living-ambient-engine)
+[![YouTube](https://img.shields.io/badge/YouTube-Peter_Krentel-red?style=for-the-badge&logo=youtube)](https://www.youtube.com/@peterkrentel1027)
+
 ## What It Creates
 
 Generative ambient art with:
