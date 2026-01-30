@@ -26,6 +26,7 @@ Generative ambient art with:
 - 🖼️ **7 Visual patterns** - Fractals, particles, sacred geometry
 - 🎨 **11 Color palettes** - Or create your own with custom RGB
 - 🎵 **9 Music styles** - World rhythms from heartbeat to tribal drums
+- 🚀 **7 Dynamic journeys** - Synchronized audio-visual evolution (awakening, deep_dive, waves...)
 - ⚡ **Full parameter control** - Speed, complexity, tempo, frequencies
 - 🎲 **Reproducible seeds** - Recreate or share your exact creations
 

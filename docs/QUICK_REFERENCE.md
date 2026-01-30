@@ -48,6 +48,24 @@ Or use raw seconds: `--duration 600`
 
 ---
 
+## Journey Presets (Art Creator)
+
+Dynamic audio-visual evolution over time:
+
+| Journey | Effect |
+|---------|--------|
+| `steady` | Constant tempo/speed (default) |
+| `awakening` | Gradual rise from stillness to energy |
+| `deep_dive` | Descending into calm (sleep prep) |
+| `breathing` | Rhythmic oscillation (breathing sync) |
+| `crescendo` | Build to peak then release |
+| `trance` | Slow hypnotic build |
+| `waves` | Long slow swells like ocean |
+
+**Intensity Options:** `subtle` (±10%), `moderate` (±20%), `dramatic` (±30%)
+
+---
+
 ## Common Examples
 
 ### Quick Test (30 seconds)
