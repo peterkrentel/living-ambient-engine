@@ -150,7 +150,7 @@ class AudioGenerator:
     def generate(self, duration: int, output_path: str) -> str:
         """Generate audio file with evolving phases."""
         num_samples = duration * self.sample_rate
-        audio = np.zeros((num_samples, self.channels))
+        audio = np.zeros((num_samples, self.channels), dtype=np.float32)
 
         # Calculate phase boundaries for this duration
         phase_boundaries = self._get_phase_boundaries(duration)
@@ -259,7 +259,7 @@ class AudioGenerator:
                                            num_samples: int,
                                            phase_boundaries: List) -> np.ndarray:
         """Generate tonal layer with phase-based chord/key shifts."""
-        audio = np.zeros((num_samples, self.channels))
+        audio = np.zeros((num_samples, self.channels), dtype=np.float32)
 
         for i, (start_sample, phase_name, mods, phase_len) in enumerate(phase_boundaries):
             end_sample = start_sample + int(phase_len * self.sample_rate)
@@ -335,7 +335,7 @@ class AudioGenerator:
         sixteenth_duration = beat_duration / 4  # 16th note duration
         sixteenth_samples = int(sixteenth_duration * self.sample_rate)
 
-        audio = np.zeros((num_samples, self.channels))
+        audio = np.zeros((num_samples, self.channels), dtype=np.float32)
 
         # Generate drum sounds
         low_drum = self._synth_drum(80, 0.3, 'low')    # Deep bass drum
@@ -447,7 +447,7 @@ class AudioGenerator:
         elif layer_type == 'call_response':
             return self._generate_call_response(layer_config, num_samples, amplitude)
         else:
-            return np.zeros((num_samples, self.channels))
+            return np.zeros((num_samples, self.channels), dtype=np.float32)
     
     def _generate_sine(self, config: Dict, num_samples: int, amplitude: float) -> np.ndarray:
         """Generate warm pad tone with harmonics (not harsh pure sine)."""
@@ -613,7 +613,7 @@ class AudioGenerator:
         evolve = config.get('evolve', True)  # Enable melodic evolution
 
         intervals = self._get_scale_intervals(scale)
-        audio = np.zeros((num_samples, self.channels))
+        audio = np.zeros((num_samples, self.channels), dtype=np.float32)
         duration = num_samples / self.sample_rate
 
         # Melodic phrases - patterns of scale degrees (more musical than just up/down)
@@ -744,7 +744,7 @@ class AudioGenerator:
         # Note duration (16th notes for flowing arpeggio)
         note_samples = int(self.sample_rate * 60 / tempo / 4)
 
-        audio = np.zeros((num_samples, self.channels))
+        audio = np.zeros((num_samples, self.channels), dtype=np.float32)
         current_sample = 0
         note_index = 0
 
@@ -790,7 +790,7 @@ class AudioGenerator:
         t = np.arange(num_samples) / self.sample_rate
 
         # Rich pad with multiple detuned oscillators
-        wave = np.zeros(num_samples)
+        wave = np.zeros(num_samples, dtype=np.float32)
 
         # Main oscillators (slightly detuned for richness)
         detune = [0.98, 0.99, 1.0, 1.01, 1.02]
@@ -831,7 +831,7 @@ class AudioGenerator:
 
         Uses very slow modulation (0.0005-0.002 Hz) for natural wave patterns.
         """
-        audio = np.zeros((num_samples, self.channels))
+        audio = np.zeros((num_samples, self.channels), dtype=np.float32)
         t = np.arange(num_samples) / self.sample_rate
         duration = num_samples / self.sample_rate
 
@@ -895,7 +895,7 @@ class AudioGenerator:
                 attack_time = np.random.uniform(0.5, 1.5)
                 decay_time = thunder_len / self.sample_rate - attack_time
 
-                env = np.zeros(thunder_len)
+                env = np.zeros(thunder_len, dtype=np.float32)
                 attack_samples = int(attack_time * self.sample_rate)
                 env[:attack_samples] = np.linspace(0, 1, attack_samples)
                 env[attack_samples:] = np.exp(-np.arange(thunder_len - attack_samples) / (decay_time * self.sample_rate) * 3)
@@ -921,7 +921,7 @@ class AudioGenerator:
 
     def _generate_fire(self, config: Dict, num_samples: int, amplitude: float) -> np.ndarray:
         """Generate crackling fire sounds."""
-        audio = np.zeros((num_samples, self.channels))
+        audio = np.zeros((num_samples, self.channels), dtype=np.float32)
 
         # Base: low rumble (the fire's breath)
         t = np.arange(num_samples) / self.sample_rate
@@ -935,7 +935,7 @@ class AudioGenerator:
         # Low frequency filtered noise for the roar
         white = np.random.randn(num_samples)
         # Simple low-pass filter
-        roar = np.zeros(num_samples)
+        roar = np.zeros(num_samples, dtype=np.float32)
         alpha = 0.05  # Low-pass coefficient (cuts high freqs)
         for i in range(1, num_samples):
             roar[i] = alpha * white[i] + (1 - alpha) * roar[i-1]
@@ -977,7 +977,7 @@ class AudioGenerator:
         Formula: ocean(t) = A(t) * N_pink(t)
         Uses higher modulation depth (0.5-0.7) and very slow frequency (~0.0003 Hz).
         """
-        audio = np.zeros((num_samples, self.channels))
+        audio = np.zeros((num_samples, self.channels), dtype=np.float32)
         t = np.arange(num_samples) / self.sample_rate
 
         # Wave cycle period (seconds between waves)
@@ -1017,7 +1017,7 @@ class AudioGenerator:
 
     def _generate_forest(self, config: Dict, num_samples: int, amplitude: float) -> np.ndarray:
         """Generate forest ambience with birds and wind."""
-        audio = np.zeros((num_samples, self.channels))
+        audio = np.zeros((num_samples, self.channels), dtype=np.float32)
         t = np.arange(num_samples) / self.sample_rate
 
         # Base: gentle wind (very soft pink noise with slow modulation)
@@ -1073,7 +1073,7 @@ class AudioGenerator:
         Formula: wind(t) = A(t) * N_white(t)
         Uses modulation frequency 0.0002-0.002 Hz for natural gusting patterns.
         """
-        audio = np.zeros((num_samples, self.channels))
+        audio = np.zeros((num_samples, self.channels), dtype=np.float32)
         t = np.arange(num_samples) / self.sample_rate
 
         # Base: white noise (characteristic of wind/air movement)
@@ -1167,7 +1167,7 @@ class AudioGenerator:
         beat_samples = int(self.sample_rate * 60 / tempo)
         chord_samples = beat_samples * chord_duration
 
-        audio = np.zeros((num_samples, self.channels))
+        audio = np.zeros((num_samples, self.channels), dtype=np.float32)
         current_sample = 0
         chord_index = 0
 
@@ -1179,7 +1179,7 @@ class AudioGenerator:
                 break
 
             t = np.arange(chunk_len) / self.sample_rate
-            chunk = np.zeros(chunk_len)
+            chunk = np.zeros(chunk_len, dtype=np.float32)
 
             for semitones in chord:
                 freq = root * (2 ** (semitones / 12))
@@ -1219,7 +1219,7 @@ class AudioGenerator:
         tempo = config.get('tempo', 80)
         patterns = config.get('patterns', [3, 4])  # e.g., 3 against 4
 
-        audio = np.zeros((num_samples, self.channels))
+        audio = np.zeros((num_samples, self.channels), dtype=np.float32)
         beat_samples = int(self.sample_rate * 60 / tempo)
 
         # Cycle length = LCM of patterns * beat_samples
@@ -1274,7 +1274,7 @@ class AudioGenerator:
         tempo = config.get('tempo', 70)
 
         intervals = self._get_scale_intervals(scale)
-        audio = np.zeros((num_samples, self.channels))
+        audio = np.zeros((num_samples, self.channels), dtype=np.float32)
 
         beat_samples = int(self.sample_rate * 60 / tempo)
         phrase_beats = 4  # 4 beats per phrase
