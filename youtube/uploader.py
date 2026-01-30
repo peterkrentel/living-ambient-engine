@@ -141,15 +141,28 @@ class YouTubeUploader:
         video_url = f"https://youtube.com/watch?v={video_id}"
         
         # Upload thumbnail if provided
+        # Note: This requires YouTube account verification. If it fails, we'll continue without it.
+        thumbnail_uploaded = False
         if thumbnail_path and os.path.exists(thumbnail_path):
-            self.youtube.thumbnails().set(
-                videoId=video_id,
-                media_body=MediaFileUpload(thumbnail_path, mimetype='image/png')
-            ).execute()
+            try:
+                self.youtube.thumbnails().set(
+                    videoId=video_id,
+                    media_body=MediaFileUpload(thumbnail_path, mimetype='image/png')
+                ).execute()
+                thumbnail_uploaded = True
+                print("✅ Custom thumbnail uploaded successfully")
+            except Exception as e:
+                # Thumbnail upload failed - this is usually due to account not being verified
+                # or missing permissions. Continue without the custom thumbnail.
+                print(f"⚠️  Warning: Could not upload custom thumbnail: {e}")
+                print("   The video was uploaded successfully, but using YouTube's auto-generated thumbnail.")
+                print("   To enable custom thumbnails, verify your YouTube account at:")
+                print("   https://www.youtube.com/verify")
         
         return {
             'video_id': video_id,
             'url': video_url,
-            'title': title
+            'title': title,
+            'thumbnail_uploaded': thumbnail_uploaded
         }
 
