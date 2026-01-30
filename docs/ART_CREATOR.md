@@ -153,6 +153,44 @@ Ancient healing frequencies:
 
 *Tip: Set rhythm to 0.0 for pure ambient, or crank to 0.8+ for energetic beats*
 
+### 🚀 Dynamic Journey
+
+The **Journey** system creates synchronized audio-visual evolution over time. Instead of static tempo and speed, your creation can breathe, build, or descend through carefully designed curves.
+
+#### Journey Presets
+
+| Journey | Description | Audio Effect | Visual Effect |
+|---------|-------------|--------------|---------------|
+| **`steady`** | Constant tempo and visuals (traditional ambient) ⭐ *default* | No change | No change |
+| **`awakening`** | Gradual rise from stillness to energy (morning meditation) | 60%→130% tempo | 40%→120% speed, complexity builds |
+| **`deep_dive`** | Descending into calm (sleep preparation) | 110%→70% tempo | 100%→30% speed, simplifies |
+| **`breathing`** | Rhythmic oscillation (breathing sync) | ±30% tempo waves | ±30% speed waves |
+| **`crescendo`** | Build to peak then release (arc shape) | 70%→140%→80% tempo | Speed/complexity follows arc |
+| **`trance`** | Slow hypnotic build with repetition | 85%→115% tempo | Slow complexity rise |
+| **`waves`** | Long slow swells like ocean waves | ±25% slow swells | ±25% slow swells |
+
+*These effects are applied on top of your base tempo/speed settings*
+
+#### Journey Intensity
+
+Controls how dramatic the journey changes are:
+
+| Intensity | Effect | Best For |
+|-----------|--------|----------|
+| **`subtle`** | ±10% variation | Barely noticeable, smooth background |
+| **`moderate`** | ±20% variation ⭐ *default* | Balanced, noticeable but not jarring |
+| **`dramatic`** | ±30% variation | Bold changes, expressive pieces |
+
+*The intensity multiplies the journey preset's natural variation*
+
+#### How Journey Works
+
+1. **Audio**: Tempo evolves according to the journey curve - melodies and arpeggios speed up or slow down
+2. **Visuals**: Speed and complexity follow synchronized curves - patterns accelerate or simplify in harmony
+3. **Smooth transitions**: Changes happen gradually using cumulative phase tracking for seamless animation
+
+*Example: An "awakening" journey with "dramatic" intensity starts very slow (36 BPM from base 60) and builds to energetic (78 BPM), with visuals accelerating in sync.*
+
 ### ⏱️ Generation Parameters
 
 #### Duration
@@ -259,6 +297,57 @@ Brainwave: 7 (Theta)
 Solfeggio: 396 Hz
 Duration: 45min
 ```
+
+### 🌊 Ocean Waves Journey
+```
+Art Period: impressionist
+Visual Pattern: slow_waves
+Visual Speed: 0.4
+Complexity: 0.5
+Color Palette: ocean
+Music Style: gamelan
+Tempo: 55
+Brainwave: 6 (Theta)
+Solfeggio: 528 Hz
+Journey: waves
+Journey Intensity: moderate
+Duration: 1h
+```
+*Uses the "waves" journey for long, slow swells in both audio and visuals*
+
+### 🌅 Morning Awakening
+```
+Art Period: renaissance
+Visual Pattern: fibonacci_spiral
+Visual Speed: 0.3
+Complexity: 0.4
+Color Palette: sunset
+Music Style: taiko
+Tempo: 60
+Brainwave: 10 (Alpha)
+Solfeggio: 432 Hz
+Journey: awakening
+Journey Intensity: dramatic
+Duration: 30min
+```
+*The "awakening" journey gradually energizes from slow stillness to vibrant motion*
+
+### 😴 Deep Dive Sleep Prep
+```
+Art Period: cave_art
+Visual Pattern: starfield
+Visual Speed: 0.5
+Complexity: 0.6
+Color Palette: cave_earth
+Music Style: heartbeat
+Tempo: 65
+Brainwave: 2 (Delta)
+Solfeggio: 174 Hz
+Journey: deep_dive
+Journey Intensity: moderate
+Duration: 2h
+```
+*The "deep_dive" journey descends into progressively calmer, slower states*
 
 ## Reproducibility & Seeds
 

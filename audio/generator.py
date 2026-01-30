@@ -107,7 +107,8 @@ class AudioGenerator:
     }
 
     def __init__(self, config: Dict, sample_rate: int = 44100, channels: int = 2,
-                 rhythm_volume_override: float = None, drone_volume_override: float = None):
+                 rhythm_volume_override: float = None, drone_volume_override: float = None,
+                 journey: str = 'steady', journey_intensity: str = 'moderate'):
         self.config = config
         self.sample_rate = sample_rate
         self.channels = channels
@@ -117,6 +118,40 @@ class AudioGenerator:
         # Phase tracking
         self.current_phase_idx = 0
         self.phase_duration_range = (180, 420)  # 3-7 minutes in seconds
+        # Journey system for dynamic tempo evolution
+        self.journey = journey
+        self.journey_intensity = journey_intensity
+        self._intensity_multipliers = {
+            'subtle': 0.5,      # ±20% becomes ±10%
+            'moderate': 1.0,    # ±20% stays ±20%
+            'dramatic': 1.5,    # ±20% becomes ±30%
+        }
+
+    def _get_journey_tempo_at(self, t: float, base_tempo: float) -> float:
+        """Get tempo at time t (0.0 to 1.0) based on journey curve.
+
+        Args:
+            t: Progress through the video (0.0 = start, 1.0 = end)
+            base_tempo: The base tempo from config
+
+        Returns:
+            Tempo at this point in the journey
+        """
+        from config.journeys import get_journey
+
+        journey = get_journey(self.journey)
+        intensity_mult = self._intensity_multipliers.get(self.journey_intensity, 1.0)
+
+        # Get the tempo curve function
+        tempo_curve = journey['tempo'](base_tempo)
+        raw_tempo = tempo_curve(t)
+
+        # Apply intensity scaling (difference from base * intensity)
+        tempo_diff = raw_tempo - base_tempo
+        scaled_tempo = base_tempo + (tempo_diff * intensity_mult)
+
+        # Clamp to reasonable range
+        return max(20, min(200, scaled_tempo))
 
     def _get_phase_boundaries(self, duration: int) -> List[Tuple[int, str, Dict]]:
         """Calculate phase boundaries for the entire duration.
@@ -631,17 +666,21 @@ class AudioGenerator:
         note_in_phrase = 0
         octave_offset = 0
 
-        # Tempo variation parameters
+        # Tempo variation parameters (micro-variation on top of journey)
         tempo_variation_cycle = 120  # seconds for full tempo cycle
-        tempo_variation_amount = 0.15  # +/- 15% tempo variation
+        tempo_variation_amount = 0.08  # +/- 8% micro-variation
 
         while current_sample < num_samples:
             # Current time for modulation
             current_time = current_sample / self.sample_rate
+            progress = current_time / duration  # 0.0 to 1.0
 
-            # Tempo variation (accelerando/ritardando)
+            # Get journey tempo (macro-level evolution)
+            journey_tempo = self._get_journey_tempo_at(progress, base_tempo)
+
+            # Add micro-variation on top of journey tempo
             tempo_mod = 1.0 + tempo_variation_amount * np.sin(2 * np.pi * current_time / tempo_variation_cycle)
-            current_tempo = base_tempo * tempo_mod
+            current_tempo = journey_tempo * tempo_mod
 
             # Calculate note duration with tempo variation
             beat_samples = int(self.sample_rate * 60 / current_tempo)
@@ -725,10 +764,11 @@ class AudioGenerator:
         return audio
 
     def _generate_arpeggio(self, config: Dict, num_samples: int, amplitude: float) -> np.ndarray:
-        """Generate hypnotic arpeggio pattern."""
+        """Generate hypnotic arpeggio pattern with journey-aware tempo."""
         root = config.get('root', 110)  # A2
         chord = config.get('chord', 'minor7')
-        tempo = config.get('tempo', 120)  # BPM
+        base_tempo = config.get('tempo', 120)  # BPM
+        duration = num_samples / self.sample_rate
 
         # Chord intervals in semitones
         chords = {
@@ -741,14 +781,19 @@ class AudioGenerator:
         }
         intervals = chords.get(chord, chords['minor7'])
 
-        # Note duration (16th notes for flowing arpeggio)
-        note_samples = int(self.sample_rate * 60 / tempo / 4)
-
         audio = np.zeros((num_samples, self.channels), dtype=np.float32)
         current_sample = 0
         note_index = 0
 
         while current_sample < num_samples:
+            # Get journey-aware tempo at current position
+            current_time = current_sample / self.sample_rate
+            progress = current_time / duration
+            current_tempo = self._get_journey_tempo_at(progress, base_tempo)
+
+            # Note duration (16th notes for flowing arpeggio)
+            note_samples = int(self.sample_rate * 60 / current_tempo / 4)
+
             # Cycle through chord tones
             semitones = intervals[note_index % len(intervals)]
             octave = (note_index // len(intervals)) % 2  # Alternate octaves
@@ -756,6 +801,8 @@ class AudioGenerator:
 
             # Generate note
             note_len = min(note_samples, num_samples - current_sample)
+            if note_len <= 0:
+                break
             t = np.arange(note_len) / self.sample_rate
 
             # Soft pluck sound

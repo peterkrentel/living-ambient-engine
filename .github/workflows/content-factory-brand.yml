@@ -14,7 +14,7 @@ on:
       durations:
         description: 'Durations: 30s, 10min, 1h, 3h, 8h (longer = more watch time)'
         required: false
-        default: '3h'
+        default: '1h'
       dual:
         description: 'Generate BOTH ambience-only and melody versions (2x videos)'
         required: false

@@ -147,6 +147,31 @@ on:
         required: false
         default: '1.0'
       
+      # ===== DYNAMICS / JOURNEY =====
+      journey:
+        description: 'Dynamic Journey (how tempo/visuals evolve over time)'
+        required: false
+        type: choice
+        default: 'steady'
+        options:
+          - 'steady'      # Constant tempo and visuals (traditional)
+          - 'awakening'   # Gradual rise from stillness to energy
+          - 'deep_dive'   # Descending into calm (sleep prep)
+          - 'breathing'   # Rhythmic oscillation (breathing sync)
+          - 'crescendo'   # Build to peak then release
+          - 'trance'      # Slow build with hypnotic repetition
+          - 'waves'       # Long slow swells like ocean waves
+
+      journey_intensity:
+        description: 'Journey Intensity (how dramatic the changes are)'
+        required: false
+        type: choice
+        default: 'moderate'
+        options:
+          - 'subtle'      # ±20% variation
+          - 'moderate'    # ±40% variation
+          - 'dramatic'    # ±60% variation
+
       # ===== GENERATION PARAMETERS =====
       duration:
         description: 'Duration (e.g., 30s, 5min, 1h, 3h)'
@@ -269,6 +294,8 @@ jobs:
           BRAINWAVE_FREQ: ${{ github.event.inputs.brainwave_frequency || '10' }}
           SOLFEGGIO_FREQ: ${{ github.event.inputs.solfeggio_frequency || '528' }}
           TEMPO: ${{ github.event.inputs.tempo || '60' }}
+          JOURNEY: ${{ github.event.inputs.journey || 'steady' }}
+          JOURNEY_INTENSITY: ${{ github.event.inputs.journey_intensity || 'moderate' }}
         run: |
           # Create a custom configuration file based on workflow inputs using env vars
           # Handle 'none' rhythm by setting it to null
@@ -295,6 +322,8 @@ jobs:
             description: "Custom artistic creation"
             title_template: "${{ github.event.inputs.title }}"
             art_period: "$ART_PERIOD"
+            journey: "$JOURNEY"
+            journey_intensity: "$JOURNEY_INTENSITY"
             visual:
               type: "$VISUAL_PATTERN"
               speed: $SPEED_VALUE

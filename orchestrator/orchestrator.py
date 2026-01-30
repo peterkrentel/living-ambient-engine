@@ -149,26 +149,34 @@ class Orchestrator:
         
         # Create temp directory for intermediate files
         temp_dir = Path(tempfile.mkdtemp(prefix="ambient_engine_"))
-        
+
+        # Extract journey parameters (for synchronized audio-visual dynamics)
+        journey = mood_config.get('journey', 'steady')
+        journey_intensity = mood_config.get('journey_intensity', 'moderate')
+
         try:
-            print(f"🎨 Generating hypnotic visuals for '{mood}'...")
+            print(f"🎨 Generating hypnotic visuals for '{mood}' (journey: {journey})...")
             visual_path = temp_dir / "visual.mp4"
             visual_gen = VisualGenerator(
                 visual_config,  # Use varied config
                 width=self.defaults['video']['resolution']['width'],
                 height=self.defaults['video']['resolution']['height'],
-                fps=self.defaults['video']['fps']
+                fps=self.defaults['video']['fps'],
+                journey=journey,
+                journey_intensity=journey_intensity
             )
             visual_gen.generate(duration, str(visual_path))
 
-            print(f"🎵 Generating ambient audio for '{mood}'...")
+            print(f"🎵 Generating ambient audio for '{mood}' (journey: {journey})...")
             audio_path = temp_dir / "audio.wav"
             audio_gen = AudioGenerator(
                 audio_config,  # Use varied config
                 sample_rate=self.defaults['audio']['sample_rate'],
                 channels=self.defaults['audio']['channels'],
                 rhythm_volume_override=rhythm_volume,
-                drone_volume_override=drone_volume
+                drone_volume_override=drone_volume,
+                journey=journey,
+                journey_intensity=journey_intensity
             )
             audio_gen.generate(duration, str(audio_path))
             

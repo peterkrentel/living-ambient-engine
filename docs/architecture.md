@@ -8,24 +8,27 @@ flowchart TB
         MOODS[("moods.yaml\n8 Mood Presets")]
         FREQ["Frequencies\nDelta/Theta/Alpha/Beta/Gamma"]
         TRIBAL["Tribal Rhythms\nBamboula/Kuku/Gnawa/etc"]
+        JOURNEY["journeys.py\n7 Dynamic Journeys"]
     end
-    
+
     subgraph Engine["🎬 Generation Engine"]
         CLI["run_job.py\nCLI Interface"]
         ORCH["Orchestrator\nPipeline Controller"]
-        
+
         subgraph Visual["🎨 Visual Generator"]
             FRACTAL["Fractal Zoom\nMandelbrot/Julia"]
             SACRED["Sacred Geometry\nFibonacci/Flower of Life"]
             WAVES["Slow Waves\nOrganic Flow"]
+            VJOUR["Journey Curves\nSpeed/Complexity Evolution"]
         end
-        
+
         subgraph Audio["🎵 Audio Generator"]
             DRUMS["Tribal Drums\nJIT Synthesis"]
             BINAURAL["Binaural Beats\nBrainwave Entrainment"]
             SOLFEGGIO["Solfeggio Tones\n432/528/639Hz"]
+            AJOUR["Journey Curves\nTempo Evolution"]
         end
-        
+
         RENDER["FFmpeg Renderer\nMP4 Output"]
         THUMB["Thumbnail\nGenerator"]
     end
@@ -39,6 +42,7 @@ flowchart TB
     MOODS --> CLI
     FREQ --> Audio
     TRIBAL --> Audio
+    JOURNEY --> ORCH
     CLI --> ORCH
     ORCH --> Visual
     ORCH --> Audio

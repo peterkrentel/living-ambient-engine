@@ -26,6 +26,7 @@ Generative ambient art with:
 - 🖼️ **7 Visual patterns** - Fractals, particles, sacred geometry
 - 🎨 **11 Color palettes** - Or create your own with custom RGB
 - 🎵 **9 Music styles** - World rhythms from heartbeat to tribal drums
+- 🚀 **7 Dynamic journeys** - Synchronized audio-visual evolution (awakening, deep_dive, waves...)
 - ⚡ **Full parameter control** - Speed, complexity, tempo, frequencies
 - 🎲 **Reproducible seeds** - Recreate or share your exact creations
 
@@ -131,6 +132,7 @@ See [docs/youtube-auth.md](docs/youtube-auth.md) for detailed instructions.
 - 📺 **[YouTube Setup](docs/youtube-auth.md)** - Authentication guide
 - 🗺️ **[Master Plan](docs/master-plan.md)** - Roadmap and milestones
 - 🤝 **[Contributing](CONTRIBUTING.md)** - How to contribute
+- 🤖 **[AI Agent Instructions](.github/AGENT_INSTRUCTIONS.md)** - For AI coding assistants
 
 ## What Can I Do With This?
 

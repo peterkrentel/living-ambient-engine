@@ -91,7 +91,8 @@ class VisualGenerator:
 
     PHI = (1 + math.sqrt(5)) / 2  # Golden ratio
 
-    def __init__(self, config: Dict, width: int = 1920, height: int = 1080, fps: int = 30):
+    def __init__(self, config: Dict, width: int = 1920, height: int = 1080, fps: int = 30,
+                 journey: str = 'steady', journey_intensity: str = 'moderate'):
         self.config = config
         self.width = width
         self.height = height
@@ -103,6 +104,67 @@ class VisualGenerator:
         self.color_shift_speed = config.get('color_shift_speed', 0.02)  # very slow
         self.opacity_variation = config.get('opacity_variation', 0.15)  # subtle
         self.animation_speed_factor = config.get('animation_speed_factor', 0.5)  # slowed down
+
+        # Journey system for dynamic visual evolution (synced with audio)
+        self.journey = journey
+        self.journey_intensity = journey_intensity
+        self._intensity_multipliers = {
+            'subtle': 0.5,      # ±20% becomes ±10%
+            'moderate': 1.0,    # ±20% stays ±20%
+            'dramatic': 1.5,    # ±20% becomes ±30%
+        }
+
+    def _get_journey_speed_at(self, progress: float, base_speed: float) -> float:
+        """Get speed at progress (0.0 to 1.0) based on journey curve.
+
+        Args:
+            progress: Progress through the video (0.0 = start, 1.0 = end)
+            base_speed: The base speed from config
+
+        Returns:
+            Speed at this point in the journey
+        """
+        from config.journeys import get_journey
+
+        journey = get_journey(self.journey)
+        intensity_mult = self._intensity_multipliers.get(self.journey_intensity, 1.0)
+
+        # Get the speed curve function
+        speed_curve = journey['speed'](base_speed)
+        raw_speed = speed_curve(progress)
+
+        # Apply intensity scaling (difference from base * intensity)
+        speed_diff = raw_speed - base_speed
+        scaled_speed = base_speed + (speed_diff * intensity_mult)
+
+        # Clamp to reasonable range
+        return max(0.05, min(2.0, scaled_speed))
+
+    def _get_journey_complexity_at(self, progress: float, base_complexity: float) -> float:
+        """Get complexity at progress (0.0 to 1.0) based on journey curve.
+
+        Args:
+            progress: Progress through the video (0.0 = start, 1.0 = end)
+            base_complexity: The base complexity from config
+
+        Returns:
+            Complexity at this point in the journey
+        """
+        from config.journeys import get_journey
+
+        journey = get_journey(self.journey)
+        intensity_mult = self._intensity_multipliers.get(self.journey_intensity, 1.0)
+
+        # Get the complexity curve function
+        complexity_curve = journey['complexity'](base_complexity)
+        raw_complexity = complexity_curve(progress)
+
+        # Apply intensity scaling (difference from base * intensity)
+        complexity_diff = raw_complexity - base_complexity
+        scaled_complexity = base_complexity + (complexity_diff * intensity_mult)
+
+        # Clamp to reasonable range
+        return max(0.1, min(1.0, scaled_complexity))
         
     def generate(self, duration: int, output_path: str) -> str:
         """Generate visual video file."""
@@ -173,17 +235,25 @@ class VisualGenerator:
         """Generate Fibonacci spiral with golden ratio - highly hypnotic.
 
         Enhanced with slow animations and dreamy opacity variations.
+        Supports journey-based dynamic speed and complexity.
         """
         total_frames = duration * self.fps
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         out = cv2.VideoWriter(output_path, fourcc, self.fps, (self.width, self.height))
 
-        # Slow down animation for meditative quality
+        # Base parameters (journey curves will modulate these)
         base_speed = self.config.get('speed', 0.3)
-        speed = base_speed * self.animation_speed_factor
-        complexity = self.config.get('complexity', 0.7)
+        base_complexity = self.config.get('complexity', 0.7)
+
+        # Track cumulative rotation for smooth animation
+        cumulative_rotation = 0.0
 
         for frame in range(total_frames):
+            # Get journey-modulated parameters
+            progress = frame / max(total_frames - 1, 1)
+            speed = self._get_journey_speed_at(progress, base_speed) * self.animation_speed_factor
+            complexity = self._get_journey_complexity_at(progress, base_complexity)
+
             # Create gradient background
             img = self._create_gradient_background(frame, total_frames)
             draw = ImageDraw.Draw(img)
@@ -195,15 +265,16 @@ class VisualGenerator:
                 tuple(self.config['colors']['accent']), frame, total_frames, shift_amount=0.05
             )
 
-            # Very slow rotation
-            rotation = frame * speed * 0.01  # Slower than before
+            # Accumulate rotation based on current speed (smooth even with varying speed)
+            cumulative_rotation += speed * 0.01
+            rotation = cumulative_rotation
 
-            # Draw multiple layers of spirals
+            # Draw multiple layers of spirals (complexity affects count)
             num_spirals = int(8 * complexity)
             for i in range(num_spirals):
-                angle_offset = (i / num_spirals) * 2 * math.pi
-                layer_color = self._blend_colors(color, accent, i / num_spirals)
-                self._draw_spiral(draw, rotation + angle_offset, layer_color, 0.5 + 0.5 * (i / num_spirals))
+                angle_offset = (i / max(num_spirals, 1)) * 2 * math.pi
+                layer_color = self._blend_colors(color, accent, i / max(num_spirals, 1))
+                self._draw_spiral(draw, rotation + angle_offset, layer_color, 0.5 + 0.5 * (i / max(num_spirals, 1)))
 
             # Draw center glow
             self._draw_center_glow(img, color, frame, total_frames)
@@ -357,17 +428,24 @@ class VisualGenerator:
         """Generate sacred geometry patterns - Flower of Life, Metatron's Cube.
 
         Enhanced with slow, hypnotic animations and subtle opacity variations.
+        Supports journey-based dynamic speed.
         """
         total_frames = duration * self.fps
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         out = cv2.VideoWriter(output_path, fourcc, self.fps, (self.width, self.height))
 
-        # Apply slower animation speed for meditative quality
+        # Base parameters (journey curves will modulate these)
         base_speed = self.config.get('speed', 0.3)
-        speed = base_speed * self.animation_speed_factor  # Slowed down
         symmetry = self.config.get('symmetry', 6)
 
+        # Track cumulative rotation for smooth animation
+        cumulative_rotation = 0.0
+
         for frame in range(total_frames):
+            # Get journey-modulated speed
+            progress = frame / max(total_frames - 1, 1)
+            speed = self._get_journey_speed_at(progress, base_speed) * self.animation_speed_factor
+
             # Create gradient background
             img = self._create_gradient_background(frame, total_frames)
             draw = ImageDraw.Draw(img)
@@ -379,11 +457,12 @@ class VisualGenerator:
                 tuple(self.config['colors']['accent']), frame, total_frames, shift_amount=0.05
             )
 
-            # Very slow rotation for hypnotic effect
-            rotation = frame * speed * 0.008  # Even slower
+            # Accumulate rotation for smooth animation with varying speed
+            cumulative_rotation += speed * 0.008
+            rotation = cumulative_rotation
 
-            # Subtle, slow-breathing pulse
-            pulse = 0.9 + 0.1 * math.sin(frame * 0.02)  # Much slower pulse
+            # Subtle, slow-breathing pulse (modulated by speed for sync)
+            pulse = 0.9 + 0.1 * math.sin(frame * 0.02 * (speed / base_speed))
 
             # Draw multiple rings of sacred geometry (Flower of Life pattern)
             base_radius = min(self.width, self.height) * 0.12 * pulse
@@ -438,24 +517,34 @@ class VisualGenerator:
         return output_path
 
     def _generate_slow_waves(self, duration: int, output_path: str) -> str:
-        """Generate slow, hypnotic wave patterns."""
+        """Generate slow, hypnotic wave patterns with journey-based dynamics."""
         total_frames = duration * self.fps
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         out = cv2.VideoWriter(output_path, fourcc, self.fps, (self.width, self.height))
 
-        speed = self.config.get('speed', 0.1)
+        base_speed = self.config.get('speed', 0.1)
+
+        # Track cumulative phase for smooth animation
+        cumulative_phase = 0.0
 
         for frame in range(total_frames):
+            # Get journey-modulated speed
+            progress = frame / max(total_frames - 1, 1)
+            speed = self._get_journey_speed_at(progress, base_speed)
+
+            # Accumulate phase for smooth wave motion
+            cumulative_phase += speed
+
             img = np.zeros((self.height, self.width, 3), dtype=np.uint8)
             color = self._get_color_at_time(frame, total_frames)
 
-            # Create wave pattern
+            # Create wave pattern using cumulative phase
             for y in range(self.height):
                 for x in range(self.width):
                     # Multiple sine waves for complexity
-                    wave1 = math.sin((x * 0.01 + frame * speed * 0.1))
-                    wave2 = math.sin((y * 0.01 + frame * speed * 0.15))
-                    wave3 = math.sin((x * 0.005 + y * 0.005 + frame * speed * 0.05))
+                    wave1 = math.sin((x * 0.01 + cumulative_phase * 0.1))
+                    wave2 = math.sin((y * 0.01 + cumulative_phase * 0.15))
+                    wave3 = math.sin((x * 0.005 + y * 0.005 + cumulative_phase * 0.05))
 
                     intensity = (wave1 + wave2 + wave3) / 3
                     intensity = (intensity + 1) / 2  # Normalize to 0-1
@@ -474,40 +563,60 @@ class VisualGenerator:
         return self._generate_particle_flow(duration, output_path)
 
     def _generate_particle_flow(self, duration: int, output_path: str) -> str:
-        """Generate flowing particle system."""
+        """Generate flowing particle system with journey-based dynamics."""
         total_frames = duration * self.fps
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         out = cv2.VideoWriter(output_path, fourcc, self.fps, (self.width, self.height))
 
-        speed = self.config.get('speed', 0.4)
-        complexity = self.config.get('complexity', 0.5)
-        num_particles = int(100 * complexity)
+        base_speed = self.config.get('speed', 0.4)
+        base_complexity = self.config.get('complexity', 0.5)
 
-        # Initialize particles
+        # Initialize particles based on initial complexity
+        initial_complexity = self._get_journey_complexity_at(0.0, base_complexity)
+        max_particles = int(150 * base_complexity)  # Maximum possible particles
         particles = []
-        for _ in range(num_particles):
+        for i in range(max_particles):
             particles.append({
                 'x': np.random.rand() * self.width,
                 'y': np.random.rand() * self.height,
-                'vx': (np.random.rand() - 0.5) * speed,
-                'vy': (np.random.rand() - 0.5) * speed,
-                'size': np.random.rand() * 5 + 2
+                'vx': (np.random.rand() - 0.5) * base_speed,
+                'vy': (np.random.rand() - 0.5) * base_speed,
+                'size': np.random.rand() * 5 + 2,
+                'active': i < int(100 * initial_complexity)  # Start with initial complexity
             })
 
         for frame in range(total_frames):
+            # Get journey-modulated parameters
+            progress = frame / max(total_frames - 1, 1)
+            speed = self._get_journey_speed_at(progress, base_speed)
+            complexity = self._get_journey_complexity_at(progress, base_complexity)
+            num_active = int(100 * complexity)
+
+            # Activate/deactivate particles based on current complexity
+            for i, p in enumerate(particles):
+                p['active'] = i < num_active
+
             img = Image.new('RGB', (self.width, self.height), (0, 0, 0))
             draw = ImageDraw.Draw(img)
 
             color = self._get_color_at_time(frame, total_frames)
 
-            # Update and draw particles
+            # Update and draw active particles
             for p in particles:
-                # Flow field influence
+                if not p['active']:
+                    continue
+
+                # Flow field influence (modulated by current speed)
                 flow_x = math.sin(p['y'] * 0.01 + frame * 0.01) * speed
                 flow_y = math.cos(p['x'] * 0.01 + frame * 0.01) * speed
 
                 p['vx'] += flow_x * 0.1
                 p['vy'] += flow_y * 0.1
+
+                # Clamp velocity based on speed
+                max_vel = speed * 2
+                p['vx'] = max(-max_vel, min(max_vel, p['vx']))
+                p['vy'] = max(-max_vel, min(max_vel, p['vy']))
 
                 # Update position
                 p['x'] += p['vx']
@@ -531,19 +640,29 @@ class VisualGenerator:
         return output_path
 
     def _generate_platonic_solids(self, duration: int, output_path: str) -> str:
-        """Generate rotating platonic solids projection."""
+        """Generate rotating platonic solids projection with journey-based dynamics."""
         total_frames = duration * self.fps
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         out = cv2.VideoWriter(output_path, fourcc, self.fps, (self.width, self.height))
 
-        speed = self.config.get('speed', 0.35)
+        base_speed = self.config.get('speed', 0.35)
+
+        # Track cumulative rotation for smooth animation
+        cumulative_rotation = 0.0
 
         for frame in range(total_frames):
+            # Get journey-modulated speed
+            progress = frame / max(total_frames - 1, 1)
+            speed = self._get_journey_speed_at(progress, base_speed)
+
             img = Image.new('RGB', (self.width, self.height), (0, 0, 0))
             draw = ImageDraw.Draw(img)
 
             color = self._get_color_at_time(frame, total_frames)
-            rotation = frame * speed * 0.02
+
+            # Accumulate rotation for smooth animation with varying speed
+            cumulative_rotation += speed * 0.02
+            rotation = cumulative_rotation
 
             # Draw cube projection
             size = min(self.width, self.height) * 0.2
@@ -608,12 +727,13 @@ class VisualGenerator:
 
         Uses a loop-and-repeat strategy: renders a short seamless loop, then
         repeats it to fill the full duration. Much faster for long videos.
+        Supports journey-based dynamic speed.
         """
         total_frames = duration * self.fps
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         out = cv2.VideoWriter(output_path, fourcc, self.fps, (self.width, self.height))
 
-        speed = self.config.get('speed', 0.15)  # Slow, hypnotic movement
+        base_speed = self.config.get('speed', 0.15)  # Slow, hypnotic movement
 
         # Interesting zoom targets for Mandelbrot
         zoom_targets = [
@@ -641,6 +761,9 @@ class VisualGenerator:
         for frame in tqdm(range(loop_frames), desc="Rendering loop", unit="frame", disable=TQDM_DISABLE):
             # Use sine-based animation for seamless looping
             t = frame / max(loop_frames, 1)  # 0 to 1 over the loop, avoid div by zero
+
+            # Get journey-modulated speed (sampled at loop position)
+            speed = self._get_journey_speed_at(t, base_speed)
 
             # Smooth zoom that returns to start (breathing effect)
             # Ensure zoom is always positive (minimum 0.1 to avoid division by zero)
@@ -804,29 +927,37 @@ class VisualGenerator:
         return self._generate_slow_waves(duration, output_path)
 
     def _generate_geometric_morph(self, duration: int, output_path: str) -> str:
-        """Generate morphing geometric shapes."""
+        """Generate morphing geometric shapes with journey-based dynamics."""
         total_frames = duration * self.fps
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
         out = cv2.VideoWriter(output_path, fourcc, self.fps, (self.width, self.height))
 
-        speed = self.config.get('speed', 0.35)
+        base_speed = self.config.get('speed', 0.35)
         symmetry = self.config.get('symmetry', 4)
 
+        # Track cumulative rotation for smooth animation
+        cumulative_rotation = 0.0
+
         for frame in range(total_frames):
+            # Get journey-modulated speed
+            progress = frame / max(total_frames - 1, 1)
+            speed = self._get_journey_speed_at(progress, base_speed)
+
             img = Image.new('RGB', (self.width, self.height), (0, 0, 0))
             draw = ImageDraw.Draw(img)
 
             color = self._get_color_at_time(frame, total_frames)
 
-            # Morph between different polygon shapes
-            num_sides = symmetry + int(math.sin(frame * speed * 0.01) * 2)
+            # Morph between different polygon shapes (use cumulative for smooth morphing)
+            cumulative_rotation += speed * 0.01
+            num_sides = symmetry + int(math.sin(cumulative_rotation) * 2)
             num_sides = max(3, num_sides)
 
             radius = min(self.width, self.height) * 0.3
             points = []
 
             for i in range(num_sides):
-                angle = (i / num_sides) * 2 * math.pi + frame * speed * 0.01
+                angle = (i / num_sides) * 2 * math.pi + cumulative_rotation
                 x = self.center[0] + radius * math.cos(angle)
                 y = self.center[1] + radius * math.sin(angle)
                 points.append((x, y))
