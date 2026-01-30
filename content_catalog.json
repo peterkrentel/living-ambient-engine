@@ -1,0 +1,258 @@
+{
+  "catalog_version": "1.0",
+  "created_at": "2026-01-30T01:38:24.843138",
+  "last_updated": "2026-01-30T01:38:28.026664",
+  "total_videos": 2,
+  "videos": [
+    {
+      "catalog_id": "video_0001_20260130_013826_32197db7",
+      "youtube_id": "wlrtWLKZU6c",
+      "youtube_url": "https://youtube.com/watch?v=wlrtWLKZU6c",
+      "title": "Wake Up in the Forest | 30 Seconds | Birds, Wind, Ever-Changing [Pure Ambience]",
+      "mood": "forest_morning",
+      "duration": 30,
+      "duration_str": "30 Seconds",
+      "seed": 734327657,
+      "version": "pure_ambience",
+      "rhythm": null,
+      "rhythm_name": "Ambient",
+      "uploaded_at": "2026-01-30T01:38:26.221941",
+      "generated_at": "20260130_013712",
+      "metadata": {
+        "mood": "forest_morning",
+        "duration": 30,
+        "duration_str": "30 Seconds",
+        "seed": 734327657,
+        "description": "Forest ambience with birds - Nature immersion",
+        "video_title": "Wake Up in the Forest | 30 Seconds | Birds, Wind, Ever-Changing [Pure Ambience]",
+        "rhythm": null,
+        "rhythm_name": "Ambient",
+        "rhythm_origin": "Nature - forest soundscape",
+        "generated_at": "20260130_013712",
+        "version": "pure_ambience",
+        "visual_config": {
+          "type": "particle_flow",
+          "colors": {
+            "primary": [
+              30,
+              60,
+              30
+            ],
+            "secondary": [
+              50,
+              80,
+              40
+            ],
+            "accent": [
+              200,
+              180,
+              100
+            ]
+          },
+          "pattern": "particle_flow",
+          "speed": 0.15,
+          "complexity": 0.4,
+          "symmetry": 1,
+          "pulse_frequency": 0.03
+        },
+        "audio_config": {
+          "rhythm": null,
+          "rhythm_volume": 0,
+          "base_frequency": 10,
+          "binaural_beat": 10,
+          "layers": [
+            {
+              "type": "forest",
+              "bird_rate": 4,
+              "amplitude": 0.6
+            },
+            {
+              "type": "pink_noise",
+              "amplitude": 0.08
+            },
+            {
+              "type": "binaural",
+              "carrier": 144,
+              "beat": 10,
+              "amplitude": 0.05
+            }
+          ]
+        },
+        "base_visual_config": {
+          "type": "particle_flow",
+          "colors": {
+            "primary": [
+              30,
+              60,
+              30
+            ],
+            "secondary": [
+              50,
+              80,
+              40
+            ],
+            "accent": [
+              200,
+              180,
+              100
+            ]
+          },
+          "pattern": "particle_flow",
+          "speed": 0.15,
+          "complexity": 0.4,
+          "symmetry": 1,
+          "pulse_frequency": 0.03
+        },
+        "base_audio_config": {
+          "rhythm": null,
+          "rhythm_volume": 0,
+          "base_frequency": 10,
+          "binaural_beat": 10,
+          "layers": [
+            {
+              "type": "forest",
+              "bird_rate": 4,
+              "amplitude": 0.6
+            },
+            {
+              "type": "pink_noise",
+              "amplitude": 0.08
+            },
+            {
+              "type": "binaural",
+              "carrier": 144,
+              "beat": 10,
+              "amplitude": 0.05
+            }
+          ]
+        },
+        "rendered_at": "2026-01-30T01:37:48.168894"
+      }
+    },
+    {
+      "catalog_id": "video_0002_20260130_013828_32b0d507",
+      "youtube_id": "_37R-G6m7-s",
+      "youtube_url": "https://youtube.com/watch?v=_37R-G6m7-s",
+      "title": "Wake Up in the Forest | 30 Seconds | Birds, Wind, Ever-Changing [With Music]",
+      "mood": "forest_morning",
+      "duration": 30,
+      "duration_str": "30 Seconds",
+      "seed": 734327657,
+      "version": "with_music",
+      "rhythm": null,
+      "rhythm_name": "Ambient",
+      "uploaded_at": "2026-01-30T01:38:28.026601",
+      "generated_at": "20260130_013712",
+      "metadata": {
+        "mood": "forest_morning",
+        "duration": 30,
+        "duration_str": "30 Seconds",
+        "seed": 734327657,
+        "description": "Forest ambience with birds - Nature immersion",
+        "video_title": "Wake Up in the Forest | 30 Seconds | Birds, Wind, Ever-Changing [With Music]",
+        "rhythm": null,
+        "rhythm_name": "Ambient",
+        "rhythm_origin": "Nature - forest soundscape",
+        "generated_at": "20260130_013712",
+        "version": "with_music",
+        "visual_config": {
+          "type": "particle_flow",
+          "colors": {
+            "primary": [
+              30,
+              60,
+              30
+            ],
+            "secondary": [
+              50,
+              80,
+              40
+            ],
+            "accent": [
+              200,
+              180,
+              100
+            ]
+          },
+          "pattern": "particle_flow",
+          "speed": 0.15,
+          "complexity": 0.4,
+          "symmetry": 1,
+          "pulse_frequency": 0.03
+        },
+        "audio_config": {
+          "rhythm": null,
+          "rhythm_volume": 0,
+          "base_frequency": 10,
+          "binaural_beat": 10,
+          "layers": [
+            {
+              "type": "forest",
+              "bird_rate": 4,
+              "amplitude": 0.6
+            },
+            {
+              "type": "pink_noise",
+              "amplitude": 0.08
+            },
+            {
+              "type": "binaural",
+              "carrier": 144,
+              "beat": 10,
+              "amplitude": 0.05
+            }
+          ]
+        },
+        "base_visual_config": {
+          "type": "particle_flow",
+          "colors": {
+            "primary": [
+              30,
+              60,
+              30
+            ],
+            "secondary": [
+              50,
+              80,
+              40
+            ],
+            "accent": [
+              200,
+              180,
+              100
+            ]
+          },
+          "pattern": "particle_flow",
+          "speed": 0.15,
+          "complexity": 0.4,
+          "symmetry": 1,
+          "pulse_frequency": 0.03
+        },
+        "base_audio_config": {
+          "rhythm": null,
+          "rhythm_volume": 0,
+          "base_frequency": 10,
+          "binaural_beat": 10,
+          "layers": [
+            {
+              "type": "forest",
+              "bird_rate": 4,
+              "amplitude": 0.6
+            },
+            {
+              "type": "pink_noise",
+              "amplitude": 0.08
+            },
+            {
+              "type": "binaural",
+              "carrier": 144,
+              "beat": 10,
+              "amplitude": 0.05
+            }
+          ]
+        },
+        "rendered_at": "2026-01-30T01:37:53.993613"
+      }
+    }
+  ]
+}
