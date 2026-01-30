@@ -178,8 +178,9 @@ on:
   workflow_call:
 
 # Prevent overlapping runs and resource contention
+# For manual runs, serialize them; for matrix tests, allow parallel execution
 concurrency:
-  group: art-creator-${{ github.event_name == 'workflow_call' && matrix.test_id || 'manual' }}
+  group: ${{ github.event_name == 'workflow_dispatch' && 'art-creator-manual' || format('art-creator-test-{0}', github.run_id) }}
   cancel-in-progress: false
 
 env:
@@ -191,6 +192,9 @@ permissions:
 
 jobs:
   create_art:
+    # For workflow_dispatch, only run first matrix entry (test_id 1)
+    # For workflow_call, run all matrix entries
+    if: ${{ github.event_name == 'workflow_call' || matrix.test_id == 1 }}
     runs-on: ubuntu-latest
     timeout-minutes: 120
     strategy:
