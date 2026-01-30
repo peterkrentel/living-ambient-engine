@@ -23,6 +23,7 @@ try:
     from google.auth.transport.requests import Request
     from googleapiclient.discovery import build
     from googleapiclient.http import MediaFileUpload
+    from googleapiclient.errors import HttpError
     GOOGLE_API_AVAILABLE = True
 except ImportError:
     GOOGLE_API_AVAILABLE = False
@@ -99,7 +100,7 @@ class YouTubeUploader:
             thumbnail_path: Optional custom thumbnail
             
         Returns:
-            Dict with video_id and url
+            Dict with video_id, url, title, and thumbnail_uploaded (bool)
         """
         if not self.youtube:
             self.authenticate()
@@ -151,13 +152,17 @@ class YouTubeUploader:
                 ).execute()
                 thumbnail_uploaded = True
                 print("✅ Custom thumbnail uploaded successfully")
-            except Exception as e:
+            except HttpError as e:
                 # Thumbnail upload failed - this is usually due to account not being verified
-                # or missing permissions. Continue without the custom thumbnail.
+                # or missing permissions (403 error). Continue without the custom thumbnail.
                 print(f"⚠️  Warning: Could not upload custom thumbnail: {e}")
                 print("   The video was uploaded successfully, but using YouTube's auto-generated thumbnail.")
                 print("   To enable custom thumbnails, verify your YouTube account at:")
                 print("   https://www.youtube.com/verify")
+            except Exception as e:
+                # Catch any other unexpected errors
+                print(f"⚠️  Warning: Unexpected error uploading thumbnail: {e}")
+                print("   The video was uploaded successfully, but using YouTube's auto-generated thumbnail.")
         
         return {
             'video_id': video_id,
