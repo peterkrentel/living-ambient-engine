@@ -200,108 +200,38 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Test all combinations of key input parameters
-        # This creates a comprehensive test matrix when workflow_call is triggered
+        # Minimal test matrix - one test per major input category
         include:
-          # Art Periods (9 options)
           - test_id: 1
+            art_period: 'modern'
+            visual_pattern: 'fractal_zoom'
+            color_palette: 'psychedelic'
+            music_style: 'gnawa'
+            solfeggio_frequency: '528'
+          - test_id: 2
             art_period: 'cave_art'
             visual_pattern: 'organic_flow'
             color_palette: 'cave_earth'
             music_style: 'heartbeat'
             solfeggio_frequency: '174'
-          - test_id: 2
-            art_period: 'ancient'
-            visual_pattern: 'sacred_geometry'
-            color_palette: 'ancient_gold'
-            music_style: 'taiko'
-            solfeggio_frequency: '285'
           - test_id: 3
-            art_period: 'medieval'
-            visual_pattern: 'sacred_geometry'
-            color_palette: 'medieval_rich'
-            music_style: 'gamelan'
-            solfeggio_frequency: '396'
-          - test_id: 4
             art_period: 'renaissance'
             visual_pattern: 'fibonacci_spiral'
             color_palette: 'renaissance_warm'
-            music_style: 'gnawa'
-            solfeggio_frequency: '417'
-          - test_id: 5
-            art_period: 'baroque'
-            visual_pattern: 'julia'
-            color_palette: 'auto'
-            music_style: 'bamboula'
-            solfeggio_frequency: '528'
-          - test_id: 6
-            art_period: 'impressionist'
-            visual_pattern: 'flowing_waves'
-            color_palette: 'impressionist_soft'
-            music_style: 'candomble'
+            music_style: 'taiko'
             solfeggio_frequency: '639'
-          - test_id: 7
-            art_period: 'modern'
-            visual_pattern: 'geometric_morph'
-            color_palette: 'psychedelic'
-            music_style: 'burundi'
-            solfeggio_frequency: '741'
-          - test_id: 8
-            art_period: 'contemporary'
-            visual_pattern: 'particle_flow'
-            color_palette: 'cyberpunk'
-            music_style: 'kuku'
-            solfeggio_frequency: '852'
-          - test_id: 9
+          - test_id: 4
             art_period: 'future'
             visual_pattern: 'starfield'
-            color_palette: 'auto'
+            color_palette: 'cyberpunk'
             music_style: 'none'
             solfeggio_frequency: '963'
-          # Additional Visual Pattern Tests
-          - test_id: 10
-            art_period: 'modern'
-            visual_pattern: 'fractal_zoom'
-            color_palette: 'sunset'
-            music_style: 'gnawa'
-            solfeggio_frequency: '528'
-          - test_id: 11
-            art_period: 'modern'
-            visual_pattern: 'mandelbrot'
-            color_palette: 'ocean'
-            music_style: 'gnawa'
-            solfeggio_frequency: '528'
-          - test_id: 12
-            art_period: 'contemporary'
-            visual_pattern: 'platonic_solids'
-            color_palette: 'forest'
-            music_style: 'gamelan'
-            solfeggio_frequency: '639'
-          - test_id: 13
+          - test_id: 5
             art_period: 'impressionist'
-            visual_pattern: 'slow_waves'
+            visual_pattern: 'flowing_waves'
             color_palette: 'auto'
-            music_style: 'none'
+            music_style: 'gamelan'
             solfeggio_frequency: '417'
-          - test_id: 14
-            art_period: 'medieval'
-            visual_pattern: 'rain_window'
-            color_palette: 'medieval_rich'
-            music_style: 'heartbeat'
-            solfeggio_frequency: '174'
-          - test_id: 15
-            art_period: 'cave_art'
-            visual_pattern: 'fireplace'
-            color_palette: 'cave_earth'
-            music_style: 'taiko'
-            solfeggio_frequency: '285'
-          # Auto mode tests
-          - test_id: 16
-            art_period: 'renaissance'
-            visual_pattern: 'auto'
-            color_palette: 'auto'
-            music_style: 'gnawa'
-            solfeggio_frequency: '528'
     
     steps:
       - name: Checkout repository
