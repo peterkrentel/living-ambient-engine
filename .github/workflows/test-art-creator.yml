@@ -12,6 +12,10 @@ on:
         required: false
         default: 'Manual test run'
 
+permissions:
+  contents: read
+  actions: read
+
 jobs:
   call-art-creator:
     # Call art-creator.yml which will run its full test matrix (7 test cases)
