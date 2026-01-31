@@ -24,7 +24,17 @@ Before making any changes, I need you to:
 
 3. Confirm you've read the relevant specs before proceeding.
 
-4. Any behavior change requires updating the spec in the same commit.
+4. Summarize the requirements you extracted from the specs that are relevant to the task.
+   - Cite the spec file and section for each requirement.
+
+5. If any spec is missing, unclear, or contradictory, stop and ask for clarification before making changes.
+
+6. Any behavior change requires updating the spec in the same commit.
+
+Before finishing:
+- Verify changes comply with all relevant specs
+- Map changes back to spec sections
+- Ensure existing or new tests validate the behavior
 
 The repo uses spec-driven development with runtime enforcement.
 Invalid parameters are auto-clamped. CI validates specs on every PR.
@@ -34,7 +44,7 @@ Invalid parameters are auto-clamped. CI validates specs on every PR.
 
 ## Why This Exists
 
-This prompt ensures any AI agent (ChatGPT, Claude, Gemini, Copilot, etc.) 
+This prompt ensures any AI agent (ChatGPT, Claude, Gemini, Copilot, etc.)
 follows the same rules as Augment agents who get `.augment/rules/` injected.
 
 For Augment users: this is already automatic via `.augment/rules/spec-enforcement.md`
