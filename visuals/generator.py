@@ -18,6 +18,10 @@ from numba import jit
 import colorsys
 from tqdm import tqdm
 import warnings
+import logging
+
+# Set up structured logging for guardrails
+logger = logging.getLogger(__name__)
 
 # Import guardrails validator
 try:
@@ -113,9 +117,12 @@ class VisualGenerator:
                 original_speed = config['speed']
                 config['speed'] = max(0.01, min(1.5, config['speed']))
                 if config['speed'] != original_speed:
-                    warnings.warn(f"Speed {original_speed} clamped to {config['speed']} per guardrails")
+                    logger.warning("GUARDRAIL_HIT: speed clamped %s → %s", original_speed, config['speed'])
             if 'complexity' in config:
+                original = config['complexity']
                 config['complexity'] = max(0.1, min(1.0, config['complexity']))
+                if config['complexity'] != original:
+                    logger.warning("GUARDRAIL_HIT: complexity clamped %s → %s", original, config['complexity'])
 
         self.config = config
         self.width = width
@@ -133,13 +140,13 @@ class VisualGenerator:
         # Validate journey preset (Level 2: Warn + Fallback)
         from config.journeys import JOURNEY_PRESETS
         if journey not in JOURNEY_PRESETS:
-            warnings.warn(f"Unknown journey '{journey}', using 'steady' per guardrails")
+            logger.warning("GUARDRAIL_HIT: journey '%s' invalid, fallback → 'steady'", journey)
             journey = 'steady'
         self.journey = journey
         # Validate journey intensity
         valid_intensities = ['subtle', 'moderate', 'dramatic']
         if journey_intensity not in valid_intensities:
-            warnings.warn(f"Unknown intensity '{journey_intensity}', using 'moderate' per guardrails")
+            logger.warning("GUARDRAIL_HIT: intensity '%s' invalid, fallback → 'moderate'", journey_intensity)
             journey_intensity = 'moderate'
         self.journey_intensity = journey_intensity
         self._intensity_multipliers = {

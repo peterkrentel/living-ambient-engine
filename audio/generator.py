@@ -11,6 +11,10 @@ import soundfile as sf
 from typing import Dict, List, Tuple
 import math
 import warnings
+import logging
+
+# Set up structured logging for guardrails
+logger = logging.getLogger(__name__)
 
 # Import guardrails validator
 try:
@@ -129,11 +133,17 @@ class AudioGenerator:
                 original_tempo = config['tempo']
                 config['tempo'] = max(20, min(200, config['tempo']))
                 if config['tempo'] != original_tempo:
-                    warnings.warn(f"Tempo {original_tempo} clamped to {config['tempo']} per guardrails")
+                    logger.warning("GUARDRAIL_HIT: tempo clamped %s → %s", original_tempo, config['tempo'])
             if 'rhythm_volume' in config:
+                original = config['rhythm_volume']
                 config['rhythm_volume'] = max(0.0, min(1.0, config['rhythm_volume']))
+                if config['rhythm_volume'] != original:
+                    logger.warning("GUARDRAIL_HIT: rhythm_volume clamped %s → %s", original, config['rhythm_volume'])
             if 'drone_volume' in config:
+                original = config['drone_volume']
                 config['drone_volume'] = max(0.0, min(1.0, config['drone_volume']))
+                if config['drone_volume'] != original:
+                    logger.warning("GUARDRAIL_HIT: drone_volume clamped %s → %s", original, config['drone_volume'])
 
         self.config = config
         self.sample_rate = sample_rate
@@ -148,13 +158,13 @@ class AudioGenerator:
         # Validate journey preset (Level 2: Warn + Fallback)
         from config.journeys import JOURNEY_PRESETS
         if journey not in JOURNEY_PRESETS:
-            warnings.warn(f"Unknown journey '{journey}', using 'steady' per guardrails")
+            logger.warning("GUARDRAIL_HIT: journey '%s' invalid, fallback → 'steady'", journey)
             journey = 'steady'
         self.journey = journey
         # Validate journey intensity
         valid_intensities = ['subtle', 'moderate', 'dramatic']
         if journey_intensity not in valid_intensities:
-            warnings.warn(f"Unknown intensity '{journey_intensity}', using 'moderate' per guardrails")
+            logger.warning("GUARDRAIL_HIT: intensity '%s' invalid, fallback → 'moderate'", journey_intensity)
             journey_intensity = 'moderate'
         self.journey_intensity = journey_intensity
         self._intensity_multipliers = {
