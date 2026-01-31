@@ -131,9 +131,10 @@ jobs:
           pip install -r requirements.txt
           pip install pytest jsonschema
 
-      - name: Run contract tests
+      - name: Run contract tests (validation only - fast)
         run: |
-          python -m pytest tests/contracts/ -v --tb=short
+          # Run only validation tests (fast) - generator tests are slow and run via matrix
+          python -m pytest tests/contracts/test_validation_contract.py -v --tb=short
 
   # Run art-creator matrix tests (slower, needs contract tests to pass)
   call-art-creator:
