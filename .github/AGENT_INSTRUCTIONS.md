@@ -1,21 +1,26 @@
 # AI Agent Instructions
 
 > **Read this file before making any changes to this codebase.**
+> **⚠️ MANDATORY: Check GUARDRAILS.md for every change!**
 
 This project uses **spec-driven development**. Specifications are the source of truth for behavior.
 
 ## Before Coding
 
-1. **Read the system spec**: `docs/spec/SYSTEM.md`
-2. **Read component specs**: Check `*/SPEC.md` for any component you'll modify
+1. **Read the guardrails**: `docs/spec/GUARDRAILS.md` - **ALWAYS CHECK THIS FIRST**
+   - Parameter limits (min/max/default)
+   - Forbidden states
+   - Enforcement levels
+2. **Read the system spec**: `docs/spec/SYSTEM.md`
+3. **Read component specs**: Check `*/SPEC.md` for any component you'll modify
    - `audio/SPEC.md` - Audio generation
    - `visuals/SPEC.md` - Visual generation
    - `orchestrator/SPEC.md` - Pipeline coordination
    - `youtube/SPEC.md` - YouTube uploads
    - `config/SPEC.md` - Configuration system
    - `render/SPEC.md` - FFmpeg rendering
-3. **Check contracts**: `docs/spec/contracts/` for cross-component interfaces
-4. **Check workflow specs**: `docs/spec/workflows.md` for CI/CD changes
+4. **Check contracts**: `docs/spec/contracts/` for cross-component interfaces
+5. **Check workflow specs**: `docs/spec/workflows.md` for CI/CD changes
 
 ## While Coding
 
@@ -34,20 +39,24 @@ This project uses **spec-driven development**. Specifications are the source of 
 
 | Change Type | Specs to Update |
 |-------------|-----------------|
-| New audio feature | `audio/SPEC.md` |
-| New visual pattern | `visuals/SPEC.md` |
-| New workflow input | `docs/spec/workflows.md`, relevant component spec |
+| **Any parameter change** | `docs/spec/GUARDRAILS.md` + component spec |
+| New audio feature | `audio/SPEC.md`, `docs/spec/GUARDRAILS.md` |
+| New visual pattern | `visuals/SPEC.md`, `docs/spec/GUARDRAILS.md` |
+| New workflow input | `docs/spec/workflows.md`, `docs/spec/GUARDRAILS.md` |
 | New mood preset | `config/SPEC.md` |
 | Interface change | `docs/spec/contracts/*.md` + both component specs |
 | New journey preset | `config/SPEC.md`, `audio/SPEC.md`, `visuals/SPEC.md` |
 
 ## Common Mistakes to Avoid
 
+- ❌ **NOT checking GUARDRAILS.md before making changes**
 - ❌ Adding features without updating specs
 - ❌ Changing interfaces without updating contracts
 - ❌ Assuming behavior from code alone (read the spec!)
 - ❌ Creating new files when editing existing ones would work
 - ❌ Adding dependencies without using package manager
+- ❌ Adding parameters without defining limits in GUARDRAILS.md
+- ❌ Bypassing validation/clamping in generators
 
 ## Testing Commands
 
