@@ -5,7 +5,7 @@
 
 ## Overview
 
-Three workflows automate video generation and YouTube deployment.
+Four workflows automate video generation, YouTube deployment, and testing.
 
 ## Workflow Index
 
@@ -13,7 +13,8 @@ Three workflows automate video generation and YouTube deployment.
 |----------|---------|---------|---------|
 | `content-factory.yml` | Schedule + Manual | Batch generation + upload | Personal |
 | `content-factory-brand.yml` | Manual | Batch generation + upload | Brand |
-| `art-creator.yml` | Manual | Single custom video | Brand (optional) |
+| `art-creator.yml` | Manual / workflow_call | Single custom video | Brand (optional) |
+| `test-art-creator.yml` | Manual | Test all input combinations | None (artifacts only) |
 
 ## content-factory.yml
 
@@ -50,7 +51,8 @@ Same as `content-factory.yml` but uses:
 
 ### Trigger
 ```yaml
-workflow_dispatch:  # Manual only
+workflow_dispatch:  # Manual trigger
+workflow_call:      # Called by test-art-creator.yml
 ```
 
 ### Input Categories
@@ -84,6 +86,38 @@ workflow_dispatch:  # Manual only
 | Secret | Purpose |
 |--------|---------|
 | `YOUTUBE_TOKEN_PICKLE_BRAND` | Brand channel OAuth (if uploading) |
+
+## test-art-creator.yml
+
+### Purpose
+Tests all input combinations for `art-creator.yml` by triggering it via `workflow_call`.
+Runs 7 test cases in parallel with 10-second videos - fast validation without YouTube upload.
+
+### Trigger
+```yaml
+workflow_dispatch:  # Manual only
+```
+
+### Test Matrix Coverage
+| Test | Art Period | Pattern | Journey | Intensity |
+|------|------------|---------|---------|-----------|
+| 1 | cave_art | organic_flow | awakening | subtle |
+| 2 | renaissance | fibonacci_spiral | breathing | moderate |
+| 3 | modern | geometric_morph | trance | dramatic |
+| 4 | future | starfield | deep_dive | moderate |
+| 5 | impressionist | flowing_waves | waves | subtle |
+| 6 | baroque | julia | crescendo | dramatic |
+| 7 | medieval | sacred_geometry | steady | moderate |
+
+### Usage
+```bash
+# Via GitHub UI: Actions → Test Art Creator - All Combinations → Run workflow
+```
+
+### Outputs
+- 7 video artifacts (10s each)
+- No YouTube upload (skipped for tests)
+- Failure in any test case reported in job summary
 
 ## Invariants
 

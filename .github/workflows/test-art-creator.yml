@@ -1,0 +1,27 @@
+# Test Art Creator - All Input Combinations
+# This workflow triggers art-creator.yml with its matrix strategy
+# to test all combinations of art periods, patterns, music styles, and journeys
+
+name: Test Art Creator - All Combinations
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for running tests (optional)'
+        required: false
+        default: 'Manual test run'
+
+jobs:
+  call-art-creator:
+    # Call art-creator.yml which will run its full test matrix (7 test cases)
+    # Each test runs with 10s duration for fast validation
+    # Tests cover:
+    #   - All art periods (cave_art through future)
+    #   - Various visual patterns (organic_flow, fibonacci_spiral, starfield, etc.)
+    #   - Different music styles (heartbeat, gnawa, gamelan, etc.)
+    #   - All journey presets (awakening, breathing, trance, deep_dive, waves, crescendo, steady)
+    #   - Journey intensities (subtle, moderate, dramatic)
+    uses: ./.github/workflows/art-creator.yml
+    secrets: inherit
+
