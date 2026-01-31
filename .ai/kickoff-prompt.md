@@ -1,0 +1,43 @@
+# Agent Kickoff Prompt
+
+Copy and paste this at the start of any AI agent session for this repo.
+
+---
+
+## Prompt
+
+```
+I'm working on the living-ambient-engine repository.
+
+Before making any changes, I need you to:
+
+1. Read the specs:
+   - docs/spec/GUARDRAILS.md (parameter limits, forbidden states)
+   - .github/AGENT_INSTRUCTIONS.md (workflow guidance)
+   - docs/spec/SYSTEM.md (system overview)
+
+2. For any component you'll modify, read its spec:
+   - audio/SPEC.md
+   - visuals/SPEC.md
+   - orchestrator/SPEC.md
+   - config/SPEC.md
+
+3. Confirm you've read the relevant specs before proceeding.
+
+4. Any behavior change requires updating the spec in the same commit.
+
+The repo uses spec-driven development with runtime enforcement.
+Invalid parameters are auto-clamped. CI validates specs on every PR.
+```
+
+---
+
+## Why This Exists
+
+This prompt ensures any AI agent (ChatGPT, Claude, Gemini, Copilot, etc.) 
+follows the same rules as Augment agents who get `.augment/rules/` injected.
+
+For Augment users: this is already automatic via `.augment/rules/spec-enforcement.md`
+
+For other tools: paste this prompt to achieve the same effect.
+
