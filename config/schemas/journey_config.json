@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/peterkrentel/living-ambient-engine/config/schemas/journey_config.json",
+  "title": "Journey Configuration",
+  "description": "Schema for journey (dynamic tempo/visual evolution) configuration.",
+  "type": "object",
+  "properties": {
+    "journey": {
+      "type": "string",
+      "enum": ["steady", "awakening", "deep_dive", "breathing", "crescendo", "trance", "waves"],
+      "default": "steady",
+      "description": "Journey preset name - controls how tempo/speed/complexity evolve over time"
+    },
+    "journey_intensity": {
+      "type": "string",
+      "enum": ["subtle", "moderate", "dramatic"],
+      "default": "moderate",
+      "description": "How dramatic the journey changes are (subtle=0.5x, moderate=1x, dramatic=1.5x)"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "journey_descriptions": {
+      "steady": "Constant tempo and visuals - traditional ambient",
+      "awakening": "Gradual rise from stillness to energy - morning meditation",
+      "deep_dive": "Descending into calm - sleep preparation",
+      "breathing": "Rhythmic oscillation - guided breathing sync",
+      "crescendo": "Build to peak then release - emotional journey",
+      "trance": "Slow build with hypnotic repetition",
+      "waves": "Long slow swells like ocean waves"
+    }
+  }
+}
+

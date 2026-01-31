@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/peterkrentel/living-ambient-engine/config/schemas/visual_config.json",
+  "title": "Visual Configuration",
+  "description": "Schema for visual generator configuration. See docs/spec/GUARDRAILS.md for limits.",
+  "type": "object",
+  "required": ["colors"],
+  "properties": {
+    "colors": {
+      "type": "object",
+      "required": ["primary", "secondary", "accent"],
+      "properties": {
+        "primary": {
+          "$ref": "#/$defs/rgb_color"
+        },
+        "secondary": {
+          "$ref": "#/$defs/rgb_color"
+        },
+        "accent": {
+          "$ref": "#/$defs/rgb_color"
+        }
+      },
+      "description": "Color palette for visuals"
+    },
+    "pattern": {
+      "type": "string",
+      "enum": [
+        "fractal_zoom", "sacred_geometry", "fibonacci_spiral",
+        "particle_flow", "geometric_morph", "platonic_solids",
+        "slow_waves", "organic_flow", "mandelbrot", "julia",
+        "flowing_waves", "starfield", "rain_window", "fireplace"
+      ],
+      "default": "fractal_zoom",
+      "description": "Visual pattern generator type"
+    },
+    "speed": {
+      "type": "number",
+      "minimum": 0.01,
+      "maximum": 1.5,
+      "default": 0.5,
+      "description": "Base animation speed multiplier"
+    },
+    "complexity": {
+      "type": "number",
+      "minimum": 0.1,
+      "maximum": 1.0,
+      "default": 0.7,
+      "description": "Visual detail/complexity level"
+    },
+    "symmetry": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 12,
+      "default": 4,
+      "description": "Rotational symmetry for applicable patterns"
+    },
+    "zoom_speed": {
+      "type": "number",
+      "minimum": 0.0001,
+      "maximum": 0.1,
+      "default": 0.001,
+      "description": "Fractal zoom rate"
+    },
+    "glow": {
+      "type": "boolean",
+      "default": true,
+      "description": "Enable glow effects"
+    },
+    "trails": {
+      "type": "boolean",
+      "default": false,
+      "description": "Enable motion trails"
+    }
+  },
+  "$defs": {
+    "rgb_color": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 255
+      },
+      "minItems": 3,
+      "maxItems": 3,
+      "description": "RGB color as [R, G, B] array with values 0-255"
+    }
+  },
+  "additionalProperties": true
+}
+

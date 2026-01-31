@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/peterkrentel/living-ambient-engine/config/schemas/workflow_inputs.json",
+  "title": "Workflow Inputs",
+  "description": "Schema for GitHub Actions workflow inputs. See docs/spec/GUARDRAILS.md.",
+  "type": "object",
+  "properties": {
+    "mood": {
+      "type": "string",
+      "description": "Mood preset name from config/moods.yaml"
+    },
+    "duration": {
+      "type": "string",
+      "pattern": "^[0-9]+(s|m|h)$",
+      "default": "1h",
+      "description": "Video duration (e.g., '30s', '5m', '1h', '3h')"
+    },
+    "art_period": {
+      "type": "string",
+      "enum": ["art_nouveau", "impressionist", "japanese_woodblock", "gothic", "byzantine", "bauhaus", "random"],
+      "default": "random",
+      "description": "Art period preset for visual style"
+    },
+    "tempo": {
+      "type": "integer",
+      "minimum": 20,
+      "maximum": 200,
+      "default": 60,
+      "description": "Audio tempo in BPM"
+    },
+    "brainwave_frequency": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 50,
+      "default": 10,
+      "description": "Binaural beat frequency in Hz"
+    },
+    "solfeggio_frequency": {
+      "type": "integer",
+      "enum": [174, 285, 396, 417, 432, 528, 639, 741, 852, 963],
+      "default": 432,
+      "description": "Solfeggio healing frequency"
+    },
+    "visual_speed": {
+      "oneOf": [
+        { "type": "string", "const": "auto" },
+        { "type": "number", "minimum": 0.01, "maximum": 1.5 }
+      ],
+      "default": "auto",
+      "description": "Visual animation speed (0.01-1.5 or 'auto')"
+    },
+    "visual_complexity": {
+      "oneOf": [
+        { "type": "string", "const": "auto" },
+        { "type": "number", "minimum": 0.1, "maximum": 1.0 }
+      ],
+      "default": "auto",
+      "description": "Visual complexity level (0.1-1.0 or 'auto')"
+    },
+    "rhythm_volume": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "default": 0.5,
+      "description": "Tribal rhythm volume"
+    },
+    "ambient_volume": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "default": 1.0,
+      "description": "Ambient/drone layer volume"
+    },
+    "journey": {
+      "type": "string",
+      "enum": ["steady", "awakening", "deep_dive", "breathing", "crescendo", "trance", "waves"],
+      "default": "steady",
+      "description": "Journey preset for dynamic evolution"
+    },
+    "journey_intensity": {
+      "type": "string",
+      "enum": ["subtle", "moderate", "dramatic"],
+      "default": "moderate",
+      "description": "Journey intensity multiplier"
+    },
+    "seed": {
+      "oneOf": [
+        { "type": "string", "const": "random" },
+        { "type": "integer", "minimum": 0 }
+      ],
+      "default": "random",
+      "description": "Random seed for reproducibility"
+    },
+    "upload": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to upload to YouTube after generation"
+    }
+  },
+  "additionalProperties": true
+}
+
