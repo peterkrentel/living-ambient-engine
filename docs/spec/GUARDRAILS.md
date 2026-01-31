@@ -232,6 +232,29 @@ complexity = max(0.1, min(1.0, complexity))
 - Upload failure rate > 20%
 - Workflow failure rate > 10%
 
+## Runtime Enforcement
+
+**Status: ✅ ENFORCED**
+
+Guardrails are enforced at runtime in generators:
+
+| Component | Enforcement | File |
+|-----------|-------------|------|
+| AudioGenerator | `clamp_to_guardrails('audio_config')` | `audio/generator.py` |
+| VisualGenerator | `clamp_to_guardrails('visual_config')` | `visuals/generator.py` |
+| Workflow | PR validation job | `.github/workflows/test-art-creator.yml` |
+
+```python
+# How enforcement works in generators:
+from config.validator import clamp_to_guardrails
+
+class AudioGenerator:
+    def __init__(self, config, ...):
+        # GUARDRAILS ENFORCEMENT (Level 1: Clamp)
+        config = clamp_to_guardrails(config, 'audio_config')
+        self.config = config
+```
+
 ## Adding New Guardrails
 
 When adding new parameters or features:
@@ -240,5 +263,6 @@ When adding new parameters or features:
 2. **Choose enforcement** - Clamp, warn+fallback, validate, or halt?
 3. **Document here** - Add to appropriate section
 4. **Implement validation** - Add to workflow and/or code
-5. **Add tests** - Contract tests for boundary conditions
+5. **Add to JSON schema** - Update `config/schemas/*.json`
+6. **Add tests** - Contract tests for boundary conditions
 

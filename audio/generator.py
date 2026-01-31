@@ -2,12 +2,26 @@
 Ambient audio generator with tribal rhythms, binaural beats and procedural synthesis.
 Creates psychoacoustic soundscapes designed for focus, relaxation, and trance states.
 Features authentic tribal rhythm patterns from world traditions.
+
+Guardrails enforced per docs/spec/GUARDRAILS.md
 """
 
 import numpy as np
 import soundfile as sf
 from typing import Dict, List, Tuple
 import math
+import warnings
+import logging
+
+# Set up structured logging for guardrails
+logger = logging.getLogger(__name__)
+
+# Import guardrails validator
+try:
+    from config.validator import clamp_to_guardrails
+    HAS_VALIDATOR = True
+except ImportError:
+    HAS_VALIDATOR = False
 
 
 # Tribal rhythm patterns (in 16th notes, 1 = hit, 0 = rest)
@@ -109,6 +123,28 @@ class AudioGenerator:
     def __init__(self, config: Dict, sample_rate: int = 44100, channels: int = 2,
                  rhythm_volume_override: float = None, drone_volume_override: float = None,
                  journey: str = 'steady', journey_intensity: str = 'moderate'):
+        # GUARDRAILS ENFORCEMENT (Level 1: Clamp)
+        # See docs/spec/GUARDRAILS.md for limits
+        if HAS_VALIDATOR:
+            config = clamp_to_guardrails(config, 'audio_config')
+        else:
+            # Inline clamping fallback if validator not available
+            if 'tempo' in config:
+                original_tempo = config['tempo']
+                config['tempo'] = max(20, min(200, config['tempo']))
+                if config['tempo'] != original_tempo:
+                    logger.warning("GUARDRAIL_HIT: tempo clamped %s → %s", original_tempo, config['tempo'])
+            if 'rhythm_volume' in config:
+                original = config['rhythm_volume']
+                config['rhythm_volume'] = max(0.0, min(1.0, config['rhythm_volume']))
+                if config['rhythm_volume'] != original:
+                    logger.warning("GUARDRAIL_HIT: rhythm_volume clamped %s → %s", original, config['rhythm_volume'])
+            if 'drone_volume' in config:
+                original = config['drone_volume']
+                config['drone_volume'] = max(0.0, min(1.0, config['drone_volume']))
+                if config['drone_volume'] != original:
+                    logger.warning("GUARDRAIL_HIT: drone_volume clamped %s → %s", original, config['drone_volume'])
+
         self.config = config
         self.sample_rate = sample_rate
         self.channels = channels
@@ -119,7 +155,17 @@ class AudioGenerator:
         self.current_phase_idx = 0
         self.phase_duration_range = (180, 420)  # 3-7 minutes in seconds
         # Journey system for dynamic tempo evolution
+        # Validate journey preset (Level 2: Warn + Fallback)
+        from config.journeys import JOURNEY_PRESETS
+        if journey not in JOURNEY_PRESETS:
+            logger.warning("GUARDRAIL_HIT: journey '%s' invalid, fallback → 'steady'", journey)
+            journey = 'steady'
         self.journey = journey
+        # Validate journey intensity
+        valid_intensities = ['subtle', 'moderate', 'dramatic']
+        if journey_intensity not in valid_intensities:
+            logger.warning("GUARDRAIL_HIT: intensity '%s' invalid, fallback → 'moderate'", journey_intensity)
+            journey_intensity = 'moderate'
         self.journey_intensity = journey_intensity
         self._intensity_multipliers = {
             'subtle': 0.5,      # ±20% becomes ±10%

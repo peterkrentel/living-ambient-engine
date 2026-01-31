@@ -2,6 +2,8 @@
 Hypnotic visual generator using psychological triggers.
 Creates procedural animations designed to capture attention and induce trance states.
 Features fractal zooms, color cycling, and psychedelic effects.
+
+Guardrails enforced per docs/spec/GUARDRAILS.md
 """
 
 import os
@@ -15,6 +17,18 @@ import math
 from numba import jit
 import colorsys
 from tqdm import tqdm
+import warnings
+import logging
+
+# Set up structured logging for guardrails
+logger = logging.getLogger(__name__)
+
+# Import guardrails validator
+try:
+    from config.validator import clamp_to_guardrails
+    HAS_VALIDATOR = True
+except ImportError:
+    HAS_VALIDATOR = False
 
 # Disable tqdm progress bars in non-interactive environments (like CI)
 # to avoid printing each update as a new line
@@ -93,6 +107,23 @@ class VisualGenerator:
 
     def __init__(self, config: Dict, width: int = 1920, height: int = 1080, fps: int = 30,
                  journey: str = 'steady', journey_intensity: str = 'moderate'):
+        # GUARDRAILS ENFORCEMENT (Level 1: Clamp)
+        # See docs/spec/GUARDRAILS.md for limits
+        if HAS_VALIDATOR:
+            config = clamp_to_guardrails(config, 'visual_config')
+        else:
+            # Inline clamping fallback if validator not available
+            if 'speed' in config:
+                original_speed = config['speed']
+                config['speed'] = max(0.01, min(1.5, config['speed']))
+                if config['speed'] != original_speed:
+                    logger.warning("GUARDRAIL_HIT: speed clamped %s → %s", original_speed, config['speed'])
+            if 'complexity' in config:
+                original = config['complexity']
+                config['complexity'] = max(0.1, min(1.0, config['complexity']))
+                if config['complexity'] != original:
+                    logger.warning("GUARDRAIL_HIT: complexity clamped %s → %s", original, config['complexity'])
+
         self.config = config
         self.width = width
         self.height = height
@@ -106,7 +137,17 @@ class VisualGenerator:
         self.animation_speed_factor = config.get('animation_speed_factor', 0.5)  # slowed down
 
         # Journey system for dynamic visual evolution (synced with audio)
+        # Validate journey preset (Level 2: Warn + Fallback)
+        from config.journeys import JOURNEY_PRESETS
+        if journey not in JOURNEY_PRESETS:
+            logger.warning("GUARDRAIL_HIT: journey '%s' invalid, fallback → 'steady'", journey)
+            journey = 'steady'
         self.journey = journey
+        # Validate journey intensity
+        valid_intensities = ['subtle', 'moderate', 'dramatic']
+        if journey_intensity not in valid_intensities:
+            logger.warning("GUARDRAIL_HIT: intensity '%s' invalid, fallback → 'moderate'", journey_intensity)
+            journey_intensity = 'moderate'
         self.journey_intensity = journey_intensity
         self._intensity_multipliers = {
             'subtle': 0.5,      # ±20% becomes ±10%

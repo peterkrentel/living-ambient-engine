@@ -2,6 +2,8 @@
 
 *Procedural ambient audiovisual generator producing long-form, continuously evolving, non-repeating pieces.*
 
+> **🤖 AI Agents:** Read [`.github/AGENT_INSTRUCTIONS.md`](.github/AGENT_INSTRUCTIONS.md) and [`docs/spec/GUARDRAILS.md`](docs/spec/GUARDRAILS.md) **BEFORE** making any changes.
+
 > **New User?** Start here: [📚 Getting Started Guide](docs/GETTING_STARTED.md) | [⚡ Quick Reference](docs/QUICK_REFERENCE.md) | [🎨 Art Creator](docs/ART_CREATOR.md) | [❓ FAQ](docs/FAQ.md)
 
 ## 🎬 Gallery

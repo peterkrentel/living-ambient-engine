@@ -73,7 +73,7 @@ jobs:
           fi
           python batch_generate.py \
             --moods "${{ github.event.inputs.moods || 'rain_sleep,deep_focus,ocean_waves' }}" \
-            --durations "${{ github.event.inputs.durations || '3h' }}" \
+            --durations "${{ github.event.inputs.durations || '1h' }}" \
             $DUAL_FLAG \
             --output ./generated
 
