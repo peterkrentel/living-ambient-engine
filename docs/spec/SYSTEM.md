@@ -142,4 +142,6 @@ See `CONTRIBUTING.md` for the required checklist including spec verification.
 - [Configuration Spec](../../config/SPEC.md)
 - [Workflow Spec](./workflows.md)
 - [Contracts](./contracts/)
+- [Enforcement Architecture](./ENFORCEMENT.md) - Three-layer control system
+- [Guardrails](./GUARDRAILS.md) - Parameter limits and forbidden states
 
