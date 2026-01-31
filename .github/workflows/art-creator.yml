@@ -294,9 +294,9 @@ jobs:
       - name: Set input values
         id: inputs
         run: |
-          # Use matrix values for workflow_call, manual inputs for workflow_dispatch
-          if [ "${{ github.event_name }}" = "workflow_call" ]; then
-            echo "Using matrix values for testing"
+          # Use matrix values for workflow_call/pull_request, manual inputs for workflow_dispatch
+          if [ "${{ github.event_name }}" = "workflow_call" ] || [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "Using matrix values for testing (event: ${{ github.event_name }})"
             echo "art_period=${{ matrix.art_period }}" >> $GITHUB_OUTPUT
             echo "visual_pattern=${{ matrix.visual_pattern }}" >> $GITHUB_OUTPUT
             echo "visual_speed=0.5" >> $GITHUB_OUTPUT
@@ -308,7 +308,7 @@ jobs:
             echo "solfeggio_frequency=${{ matrix.solfeggio_frequency }}" >> $GITHUB_OUTPUT
             echo "rhythm_volume=0.5" >> $GITHUB_OUTPUT
             echo "ambient_volume=1.0" >> $GITHUB_OUTPUT
-            echo "duration=10s" >> $GITHUB_OUTPUT
+            echo "duration=20s" >> $GITHUB_OUTPUT
             echo "seed=" >> $GITHUB_OUTPUT
             echo "title=" >> $GITHUB_OUTPUT
             echo "description=" >> $GITHUB_OUTPUT

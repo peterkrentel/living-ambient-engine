@@ -27,9 +27,119 @@ permissions:
   actions: read
 
 jobs:
+  # Validate specs are complete and consistent
+  spec-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate spec structure
+        run: |
+          echo "🔍 Checking spec structure..."
+
+          # Check required spec files exist
+          REQUIRED_SPECS=(
+            "docs/spec/SYSTEM.md"
+            "docs/spec/GUARDRAILS.md"
+            "docs/spec/contracts/orchestrator-audio.md"
+            "docs/spec/contracts/orchestrator-visual.md"
+            "docs/spec/contracts/orchestrator-youtube.md"
+            "audio/SPEC.md"
+            "visuals/SPEC.md"
+          )
+
+          MISSING=0
+          for spec in "${REQUIRED_SPECS[@]}"; do
+            if [ ! -f "$spec" ]; then
+              echo "❌ Missing: $spec"
+              MISSING=1
+            else
+              echo "✅ Found: $spec"
+            fi
+          done
+
+          if [ $MISSING -eq 1 ]; then
+            echo "::error::Required spec files are missing"
+            exit 1
+          fi
+
+      - name: Validate contracts have required sections
+        run: |
+          echo "🔍 Checking contract sections..."
+
+          CONTRACTS=(
+            "docs/spec/contracts/orchestrator-audio.md"
+            "docs/spec/contracts/orchestrator-visual.md"
+            "docs/spec/contracts/orchestrator-youtube.md"
+          )
+
+          REQUIRED_SECTIONS=("Pre-Conditions" "Post-Conditions" "Invariants" "Error Handling")
+
+          ERRORS=0
+          for contract in "${CONTRACTS[@]}"; do
+            echo "Checking $contract..."
+            for section in "${REQUIRED_SECTIONS[@]}"; do
+              if ! grep -q "## $section" "$contract"; then
+                echo "❌ Missing section '$section' in $contract"
+                ERRORS=1
+              fi
+            done
+          done
+
+          if [ $ERRORS -eq 1 ]; then
+            echo "::error::Contracts are missing required sections"
+            exit 1
+          fi
+          echo "✅ All contracts have required sections"
+
+      - name: Validate GUARDRAILS.md has parameter limits
+        run: |
+          echo "🔍 Checking GUARDRAILS.md..."
+
+          GUARDRAILS="docs/spec/GUARDRAILS.md"
+          REQUIRED_PARAMS=("tempo" "speed" "complexity" "duration" "volume")
+
+          ERRORS=0
+          for param in "${REQUIRED_PARAMS[@]}"; do
+            if ! grep -qi "$param" "$GUARDRAILS"; then
+              echo "❌ Missing parameter '$param' in GUARDRAILS.md"
+              ERRORS=1
+            fi
+          done
+
+          if [ $ERRORS -eq 1 ]; then
+            echo "::error::GUARDRAILS.md is missing required parameters"
+            exit 1
+          fi
+          echo "✅ GUARDRAILS.md has all required parameters"
+
+  # Run contract and validation tests (fast)
+  contract-tests:
+    needs: spec-validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pytest jsonschema
+
+      - name: Run contract tests
+        run: |
+          python -m pytest tests/contracts/ -v --tb=short
+
+  # Run art-creator matrix tests (slower, needs contract tests to pass)
   call-art-creator:
+    needs: contract-tests
     # Call art-creator.yml which will run its full test matrix (7 test cases)
-    # Each test runs with 10s duration for fast validation
+    # Each test runs with 20s duration for fast validation
     # Tests cover:
     #   - All art periods (cave_art through future)
     #   - Various visual patterns (organic_flow, fibonacci_spiral, starfield, etc.)
