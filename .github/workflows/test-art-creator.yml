@@ -12,6 +12,16 @@ on:
         required: false
         default: 'Manual test run'
 
+  pull_request:
+    paths:
+      - '.github/workflows/art-creator.yml'
+      - '.github/workflows/test-art-creator.yml'
+      - 'audio/**'
+      - 'visuals/**'
+      - 'orchestrator/**'
+      - 'config/**'
+      - 'render/**'
+
 permissions:
   contents: read
   actions: read
