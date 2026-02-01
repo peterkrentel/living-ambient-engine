@@ -1,5 +1,6 @@
 # Content Factory (Brand Channel) - Living Ambient Engine
 # Generates ambient videos and publishes to the brand YouTube channel
+# Spec: docs/spec/workflows.md#content-factory-brandyml
 
 name: Content Factory (Brand)
 

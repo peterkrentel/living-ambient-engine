@@ -1,6 +1,7 @@
 # Art Creator - Parameterized Artistic Video Generation
 # An artist's palette for creating unique ambient videos
 # Inspired by the premise that anyone can be an artist with the right tools
+# Spec: docs/spec/workflows.md#art-creatoryml
 
 name: Art Creator
 

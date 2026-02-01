@@ -1,6 +1,7 @@
 # Test Art Creator - All Input Combinations
 # This workflow triggers art-creator.yml with its matrix strategy
 # to test all combinations of art periods, patterns, music styles, and journeys
+# Spec: docs/spec/workflows.md#test-art-creatoryml
 
 name: Test Art Creator - All Combinations
 
