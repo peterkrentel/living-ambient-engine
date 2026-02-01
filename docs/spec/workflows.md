@@ -16,12 +16,12 @@ Four workflows automate video generation, YouTube deployment, and testing.
 
 ## Workflow Index
 
-| Workflow | Trigger | Purpose | Channel |
-|----------|---------|---------|---------|
-| `content-factory.yml` | Schedule + Manual | Batch generation + upload | Personal |
-| `content-factory-brand.yml` | Manual only | Batch generation + upload | Brand |
-| `art-creator.yml` | Manual / workflow_call | Single custom video | Brand (optional) |
-| `test-art-creator.yml` | Manual + PR (path filter) | Test all input combinations | None (test only) |
+| ID | Workflow | Trigger | Purpose | Channel |
+|----|----------|---------|---------|---------|
+| WF-CF | `content-factory.yml` | Schedule + Manual | Batch generation + upload | Personal |
+| WF-CFB | `content-factory-brand.yml` | Manual only | Batch generation + upload | Brand |
+| WF-ART | `art-creator.yml` | Manual / workflow_call | Single custom video | Brand (optional) |
+| WF-TEST | `test-art-creator.yml` | Manual + PR (path filter) | Test all input combinations | None (test only) |
 
 ## Gating Rules
 
@@ -52,7 +52,9 @@ This spec is enforced at multiple levels:
 | CI | `spec-validation` job | Spec files missing, guardrails undocumented |
 | Runtime | `clamp_to_guardrails()` | Invalid parameter values |
 
-**Policy:** If the spec and workflow disagree, the workflow must be changed or the spec must be updated in the same PR—never leave them diverged.
+**Enforcement source of truth:** GitHub repository settings → Branches → `main` branch protection rules. This document describes the *intent*; the branch protection configuration is the *actual gate*.
+
+**Policy:** If the spec and workflow disagree, the workflow MUST be changed or the spec MUST be updated in the same PR—never leave them diverged.
 
 **When changing workflows:**
 
