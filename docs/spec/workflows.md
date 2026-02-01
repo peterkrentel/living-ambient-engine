@@ -40,7 +40,7 @@ Four workflows automate video generation, YouTube deployment, and testing.
 | `contract-tests` | `Test Art Creator - All Combinations / contract-tests` | Runs contract tests |
 | `call-art-creator` | `Test Art Creator - All Combinations / call-art-creator (...)` | 7 matrix jobs |
 
-**Matrix gating:** All 7 `call-art-creator` matrix jobs must pass. Branch protection should require the workflow to be green (all jobs pass), not individual matrix checks.
+**Matrix gating:** All 7 `call-art-creator` matrix jobs MUST pass. For matrix workflows, all matrix job variants MUST succeed for the workflow to be considered passing.
 
 ## Contract Enforcement
 
