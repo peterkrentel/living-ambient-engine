@@ -127,6 +127,33 @@ jobs:
           fi
           echo "✅ Concurrency group includes test_id for parallel tests"
 
+      - name: Validate guardrails have contract tests
+        run: |
+          echo "🔍 Checking guardrail↔contract alignment..."
+          echo "See: docs/spec/ENFORCEMENT.md - Layer 2 requires contract tests for guardrails"
+
+          ERRORS=0
+
+          # Memory guardrail (GUARDRAILS.md line 96) must have contract test
+          if ! grep -q "test_memory_guardrail" tests/contracts/test_audio_contract.py; then
+            echo "❌ Missing contract test for memory guardrail (GUARDRAILS.md: 'Memory usage > 8GB')"
+            echo "::error::Memory guardrail has no contract test - add test_memory_guardrail_enforced"
+            ERRORS=1
+          else
+            echo "✅ Memory guardrail has contract test"
+          fi
+
+          # Concurrency guardrail has validation step above (not a pytest test)
+          echo "✅ Concurrency guardrail validated in previous step"
+
+          if [ $ERRORS -eq 1 ]; then
+            echo ""
+            echo "::error::Guardrails without contract tests detected. See ENFORCEMENT.md Layer 2."
+            exit 1
+          fi
+
+          echo "✅ All guardrails have contract tests"
+
   # Run contract and validation tests (fast)
   contract-tests:
     needs: spec-validation

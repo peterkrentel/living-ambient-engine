@@ -231,6 +231,18 @@ class AudioGenerator:
     def generate(self, duration: int, output_path: str) -> str:
         """Generate audio file with evolving phases."""
         num_samples = duration * self.sample_rate
+
+        # GUARDRAIL ENFORCEMENT: Memory check before allocation
+        # See docs/spec/GUARDRAILS.md - "Memory usage > 8GB" is forbidden
+        bytes_per_sample = 4  # float32
+        estimated_bytes = num_samples * self.channels * bytes_per_sample
+        max_bytes = 8 * 1024 * 1024 * 1024  # 8GB guardrail
+        if estimated_bytes > max_bytes:
+            raise MemoryError(
+                f"Audio generation would require {estimated_bytes / 1e9:.1f}GB, "
+                f"exceeds 8GB guardrail. Reduce duration or sample rate."
+            )
+
         audio = np.zeros((num_samples, self.channels), dtype=np.float32)
 
         # Calculate phase boundaries for this duration

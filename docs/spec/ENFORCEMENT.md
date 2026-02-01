@@ -60,9 +60,21 @@ Automated systems that catch violations:
 |-----------|------|--------|
 | `clamp_to_guardrails()` | Runtime | Auto-corrects invalid values |
 | `spec-validation` job | Every PR | Blocks merge if specs missing |
+| Guardrail↔Contract check | Every PR | Blocks merge if guardrails lack tests |
 | Contract tests | Every PR | Blocks merge if schemas violated |
 
 **Key insight**: Even if an agent ignores specs, Layer 2 catches it.
+
+**Guardrail↔Contract alignment** (added to prevent OOM-style bugs):
+```yaml
+# In .github/workflows/test-art-creator.yml spec-validation job
+- name: Validate guardrails have contract tests
+  run: |
+    # Each forbidden state in GUARDRAILS.md must have a contract test
+    if ! grep -q "test_memory_guardrail" tests/contracts/test_audio_contract.py; then
+      exit 1  # Block merge
+    fi
+```
 
 ### Layer 3: Agent Bias (Rules)
 

@@ -128,9 +128,55 @@ class TestAudioContractPostConditions:
                 os.unlink(output_path)
 
 
+class TestAudioContractGuardrails:
+    """Test guardrail enforcement per docs/spec/GUARDRAILS.md."""
+
+    def test_memory_guardrail_enforced(self):
+        """Guardrail: Memory > 8GB must raise MemoryError before allocation.
+
+        See: docs/spec/GUARDRAILS.md - "Memory usage > 8GB" forbidden
+        See: docs/spec/contracts/orchestrator-audio.md - "Memory exhaustion | Raise MemoryError"
+        """
+        gen = AudioGenerator({'tempo': 60})
+
+        # Calculate duration that would exceed 8GB
+        # 8GB / (44100 Hz * 2 channels * 4 bytes) = ~22,675 seconds (~6.3 hours)
+        # Use 7 hours to be safely over the limit
+        excessive_duration = 7 * 3600  # 7 hours in seconds
+
+        with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as f:
+            output_path = f.name
+
+        try:
+            with pytest.raises(MemoryError) as exc_info:
+                gen.generate(excessive_duration, output_path)
+
+            # Verify error message mentions guardrail
+            assert "8GB" in str(exc_info.value) or "guardrail" in str(exc_info.value).lower()
+        finally:
+            if Path(output_path).exists():
+                os.unlink(output_path)
+
+    def test_memory_under_guardrail_succeeds(self):
+        """Verify durations under 8GB work normally."""
+        gen = AudioGenerator({'tempo': 60})
+
+        # 1 hour = 3600s * 44100 * 2 * 4 = ~1.3GB - well under limit
+        with tempfile.NamedTemporaryFile(suffix='.wav', delete=False) as f:
+            output_path = f.name
+
+        try:
+            # Should not raise - use short duration for fast test
+            gen.generate(3, output_path)
+            assert Path(output_path).exists()
+        finally:
+            if Path(output_path).exists():
+                os.unlink(output_path)
+
+
 class TestAudioContractInvariants:
     """Test invariants hold during execution."""
-    
+
     def test_deterministic_output(self):
         """Invariant: same seed + config = identical output."""
         import random

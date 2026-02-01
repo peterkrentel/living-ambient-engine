@@ -93,10 +93,19 @@ These conditions must **never** occur. If detected, the system must halt with an
 
 | Forbidden | Reason | Detection |
 |-----------|--------|-----------|
-| Memory usage > 8GB | OOM on runners | Memory monitoring |
+| Memory usage > 8GB | OOM on runners | Pre-allocation check |
 | Temp files > 50GB | Disk exhaustion | Disk space check |
 | Single job > 6 hours | Workflow timeout | Duration limits |
 | Infinite loops in generation | Hang | Timeout watchdog |
+
+**Memory Enforcement:**
+```python
+# AudioGenerator.generate() checks memory BEFORE allocation
+estimated_bytes = num_samples * channels * 4  # float32
+if estimated_bytes > 8GB:
+    raise MemoryError("exceeds 8GB guardrail")
+```
+Contract test: `tests/contracts/test_audio_contract.py::TestAudioContractGuardrails::test_memory_guardrail_enforced`
 
 ## Enforcement Levels
 
