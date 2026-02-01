@@ -27,10 +27,33 @@ Four workflows automate video generation, YouTube deployment, and testing.
 
 | Event | Required Checks | Blocks |
 |-------|-----------------|--------|
-| PR to `main` | `spec-validation`, `contract-tests`, `call-art-creator` (7 jobs) | Merge |
+| PR to `main` | `spec-validation`, `contract-tests`, `call-art-creator` (×7) | Merge |
 | Push to `main` | None (protected by PR) | N/A |
 | Schedule | None | N/A (runs anyway) |
 | Manual dispatch | None | N/A |
+
+**Check names match GitHub Actions job IDs exactly:**
+
+- `spec-validation` - Validates specs exist and are consistent
+- `contract-tests` - Runs `pytest tests/contracts/test_validation_contract.py`
+- `call-art-creator` - Runs 7 times via matrix (test_id 1-7)
+
+## Contract Enforcement
+
+This spec is enforced at multiple levels:
+
+| Level | Mechanism | What it catches |
+|-------|-----------|-----------------|
+| PR | Branch protection requires checks above | Missing specs, broken contracts |
+| CI | `spec-validation` job | Spec files missing, guardrails undocumented |
+| Runtime | `clamp_to_guardrails()` | Invalid parameter values |
+
+**When changing workflows:**
+
+1. Update this contract (`docs/spec/workflows.md`) in the same PR
+2. If adding inputs/outputs, add to the relevant section
+3. If changing concurrency, update the Concurrency section
+4. Run `test-art-creator.yml` to validate
 
 ## Permissions Summary
 
