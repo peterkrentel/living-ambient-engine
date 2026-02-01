@@ -695,8 +695,8 @@ jobs:
               else:
                   duration = int(duration_str)
               
-              if duration < 10 or duration > 14400:  # Min 10s, Max 4h per GUARDRAILS.md
-                  print(f"❌ Error: Duration must be between 10 seconds and 4 hours (per guardrails), got {duration} seconds")
+              if duration < 5 or duration > 14400:  # Min 5s, Max 4h per GUARDRAILS.md
+                  print(f"❌ Error: Duration must be between 5 seconds and 4 hours (per guardrails), got {duration} seconds")
                   sys.exit(1)
           except ValueError as e:
               print(f"❌ Error: Invalid duration format '{duration_str}'. Use formats like: 30s, 5min, 1h")
