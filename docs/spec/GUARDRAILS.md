@@ -219,6 +219,12 @@ duration: str | int
 workflow_timeout: int (minutes)
   max: 360     # 6 hours GitHub Actions limit
   enforcement: VALIDATE
+
+# Concurrency group (art-creator.yml)
+concurrency_group: str
+  format: "art-creator-{run_id}-{test_id}"
+  requirement: Must include test_id to allow parallel matrix jobs
+  enforcement: VALIDATE
 ```
 
 ## Journey System Guardrails
