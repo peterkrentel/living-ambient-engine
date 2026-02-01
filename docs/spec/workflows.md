@@ -27,16 +27,20 @@ Four workflows automate video generation, YouTube deployment, and testing.
 
 | Event | Required Checks | Blocks |
 |-------|-----------------|--------|
-| PR to `main` | `spec-validation`, `contract-tests`, `call-art-creator` (×7) | Merge |
+| PR to `main` | All jobs in `Test Art Creator - All Combinations` workflow | Merge |
 | Push to `main` | None (protected by PR) | N/A |
 | Schedule | None | N/A (runs anyway) |
 | Manual dispatch | None | N/A |
 
-**Check names match GitHub Actions job IDs exactly:**
+**PR check names as shown in GitHub UI:**
 
-- `spec-validation` - Validates specs exist and are consistent
-- `contract-tests` - Runs `pytest tests/contracts/test_validation_contract.py`
-- `call-art-creator` - Runs 7 times via matrix (test_id 1-7)
+| Job ID | PR Check Name | Description |
+|--------|---------------|-------------|
+| `spec-validation` | `Test Art Creator - All Combinations / spec-validation` | Validates specs exist |
+| `contract-tests` | `Test Art Creator - All Combinations / contract-tests` | Runs contract tests |
+| `call-art-creator` | `Test Art Creator - All Combinations / call-art-creator (...)` | 7 matrix jobs |
+
+**Matrix gating:** All 7 `call-art-creator` matrix jobs must pass. Branch protection should require the workflow to be green (all jobs pass), not individual matrix checks.
 
 ## Contract Enforcement
 
@@ -44,9 +48,11 @@ This spec is enforced at multiple levels:
 
 | Level | Mechanism | What it catches |
 |-------|-----------|-----------------|
-| PR | Branch protection requires checks above | Missing specs, broken contracts |
+| PR | Branch protection requires workflow green | Missing specs, broken contracts |
 | CI | `spec-validation` job | Spec files missing, guardrails undocumented |
 | Runtime | `clamp_to_guardrails()` | Invalid parameter values |
+
+**Policy:** If the spec and workflow disagree, the workflow must be changed or the spec must be updated in the same PR—never leave them diverged.
 
 **When changing workflows:**
 
@@ -140,7 +146,16 @@ concurrency:
 
 **CRITICAL:** The concurrency group MUST include `test_id` when called from test-art-creator.yml.
 This allows 7 parallel test jobs to run without cancelling each other.
-See: `tests/contracts/` for enforcement.
+
+**Example concurrency group values:**
+
+| Scenario | Group Value |
+|----------|-------------|
+| Manual run (run_id=123) | `art-creator-123-manual` |
+| Test matrix job 1 (run_id=456) | `art-creator-456-1` |
+| Test matrix job 7 (run_id=456) | `art-creator-456-7` |
+
+See: `tests/contracts/` for enforcement via `spec-validation` job.
 
 ### Input Categories
 
