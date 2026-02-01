@@ -14,7 +14,7 @@
 | `solfeggio_frequency` | 174 | 963 | 432 | Validate |
 | `rhythm_volume` | 0.0 | 1.0 | 0.5 | Clamp |
 | `ambient_volume` | 0.0 | 1.0 | 1.0 | Clamp |
-| `duration` | 10s | 4h | 5min | Validate |
+| `duration` | 5s | 4h | 5min | Validate |
 | `fps` | 15 | 60 | 24 | Validate |
 | `resolution.width` | 640 | 3840 | 1280 | Validate |
 | `resolution.height` | 480 | 2160 | 720 | Validate |
@@ -164,7 +164,7 @@ fps: int
 ```python
 # Video duration
 duration: str | int
-  min: "10s"   # Minimum useful length
+  min: "5s"    # Minimum for tests (allows 2s fade in/out + content)
   max: "4h"    # Maximum for workflow timeout
   default: "5min"
   enforcement: VALIDATE

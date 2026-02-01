@@ -137,17 +137,70 @@ jobs:
           python -m pytest tests/contracts/test_validation_contract.py -v --tb=short
 
   # Run art-creator matrix tests (slower, needs contract tests to pass)
+  # Matrix strategy calls art-creator.yml 7 times with different input combinations
   call-art-creator:
     needs: contract-tests
-    # Call art-creator.yml which will run its full test matrix (7 test cases)
-    # Each test runs with 20s duration for fast validation
-    # Tests cover:
-    #   - All art periods (cave_art through future)
-    #   - Various visual patterns (organic_flow, fibonacci_spiral, starfield, etc.)
-    #   - Different music styles (heartbeat, gnawa, gamelan, etc.)
-    #   - All journey presets (awakening, breathing, trance, deep_dive, waves, crescendo, steady)
-    #   - Journey intensities (subtle, moderate, dramatic)
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Test 1: Cave art with awakening journey
+          - test_id: '1'
+            art_period: 'cave_art'
+            visual_pattern: 'organic_flow'
+            music_style: 'heartbeat'
+            journey: 'awakening'
+            journey_intensity: 'subtle'
+          # Test 2: Renaissance with breathing journey
+          - test_id: '2'
+            art_period: 'renaissance'
+            visual_pattern: 'fibonacci_spiral'
+            music_style: 'gnawa'
+            journey: 'breathing'
+            journey_intensity: 'moderate'
+          # Test 3: Modern with trance journey
+          - test_id: '3'
+            art_period: 'modern'
+            visual_pattern: 'geometric_morph'
+            music_style: 'gamelan'
+            journey: 'trance'
+            journey_intensity: 'dramatic'
+          # Test 4: Future with deep_dive journey
+          - test_id: '4'
+            art_period: 'future'
+            visual_pattern: 'starfield'
+            music_style: 'none'
+            journey: 'deep_dive'
+            journey_intensity: 'moderate'
+          # Test 5: Impressionist with waves journey
+          - test_id: '5'
+            art_period: 'impressionist'
+            visual_pattern: 'flowing_waves'
+            music_style: 'candomble'
+            journey: 'waves'
+            journey_intensity: 'subtle'
+          # Test 6: Baroque with crescendo journey
+          - test_id: '6'
+            art_period: 'baroque'
+            visual_pattern: 'julia'
+            music_style: 'taiko'
+            journey: 'crescendo'
+            journey_intensity: 'dramatic'
+          # Test 7: Medieval with steady journey
+          - test_id: '7'
+            art_period: 'medieval'
+            visual_pattern: 'sacred_geometry'
+            music_style: 'burundi'
+            journey: 'steady'
+            journey_intensity: 'moderate'
     uses: ./.github/workflows/art-creator.yml
+    with:
+      art_period: ${{ matrix.art_period }}
+      visual_pattern: ${{ matrix.visual_pattern }}
+      music_style: ${{ matrix.music_style }}
+      journey: ${{ matrix.journey }}
+      journey_intensity: ${{ matrix.journey_intensity }}
+      duration: '5s'  # Minimum per GUARDRAILS.md - fast test validation
+      test_id: ${{ matrix.test_id }}
+      skip_artifact_upload: 'true'  # Tests don't need artifacts saved
     secrets: inherit
-
-# Test PR

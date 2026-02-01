@@ -91,7 +91,8 @@ workflow_call:      # Called by test-art-creator.yml
 
 ### Purpose
 Tests all input combinations for `art-creator.yml` by triggering it via `workflow_call`.
-Runs 7 test cases in parallel with 10-second videos - fast validation without YouTube upload.
+The test matrix is defined in this workflow and calls art-creator.yml 7 times with different inputs.
+Runs 7 test cases in parallel with 5-second videos (minimum per GUARDRAILS.md) - fast validation without YouTube upload or artifact storage.
 
 ### Trigger
 ```yaml
@@ -115,7 +116,7 @@ workflow_dispatch:  # Manual only
 ```
 
 ### Outputs
-- 7 video artifacts (10s each)
+- No artifacts saved (tests use `skip_artifact_upload: true`)
 - No YouTube upload (skipped for tests)
 - Failure in any test case reported in job summary
 
