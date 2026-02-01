@@ -5,6 +5,40 @@
 deep_focus:
   description: "Deep concentration and flow state - Hypnotic fractal journey"
   title_template: "Sounds for an Overactive Mind | {duration_str} Evolving Focus Music | No Loops"
+  description_template: |
+    🎯 Created to quiet an overactive mind and unlock deep concentration.
+    ✨ This soundscape evolves through phases and never repeats.
+    Best for: deep work, coding, writing, any task requiring flow.
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    ⏱️ Duration: {duration_str}
+    🥁 Rhythm: {rhythm_name}
+    🌍 {rhythm_origin}
+
+    🧠 Uses binaural beats & Solfeggio frequencies for brainwave entrainment.
+
+    🔔 Subscribe for weekly long-form ambient
+    👍 Like if this helps you focus
+
+    #AmbientMusic #BinauralBeats #Focus #DeepWork #StudyMusic #Concentration
+  tags:
+    - "focus music"
+    - "deep work music"
+    - "concentration music"
+    - "binaural beats focus"
+    - "study music"
+    - "work music"
+    - "ambient focus"
+    - "coding music"
+    - "flow state music"
+    - "productivity music"
+    - "background music for work"
+    - "music for concentration"
+    - "gnawa rhythm"
+    - "tribal drums focus"
+    - "432 hz music"
+    - "ASMR"
   rhythm_origin: "Moroccan Gnawa - spiritual trance music for healing"
   visual:
     type: "fractal_zoom"
@@ -42,6 +76,40 @@ deep_focus:
 sleep:
   description: "Deep relaxation and sleep induction - Gentle fractal drift"
   title_template: "Can't Sleep? | {duration_str} Gentle Drift | Evolving Sounds That Never Repeat"
+  description_template: |
+    😴 Created to guide you gently into restful, restorative sleep.
+    ✨ This soundscape evolves through phases and never repeats.
+    Best for: insomnia, restless nights, transitioning to sleep.
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    ⏱️ Duration: {duration_str}
+    🥁 Rhythm: {rhythm_name}
+    🌍 {rhythm_origin}
+
+    🧠 Uses delta waves & 528Hz healing frequency for deep sleep.
+
+    🔔 Subscribe for weekly long-form ambient
+    👍 Like if this helps you sleep
+
+    #SleepMusic #Insomnia #DeepSleep #RelaxingMusic #SleepSounds #DeltaWaves
+  tags:
+    - "ASMR"
+    - "sleep music"
+    - "music for sleep"
+    - "insomnia relief"
+    - "deep sleep music"
+    - "relaxing sleep music"
+    - "sleep sounds"
+    - "delta waves sleep"
+    - "528 hz sleep"
+    - "fall asleep fast"
+    - "sleeping music"
+    - "bedtime music"
+    - "calming music for sleep"
+    - "heartbeat sleep"
+    - "binaural beats sleep"
+    - "8 hour sleep music"
   rhythm_origin: "Universal Heartbeat - primal rhythm synced to the body"
   visual:
     type: "fractal_zoom"
@@ -81,6 +149,40 @@ sleep:
 chill:
   description: "Relaxed and peaceful state - Gamelan rhythm"
   title_template: "Unwind After a Long Day | {duration_str} Chill Ambient | Continuously Evolving"
+  description_template: |
+    ✨ Created to help you decompress and find your calm.
+    ✨ This soundscape evolves through phases and never repeats.
+    Best for: unwinding, gentle background, stress relief.
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    ⏱️ Duration: {duration_str}
+    🥁 Rhythm: {rhythm_name}
+    🌍 {rhythm_origin}
+
+    🧠 Uses alpha waves & Solfeggio frequencies for relaxation.
+
+    🔔 Subscribe for weekly long-form ambient
+    👍 Like if this helps you relax
+
+    #ChillMusic #Relaxation #StressRelief #AmbientMusic #CalmMusic #Unwind
+  tags:
+    - "ASMR"
+    - "chill music"
+    - "relaxing music"
+    - "stress relief music"
+    - "calm music"
+    - "ambient chill"
+    - "unwind music"
+    - "peaceful music"
+    - "background music"
+    - "alpha waves"
+    - "gamelan music"
+    - "meditation music"
+    - "soothing music"
+    - "tranquil music"
+    - "zen music"
+    - "spa music"
   rhythm_origin: "Indonesian Gamelan - ethereal layered percussion"
   visual:
     type: "particle_flow"
@@ -115,6 +217,40 @@ chill:
 study:
   description: "Alert focus and learning state - Taiko rhythm"
   title_template: "Study Without Distractions | {duration_str} Focus Soundscape | Always Evolving"
+  description_template: |
+    📚 Created to keep you focused without pulling your attention.
+    ✨ This soundscape evolves through phases and never repeats.
+    Best for: studying, reading, learning, quiet focus.
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    ⏱️ Duration: {duration_str}
+    🥁 Rhythm: {rhythm_name}
+    🌍 {rhythm_origin}
+
+    🧠 Uses 12Hz alpha/beta waves for learning and memory retention.
+
+    🔔 Subscribe for weekly long-form ambient
+    👍 Like if this helps you study
+
+    #StudyMusic #FocusMusic #LearningMusic #ConcentrationMusic #HomeworkMusic
+  tags:
+    - "study music"
+    - "music for studying"
+    - "homework music"
+    - "focus music for studying"
+    - "concentration music"
+    - "learning music"
+    - "reading music"
+    - "exam study music"
+    - "background study music"
+    - "taiko drums"
+    - "alpha waves study"
+    - "memory music"
+    - "brain music"
+    - "432 hz study"
+    - "ambient study"
+    - "ASMR"
   rhythm_origin: "Japanese Taiko - ceremonial drums for concentration"
   visual:
     type: "geometric_morph"
@@ -149,6 +285,39 @@ study:
 energize:
   description: "Energized and motivated state - Kuku rhythm"
   title_template: "Get Moving | {duration_str} Energizing Ambient Beats | Non-Repeating Flow"
+  description_template: |
+    ⚡ Created to build energy and momentum when you need a boost.
+    ✨ This soundscape evolves through phases and never repeats.
+    Best for: workouts, morning energy, breaking through resistance.
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    ⏱️ Duration: {duration_str}
+    🥁 Rhythm: {rhythm_name}
+    🌍 {rhythm_origin}
+
+    🧠 Uses beta waves for energy and motivation.
+
+    🔔 Subscribe for weekly long-form ambient
+    👍 Like if this energizes you
+
+    #EnergyMusic #MotivationMusic #WorkoutMusic #MorningMusic #PowerMusic
+  tags:
+    - "energy music"
+    - "motivation music"
+    - "workout music"
+    - "morning music"
+    - "power music"
+    - "uplifting music"
+    - "energizing beats"
+    - "beta waves"
+    - "african drums"
+    - "kuku rhythm"
+    - "tribal drums energy"
+    - "gym music"
+    - "running music"
+    - "pump up music"
+    - "high energy ambient"
   rhythm_origin: "West African Kuku - celebratory energizing rhythm"
   visual:
     type: "fractal_zoom"
@@ -181,6 +350,40 @@ energize:
 trance:
   description: "Deep hypnotic trance - Infinite fractal journey"
   title_template: "Journey Inward | {duration_str} Hypnotic Trance | Never-Repeating Soundscape"
+  description_template: |
+    🌀 Created to take you on an inward journey of hypnotic depth.
+    ✨ This soundscape evolves through phases and never repeats.
+    Best for: meditation, altered states, inner exploration.
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    ⏱️ Duration: {duration_str}
+    🥁 Rhythm: {rhythm_name}
+    🌍 {rhythm_origin}
+
+    🧠 Uses theta waves for deep trance states.
+
+    🔔 Subscribe for weekly long-form ambient
+    👍 Like if this takes you deep
+
+    #TranceMusic #HypnoticMusic #MeditationMusic #ThetaWaves #DeepTrance
+  tags:
+    - "trance music"
+    - "hypnotic music"
+    - "deep trance"
+    - "theta waves"
+    - "meditation trance"
+    - "psychedelic music"
+    - "trippy music"
+    - "shamanic music"
+    - "altered states music"
+    - "bamboula rhythm"
+    - "fractal music"
+    - "journey music"
+    - "inner exploration"
+    - "transcendental music"
+    - "visionary music"
+    - "ASMR"
   rhythm_origin: "New Orleans Bamboula - Caribbean hypnotic groove"
   visual:
     type: "fractal_zoom"
@@ -220,6 +423,40 @@ trance:
 ceremony:
   description: "Ritual and ceremony - Candomblé rhythm"
   title_template: "Sacred Space | {duration_str} Ceremonial Sounds | Evolving Ritual Ambient"
+  description_template: |
+    🕯️ Created to hold space for ritual, intention, and presence.
+    ✨ This soundscape evolves through phases and never repeats.
+    Best for: rituals, intention setting, sacred space.
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    ⏱️ Duration: {duration_str}
+    🥁 Rhythm: {rhythm_name}
+    🌍 {rhythm_origin}
+
+    🧠 Uses alpha waves & healing frequencies for sacred space.
+
+    🔔 Subscribe for weekly long-form ambient
+    👍 Like if this resonates with you
+
+    #CeremonialMusic #RitualMusic #SacredMusic #SpiritualMusic #HealingMusic
+  tags:
+    - "ceremonial music"
+    - "ritual music"
+    - "sacred music"
+    - "spiritual music"
+    - "healing music"
+    - "sacred geometry"
+    - "candomble rhythm"
+    - "brazilian drums"
+    - "shamanic drums"
+    - "intention music"
+    - "meditation ritual"
+    - "sacred space music"
+    - "prayer music"
+    - "solfeggio frequencies"
+    - "285 hz healing"
+    - "ASMR"
   rhythm_origin: "Brazilian Candomblé - Afro-Brazilian sacred polyrhythms"
   visual:
     type: "sacred_geometry"
@@ -251,6 +488,39 @@ ceremony:
 warrior:
   description: "Power and strength - Burundi rhythm"
   title_template: "Find Your Strength | {duration_str} Power Drums | Builds & Evolves"
+  description_template: |
+    💪 Created to fuel your inner fire and strengthen your resolve.
+    ✨ This soundscape evolves through phases and never repeats.
+    Best for: training, motivation, building intensity.
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    ⏱️ Duration: {duration_str}
+    🥁 Rhythm: {rhythm_name}
+    🌍 {rhythm_origin}
+
+    🧠 Uses beta waves for power and strength.
+
+    🔔 Subscribe for weekly long-form ambient
+    👍 Like if this empowers you
+
+    #WarriorMusic #PowerMusic #StrengthMusic #MotivationMusic #TribalDrums
+  tags:
+    - "warrior music"
+    - "power music"
+    - "strength music"
+    - "motivation music"
+    - "tribal drums"
+    - "burundi drums"
+    - "african drums"
+    - "intense music"
+    - "training music"
+    - "workout drums"
+    - "beta waves"
+    - "741 hz"
+    - "empowering music"
+    - "fierce music"
+    - "battle music"
   rhythm_origin: "East African Burundi - intense ceremonial drumming"
   visual:
     type: "geometric_morph"
@@ -287,6 +557,36 @@ warrior:
 rain_sleep:
   description: "Rain sounds for deep sleep - Proven top performer"
   title_template: "Fall Asleep to Gentle Rain | {duration_str} | Evolving Storm, Never Loops"
+  description_template: |
+    🌧️ Created to help you fall asleep naturally with gentle, ever-changing rain.
+    ✨ This soundscape evolves continuously and never loops.
+    Best for: falling asleep, deep rest, blocking out the world.
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    ⏱️ Duration: {duration_str}
+
+    🔔 Subscribe for weekly long-form ambient
+    👍 Like if this helps you rest
+
+    #RainSounds #SleepSounds #RainForSleep #Relaxation #ASMR #WhiteNoise
+  tags:
+    - "ASMR"
+    - "rain sounds"
+    - "rain for sleep"
+    - "rain sounds for sleeping"
+    - "rain asmr"
+    - "rain noise"
+    - "thunderstorm sounds"
+    - "rain on window"
+    - "sleep sounds"
+    - "relaxing rain"
+    - "rain white noise"
+    - "rain ambience"
+    - "storm sounds"
+    - "rain meditation"
+    - "rain relaxation"
+    - "10 hours rain"
   rhythm_origin: "Nature - no tribal drums, pure rain"
   visual:
     type: "rain_window"
@@ -332,6 +632,36 @@ rain_sleep:
 fireplace:
   description: "Cozy fireplace crackling - Comfort content"
   title_template: "Cozy Night by the Fire | {duration_str} | Crackling That Shifts & Breathes"
+  description_template: |
+    🔥 Created to bring the warmth and comfort of a real fireplace into your space.
+    ✨ This soundscape evolves continuously and never loops.
+    Best for: cozy nights, reading, relaxation, background ambience.
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    ⏱️ Duration: {duration_str}
+
+    🔔 Subscribe for weekly long-form ambient
+    👍 Like if this warms your soul
+
+    #FireplaceSounds #CracklingFire #CozyAmbience #Relaxation #ASMR #FireASMR
+  tags:
+    - "ASMR"
+    - "fireplace sounds"
+    - "crackling fire"
+    - "fire sounds"
+    - "cozy fireplace"
+    - "fireplace asmr"
+    - "fire crackling"
+    - "relaxing fireplace"
+    - "fireplace ambience"
+    - "cozy night"
+    - "fire for sleep"
+    - "fireplace white noise"
+    - "winter fireplace"
+    - "warm ambience"
+    - "cabin fireplace"
+    - "10 hours fireplace"
   rhythm_origin: "Nature - fire crackling"
   visual:
     type: "fireplace"
@@ -377,6 +707,36 @@ fireplace:
 ocean_waves:
   description: "Ocean waves for sleep and relaxation"
   title_template: "Drift Off to Ocean Waves | {duration_str} | Endless Tides, Never Repeats"
+  description_template: |
+    🌊 Created to carry you away on gentle, endless ocean tides.
+    ✨ This soundscape evolves continuously and never loops.
+    Best for: sleeping, meditation, relaxation, beach vibes.
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    ⏱️ Duration: {duration_str}
+
+    🔔 Subscribe for weekly long-form ambient
+    👍 Like if this relaxes you
+
+    #OceanSounds #OceanWaves #BeachSounds #SleepSounds #Relaxation #ASMR
+  tags:
+    - "ASMR"
+    - "ocean sounds"
+    - "ocean waves"
+    - "beach sounds"
+    - "wave sounds"
+    - "ocean for sleep"
+    - "sea sounds"
+    - "ocean asmr"
+    - "beach ambience"
+    - "ocean meditation"
+    - "water sounds"
+    - "coastal sounds"
+    - "relaxing waves"
+    - "ocean white noise"
+    - "sleep waves"
+    - "10 hours ocean"
   rhythm_origin: "Nature - ocean waves"
   visual:
     type: "starfield"             # Use starfield (night ocean view)
@@ -417,6 +777,36 @@ ocean_waves:
 lofi_study:
   description: "Lofi beats for studying - Chill hip-hop vibes"
   title_template: "Study to Chill Beats | {duration_str} Lofi | Drifts & Evolves Endlessly"
+  description_template: |
+    🎧 Created to keep you in the zone with chill, evolving lofi beats.
+    ✨ This soundscape drifts endlessly and never loops.
+    Best for: studying, homework, coding, creative work.
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    ⏱️ Duration: {duration_str}
+
+    🔔 Subscribe for weekly long-form ambient
+    👍 Like if this helps you focus
+
+    #LofiBeats #StudyBeats #ChillBeats #LofiHipHop #StudyMusic #Homework
+  tags:
+    - "ASMR"
+    - "lofi"
+    - "lofi beats"
+    - "lofi music"
+    - "lofi hip hop"
+    - "study beats"
+    - "chill beats"
+    - "lofi study"
+    - "homework music"
+    - "coding music"
+    - "chill hop"
+    - "lofi radio"
+    - "relaxing beats"
+    - "focus beats"
+    - "background beats"
+    - "lofi mix"
   rhythm_origin: "Lofi - chill hip-hop inspired"
   visual:
     type: "particle_flow"
@@ -454,6 +844,36 @@ lofi_study:
 piano_relax:
   description: "Peaceful piano for stress relief"
   title_template: "Let Go of Stress | {duration_str} Soft Piano | Gently Evolving Melodies"
+  description_template: |
+    🎹 Created to help you release tension and find inner peace.
+    ✨ This soundscape gently evolves and never loops.
+    Best for: stress relief, unwinding, quiet reflection.
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    ⏱️ Duration: {duration_str}
+
+    🔔 Subscribe for weekly long-form ambient
+    👍 Like if this soothes you
+
+    #PianoMusic #RelaxingPiano #StressRelief #PeacefulMusic #CalmPiano #Meditation
+  tags:
+    - "ASMR"
+    - "piano music"
+    - "relaxing piano"
+    - "peaceful piano"
+    - "stress relief music"
+    - "calm piano"
+    - "soft piano"
+    - "piano for sleep"
+    - "meditation piano"
+    - "piano ambient"
+    - "gentle piano"
+    - "piano relaxation"
+    - "soothing piano"
+    - "theta waves"
+    - "piano lullaby"
+    - "piano background"
   rhythm_origin: "Classical inspired - no percussion"
   visual:
     type: "starfield"
@@ -488,6 +908,36 @@ piano_relax:
 forest_morning:
   description: "Forest ambience with birds - Nature immersion"
   title_template: "Wake Up in the Forest | {duration_str} | Birds, Wind, Ever-Changing"
+  description_template: |
+    🌲 Created to immerse you in a peaceful, living forest.
+    ✨ This soundscape evolves continuously and never loops.
+    Best for: morning routine, meditation, nature immersion, gentle awakening.
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    ⏱️ Duration: {duration_str}
+
+    🔔 Subscribe for weekly long-form ambient
+    👍 Like if this brings you peace
+
+    #ForestSounds #NatureSounds #BirdSounds #MorningMeditation #NatureASMR #Forest
+  tags:
+    - "ASMR"
+    - "forest sounds"
+    - "nature sounds"
+    - "bird sounds"
+    - "forest ambience"
+    - "morning sounds"
+    - "nature asmr"
+    - "birds singing"
+    - "forest meditation"
+    - "peaceful nature"
+    - "woodland sounds"
+    - "morning meditation"
+    - "nature relaxation"
+    - "forest birds"
+    - "tranquil forest"
+    - "forest background"
   rhythm_origin: "Nature - forest soundscape"
   visual:
     type: "particle_flow"
