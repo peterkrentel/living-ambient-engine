@@ -278,8 +278,9 @@ on:
         description: 'Skip artifact upload for faster tests'
 
 # Prevent overlapping runs and resource contention
+# Include test_id to allow parallel matrix jobs from test-art-creator.yml
 concurrency:
-  group: art-creator-${{ github.run_id }}
+  group: art-creator-${{ github.run_id }}-${{ inputs.test_id || 'manual' }}
   cancel-in-progress: false
 
 env:

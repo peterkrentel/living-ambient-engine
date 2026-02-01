@@ -113,6 +113,47 @@ jobs:
           fi
           echo "✅ GUARDRAILS.md has all required parameters"
 
+      - name: Validate art-creator.yml concurrency allows parallel tests
+        run: |
+          echo "🔍 Checking concurrency group includes test_id..."
+
+          WORKFLOW=".github/workflows/art-creator.yml"
+
+          # Concurrency group must include test_id for parallel matrix jobs
+          if ! grep -q 'group:.*test_id' "$WORKFLOW"; then
+            echo "❌ Concurrency group must include test_id for parallel test execution"
+            echo "::error::art-creator.yml concurrency group missing test_id (see GUARDRAILS.md)"
+            exit 1
+          fi
+          echo "✅ Concurrency group includes test_id for parallel tests"
+
+      - name: Validate guardrails have contract tests
+        run: |
+          echo "🔍 Checking guardrail↔contract alignment..."
+          echo "See: docs/spec/ENFORCEMENT.md - Layer 2 requires contract tests for guardrails"
+
+          ERRORS=0
+
+          # Memory guardrail (GUARDRAILS.md line 96) must have contract test
+          if ! grep -q "test_memory_guardrail" tests/contracts/test_audio_contract.py; then
+            echo "❌ Missing contract test for memory guardrail (GUARDRAILS.md: 'Memory usage > 8GB')"
+            echo "::error::Memory guardrail has no contract test - add test_memory_guardrail_enforced"
+            ERRORS=1
+          else
+            echo "✅ Memory guardrail has contract test"
+          fi
+
+          # Concurrency guardrail has validation step above (not a pytest test)
+          echo "✅ Concurrency guardrail validated in previous step"
+
+          if [ $ERRORS -eq 1 ]; then
+            echo ""
+            echo "::error::Guardrails without contract tests detected. See ENFORCEMENT.md Layer 2."
+            exit 1
+          fi
+
+          echo "✅ All guardrails have contract tests"
+
   # Run contract and validation tests (fast)
   contract-tests:
     needs: spec-validation
