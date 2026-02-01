@@ -1,8 +1,8 @@
 {
   "catalog_version": "1.0",
   "created_at": "2026-01-30T01:38:24.843138",
-  "last_updated": "2026-01-30T01:38:28.026664",
-  "total_videos": 2,
+  "last_updated": "2026-02-01T05:02:09.550236",
+  "total_videos": 12,
   "videos": [
     {
       "catalog_id": "video_0001_20260130_013826_32197db7",
@@ -252,6 +252,226 @@
           ]
         },
         "rendered_at": "2026-01-30T01:37:53.993613"
+      }
+    },
+    {
+      "catalog_id": "video_0003_20260201_050152_bd076b22",
+      "youtube_id": "uq0Na-GZ38I",
+      "youtube_url": "https://youtube.com/watch?v=uq0Na-GZ38I",
+      "title": "Sounds for an Overactive Mind | 30 Seconds Evolving Focus Music | No Loops",
+      "mood": "deep_focus",
+      "duration": 30,
+      "duration_str": "",
+      "seed": null,
+      "version": "standard",
+      "rhythm": "ambient",
+      "rhythm_name": "",
+      "uploaded_at": "2026-02-01T05:01:52.737339",
+      "generated_at": "2026-02-01T05:01:52.737339",
+      "metadata": {
+        "video_title": "Sounds for an Overactive Mind | 30 Seconds Evolving Focus Music | No Loops",
+        "mood": "deep_focus",
+        "duration": 30,
+        "description": "Deep concentration and flow state - Hypnotic fractal journey",
+        "tags": []
+      }
+    },
+    {
+      "catalog_id": "video_0004_20260201_050155_74962989",
+      "youtube_id": "_6HcwPMisEA",
+      "youtube_url": "https://youtube.com/watch?v=_6HcwPMisEA",
+      "title": "Can't Sleep? | 30 Seconds Gentle Drift | Evolving Sounds That Never Repeat",
+      "mood": "sleep",
+      "duration": 30,
+      "duration_str": "",
+      "seed": null,
+      "version": "standard",
+      "rhythm": "ambient",
+      "rhythm_name": "",
+      "uploaded_at": "2026-02-01T05:01:55.298413",
+      "generated_at": "2026-02-01T05:01:55.298413",
+      "metadata": {
+        "video_title": "Can't Sleep? | 30 Seconds Gentle Drift | Evolving Sounds That Never Repeat",
+        "mood": "sleep",
+        "duration": 30,
+        "description": "Deep relaxation and sleep induction - Gentle fractal drift",
+        "tags": []
+      }
+    },
+    {
+      "catalog_id": "video_0005_20260201_050156_aba3a0bb",
+      "youtube_id": "oEpxFE0Q2IM",
+      "youtube_url": "https://youtube.com/watch?v=oEpxFE0Q2IM",
+      "title": "Unwind After a Long Day | 30 Seconds Chill Ambient | Continuously Evolving",
+      "mood": "chill",
+      "duration": 30,
+      "duration_str": "",
+      "seed": null,
+      "version": "standard",
+      "rhythm": "ambient",
+      "rhythm_name": "",
+      "uploaded_at": "2026-02-01T05:01:56.766693",
+      "generated_at": "2026-02-01T05:01:56.766693",
+      "metadata": {
+        "video_title": "Unwind After a Long Day | 30 Seconds Chill Ambient | Continuously Evolving",
+        "mood": "chill",
+        "duration": 30,
+        "description": "Relaxed and peaceful state - Gamelan rhythm",
+        "tags": []
+      }
+    },
+    {
+      "catalog_id": "video_0006_20260201_050158_6288626f",
+      "youtube_id": "MhsVea1aU-I",
+      "youtube_url": "https://youtube.com/watch?v=MhsVea1aU-I",
+      "title": "Study Without Distractions | 30 Seconds Focus Soundscape | Always Evolving",
+      "mood": "study",
+      "duration": 30,
+      "duration_str": "",
+      "seed": null,
+      "version": "standard",
+      "rhythm": "ambient",
+      "rhythm_name": "",
+      "uploaded_at": "2026-02-01T05:01:58.755698",
+      "generated_at": "2026-02-01T05:01:58.755698",
+      "metadata": {
+        "video_title": "Study Without Distractions | 30 Seconds Focus Soundscape | Always Evolving",
+        "mood": "study",
+        "duration": 30,
+        "description": "Alert focus and learning state - Taiko rhythm",
+        "tags": []
+      }
+    },
+    {
+      "catalog_id": "video_0007_20260201_050200_d41e280c",
+      "youtube_id": "gOrWDi3DQjs",
+      "youtube_url": "https://youtube.com/watch?v=gOrWDi3DQjs",
+      "title": "Get Moving | 30 Seconds Energizing Ambient Beats | Non-Repeating Flow",
+      "mood": "energize",
+      "duration": 30,
+      "duration_str": "",
+      "seed": null,
+      "version": "standard",
+      "rhythm": "ambient",
+      "rhythm_name": "",
+      "uploaded_at": "2026-02-01T05:02:00.579454",
+      "generated_at": "2026-02-01T05:02:00.579454",
+      "metadata": {
+        "video_title": "Get Moving | 30 Seconds Energizing Ambient Beats | Non-Repeating Flow",
+        "mood": "energize",
+        "duration": 30,
+        "description": "Energized and motivated state - Kuku rhythm",
+        "tags": []
+      }
+    },
+    {
+      "catalog_id": "video_0008_20260201_050202_e91ecf29",
+      "youtube_id": "kkzz-0eXIoM",
+      "youtube_url": "https://youtube.com/watch?v=kkzz-0eXIoM",
+      "title": "Sacred Space | 30 Seconds Ceremonial Sounds | Evolving Ritual Ambient",
+      "mood": "ceremony",
+      "duration": 30,
+      "duration_str": "",
+      "seed": null,
+      "version": "standard",
+      "rhythm": "ambient",
+      "rhythm_name": "",
+      "uploaded_at": "2026-02-01T05:02:02.313406",
+      "generated_at": "2026-02-01T05:02:02.313406",
+      "metadata": {
+        "video_title": "Sacred Space | 30 Seconds Ceremonial Sounds | Evolving Ritual Ambient",
+        "mood": "ceremony",
+        "duration": 30,
+        "description": "Ritual and ceremony - Candombl\u00e9 rhythm",
+        "tags": []
+      }
+    },
+    {
+      "catalog_id": "video_0009_20260201_050204_eb9f915e",
+      "youtube_id": "TNzRlR3aDao",
+      "youtube_url": "https://youtube.com/watch?v=TNzRlR3aDao",
+      "title": "Find Your Strength | 30 Seconds Power Drums | Builds & Evolves",
+      "mood": "warrior",
+      "duration": 30,
+      "duration_str": "",
+      "seed": null,
+      "version": "standard",
+      "rhythm": "ambient",
+      "rhythm_name": "",
+      "uploaded_at": "2026-02-01T05:02:04.310910",
+      "generated_at": "2026-02-01T05:02:04.310910",
+      "metadata": {
+        "video_title": "Find Your Strength | 30 Seconds Power Drums | Builds & Evolves",
+        "mood": "warrior",
+        "duration": 30,
+        "description": "Power and strength - Burundi rhythm",
+        "tags": []
+      }
+    },
+    {
+      "catalog_id": "video_0010_20260201_050206_156c61a0",
+      "youtube_id": "P7mT-d6rLyg",
+      "youtube_url": "https://youtube.com/watch?v=P7mT-d6rLyg",
+      "title": "Fall Asleep to Gentle Rain | 30 Seconds | Evolving Storm, Never Loops",
+      "mood": "rain_sleep",
+      "duration": 30,
+      "duration_str": "",
+      "seed": null,
+      "version": "standard",
+      "rhythm": "ambient",
+      "rhythm_name": "",
+      "uploaded_at": "2026-02-01T05:02:06.031779",
+      "generated_at": "2026-02-01T05:02:06.031779",
+      "metadata": {
+        "video_title": "Fall Asleep to Gentle Rain | 30 Seconds | Evolving Storm, Never Loops",
+        "mood": "rain_sleep",
+        "duration": 30,
+        "description": "Rain sounds for deep sleep - Proven top performer",
+        "tags": []
+      }
+    },
+    {
+      "catalog_id": "video_0011_20260201_050207_8ec1b321",
+      "youtube_id": "bTTOLj_krA0",
+      "youtube_url": "https://youtube.com/watch?v=bTTOLj_krA0",
+      "title": "Cozy Night by the Fire | 30 Seconds | Crackling That Shifts & Breathes",
+      "mood": "fireplace",
+      "duration": 30,
+      "duration_str": "",
+      "seed": null,
+      "version": "standard",
+      "rhythm": "ambient",
+      "rhythm_name": "",
+      "uploaded_at": "2026-02-01T05:02:07.788243",
+      "generated_at": "2026-02-01T05:02:07.788243",
+      "metadata": {
+        "video_title": "Cozy Night by the Fire | 30 Seconds | Crackling That Shifts & Breathes",
+        "mood": "fireplace",
+        "duration": 30,
+        "description": "Cozy fireplace crackling - Comfort content",
+        "tags": []
+      }
+    },
+    {
+      "catalog_id": "video_0012_20260201_050209_a4c18440",
+      "youtube_id": "dWoppwh6RIk",
+      "youtube_url": "https://youtube.com/watch?v=dWoppwh6RIk",
+      "title": "Drift Off to Ocean Waves | 30 Seconds | Endless Tides, Never Repeats",
+      "mood": "ocean_waves",
+      "duration": 30,
+      "duration_str": "",
+      "seed": null,
+      "version": "standard",
+      "rhythm": "ambient",
+      "rhythm_name": "",
+      "uploaded_at": "2026-02-01T05:02:09.550189",
+      "generated_at": "2026-02-01T05:02:09.550189",
+      "metadata": {
+        "video_title": "Drift Off to Ocean Waves | 30 Seconds | Endless Tides, Never Repeats",
+        "mood": "ocean_waves",
+        "duration": 30,
+        "description": "Ocean waves for sleep and relaxation",
+        "tags": []
       }
     }
   ]
