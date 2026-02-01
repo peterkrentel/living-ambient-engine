@@ -15,9 +15,9 @@
 | `rhythm_volume` | 0.0 | 1.0 | 0.5 | Clamp |
 | `ambient_volume` | 0.0 | 1.0 | 1.0 | Clamp |
 | `duration` | 5s | 4h | 5min | Validate |
-| `fps` | 15 | 60 | 24 | Validate |
-| `resolution.width` | 640 | 3840 | 1280 | Validate |
-| `resolution.height` | 480 | 2160 | 720 | Validate |
+| `fps` | 15 | 60 | 15 | Validate |
+| `resolution.width` | 640 | 3840 | 640 | Validate |
+| `resolution.height` | 480 | 2160 | 480 | Validate |
 
 ## Forbidden States
 
@@ -138,24 +138,24 @@ visual_complexity: float
   default: 0.7
   enforcement: CLAMP
 
-# Resolution
+# Resolution (smaller is better for ambient YouTube)
 width: int
   min: 640     # Minimum for YouTube
   max: 3840    # 4K maximum
-  default: 1280
+  default: 640 # Use minimum - smaller files, faster renders
   enforcement: VALIDATE
 
 height: int
   min: 480
   max: 2160
-  default: 720
+  default: 480 # Use minimum - smaller files, faster renders
   enforcement: VALIDATE
 
-# Frame rate
+# Frame rate (lower is fine for ambient)
 fps: int
   min: 15      # Minimum for smooth video
   max: 60      # Maximum for ambient (no need higher)
-  default: 24
+  default: 15  # Use minimum - smaller files, faster renders
   enforcement: VALIDATE
 ```
 
