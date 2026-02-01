@@ -174,9 +174,17 @@ on:
 
       # ===== GENERATION PARAMETERS =====
       duration:
-        description: 'Duration (e.g., 30s, 5min, 1h, 3h)'
+        description: 'Duration (max 4h per guardrails)'
         required: false
+        type: choice
         default: '5min'
+        options:
+          - '30s'
+          - '5min'
+          - '10min'
+          - '1h'
+          - '3h'
+          - '4h'
       
       seed:
         description: 'Random Seed (for reproducibility, leave empty for random)'
@@ -687,8 +695,8 @@ jobs:
               else:
                   duration = int(duration_str)
               
-              if duration < 1 or duration > 28800:  # Max 8 hours
-                  print(f"❌ Error: Duration must be between 1 second and 8 hours, got {duration} seconds")
+              if duration < 10 or duration > 14400:  # Min 10s, Max 4h per GUARDRAILS.md
+                  print(f"❌ Error: Duration must be between 10 seconds and 4 hours (per guardrails), got {duration} seconds")
                   sys.exit(1)
           except ValueError as e:
               print(f"❌ Error: Invalid duration format '{duration_str}'. Use formats like: 30s, 5min, 1h")

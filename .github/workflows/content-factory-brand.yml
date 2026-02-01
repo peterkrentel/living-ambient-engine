@@ -8,13 +8,20 @@ on:
   workflow_dispatch:
     inputs:
       moods:
-        description: 'Nature: rain_sleep, ocean_waves, fireplace, forest_morning | Music: deep_focus, sleep, chill, study, lofi_study, piano_relax | Tribal: warrior, ceremony, trance, energize'
+        description: 'Moods (comma-separated). VALID: rain_sleep, ocean_waves, fireplace, forest_morning, deep_focus, sleep, chill, study, energize, lofi_study, piano_relax, warrior, ceremony, trance. Or use: all'
         required: false
         default: 'rain_sleep,deep_focus,ocean_waves'
-      durations:
-        description: 'Durations: 30s, 10min, 1h, 3h, 8h (longer = more watch time)'
+      duration:
+        description: 'Duration. VALID: 30s, 10min, 1h, 3h, 4h (max)'
         required: false
+        type: choice
         default: '1h'
+        options:
+          - '30s'
+          - '10min'
+          - '1h'
+          - '3h'
+          - '4h'
       dual:
         description: 'Generate BOTH ambience-only and melody versions (2x videos)'
         required: false
@@ -73,7 +80,7 @@ jobs:
           fi
           python batch_generate.py \
             --moods "${{ github.event.inputs.moods || 'rain_sleep,deep_focus,ocean_waves' }}" \
-            --durations "${{ github.event.inputs.durations || '1h' }}" \
+            --durations "${{ github.event.inputs.duration || '1h' }}" \
             $DUAL_FLAG \
             --output ./generated
 
@@ -116,12 +123,12 @@ jobs:
           data = json.load(sys.stdin)
           dual = data.get('dual_mode', False)
           print(f\"- Mode: {'DUAL (Ambience + Melody)' if dual else 'Single'}\")
-          print(f\"- Jobs: {data['total']}\")
-          print(f\"- Success: {data['success']}\")
-          print(f\"- Total Videos: {data.get('total_videos', data['success'])}\")
+          print(f\"- Jobs: {data.get('total_jobs', data.get('total', 0))}\")
+          print(f\"- Success: {data.get('successful_jobs', data.get('success', 0))}\")
+          print(f\"- Total Videos: {data.get('total_videos', 0)}\")
           for v in data.get('videos', []):
-              r = v.get('result', {})
-              print(f\"  - {r.get('video_title', 'Unknown')}\")
+              title = v.get('video_title', v.get('result', {}).get('video_title', 'Unknown'))
+              print(f\"  - {title}\")
           "
 
   # Job 2: Download artifacts and upload to YouTube
