@@ -3,7 +3,7 @@
 > **Hard limits and forbidden states that must never be violated.**
 > These are non-negotiable constraints enforced across all components.
 
-## Quick Reference
+## Quick Reference - Numeric Parameters
 
 | Parameter | Min | Max | Default | Enforcement |
 |-----------|-----|-----|---------|-------------|
@@ -18,6 +18,52 @@
 | `fps` | 15 | 60 | 24 | Validate |
 | `resolution.width` | 640 | 3840 | 1280 | Validate |
 | `resolution.height` | 480 | 2160 | 720 | Validate |
+
+## Valid Moods
+
+Canonical list of valid mood identifiers. Source: `config/moods.yaml`
+
+| Category | Valid Values |
+|----------|--------------|
+| **Nature** | `rain_sleep`, `ocean_waves`, `fireplace`, `forest_morning` |
+| **Music** | `deep_focus`, `sleep`, `chill`, `study`, `energize`, `lofi_study`, `piano_relax` |
+| **Tribal** | `warrior`, `ceremony`, `trance` |
+
+**Special value:** `all` - expands to all 14 moods
+
+**Enforcement:** Validate + Reject. Unknown mood causes immediate failure with error listing valid options.
+
+**Adding new moods:**
+1. Add to `config/moods.yaml`
+2. Update this table
+3. Workflows auto-discover from config (no workflow changes needed)
+
+## Valid Durations (Workflow Inputs)
+
+| Value | Seconds | Use Case |
+|-------|---------|----------|
+| `30s` | 30 | Test/preview |
+| `5min` | 300 | Quick creation (art-creator default) |
+| `10min` | 600 | Short session |
+| `1h` | 3600 | Standard session |
+| `3h` | 10800 | Extended session |
+| `4h` | 14400 | Maximum allowed |
+
+**Enforcement:** Dropdown selection in workflows (no free text = no typos)
+
+## Valid Moods
+
+Moods are defined in `config/moods.yaml`. Only these values are accepted:
+
+| Category | Valid Moods | Description |
+|----------|-------------|-------------|
+| **Nature** | `rain_sleep`, `ocean_waves`, `fireplace`, `forest_morning` | Ambient nature sounds, no drums |
+| **Music** | `deep_focus`, `sleep`, `chill`, `study`, `energize`, `lofi_study`, `piano_relax` | Musical ambient with optional rhythm |
+| **Tribal** | `warrior`, `ceremony`, `trance` | Tribal drums and ceremonial sounds |
+
+**Special value:** `all` - generates all 14 moods
+
+**Enforcement:** Validate + Reject (unknown moods cause immediate failure with list of valid options)
 
 ## Forbidden States
 
