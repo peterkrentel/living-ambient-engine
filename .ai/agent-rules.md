@@ -27,8 +27,8 @@ Normative rules for any AI agent working on this codebase.
 | tempo | 20 | 200 | 60 |
 | visual_speed | 0.01 | 1.5 | 0.5 |
 | visual_complexity | 0.1 | 1.0 | 0.7 |
-| duration | 10s | 4h | 5min |
-| fps | 15 | 60 | 24 |
+| duration | 5s | 4h | 5min |
+| fps | 15 | 60 | 15 |
 
 ## Enforcement
 

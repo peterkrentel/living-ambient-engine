@@ -207,8 +207,75 @@ on:
         type: boolean
         default: false
 
-  # Automatic test trigger - tests all input combinations
+  # Called by test-art-creator.yml with specific inputs
   workflow_call:
+    inputs:
+      art_period:
+        type: string
+        required: false
+        default: 'modern'
+      visual_pattern:
+        type: string
+        required: false
+        default: 'auto'
+      visual_speed:
+        type: string
+        required: false
+        default: 'auto'
+      visual_complexity:
+        type: string
+        required: false
+        default: 'auto'
+      color_palette:
+        type: string
+        required: false
+        default: 'auto'
+      music_style:
+        type: string
+        required: false
+        default: 'gnawa'
+      tempo:
+        type: string
+        required: false
+        default: '60'
+      brainwave_frequency:
+        type: string
+        required: false
+        default: '10'
+      solfeggio_frequency:
+        type: string
+        required: false
+        default: '528'
+      rhythm_volume:
+        type: string
+        required: false
+        default: '0.5'
+      ambient_volume:
+        type: string
+        required: false
+        default: '1.0'
+      duration:
+        type: string
+        required: false
+        default: '5min'
+      journey:
+        type: string
+        required: false
+        default: 'steady'
+      journey_intensity:
+        type: string
+        required: false
+        default: 'moderate'
+      test_id:
+        type: string
+        required: false
+        default: ''
+        description: 'Test identifier for artifact naming'
+      skip_artifact_upload:
+        type: string
+        required: false
+        default: 'false'
+        description: 'Skip artifact upload for faster tests'
 
 # Prevent overlapping runs and resource contention
 concurrency:
@@ -223,77 +290,12 @@ permissions:
   actions: read
 
 jobs:
+  # =============================================================================
+  # SINGLE JOB - Works for both manual (workflow_dispatch) and test (workflow_call)
+  # =============================================================================
   create_art:
     runs-on: ubuntu-latest
     timeout-minutes: 120
-    strategy:
-      fail-fast: false
-      matrix:
-        # Matrix is used for workflow_call tests; workflow_dispatch runs single job
-        include:
-          # Test 1: Cave art with awakening journey
-          - test_id: 1
-            art_period: 'cave_art'
-            visual_pattern: 'organic_flow'
-            color_palette: 'cave_earth'
-            music_style: 'heartbeat'
-            solfeggio_frequency: '174'
-            journey: 'awakening'
-            journey_intensity: 'subtle'
-          # Test 2: Renaissance with breathing journey
-          - test_id: 2
-            art_period: 'renaissance'
-            visual_pattern: 'fibonacci_spiral'
-            color_palette: 'renaissance_warm'
-            music_style: 'gnawa'
-            solfeggio_frequency: '528'
-            journey: 'breathing'
-            journey_intensity: 'moderate'
-          # Test 3: Modern with trance journey
-          - test_id: 3
-            art_period: 'modern'
-            visual_pattern: 'geometric_morph'
-            color_palette: 'psychedelic'
-            music_style: 'gamelan'
-            solfeggio_frequency: '741'
-            journey: 'trance'
-            journey_intensity: 'dramatic'
-          # Test 4: Future with deep_dive journey
-          - test_id: 4
-            art_period: 'future'
-            visual_pattern: 'starfield'
-            color_palette: 'cyberpunk'
-            music_style: 'none'
-            solfeggio_frequency: '963'
-            journey: 'deep_dive'
-            journey_intensity: 'moderate'
-          # Test 5: Impressionist with waves journey
-          - test_id: 5
-            art_period: 'impressionist'
-            visual_pattern: 'flowing_waves'
-            color_palette: 'impressionist_soft'
-            music_style: 'candomble'
-            solfeggio_frequency: '639'
-            journey: 'waves'
-            journey_intensity: 'subtle'
-          # Test 6: Baroque with crescendo journey
-          - test_id: 6
-            art_period: 'baroque'
-            visual_pattern: 'julia'
-            color_palette: 'auto'
-            music_style: 'taiko'
-            solfeggio_frequency: '417'
-            journey: 'crescendo'
-            journey_intensity: 'dramatic'
-          # Test 7: Steady journey (default) with auto settings
-          - test_id: 7
-            art_period: 'medieval'
-            visual_pattern: 'sacred_geometry'
-            color_palette: 'medieval_rich'
-            music_style: 'burundi'
-            solfeggio_frequency: '396'
-            journey: 'steady'
-            journey_intensity: 'moderate'
 
     steps:
       - name: Checkout repository
@@ -302,54 +304,31 @@ jobs:
       - name: Set input values
         id: inputs
         run: |
-          # Use matrix values for workflow_call/pull_request, manual inputs for workflow_dispatch
-          if [ "${{ github.event_name }}" = "workflow_call" ] || [ "${{ github.event_name }}" = "pull_request" ]; then
-            echo "Using matrix values for testing (event: ${{ github.event_name }})"
-            echo "art_period=${{ matrix.art_period }}" >> $GITHUB_OUTPUT
-            echo "visual_pattern=${{ matrix.visual_pattern }}" >> $GITHUB_OUTPUT
-            echo "visual_speed=0.5" >> $GITHUB_OUTPUT
-            echo "visual_complexity=0.7" >> $GITHUB_OUTPUT
-            echo "color_palette=${{ matrix.color_palette }}" >> $GITHUB_OUTPUT
-            echo "music_style=${{ matrix.music_style }}" >> $GITHUB_OUTPUT
-            echo "tempo=60" >> $GITHUB_OUTPUT
-            echo "brainwave_frequency=10" >> $GITHUB_OUTPUT
-            echo "solfeggio_frequency=${{ matrix.solfeggio_frequency }}" >> $GITHUB_OUTPUT
-            echo "rhythm_volume=0.5" >> $GITHUB_OUTPUT
-            echo "ambient_volume=1.0" >> $GITHUB_OUTPUT
-            echo "duration=20s" >> $GITHUB_OUTPUT
-            echo "seed=" >> $GITHUB_OUTPUT
-            echo "title=" >> $GITHUB_OUTPUT
-            echo "description=" >> $GITHUB_OUTPUT
-            echo "upload_to_brand=false" >> $GITHUB_OUTPUT
-            echo "custom_primary_rgb=100,150,200" >> $GITHUB_OUTPUT
-            echo "custom_secondary_rgb=200,100,150" >> $GITHUB_OUTPUT
-            echo "custom_accent_rgb=255,255,100" >> $GITHUB_OUTPUT
-            echo "journey=${{ matrix.journey }}" >> $GITHUB_OUTPUT
-            echo "journey_intensity=${{ matrix.journey_intensity }}" >> $GITHUB_OUTPUT
-          else
-            echo "Using manual workflow_dispatch inputs"
-            echo "art_period=${{ github.event.inputs.art_period || 'modern' }}" >> $GITHUB_OUTPUT
-            echo "visual_pattern=${{ github.event.inputs.visual_pattern || 'auto' }}" >> $GITHUB_OUTPUT
-            echo "visual_speed=${{ github.event.inputs.visual_speed || 'auto' }}" >> $GITHUB_OUTPUT
-            echo "visual_complexity=${{ github.event.inputs.visual_complexity || 'auto' }}" >> $GITHUB_OUTPUT
-            echo "color_palette=${{ github.event.inputs.color_palette || 'auto' }}" >> $GITHUB_OUTPUT
-            echo "music_style=${{ github.event.inputs.music_style || 'gnawa' }}" >> $GITHUB_OUTPUT
-            echo "tempo=${{ github.event.inputs.tempo || '60' }}" >> $GITHUB_OUTPUT
-            echo "brainwave_frequency=${{ github.event.inputs.brainwave_frequency || '10' }}" >> $GITHUB_OUTPUT
-            echo "solfeggio_frequency=${{ github.event.inputs.solfeggio_frequency || '528' }}" >> $GITHUB_OUTPUT
-            echo "rhythm_volume=${{ github.event.inputs.rhythm_volume || '0.5' }}" >> $GITHUB_OUTPUT
-            echo "ambient_volume=${{ github.event.inputs.ambient_volume || '1.0' }}" >> $GITHUB_OUTPUT
-            echo "duration=${{ github.event.inputs.duration || '5min' }}" >> $GITHUB_OUTPUT
-            echo "seed=${{ github.event.inputs.seed || '' }}" >> $GITHUB_OUTPUT
-            echo "title=${{ github.event.inputs.title || '' }}" >> $GITHUB_OUTPUT
-            echo "description=${{ github.event.inputs.description || '' }}" >> $GITHUB_OUTPUT
-            echo "upload_to_brand=${{ github.event.inputs.upload_to_brand || 'false' }}" >> $GITHUB_OUTPUT
-            echo "custom_primary_rgb=${{ github.event.inputs.custom_primary_rgb || '100,150,200' }}" >> $GITHUB_OUTPUT
-            echo "custom_secondary_rgb=${{ github.event.inputs.custom_secondary_rgb || '200,100,150' }}" >> $GITHUB_OUTPUT
-            echo "custom_accent_rgb=${{ github.event.inputs.custom_accent_rgb || '255,255,100' }}" >> $GITHUB_OUTPUT
-            echo "journey=${{ github.event.inputs.journey || 'steady' }}" >> $GITHUB_OUTPUT
-            echo "journey_intensity=${{ github.event.inputs.journey_intensity || 'moderate' }}" >> $GITHUB_OUTPUT
-          fi
+          # For workflow_call: use inputs.X
+          # For workflow_dispatch: use github.event.inputs.X
+          # Fallback to defaults if neither provided
+          echo "art_period=${{ inputs.art_period || github.event.inputs.art_period || 'modern' }}" >> $GITHUB_OUTPUT
+          echo "visual_pattern=${{ inputs.visual_pattern || github.event.inputs.visual_pattern || 'auto' }}" >> $GITHUB_OUTPUT
+          echo "visual_speed=${{ inputs.visual_speed || github.event.inputs.visual_speed || 'auto' }}" >> $GITHUB_OUTPUT
+          echo "visual_complexity=${{ inputs.visual_complexity || github.event.inputs.visual_complexity || 'auto' }}" >> $GITHUB_OUTPUT
+          echo "color_palette=${{ inputs.color_palette || github.event.inputs.color_palette || 'auto' }}" >> $GITHUB_OUTPUT
+          echo "music_style=${{ inputs.music_style || github.event.inputs.music_style || 'gnawa' }}" >> $GITHUB_OUTPUT
+          echo "tempo=${{ inputs.tempo || github.event.inputs.tempo || '60' }}" >> $GITHUB_OUTPUT
+          echo "brainwave_frequency=${{ inputs.brainwave_frequency || github.event.inputs.brainwave_frequency || '10' }}" >> $GITHUB_OUTPUT
+          echo "solfeggio_frequency=${{ inputs.solfeggio_frequency || github.event.inputs.solfeggio_frequency || '528' }}" >> $GITHUB_OUTPUT
+          echo "rhythm_volume=${{ inputs.rhythm_volume || github.event.inputs.rhythm_volume || '0.5' }}" >> $GITHUB_OUTPUT
+          echo "ambient_volume=${{ inputs.ambient_volume || github.event.inputs.ambient_volume || '1.0' }}" >> $GITHUB_OUTPUT
+          echo "duration=${{ inputs.duration || github.event.inputs.duration || '5min' }}" >> $GITHUB_OUTPUT
+          echo "seed=${{ github.event.inputs.seed || '' }}" >> $GITHUB_OUTPUT
+          echo "title=${{ github.event.inputs.title || '' }}" >> $GITHUB_OUTPUT
+          echo "description=${{ github.event.inputs.description || '' }}" >> $GITHUB_OUTPUT
+          echo "upload_to_brand=${{ github.event.inputs.upload_to_brand || 'false' }}" >> $GITHUB_OUTPUT
+          echo "custom_primary_rgb=${{ github.event.inputs.custom_primary_rgb || '100,150,200' }}" >> $GITHUB_OUTPUT
+          echo "custom_secondary_rgb=${{ github.event.inputs.custom_secondary_rgb || '200,100,150' }}" >> $GITHUB_OUTPUT
+          echo "custom_accent_rgb=${{ github.event.inputs.custom_accent_rgb || '255,255,100' }}" >> $GITHUB_OUTPUT
+          echo "journey=${{ inputs.journey || github.event.inputs.journey || 'steady' }}" >> $GITHUB_OUTPUT
+          echo "journey_intensity=${{ inputs.journey_intensity || github.event.inputs.journey_intensity || 'moderate' }}" >> $GITHUB_OUTPUT
+          echo "test_id=${{ inputs.test_id || '' }}" >> $GITHUB_OUTPUT
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -716,8 +695,8 @@ jobs:
               else:
                   duration = int(duration_str)
               
-              if duration < 10 or duration > 14400:  # Min 10s, Max 4h per GUARDRAILS.md
-                  print(f"❌ Error: Duration must be between 10 seconds and 4 hours (per guardrails), got {duration} seconds")
+              if duration < 5 or duration > 14400:  # Min 5s, Max 4h per GUARDRAILS.md
+                  print(f"❌ Error: Duration must be between 5 seconds and 4 hours (per guardrails), got {duration} seconds")
                   sys.exit(1)
           except ValueError as e:
               print(f"❌ Error: Invalid duration format '{duration_str}'. Use formats like: 30s, 5min, 1h")
@@ -790,9 +769,10 @@ jobs:
           PYTHON_SCRIPT
       
       - name: Upload artwork as artifact
+        if: ${{ inputs.skip_artifact_upload != 'true' }}
         uses: actions/upload-artifact@v4
         with:
-          name: artistic-creation-${{ github.run_number }}-${{ matrix.test_id || 'manual' }}
+          name: artistic-creation-${{ github.run_number }}-${{ steps.inputs.outputs.test_id || 'manual' }}
           path: ./art_output/
           retention-days: 30
       

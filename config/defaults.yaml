@@ -1,11 +1,12 @@
 # Default settings for Living Ambient Engine
 
 # Video settings - optimized for small file size
+# Uses minimum per GUARDRAILS.md - smaller is better for ambient YouTube
 video:
-  fps: 24
+  fps: 15
   resolution:
-    width: 1280
-    height: 720
+    width: 640
+    height: 480
   codec: "libx264"
   bitrate: "2000k"
   preset: "faster"  # ultrafast, superfast, veryfast, faster, fast, medium, slow, slower, veryslow

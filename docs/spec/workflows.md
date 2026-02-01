@@ -14,7 +14,7 @@ Four workflows automate video generation, YouTube deployment, and testing.
 | `content-factory.yml` | Schedule + Manual | Batch generation + upload | Personal |
 | `content-factory-brand.yml` | Manual | Batch generation + upload | Brand |
 | `art-creator.yml` | Manual / workflow_call | Single custom video | Brand (optional) |
-| `test-art-creator.yml` | Manual | Test all input combinations | None (artifacts only) |
+| `test-art-creator.yml` | Manual + PR (path filter) | Test all input combinations | None (no artifacts) |
 
 ## content-factory.yml
 
@@ -91,11 +91,21 @@ workflow_call:      # Called by test-art-creator.yml
 
 ### Purpose
 Tests all input combinations for `art-creator.yml` by triggering it via `workflow_call`.
-Runs 7 test cases in parallel with 10-second videos - fast validation without YouTube upload.
+The test matrix is defined in this workflow and calls art-creator.yml 7 times with different inputs.
+Runs 7 test cases in parallel with 5-second videos (minimum per GUARDRAILS.md) - fast validation without YouTube upload or artifact storage.
 
 ### Trigger
 ```yaml
-workflow_dispatch:  # Manual only
+workflow_dispatch:  # Manual trigger
+pull_request:       # Auto-trigger on workflow/core code changes
+  paths:
+    - '.github/workflows/art-creator.yml'
+    - '.github/workflows/test-art-creator.yml'
+    - 'audio/**'
+    - 'visuals/**'
+    - 'orchestrator/**'
+    - 'config/**'
+    - 'render/**'
 ```
 
 ### Test Matrix Coverage
@@ -115,7 +125,7 @@ workflow_dispatch:  # Manual only
 ```
 
 ### Outputs
-- 7 video artifacts (10s each)
+- No artifacts saved (tests use `skip_artifact_upload: true`)
 - No YouTube upload (skipped for tests)
 - Failure in any test case reported in job summary
 
