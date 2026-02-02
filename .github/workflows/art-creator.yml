@@ -776,26 +776,31 @@ jobs:
               else:
                   video_title = f"{art_period.replace('_', ' ').title()} {visual_pattern.replace('_', ' ').title()} - Ambient {music_style.replace('_', ' ').title()}"
 
+              # Build description using join to avoid YAML parsing issues with f-string braces
+              desc_lines = [
+                  f"ASMR Algorithmic Art | {art_period.replace('_', ' ').title()} Inspired Ambient",
+                  "",
+                  "🎨 Unique algorithmic art created with Living Ambient Engine.",
+                  "",
+                  "✨ Art Configuration:",
+                  f"• Period: {art_period.replace('_', ' ').title()}",
+                  f"• Visual Pattern: {visual_pattern.replace('_', ' ').title()}",
+                  f"• Music Style: {music_style.replace('_', ' ').title()}",
+                  "",
+                  "🎵 Audio:",
+                  f"• Tempo: {os.environ.get('TEMPO_INPUT', 'N/A')} BPM",
+                  f"• Brainwave: {os.environ.get('BRAINWAVE_FREQ_INPUT', 'N/A')} Hz",
+                  f"• Solfeggio: {os.environ.get('SOLFEGGIO_FREQ_INPUT', 'N/A')} Hz",
+                  "",
+                  f"Seed: {result['metadata'].get('seed', 'N/A')} (save to recreate)",
+                  f"Created by: @{os.environ.get('GITHUB_ACTOR_NAME', 'unknown')}",
+                  "",
+                  "#ASMR #ambient #meditation #algorithmicart #focusmusic"
+              ]
+
               youtube_metadata = {
                   'video_title': video_title,
-                  'description_template': f"""ASMR Algorithmic Art | {art_period.replace('_', ' ').title()} Inspired Ambient
-
-🎨 Unique algorithmic art created with Living Ambient Engine.
-
-✨ Art Configuration:
-• Period: {art_period.replace('_', ' ').title()}
-• Visual Pattern: {visual_pattern.replace('_', ' ').title()}
-• Music Style: {music_style.replace('_', ' ').title()}
-
-🎵 Audio:
-• Tempo: {os.environ.get('TEMPO_INPUT', 'N/A')} BPM
-• Brainwave: {os.environ.get('BRAINWAVE_FREQ_INPUT', 'N/A')} Hz
-• Solfeggio: {os.environ.get('SOLFEGGIO_FREQ_INPUT', 'N/A')} Hz
-
-Seed: {result['metadata'].get('seed', 'N/A')} (save to recreate)
-Created by: @{os.environ.get('GITHUB_ACTOR_NAME', 'unknown')}
-
-#ASMR #ambient #meditation #algorithmicart #focusmusic""",
+                  'description_template': '\n'.join(desc_lines),
                   'tags': [
                       'ASMR',
                       'algorithmic art',
