@@ -269,6 +269,26 @@ All 7 jobs use:
 2. **Artifacts always saved** - Even if upload fails
 3. **Idempotent uploads** - Re-runs don't create duplicates
 4. **Quota awareness** - Graceful handling of API limits
+5. **Metadata consistency** - ALL uploads use `youtube_upload.py` with `metadata.json`
+
+### Metadata Consistency Rule
+
+**MANDATORY:** All workflows that upload to YouTube MUST:
+
+1. Generate `metadata.json` via orchestrator (or compatible generator)
+2. Call `python youtube_upload.py --batch <directory>`
+3. NOT generate title/description/tags inline in workflow YAML
+
+**Rationale:** Single source of truth for SEO optimization. Tags and descriptions are defined in `moods.yaml` and flow through the pipeline:
+
+```
+moods.yaml → orchestrator → metadata.json → youtube_upload.py → YouTube
+```
+
+**Enforcement:**
+- Contract test: `tests/contracts/test_workflow_metadata_consistency.py`
+- See: [GUARDRAILS.md](./GUARDRAILS.md) § Metadata Consistency Violations
+- See: [orchestrator-youtube.md](./contracts/orchestrator-youtube.md) § Workflow Integration
 
 ## Adding a New Workflow Input
 

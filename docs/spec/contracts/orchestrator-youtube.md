@@ -119,18 +119,45 @@ metadata = {
 
 ## Workflow Integration
 
-In GitHub Actions, the uploader is called via `youtube_upload.py`:
+**MANDATORY:** All workflows that upload to YouTube MUST use `youtube_upload.py`.
+
+### Allowed Pattern
 
 ```yaml
 - name: Upload to YouTube
   env:
     YOUTUBE_TOKEN_PICKLE: ${{ secrets.YOUTUBE_TOKEN_PICKLE }}
   run: |
-    python youtube_upload.py \
-      --file "$VIDEO_PATH" \
-      --title "$TITLE" \
-      --description "$DESCRIPTION"
+    python youtube_upload.py --batch ./generated
 ```
+
+The `--batch` flag reads `metadata.json` from each video directory, which contains:
+- `title` (from `title_template` in moods.yaml)
+- `description_template` (from moods.yaml)
+- `tags` (from moods.yaml)
+
+### Forbidden Pattern
+
+```yaml
+# ❌ FORBIDDEN: Inline metadata generation
+- name: Upload to YouTube
+  run: |
+    python << 'EOF'
+    title = f"My Video - {art_period}"  # ❌ Hardcoded
+    tags = ['ambient', 'meditation']     # ❌ Hardcoded
+    youtube.upload(video, title, ...)
+    EOF
+```
+
+This violates the single source of truth principle. All metadata MUST flow:
+```
+moods.yaml → orchestrator → metadata.json → youtube_upload.py → YouTube API
+```
+
+### Enforcement
+
+- Contract test: `tests/contracts/test_workflow_metadata_consistency.py`
+- See: [GUARDRAILS.md](../GUARDRAILS.md) § Metadata Consistency Violations
 
 ## Exit Codes
 

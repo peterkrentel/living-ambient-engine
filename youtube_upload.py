@@ -369,7 +369,18 @@ def main(video: str, metadata: str, privacy: str, auth: bool, batch: str, update
             meta = json.load(f)
     
     upload_result = upload_single(uploader, video, meta, privacy)
-    
+
+    # Save upload result to file (for workflow integration)
+    if upload_result:
+        result_path = video.replace('.mp4', '_upload_result.json')
+        # Also save to directory's youtube_upload.json for backward compat
+        dir_result_path = os.path.join(os.path.dirname(video), 'youtube_upload.json')
+        with open(result_path, 'w') as f:
+            json.dump(upload_result, f, indent=2)
+        with open(dir_result_path, 'w') as f:
+            json.dump(upload_result, f, indent=2)
+        click.echo(f"📁 Upload result saved: {result_path}")
+
     # Add to content library
     if update_catalog and upload_result:
         try:
