@@ -17,11 +17,17 @@ on:
     paths:
       - '.github/workflows/art-creator.yml'
       - '.github/workflows/test-art-creator.yml'
+      - '.github/workflows/content-factory.yml'
+      - '.github/workflows/content-factory-brand.yml'
       - 'audio/**'
       - 'visuals/**'
       - 'orchestrator/**'
       - 'config/**'
       - 'render/**'
+      - 'youtube_upload.py'
+      - 'youtube/**'
+      - 'tests/contracts/**'
+      - 'docs/spec/**'
 
 permissions:
   contents: read
@@ -147,6 +153,15 @@ jobs:
           # Concurrency guardrail has validation step above (not a pytest test)
           echo "✅ Concurrency guardrail validated in previous step"
 
+          # Metadata consistency guardrail must have contract test
+          if ! grep -q "test_no_inline_metadata_generation" tests/contracts/test_workflow_metadata_consistency.py 2>/dev/null; then
+            echo "❌ Missing contract test for metadata consistency guardrail"
+            echo "::error::Metadata consistency guardrail has no contract test"
+            ERRORS=1
+          else
+            echo "✅ Metadata consistency guardrail has contract test"
+          fi
+
           if [ $ERRORS -eq 1 ]; then
             echo ""
             echo "::error::Guardrails without contract tests detected. See ENFORCEMENT.md Layer 2."
@@ -175,8 +190,9 @@ jobs:
 
       - name: Run contract tests (validation only - fast)
         run: |
-          # Run only validation tests (fast) - generator tests are slow and run via matrix
-          python -m pytest tests/contracts/test_validation_contract.py -v --tb=short
+          # Run validation + workflow metadata consistency tests (fast)
+          # Generator tests are slow and run via matrix
+          python -m pytest tests/contracts/test_validation_contract.py tests/contracts/test_workflow_metadata_consistency.py -v --tb=short
 
   # Run art-creator matrix tests (slower, needs contract tests to pass)
   # Matrix strategy calls art-creator.yml 7 times with different input combinations

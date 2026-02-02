@@ -762,7 +762,69 @@ jobs:
               
               with open(f"{output_dir}/creation_info.json", 'w') as f:
                   json.dump(creation_info, f, indent=2)
-                  
+
+              # Generate metadata.json for youtube_upload.py (metadata consistency rule)
+              # See: docs/spec/GUARDRAILS.md § Metadata Consistency Violations
+              art_period = os.environ.get('ART_PERIOD_INPUT', 'modern')
+              visual_pattern = os.environ.get('VISUAL_PATTERN_INPUT', 'fractal_zoom')
+              music_style = os.environ.get('MUSIC_STYLE_INPUT', 'ambient')
+
+              # SEO-optimized metadata for algorithmic art
+              custom_title = os.environ.get('CUSTOM_TITLE', '').strip()
+              if custom_title:
+                  video_title = custom_title
+              else:
+                  video_title = f"{art_period.replace('_', ' ').title()} {visual_pattern.replace('_', ' ').title()} - Ambient {music_style.replace('_', ' ').title()}"
+
+              # Build description using join to avoid YAML parsing issues with f-string braces
+              desc_lines = [
+                  f"ASMR Algorithmic Art | {art_period.replace('_', ' ').title()} Inspired Ambient",
+                  "",
+                  "🎨 Unique algorithmic art created with Living Ambient Engine.",
+                  "",
+                  "✨ Art Configuration:",
+                  f"• Period: {art_period.replace('_', ' ').title()}",
+                  f"• Visual Pattern: {visual_pattern.replace('_', ' ').title()}",
+                  f"• Music Style: {music_style.replace('_', ' ').title()}",
+                  "",
+                  "🎵 Audio:",
+                  f"• Tempo: {os.environ.get('TEMPO_INPUT', 'N/A')} BPM",
+                  f"• Brainwave: {os.environ.get('BRAINWAVE_FREQ_INPUT', 'N/A')} Hz",
+                  f"• Solfeggio: {os.environ.get('SOLFEGGIO_FREQ_INPUT', 'N/A')} Hz",
+                  "",
+                  f"Seed: {result['metadata'].get('seed', 'N/A')} (save to recreate)",
+                  f"Created by: @{os.environ.get('GITHUB_ACTOR_NAME', 'unknown')}",
+                  "",
+                  "#ASMR #ambient #meditation #algorithmicart #focusmusic"
+              ]
+
+              youtube_metadata = {
+                  'video_title': video_title,
+                  'description_template': '\n'.join(desc_lines),
+                  'tags': [
+                      'ASMR',
+                      'algorithmic art',
+                      'ambient',
+                      'meditation music',
+                      'focus music',
+                      'binaural beats',
+                      art_period.replace('_', ' '),
+                      visual_pattern.replace('_', ' '),
+                      music_style.replace('_', ' '),
+                      'generative art',
+                      'procedural art',
+                      'sleep music',
+                      'relaxation'
+                  ]
+              }
+
+              # Write metadata.json next to video file
+              video_stem = Path(result['video_path']).stem
+              metadata_path = f"{output_dir}/{video_stem}.json"
+              with open(metadata_path, 'w') as f:
+                  json.dump(youtube_metadata, f, indent=2)
+              print(f"📝 Metadata written: {metadata_path}")
+
           except Exception as e:
               print(f"❌ Error during video generation: {type(e).__name__}: {e}")
               import traceback
@@ -874,109 +936,27 @@ jobs:
           printf "%s" '${{ secrets.YOUTUBE_CLIENT_SECRETS }}' > client_secrets.json
       
       - name: Upload to YouTube (Brand Channel)
-        env:
-          CUSTOM_TITLE: ${{ github.event.inputs.title || '' }}
-          CUSTOM_DESCRIPTION: ${{ github.event.inputs.description || '' }}
-          GITHUB_ACTOR: ${{ github.actor }}
         run: |
-          # Upload the created art video to YouTube
-          python3 << 'PYTHON_UPLOAD'
-          import os
-          import json
-          from pathlib import Path
-          from youtube.uploader import YouTubeUploader
-          
-          # Find the video file
-          art_output = Path('./art_output')
-          video_files = list(art_output.glob('*.mp4'))
-          
-          if not video_files:
-              print("❌ No video files found in art_output")
-              exit(1)
-          
-          video_path = video_files[0]
-          print(f"📹 Found video: {video_path}")
-          
-          # Load creation info
-          creation_info_path = art_output / 'creation_info.json'
-          if creation_info_path.exists():
-              with open(creation_info_path, 'r') as f:
-                  info = json.load(f)
-          else:
-              info = {}
-          
-          # Generate title and description
-          title = os.environ.get('CUSTOM_TITLE', '')
-          if not title or title.strip() == "":
-              # Auto-generate title from parameters
-              art_period = info.get('art_period', 'modern')
-              visual = info.get('visual_pattern', 'fractal_zoom')
-              music = info.get('music_style', 'ambient')
-              title = f"{art_period.replace('_', ' ').title()} {visual.replace('_', ' ').title()} - {music.replace('_', ' ').title()}"
-          
-          description = os.environ.get('CUSTOM_DESCRIPTION', '')
-          if not description or description.strip() == "":
-              # Auto-generate description
-              parts = [
-                  "Unique algorithmic art created with Living Ambient Engine.",
-                  "",
-                  "🎨 Art Configuration:",
-                  f"- Period: {info.get('art_period', 'N/A')}",
-                  f"- Visual Pattern: {info.get('visual_pattern', 'N/A')}",
-                  f"- Color Palette: {info.get('color_palette', 'N/A')}",
-                  "",
-                  "🎵 Audio Configuration:",
-                  f"- Music Style: {info.get('music_style', 'N/A')}",
-                  f"- Tempo: {info.get('tempo', 'N/A')} BPM",
-                  f"- Brainwave: {info.get('brainwave_hz', 'N/A')} Hz",
-                  f"- Solfeggio: {info.get('solfeggio_hz', 'N/A')} Hz",
-                  "",
-                  f"Seed: {info.get('seed', 'N/A')}",
-                  f"Created by: @{info.get('created_by', os.environ.get('GITHUB_ACTOR', 'N/A'))}",
-                  "",
-                  "#ambient #meditation #focus #algorithmicart"
-              ]
-              description = "\n".join(parts)
-          
-          # Generate tags
-          tags = [
-              'ambient',
-              'meditation',
-              'focus',
-              'algorithmic art',
-              info.get('art_period', ''),
-              info.get('visual_pattern', ''),
-              info.get('music_style', '')
-          ]
-          tags = [t for t in tags if t]  # Remove empty strings
-          
-          # Find thumbnail
-          thumbnail_files = list(art_output.glob('*.png'))
-          thumbnail_path = str(thumbnail_files[0]) if thumbnail_files else None
-          
-          # Upload
-          uploader = YouTubeUploader()
-          uploader.authenticate()
-          
-          print(f"📤 Uploading: {title}")
-          result = uploader.upload(
-              video_path=str(video_path),
-              title=title,
-              description=description,
-              tags=tags,
-              category_id="10",  # Music
-              privacy="public",
-              thumbnail_path=thumbnail_path
-          )
-          
-          print(f"✅ Upload successful!")
-          print(f"   Video ID: {result['video_id']}")
-          print(f"   URL: {result['url']}")
-          
-          # Save upload result
-          with open(art_output / 'youtube_upload.json', 'w') as f:
-              json.dump(result, f, indent=2)
-          PYTHON_UPLOAD
+          # Upload using youtube_upload.py with metadata.json
+          # Spec: docs/spec/workflows.md § Metadata Consistency Rule
+          # Contract: docs/spec/contracts/orchestrator-youtube.md § Workflow Integration
+
+          VIDEO_FILE=$(ls ./art_output/*.mp4 2>/dev/null | head -1)
+          if [ -z "$VIDEO_FILE" ]; then
+            echo "❌ No video files found in art_output"
+            exit 1
+          fi
+
+          echo "📹 Found video: $VIDEO_FILE"
+          echo "📝 Metadata: ${VIDEO_FILE%.mp4}.json"
+
+          # youtube_upload.py reads metadata from <video>.json automatically
+          python youtube_upload.py -v "$VIDEO_FILE" --no-update-catalog
+
+          # Copy upload result for summary step
+          if [ -f "./art_output/youtube_upload.json" ]; then
+            echo "✅ Upload result saved"
+          fi
       
       - name: Cleanup credentials
         if: always()

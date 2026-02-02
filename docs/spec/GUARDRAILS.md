@@ -98,6 +98,21 @@ These conditions must **never** occur. If detected, the system must halt with an
 | Single job > 6 hours | Workflow timeout | Duration limits |
 | Infinite loops in generation | Hang | Timeout watchdog |
 
+### 4. Metadata Consistency Violations
+
+| Forbidden | Reason | Detection |
+|-----------|--------|-----------|
+| Inline metadata generation in workflows | Inconsistent SEO, bypasses moods.yaml | Contract test + code review |
+| Hardcoded tags/description in workflow YAML | Single source of truth violation | Contract test |
+| Upload without metadata.json | Missing SEO optimization | Pre-upload validation |
+
+**Enforcement:**
+- All workflows that upload to YouTube MUST use `youtube_upload.py`
+- All metadata (title, description, tags) MUST originate from `moods.yaml` → `metadata.json` → `youtube_upload.py`
+- Inline Python in workflows MUST NOT generate YouTube metadata directly
+
+Contract test: `tests/contracts/test_workflow_metadata_consistency.py`
+
 **Memory Enforcement:**
 ```python
 # AudioGenerator.generate() checks memory BEFORE allocation
