@@ -16,7 +16,28 @@ from library import ContentLibrary
 
 
 def generate_description(metadata: dict) -> str:
-    """Generate YouTube description with 3-line format: Intent, Guarantee, Use case."""
+    """Generate YouTube description with 3-line format: Intent, Guarantee, Use case.
+
+    If metadata contains 'description_template', uses that (with variable substitution).
+    Otherwise falls back to hardcoded mood-specific descriptions.
+    """
+    # Check for custom description_template from moods.yaml (SEO-optimized)
+    description_template = metadata.get('description_template', '')
+    if description_template:
+        # Format template with available metadata variables
+        try:
+            return description_template.format(
+                mood=metadata.get('mood', 'ambient'),
+                duration_str=metadata.get('duration_str', ''),
+                rhythm_name=metadata.get('rhythm_name', ''),
+                rhythm_origin=metadata.get('rhythm_origin', ''),
+                video_title=metadata.get('video_title', ''),
+            )
+        except KeyError:
+            # If template has unknown variables, return as-is
+            return description_template
+
+    # Fallback to hardcoded descriptions for backward compatibility
     mood = metadata.get('mood', 'ambient')
     rhythm = metadata.get('rhythm_name', '')
     origin = metadata.get('rhythm_origin', '')
@@ -115,7 +136,17 @@ def generate_description(metadata: dict) -> str:
 
 
 def get_tags(metadata: dict) -> list:
-    """Generate YouTube tags for SEO based on mood type."""
+    """Generate YouTube tags for SEO based on mood type.
+
+    If metadata contains 'tags' array from moods.yaml, uses those.
+    Otherwise falls back to hardcoded mood-specific tags.
+    """
+    # Check for custom tags from moods.yaml (SEO-optimized)
+    custom_tags = metadata.get('tags', [])
+    if custom_tags:
+        return custom_tags[:30]  # YouTube limit: 30 tags
+
+    # Fallback to hardcoded tags for backward compatibility
     mood = metadata.get('mood', '')
     rhythm = metadata.get('rhythm_name', '')
 

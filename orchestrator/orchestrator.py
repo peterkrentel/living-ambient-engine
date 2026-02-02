@@ -206,6 +206,8 @@ class Orchestrator:
                 'duration_str': duration_str,
                 'seed': seed,  # For reproducibility
                 'description': mood_config.get('description', ''),
+                'description_template': mood_config.get('description_template', ''),  # SEO description
+                'tags': mood_config.get('tags', []),  # SEO tags
                 'video_title': video_title,
                 'rhythm': audio_config.get('rhythm', 'ambient'),
                 'rhythm_name': rhythm_name,
@@ -450,6 +452,8 @@ class Orchestrator:
             'duration_str': duration_str,
             'seed': seed,
             'description': mood_config.get('description', ''),
+            'description_template': mood_config.get('description_template', ''),  # SEO description
+            'tags': mood_config.get('tags', []),  # SEO tags
             'video_title': video_title,
             'rhythm': audio_config.get('rhythm', 'ambient'),
             'rhythm_name': rhythm_name,
