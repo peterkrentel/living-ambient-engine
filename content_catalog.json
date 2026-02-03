@@ -1,8 +1,8 @@
 {
   "catalog_version": "1.0",
   "created_at": "2026-01-30T01:38:24.843138",
-  "last_updated": "2026-02-01T05:02:09.550236",
-  "total_videos": 12,
+  "last_updated": "2026-02-03T04:15:29.507021",
+  "total_videos": 14,
   "videos": [
     {
       "catalog_id": "video_0001_20260130_013826_32197db7",
@@ -472,6 +472,84 @@
         "duration": 30,
         "description": "Ocean waves for sleep and relaxation",
         "tags": []
+      }
+    },
+    {
+      "catalog_id": "video_0013_20260203_041501_6b01e8d8",
+      "youtube_id": "SPtwcoH_lpM",
+      "youtube_url": "https://youtube.com/watch?v=SPtwcoH_lpM",
+      "title": "Sounds for an Overactive Mind | 1 Hour Evolving Focus Music | No Loops [Pure Ambience]",
+      "mood": "deep_focus",
+      "duration": 3600,
+      "duration_str": "",
+      "seed": null,
+      "version": "standard",
+      "rhythm": "ambient",
+      "rhythm_name": "",
+      "uploaded_at": "2026-02-03T04:15:01.164448",
+      "generated_at": "2026-02-03T04:15:01.164448",
+      "metadata": {
+        "video_title": "Sounds for an Overactive Mind | 1 Hour Evolving Focus Music | No Loops [Pure Ambience]",
+        "mood": "deep_focus",
+        "duration": 3600,
+        "description": "Deep concentration and flow state - Hypnotic fractal journey",
+        "tags": [
+          "focus music",
+          "deep work music",
+          "concentration music",
+          "binaural beats focus",
+          "study music",
+          "work music",
+          "ambient focus",
+          "coding music",
+          "flow state music",
+          "productivity music",
+          "background music for work",
+          "music for concentration",
+          "gnawa rhythm",
+          "tribal drums focus",
+          "432 hz music",
+          "ASMR"
+        ]
+      }
+    },
+    {
+      "catalog_id": "video_0014_20260203_041529_9cbaada8",
+      "youtube_id": "7WqhdCLqCj4",
+      "youtube_url": "https://youtube.com/watch?v=7WqhdCLqCj4",
+      "title": "Sounds for an Overactive Mind | 1 Hour Evolving Focus Music | No Loops [With Music]",
+      "mood": "deep_focus",
+      "duration": 3600,
+      "duration_str": "",
+      "seed": null,
+      "version": "standard",
+      "rhythm": "ambient",
+      "rhythm_name": "",
+      "uploaded_at": "2026-02-03T04:15:29.506953",
+      "generated_at": "2026-02-03T04:15:29.506953",
+      "metadata": {
+        "video_title": "Sounds for an Overactive Mind | 1 Hour Evolving Focus Music | No Loops [With Music]",
+        "mood": "deep_focus",
+        "duration": 3600,
+        "description": "Deep concentration and flow state - Hypnotic fractal journey",
+        "tags": [
+          "focus music",
+          "deep work music",
+          "concentration music",
+          "binaural beats focus",
+          "study music",
+          "work music",
+          "ambient focus",
+          "coding music",
+          "flow state music",
+          "productivity music",
+          "background music for work",
+          "music for concentration",
+          "gnawa rhythm",
+          "tribal drums focus",
+          "432 hz music",
+          "ASMR"
+        ]
       }
     }
   ]

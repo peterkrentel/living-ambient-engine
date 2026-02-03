@@ -1,18 +1,18 @@
 # Content Library
 
-*Last updated: 2026-02-01T05:02:09.550236*
+*Last updated: 2026-02-03T04:15:29.507021*
 
 ## Statistics
 
-- **Total Videos:** 12
-- **Total Duration:** 0.1 hours
-- **Average Duration:** 0.5 minutes
+- **Total Videos:** 14
+- **Total Duration:** 2.1 hours
+- **Average Duration:** 9.0 minutes
 
 ### Videos by Mood
 
 - **Ceremony:** 1 videos
 - **Chill:** 1 videos
-- **Deep Focus:** 1 videos
+- **Deep Focus:** 3 videos
 - **Energize:** 1 videos
 - **Fireplace:** 1 videos
 - **Forest Morning:** 2 videos
@@ -59,6 +59,26 @@
 - **Uploaded:** 2026-02-01
 - **Seed:** `None`
 - **Catalog ID:** `video_0003_20260201_050152_bd076b22`
+
+#### Sounds for an Overactive Mind | 1 Hour Evolving Focus Music | No Loops [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=SPtwcoH_lpM](https://youtube.com/watch?v=SPtwcoH_lpM)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-03
+- **Seed:** `None`
+- **Catalog ID:** `video_0013_20260203_041501_6b01e8d8`
+
+#### Sounds for an Overactive Mind | 1 Hour Evolving Focus Music | No Loops [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=7WqhdCLqCj4](https://youtube.com/watch?v=7WqhdCLqCj4)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-03
+- **Seed:** `None`
+- **Catalog ID:** `video_0014_20260203_041529_9cbaada8`
 
 ### Energize
 
