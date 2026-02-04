@@ -60,8 +60,8 @@ You can override the automatic behavior:
 
 2. **Duration Options:**
    - `5s` - Fast validation (default for manual)
-   - `5min` - Short test video
-   - `10min` - Medium test video
+   - `5min` - Quality test video
+   - `10min` - Extended test video
 
 3. **Upload Control:**
    - Check `upload_to_brand` to enable YouTube upload
