@@ -40,7 +40,7 @@ This rotation ensures:
 6. **Baroque** - Julia fractal, taiko drums, crescendo journey
 7. **Medieval** - Sacred geometry, burundi drums, steady journey
 
-## Automatic vs Manual Control
+## Automatic vs. Manual Control
 
 ### Automatic Mode (Scheduled Runs)
 - **Trigger:** Cron schedule at 3 AM UTC
@@ -75,7 +75,7 @@ You can override the automatic behavior:
 ## How It Works
 
 1. **Determine Pattern Set Job**
-   - Checks event type (schedule vs manual vs PR)
+   - Checks event type (schedule vs. manual vs. PR)
    - For scheduled runs: calculates day of week (1-7)
    - Assigns pattern set based on day
    - Sets duration and upload flag
