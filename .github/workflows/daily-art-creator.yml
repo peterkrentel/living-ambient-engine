@@ -1,0 +1,223 @@
+# Daily Art Creator - Automated Cycling Through Art Combinations
+# 
+# This workflow automatically generates one unique art piece per day by cycling
+# through a curated list of Art Creator parameter combinations. Each day at
+# 1:10pm CST (19:10 UTC), it selects the next unused combination and triggers
+# the art-creator workflow with those parameters.
+#
+# Key Features:
+# - Runs daily at 19:10 UTC (1:10pm CST)
+# - Automatically selects next unused combination
+# - Tracks progress to avoid repeating scenarios
+# - Stops gracefully when all combinations are used
+# - Easy to modify combinations via .github/data/art-combinations.json
+#
+# Data Files:
+# - .github/data/art-combinations.json - List of all combinations to cycle through
+# - .github/data/art-tracking.json - Tracks which combinations have been used
+#
+# Helper Script:
+# - .github/scripts/select_art_combo.py - Handles combination selection logic
+
+name: Daily Art Creator
+
+on:
+  # Scheduled trigger - runs daily at 1:10pm CST (19:10 UTC)
+  schedule:
+    - cron: '10 19 * * *'  # 19:10 UTC = 1:10pm CST
+  
+  # Manual trigger for testing
+  workflow_dispatch:
+    inputs:
+      force_run:
+        description: 'Force run even if all combinations are used'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  select-and-generate:
+    name: Select Next Art Combination and Generate
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Need to fetch full history to commit tracking updates
+          fetch-depth: 0
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Select next art combination
+        id: select
+        run: |
+          echo "🎨 Selecting next art combination..."
+          python3 .github/scripts/select_art_combo.py
+          
+          # Check if all combinations are completed
+          if [ -f "$GITHUB_OUTPUT" ]; then
+            if grep -q "all_completed=true" "$GITHUB_OUTPUT"; then
+              echo "⚠️  All art combinations have been used!"
+              echo "   To restart the cycle, manually run with --reset or update tracking file"
+            fi
+          fi
+      
+      - name: Display selected combination
+        if: steps.select.outputs.all_completed != 'true'
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "🎨 Selected Art Combination"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "ID: ${{ steps.select.outputs.selected_id }}"
+          echo "Name: ${{ steps.select.outputs.selected_name }}"
+          echo ""
+          echo "Parameters:"
+          echo "  Art Period: ${{ steps.select.outputs.art_period }}"
+          echo "  Visual Pattern: ${{ steps.select.outputs.visual_pattern }}"
+          echo "  Visual Speed: ${{ steps.select.outputs.visual_speed }}"
+          echo "  Visual Complexity: ${{ steps.select.outputs.visual_complexity }}"
+          echo "  Color Palette: ${{ steps.select.outputs.color_palette }}"
+          echo "  Music Style: ${{ steps.select.outputs.music_style }}"
+          echo "  Tempo: ${{ steps.select.outputs.tempo }}"
+          echo "  Brainwave Frequency: ${{ steps.select.outputs.brainwave_frequency }} Hz"
+          echo "  Solfeggio Frequency: ${{ steps.select.outputs.solfeggio_frequency }} Hz"
+          echo "  Rhythm Volume: ${{ steps.select.outputs.rhythm_volume }}"
+          echo "  Ambient Volume: ${{ steps.select.outputs.ambient_volume }}"
+          echo "  Journey: ${{ steps.select.outputs.journey }}"
+          echo "  Journey Intensity: ${{ steps.select.outputs.journey_intensity }}"
+          echo "  Duration: ${{ steps.select.outputs.duration }}"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+      
+      - name: Commit tracking file updates
+        if: steps.select.outputs.all_completed != 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Check if tracking file has changes
+          if git diff --quiet .github/data/art-tracking.json; then
+            echo "No changes to tracking file"
+          else
+            git add .github/data/art-tracking.json
+            git commit -m "🎨 Update art combination tracking (ID: ${{ steps.select.outputs.selected_id }} - ${{ steps.select.outputs.selected_name }})"
+            git push
+            echo "✅ Tracking file updated and pushed"
+          fi
+      
+      - name: Trigger Art Creator workflow
+        if: steps.select.outputs.all_completed != 'true'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const workflowDispatch = await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'art-creator.yml',
+              ref: 'main',
+              inputs: {
+                art_period: '${{ steps.select.outputs.art_period }}',
+                visual_pattern: '${{ steps.select.outputs.visual_pattern }}',
+                visual_speed: '${{ steps.select.outputs.visual_speed }}',
+                visual_complexity: '${{ steps.select.outputs.visual_complexity }}',
+                color_palette: '${{ steps.select.outputs.color_palette }}',
+                music_style: '${{ steps.select.outputs.music_style }}',
+                tempo: '${{ steps.select.outputs.tempo }}',
+                brainwave_frequency: '${{ steps.select.outputs.brainwave_frequency }}',
+                solfeggio_frequency: '${{ steps.select.outputs.solfeggio_frequency }}',
+                rhythm_volume: '${{ steps.select.outputs.rhythm_volume }}',
+                ambient_volume: '${{ steps.select.outputs.ambient_volume }}',
+                journey: '${{ steps.select.outputs.journey }}',
+                journey_intensity: '${{ steps.select.outputs.journey_intensity }}',
+                duration: '${{ steps.select.outputs.duration }}',
+                title: 'Daily Art: ${{ steps.select.outputs.selected_name }}',
+                description: 'Automatically generated daily art piece - Combination #${{ steps.select.outputs.selected_id }}: ${{ steps.select.outputs.selected_name }}',
+                upload_to_brand: 'false'
+              }
+            });
+            
+            console.log('✅ Art Creator workflow triggered successfully');
+            console.log(`   Name: ${{ steps.select.outputs.selected_name }}`);
+      
+      - name: All combinations completed notification
+        if: steps.select.outputs.all_completed == 'true'
+        run: |
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo "✅ All Art Combinations Completed!"
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          echo ""
+          echo "All combinations from the Art Creator combination list"
+          echo "have been used. No new art will be generated until the"
+          echo "tracking is reset or new combinations are added."
+          echo ""
+          echo "To restart the cycle:"
+          echo "1. Manually update .github/data/art-tracking.json"
+          echo "2. Or run: python3 .github/scripts/select_art_combo.py --reset"
+          echo "3. Or add new combinations to .github/data/art-combinations.json"
+          echo ""
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+      
+      - name: Create completion issue (if all done)
+        if: steps.select.outputs.all_completed == 'true' && github.event_name == 'schedule'
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            // Check if issue already exists
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'daily-art-creator'
+            });
+            
+            const existingIssue = issues.data.find(issue => 
+              issue.title.includes('Daily Art Creator - All Combinations Completed')
+            );
+            
+            if (!existingIssue) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: '🎨 Daily Art Creator - All Combinations Completed',
+                body: `## All Art Combinations Have Been Used
+                
+                The Daily Art Creator workflow has cycled through all available combinations.
+                
+                ### Next Steps
+                
+                Choose one of the following options:
+                
+                1. **Reset and restart the cycle**
+                   \`\`\`bash
+                   python3 .github/scripts/select_art_combo.py --reset
+                   \`\`\`
+                
+                2. **Add new combinations**
+                   - Edit \`.github/data/art-combinations.json\`
+                   - Add new combination objects to the array
+                   - Update the tracking file's \`total_combinations\` count
+                
+                3. **Disable the scheduled workflow**
+                   - If you don't want it to continue running
+                
+                ### Current Status
+                
+                Check status at any time with:
+                \`\`\`bash
+                python3 .github/scripts/select_art_combo.py --status
+                \`\`\`
+                
+                ---
+                *This issue was automatically created by the Daily Art Creator workflow*`,
+                labels: ['daily-art-creator', 'automation']
+              });
+              
+              console.log('✅ Created issue to notify about completion');
+            } else {
+              console.log('ℹ️  Completion issue already exists');
+            }
