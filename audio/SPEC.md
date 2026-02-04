@@ -81,6 +81,41 @@ Audio evolves through phases every 3-7 minutes:
 - [ ] Journey tempo changes are smooth (no sudden jumps)
 - [ ] All layers blend without harsh frequencies
 
+## Memory Efficiency
+
+Audio generation uses **chunked streaming** to enable long-duration videos (up to 4 hours)
+on systems with limited RAM (e.g., 7GB GitHub Actions runners).
+
+### How It Works
+
+```python
+# Instead of pre-allocating entire audio buffer (which would be ~10GB for 4h):
+# audio = np.zeros((635_040_000, 2))  # ❌ OOM on 7GB runner
+
+# Audio is generated in 30-second chunks (~10MB each):
+chunk_duration = 30  # seconds
+with sf.SoundFile(output_path, 'w', sample_rate, channels) as f:
+    for chunk_start in range(0, total_samples, chunk_size):
+        chunk = generate_chunk(chunk_start, chunk_size)  # ~10MB
+        f.write(chunk)  # ✅ Constant memory usage
+```
+
+### Memory Usage
+
+| Duration | Pre-allocation (old) | Chunked (current) |
+|----------|---------------------|-------------------|
+| 5 min | ~106 MB | ~10 MB |
+| 1 hour | ~1.3 GB | ~10 MB |
+| 4 hours | ~10 GB | ~10 MB |
+
+### Implementation Details
+
+Chunk-aware methods handle boundary cases:
+- **Rhythm:** Drum hits spanning chunk boundaries are correctly rendered
+- **Layers:** Phase/time-based modulation uses absolute timestamps
+- **Fades:** Only first/last chunks apply fade in/out
+- **Normalization:** Per-chunk soft limiting (conservative 0.85 headroom)
+
 ## Error Handling
 
 | Condition | Behavior |
@@ -93,8 +128,8 @@ Audio evolves through phases every 3-7 minutes:
 ## Dependencies
 
 - `numpy` - Audio synthesis
-- `scipy` - Signal processing, WAV output
-- `numba` - JIT compilation for performance
+- `soundfile` - Streaming WAV output (chunked writes)
+- `scipy` - Signal processing (optional)
 
 ## Files
 
@@ -120,5 +155,5 @@ print('✓ Audio generated')
 - [ ] Journey-aware rhythm BPM
 - [ ] More rhythm patterns
 - [ ] Harmonic progression system
-- [ ] Real-time streaming output
+- [x] ~~Real-time streaming output~~ ✅ Implemented (chunked generation)
 

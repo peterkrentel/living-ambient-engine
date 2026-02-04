@@ -113,13 +113,26 @@ These conditions must **never** occur. If detected, the system must halt with an
 
 Contract test: `tests/contracts/test_workflow_metadata_consistency.py`
 
-**Memory Enforcement:**
+**Memory Enforcement via Chunked Generation:**
+
+Audio generation uses **streaming/chunked writes** to stay within memory limits, enabling
+4+ hour videos on systems with limited RAM (e.g., 7GB GitHub Actions runners).
+
 ```python
-# AudioGenerator.generate() checks memory BEFORE allocation
-estimated_bytes = num_samples * channels * 4  # float32
-if estimated_bytes > 8GB:
-    raise MemoryError("exceeds 8GB guardrail")
+# AudioGenerator.generate() uses chunked streaming instead of pre-allocation
+# Chunk size: 30 seconds (~10MB per chunk for stereo float32)
+chunk_duration = 30  # seconds
+chunk_size = chunk_duration * sample_rate
+
+with sf.SoundFile(output_path, 'w', sample_rate, channels) as f:
+    for chunk_start in range(0, num_samples, chunk_size):
+        chunk = generate_chunk(chunk_start, chunk_size)  # ~10MB
+        f.write(chunk)
 ```
+
+**Why chunked:** A 4-hour video at 44100 Hz stereo float32 would require ~10GB RAM if
+pre-allocated. Chunked generation uses only ~10-15MB regardless of video duration.
+
 Contract test: `tests/contracts/test_audio_contract.py::TestAudioContractGuardrails::test_memory_guardrail_enforced`
 
 ## Enforcement Levels
