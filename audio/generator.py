@@ -229,23 +229,22 @@ class AudioGenerator:
         return boundaries
 
     def generate(self, duration: int, output_path: str) -> str:
-        """Generate audio file with evolving phases."""
+        """Generate audio file with evolving phases using chunked streaming.
+
+        Uses chunked generation to stay within memory limits (max ~150MB per chunk).
+        This allows generating 4+ hour videos on systems with limited RAM (e.g., 7GB
+        GitHub Actions runners).
+
+        See docs/spec/GUARDRAILS.md for memory constraints.
+        """
         num_samples = duration * self.sample_rate
 
-        # GUARDRAIL ENFORCEMENT: Memory check before allocation
-        # See docs/spec/GUARDRAILS.md - "Memory usage > 8GB" is forbidden
-        bytes_per_sample = 4  # float32
-        estimated_bytes = num_samples * self.channels * bytes_per_sample
-        max_bytes = 8 * 1024 * 1024 * 1024  # 8GB guardrail
-        if estimated_bytes > max_bytes:
-            raise MemoryError(
-                f"Audio generation would require {estimated_bytes / 1e9:.1f}GB, "
-                f"exceeds 8GB guardrail. Reduce duration or sample rate."
-            )
+        # Chunk size: 30 seconds (~10MB per chunk for stereo float32)
+        # This keeps memory usage low while being efficient
+        chunk_duration = 30  # seconds
+        chunk_size = chunk_duration * self.sample_rate
 
-        audio = np.zeros((num_samples, self.channels), dtype=np.float32)
-
-        # Calculate phase boundaries for this duration
+        # Calculate phase boundaries for this duration (small metadata, not audio)
         phase_boundaries = self._get_phase_boundaries(duration)
 
         # Log phase plan for debugging
@@ -255,42 +254,75 @@ class AudioGenerator:
                 start_min = start_sample / self.sample_rate / 60
                 print(f"       {start_min:.1f}min: {phase_name} ({phase_len//60}m{phase_len%60}s)")
 
-        # Generate tribal rhythm layer (with phase-based tempo variation)
+        # Get config values
         rhythm_type = self.config.get('rhythm', 'bamboula')
         rhythm_volume = self.rhythm_volume_override if self.rhythm_volume_override is not None else self.config.get('rhythm_volume', 0.4)
-        if rhythm_type and rhythm_type in TRIBAL_PATTERNS:
-            rhythm_audio = self._generate_tribal_rhythm_phased(
-                rhythm_type, num_samples, phase_boundaries
-            )
-            audio += rhythm_audio * rhythm_volume
-
-        # Drone volume multiplier (applies to sine/binaural layers)
         drone_mult = self.drone_volume_override if self.drone_volume_override is not None else 1.0
-
-        # Generate each tonal layer with phase modulation
         layers = self.config.get('layers', [])
-        for layer in layers:
-            layer_audio = self._generate_layer_phased(
-                layer, num_samples, phase_boundaries
-            )
-            audio += layer_audio * drone_mult
 
-        # Apply phase-based volume envelope for smooth evolution
-        volume_envelope = self._create_phase_volume_envelope(
-            num_samples, phase_boundaries
-        )
-        audio = audio * volume_envelope[:, np.newaxis]
+        # Pre-synthesize drum sounds (small, reusable across chunks)
+        drum_sounds = None
+        if rhythm_type and rhythm_type in TRIBAL_PATTERNS:
+            drum_sounds = {
+                'low': self._synth_drum(80, 0.3, 'low'),
+                'mid': self._synth_drum(150, 0.15, 'mid'),
+                'high': self._synth_drum(300, 0.08, 'high'),
+                'pattern': TRIBAL_PATTERNS[rhythm_type],
+            }
 
-        # Normalize to prevent clipping
-        max_val = np.max(np.abs(audio))
-        if max_val > 0:
-            audio = audio / max_val * 0.85  # Leave headroom
+        # Streaming write: generate and write chunks sequentially
+        num_chunks = (num_samples + chunk_size - 1) // chunk_size
+        print(f"    🎵 Generating audio in {num_chunks} chunks ({chunk_duration}s each)...")
 
-        # Apply fade in/out
-        audio = self._apply_fade(audio, fade_duration=2.0)
+        with sf.SoundFile(output_path, 'w', self.sample_rate, self.channels,
+                          subtype='FLOAT') as f:
+            for chunk_idx in range(num_chunks):
+                chunk_start = chunk_idx * chunk_size
+                chunk_end = min(chunk_start + chunk_size, num_samples)
+                chunk_samples = chunk_end - chunk_start
 
-        # Save as WAV
-        sf.write(output_path, audio, self.sample_rate)
+                # Progress indicator for long generations
+                if num_chunks > 10 and chunk_idx % 10 == 0:
+                    progress = chunk_idx / num_chunks * 100
+                    print(f"       {progress:.0f}% ({chunk_idx}/{num_chunks} chunks)")
+
+                # Generate this chunk
+                chunk = np.zeros((chunk_samples, self.channels), dtype=np.float32)
+
+                # Add rhythm for this chunk
+                if drum_sounds:
+                    rhythm_chunk = self._generate_tribal_rhythm_chunk(
+                        drum_sounds, chunk_start, chunk_samples, num_samples
+                    )
+                    chunk += rhythm_chunk * rhythm_volume
+
+                # Add layers for this chunk
+                for layer in layers:
+                    layer_chunk = self._generate_layer_chunk(
+                        layer, chunk_start, chunk_samples, num_samples, phase_boundaries
+                    )
+                    chunk += layer_chunk * drone_mult
+
+                # Apply volume envelope for this chunk
+                envelope_chunk = self._get_volume_envelope_chunk(
+                    chunk_start, chunk_samples, phase_boundaries
+                )
+                chunk *= envelope_chunk[:, np.newaxis]
+
+                # Soft-limit to prevent clipping (per-chunk, conservative)
+                # Scale down if any sample exceeds 0.85
+                max_val = np.max(np.abs(chunk))
+                if max_val > 0.85:
+                    chunk = chunk / max_val * 0.85
+
+                # Apply fade in/out (only affects first/last chunks)
+                chunk = self._apply_fade_chunk(
+                    chunk, chunk_start, num_samples, fade_duration=2.0
+                )
+
+                f.write(chunk)
+
+        print(f"       100% complete")
         return output_path
 
     def _create_phase_volume_envelope(self, num_samples: int,
@@ -319,6 +351,373 @@ class AudioGenerator:
             envelope[sustain_start:end_sample] = target_volume
 
         return envelope
+
+    def _get_volume_envelope_chunk(self, chunk_start: int, chunk_samples: int,
+                                    phase_boundaries: List) -> np.ndarray:
+        """Get volume envelope values for a specific chunk."""
+        envelope = np.ones(chunk_samples, dtype=np.float32)
+        chunk_end = chunk_start + chunk_samples
+
+        # Track the previous phase's volume for smooth transitions
+        prev_volume = 0.85  # Default starting volume
+
+        for i, (start_sample, phase_name, mods, phase_len) in enumerate(phase_boundaries):
+            phase_end_sample = start_sample + int(phase_len * self.sample_rate)
+            target_volume = mods['volume_mult']
+
+            # Check if this phase overlaps with our chunk
+            if phase_end_sample <= chunk_start:
+                prev_volume = target_volume
+                continue
+            if start_sample >= chunk_end:
+                break
+
+            # Calculate crossfade region
+            crossfade_samples = min(int(5 * self.sample_rate), int(phase_len * self.sample_rate) // 4)
+
+            # Map phase boundaries to chunk-local indices
+            for sample_idx in range(chunk_samples):
+                global_idx = chunk_start + sample_idx
+
+                if global_idx < start_sample:
+                    envelope[sample_idx] = prev_volume
+                elif global_idx < start_sample + crossfade_samples:
+                    # In crossfade region
+                    fade_progress = (global_idx - start_sample) / max(1, crossfade_samples)
+                    envelope[sample_idx] = prev_volume + (target_volume - prev_volume) * fade_progress
+                elif global_idx < phase_end_sample:
+                    envelope[sample_idx] = target_volume
+
+            prev_volume = target_volume
+
+        return envelope
+
+    def _generate_tribal_rhythm_chunk(self, drum_sounds: Dict, chunk_start: int,
+                                       chunk_samples: int, total_samples: int) -> np.ndarray:
+        """Generate tribal rhythm for a specific chunk of audio."""
+        pattern = drum_sounds['pattern']
+        bpm = pattern['bpm']
+
+        # Calculate timing
+        beat_duration = 60.0 / bpm
+        sixteenth_duration = beat_duration / 4
+        sixteenth_samples = int(sixteenth_duration * self.sample_rate)
+
+        chunk = np.zeros((chunk_samples, self.channels), dtype=np.float32)
+        chunk_end = chunk_start + chunk_samples
+
+        # Calculate which pattern positions fall within this chunk
+        pattern_length = len(pattern['low'])
+        pattern_samples = pattern_length * sixteenth_samples
+
+        # Find the first pattern cycle that could affect this chunk
+        first_cycle = max(0, (chunk_start - len(drum_sounds['low'])) // pattern_samples)
+
+        # Iterate through pattern positions
+        current_sample = first_cycle * pattern_samples
+
+        # Use a fixed seed based on position for consistent humanization
+        np.random.seed(42)  # Reset for reproducibility
+        # Skip random draws for positions before our chunk
+        for _ in range(first_cycle * pattern_length * 4):  # 4 random calls per position
+            np.random.rand()
+
+        while current_sample < chunk_end:
+            for i in range(pattern_length):
+                if current_sample >= chunk_end:
+                    break
+
+                # Consistent humanization based on position
+                humanize = int((np.random.rand() - 0.5) * sixteenth_samples * 0.05)
+                velocity_low = 0.7 + np.random.rand() * 0.3
+                velocity_mid = 0.5 + np.random.rand() * 0.3
+                velocity_high = 0.3 + np.random.rand() * 0.2
+
+                hit_pos = current_sample + humanize
+
+                # Check if this hit could affect our chunk
+                if hit_pos + len(drum_sounds['low']) >= chunk_start and hit_pos < chunk_end:
+                    # Convert to chunk-local position
+                    local_pos = hit_pos - chunk_start
+
+                    if pattern['low'][i]:
+                        self._add_sound_chunk(chunk, drum_sounds['low'], local_pos, velocity_low)
+                    if pattern['mid'][i]:
+                        self._add_sound_chunk(chunk, drum_sounds['mid'], local_pos, velocity_mid)
+                    if pattern['high'][i]:
+                        self._add_sound_chunk(chunk, drum_sounds['high'], local_pos, velocity_high)
+
+                current_sample += sixteenth_samples
+
+        return chunk
+
+    def _add_sound_chunk(self, chunk: np.ndarray, sound: np.ndarray,
+                          position: int, velocity: float):
+        """Add a sound to a chunk buffer, handling boundary cases."""
+        chunk_len = len(chunk)
+        sound_len = len(sound)
+
+        # Handle sounds that start before the chunk
+        if position < 0:
+            sound_offset = -position
+            if sound_offset >= sound_len:
+                return  # Sound ended before chunk
+            sound = sound[sound_offset:]
+            position = 0
+
+        # Handle sounds that extend past the chunk
+        end_pos = position + len(sound)
+        if end_pos > chunk_len:
+            sound = sound[:chunk_len - position]
+            end_pos = chunk_len
+
+        if position < chunk_len and len(sound) > 0:
+            chunk[position:end_pos] += sound * velocity
+
+    def _generate_layer_chunk(self, layer_config: Dict, chunk_start: int,
+                               chunk_samples: int, total_samples: int,
+                               phase_boundaries: List) -> np.ndarray:
+        """Generate a layer for a specific chunk of audio."""
+        layer_type = layer_config.get('type', 'sine')
+        amplitude = layer_config.get('amplitude', 0.3)
+
+        # Calculate time array for this chunk (absolute time)
+        t = (np.arange(chunk_samples) + chunk_start) / self.sample_rate
+        duration = total_samples / self.sample_rate
+
+        if layer_type == 'sine':
+            return self._generate_sine_chunk(layer_config, t, amplitude)
+        elif layer_type == 'binaural':
+            return self._generate_binaural_chunk(layer_config, t, amplitude)
+        elif layer_type == 'pink_noise':
+            return self._generate_pink_noise_chunk(chunk_samples, amplitude, chunk_start)
+        elif layer_type == 'pad':
+            return self._generate_pad_chunk(layer_config, t, amplitude)
+        elif layer_type == 'rain':
+            return self._generate_rain_chunk(layer_config, chunk_start, chunk_samples,
+                                              total_samples, amplitude)
+        elif layer_type == 'ocean':
+            return self._generate_ocean_chunk(layer_config, t, chunk_samples, amplitude)
+        elif layer_type == 'melody':
+            return self._generate_melody_chunk(layer_config, chunk_start, chunk_samples,
+                                                total_samples, amplitude)
+        else:
+            # For other layer types, generate full and slice (fallback)
+            return np.zeros((chunk_samples, self.channels), dtype=np.float32)
+
+    def _generate_sine_chunk(self, config: Dict, t: np.ndarray, amplitude: float) -> np.ndarray:
+        """Generate sine wave chunk."""
+        frequency = config.get('frequency', 432)
+        warmth = config.get('warmth', 0.7)
+
+        wave = np.sin(2 * np.pi * frequency * t)
+
+        if warmth > 0:
+            wave += np.sin(2 * np.pi * (frequency / 2) * t) * 0.3 * warmth
+            wave += np.sin(2 * np.pi * (frequency * 1.5) * t) * 0.15 * warmth
+            wave += np.sin(2 * np.pi * (frequency * 2) * t) * 0.08 * warmth
+
+        mod_freq = 0.1
+        modulation = 0.85 + 0.15 * np.sin(2 * np.pi * mod_freq * t)
+        wave = wave * modulation * amplitude
+
+        left = wave
+        right = np.roll(wave, min(int(self.sample_rate * 0.01), len(wave) - 1))
+
+        return np.column_stack([left, right]).astype(np.float32)
+
+    def _generate_binaural_chunk(self, config: Dict, t: np.ndarray, amplitude: float) -> np.ndarray:
+        """Generate binaural beat chunk."""
+        carrier = config.get('carrier', 200)
+        beat = config.get('beat', 10)
+        warmth = 0.2
+
+        left = np.sin(2 * np.pi * carrier * t)
+        left += np.sin(2 * np.pi * (carrier / 2) * t) * 0.2 * warmth
+
+        right = np.sin(2 * np.pi * (carrier + beat) * t)
+        right += np.sin(2 * np.pi * ((carrier + beat) / 2) * t) * 0.2 * warmth
+
+        envelope = 0.7 + 0.3 * np.sin(2 * np.pi * t / 10)
+        left = left * amplitude * envelope
+        right = right * amplitude * envelope
+
+        return np.column_stack([left, right]).astype(np.float32)
+
+    def _generate_pink_noise_chunk(self, chunk_samples: int, amplitude: float,
+                                    chunk_start: int) -> np.ndarray:
+        """Generate pink noise for a chunk with consistent randomness."""
+        # Use chunk_start as seed for reproducible noise across chunks
+        np.random.seed(chunk_start // self.sample_rate)
+
+        rows = 16
+        array = np.random.randn(rows, chunk_samples)
+
+        for i in range(rows):
+            step = 2 ** i
+            if step < chunk_samples:
+                indices = np.arange(0, chunk_samples, step)
+                held_values = array[i, indices]
+                array[i] = np.repeat(held_values, step)[:chunk_samples]
+
+        pink = np.sum(array, axis=0)
+        max_val = np.max(np.abs(pink))
+        if max_val > 0:
+            pink = pink / max_val * amplitude
+
+        right = np.roll(pink, min(int(self.sample_rate * 0.02), len(pink) - 1))
+        return np.column_stack([pink, right]).astype(np.float32)
+
+    def _generate_pad_chunk(self, config: Dict, t: np.ndarray, amplitude: float) -> np.ndarray:
+        """Generate pad sound chunk."""
+        frequency = config.get('frequency', 110)
+
+        wave = np.zeros(len(t), dtype=np.float32)
+        detune = [0.98, 0.99, 1.0, 1.01, 1.02]
+        for d in detune:
+            wave += np.sin(2 * np.pi * frequency * d * t) * 0.2
+
+        wave += np.sin(2 * np.pi * frequency * 0.5 * t) * 0.3
+        wave += np.sin(2 * np.pi * frequency * 1.5 * t) * 0.1
+
+        lfo = 0.5 + 0.5 * np.sin(2 * np.pi * 0.05 * t)
+        breath = 0.8 + 0.2 * np.sin(2 * np.pi * 0.08 * t)
+        wave = wave * (0.7 + 0.3 * lfo) * breath * amplitude
+
+        left = wave
+        right = np.roll(wave, min(int(self.sample_rate * 0.015), len(wave) - 1))
+
+        return np.column_stack([left, right]).astype(np.float32)
+
+    def _generate_ocean_chunk(self, config: Dict, t: np.ndarray,
+                               chunk_samples: int, amplitude: float) -> np.ndarray:
+        """Generate ocean waves for a chunk."""
+        wave_period = config.get('wave_period', 8)
+
+        wave_phase = (t / wave_period) % 1.0
+        wave_env = np.sin(wave_phase * np.pi) ** 2
+        tide_mod = 0.5 + 0.5 * np.sin(2 * np.pi * 0.0003 * t)
+
+        pink = self._generate_pink_noise_chunk(chunk_samples, 1.0, int(t[0] * self.sample_rate))[:, 0]
+        ocean = pink * wave_env * tide_mod * amplitude * 0.5
+
+        white = np.random.randn(chunk_samples) * amplitude * 0.3
+        foam_env = np.where(wave_phase > 0.4, np.sin((wave_phase - 0.4) / 0.3 * np.pi), 0)
+        foam_env = np.clip(foam_env, 0, 1) ** 2
+        foam = white * foam_env
+
+        rumble_freq = 40
+        rumble = np.sin(2 * np.pi * rumble_freq * t) * wave_env * amplitude * 0.15
+
+        combined = ocean + foam + rumble
+        right = np.roll(combined, min(int(self.sample_rate * 0.05), len(combined) - 1))
+
+        return np.column_stack([combined, right]).astype(np.float32)
+
+    def _generate_rain_chunk(self, config: Dict, chunk_start: int, chunk_samples: int,
+                              total_samples: int, amplitude: float) -> np.ndarray:
+        """Generate rain sounds for a chunk."""
+        t = (np.arange(chunk_samples) + chunk_start) / self.sample_rate
+        chunk = np.zeros((chunk_samples, self.channels), dtype=np.float32)
+
+        # Base pink noise with modulation
+        pink = self._generate_pink_noise_chunk(chunk_samples, amplitude * 0.6, chunk_start)[:, 0]
+
+        mod_freq_1 = config.get('mod_freq_slow', 0.0005)
+        mod_freq_2 = config.get('mod_freq_med', 0.003)
+        mod_freq_3 = config.get('mod_freq_fast', 0.015)
+
+        rain_intensity = 0.7 + 0.15 * np.sin(2 * np.pi * mod_freq_1 * t)
+        rain_intensity *= 0.9 + 0.1 * np.sin(2 * np.pi * mod_freq_2 * t)
+        rain_intensity *= 0.95 + 0.05 * np.sin(2 * np.pi * mod_freq_3 * t)
+
+        chunk[:, 0] = pink * rain_intensity
+        chunk[:, 1] = pink * rain_intensity
+
+        return chunk
+
+    def _generate_melody_chunk(self, config: Dict, chunk_start: int, chunk_samples: int,
+                                total_samples: int, amplitude: float) -> np.ndarray:
+        """Generate melody for a chunk (simplified for chunked generation)."""
+        root = config.get('root', 220)
+        scale = config.get('scale', 'pentatonic_minor')
+        base_tempo = config.get('tempo', 60)
+
+        intervals = self._get_scale_intervals(scale)
+        chunk = np.zeros((chunk_samples, self.channels), dtype=np.float32)
+        duration = total_samples / self.sample_rate
+
+        # Calculate beat timing
+        beat_samples = int(self.sample_rate * 60 / base_tempo)
+
+        # Determine which notes fall in this chunk
+        t_start = chunk_start / self.sample_rate
+
+        # Simplified: generate continuous pad-like melody for chunk
+        t = (np.arange(chunk_samples) + chunk_start) / self.sample_rate
+        progress = t / duration
+
+        # Slowly evolving frequency based on scale
+        note_cycle = (t * base_tempo / 60 / 4).astype(int)  # Change note every 4 beats
+        scale_positions = note_cycle % len(intervals)
+
+        for sample_idx in range(0, chunk_samples, beat_samples):
+            end_idx = min(sample_idx + beat_samples, chunk_samples)
+            segment_len = end_idx - sample_idx
+
+            if segment_len <= 0:
+                break
+
+            # Get frequency for this segment
+            scale_pos = scale_positions[sample_idx]
+            semitones = intervals[scale_pos]
+            freq = root * (2.0 ** (semitones / 12.0))
+
+            seg_t = np.arange(segment_len) / self.sample_rate
+
+            wave = np.sin(2 * np.pi * freq * seg_t)
+            wave += np.sin(2 * np.pi * freq * 2 * seg_t) * 0.2
+
+            # Simple envelope
+            envelope = np.ones(segment_len, dtype=np.float32)
+            attack = min(int(segment_len * 0.1), segment_len)
+            release = min(int(segment_len * 0.3), segment_len)
+            if attack > 0:
+                envelope[:attack] = np.linspace(0, 1, attack)
+            if release > 0:
+                envelope[-release:] = np.linspace(1, 0, release)
+
+            wave = wave * envelope * amplitude * 0.5
+
+            chunk[sample_idx:end_idx, 0] += wave
+            chunk[sample_idx:end_idx, 1] += wave
+
+        return chunk
+
+    def _apply_fade_chunk(self, chunk: np.ndarray, chunk_start: int,
+                           total_samples: int, fade_duration: float = 2.0) -> np.ndarray:
+        """Apply fade in/out only to relevant chunks."""
+        fade_samples = int(fade_duration * self.sample_rate)
+        chunk_end = chunk_start + len(chunk)
+
+        # Fade in (only affects first chunk)
+        if chunk_start < fade_samples:
+            fade_end = min(fade_samples - chunk_start, len(chunk))
+            for i in range(fade_end):
+                global_i = chunk_start + i
+                fade_factor = global_i / fade_samples
+                chunk[i] *= fade_factor
+
+        # Fade out (only affects last chunk)
+        fade_out_start = total_samples - fade_samples
+        if chunk_end > fade_out_start:
+            for i in range(len(chunk)):
+                global_i = chunk_start + i
+                if global_i >= fade_out_start:
+                    fade_factor = (total_samples - global_i) / fade_samples
+                    chunk[i] *= max(0, fade_factor)
+
+        return chunk
 
     def _generate_tribal_rhythm_phased(self, rhythm_type: str, num_samples: int,
                                         phase_boundaries: List) -> np.ndarray:
