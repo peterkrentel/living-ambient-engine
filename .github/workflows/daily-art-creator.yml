@@ -40,6 +40,12 @@ jobs:
     name: Select Next Art Combination and Generate
     runs-on: ubuntu-latest
     
+    # Explicit permissions for security best practices
+    permissions:
+      contents: write      # Required to commit tracking file updates
+      actions: write       # Required to trigger art-creator workflow
+      issues: write        # Required to create completion issue
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
