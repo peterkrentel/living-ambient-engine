@@ -288,6 +288,65 @@ Key: Consistency + unique branding + SEO
 
 ---
 
+## AI Agent & Automation Questions
+
+### Can AI coding agents do things not code-related?
+
+**Yes!** Modern AI coding agents (like GitHub Copilot) can handle many tasks beyond just writing code:
+
+**Documentation Tasks:**
+- Writing and updating documentation (README, guides, FAQs)
+- Creating diagrams and flowcharts (Mermaid, ASCII art)
+- Generating API documentation
+- Writing release notes and changelogs
+
+**Project Management:**
+- Creating and organizing issues
+- Writing project plans and roadmaps
+- Setting up project structure
+- Creating checklists and task breakdowns
+
+**Research & Analysis:**
+- Searching codebases for patterns
+- Analyzing dependencies and vulnerabilities
+- Researching best practices
+- Comparing different approaches
+
+**Configuration & Setup:**
+- Setting up CI/CD pipelines
+- Configuring linters and formatters
+- Managing environment files
+- Creating Docker configurations
+
+**Testing & Validation:**
+- Writing test cases
+- Running tests and analyzing results
+- Validating configurations
+- Checking for security issues
+
+**What AI Agents Can't Do:**
+- Make subjective creative decisions (you decide the vision)
+- Understand business context without explanation
+- Access external services without credentials
+- Make breaking changes without approval
+
+**Best Practices When Working with AI Agents:**
+1. **Be specific** - Clear instructions get better results
+2. **Provide context** - Share relevant background information
+3. **Review changes** - Always verify AI-generated code
+4. **Iterate** - Refine requests based on results
+5. **Ask questions** - If something isn't clear, ask for clarification
+
+### How do I use AI agents with this project?
+
+Read [`.github/AGENT_INSTRUCTIONS.md`](.github/AGENT_INSTRUCTIONS.md) first. AI agents working on this codebase should:
+- Check `docs/spec/GUARDRAILS.md` before any changes
+- Follow the spec-driven development process
+- Update documentation with code changes
+- Test changes with provided commands
+
+---
+
 ## Still Have Questions?
 
 - **GitHub Issues:** [Report bugs or ask questions](https://github.com/peterkrentel/living-ambient-engine/issues)
