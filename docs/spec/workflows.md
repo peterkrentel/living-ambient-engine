@@ -210,13 +210,19 @@ permissions:
 ### Purpose
 
 Tests all input combinations for `art-creator.yml` by triggering it via `workflow_call`.
-Runs 7 test cases **in parallel** with 5-second videos (minimum per GUARDRAILS.md).
+
+**Three modes:**
+1. **Schedule** - Daily cron run with pattern rotation and uploads (respects 10 uploads/24hr limit)
+2. **PR** - All 7 patterns in parallel, 5-second videos, no upload
+3. **Manual** - Configurable pattern set, duration, and upload
 
 ### Trigger
 
 ```yaml
-workflow_dispatch:  # Manual trigger
-pull_request:       # Auto-trigger on workflow/core code changes
+schedule:
+  - cron: '0 3 * * *'  # Daily 3AM UTC - rotates pattern sets
+workflow_dispatch:      # Manual trigger with options
+pull_request:          # Auto-trigger on workflow/core code changes
   paths:
     - '.github/workflows/art-creator.yml'
     - '.github/workflows/test-art-creator.yml'
@@ -227,15 +233,39 @@ pull_request:       # Auto-trigger on workflow/core code changes
     - 'render/**'
 ```
 
+### Inputs (Manual)
+
+| Input | Type | Default | Valid Values | Description |
+|-------|------|---------|--------------|-------------|
+| `pattern_set` | choice | `auto` | `auto`, `all`, `set1`, `set2`, `set3` | Pattern subset to test |
+| `duration` | choice | `5s` | `5s`, `5min`, `10min` | Video duration |
+| `upload_to_brand` | boolean | `false` | `true`, `false` | Upload to Brand YouTube |
+| `reason` | string | - | - | Test run description |
+
+### Pattern Rotation Strategy
+
+Scheduled runs rotate through pattern subsets to stay under YouTube upload quota:
+
+| Day(s) | Pattern Set | Test IDs | Upload Count |
+|--------|-------------|----------|--------------|
+| Mon, Thu, Sun | `set1` | 1-3 | 3 videos |
+| Tue, Fri | `set2` | 4-5 | 2 videos |
+| Wed, Sat | `set3` | 6-7 | 2 videos |
+
+**Rationale:** Max 3 videos/day << 10 uploads/24hr quota limit
+
+See: [docs/CRON_PATTERN_TESTING.md](../CRON_PATTERN_TESTING.md) for detailed schedule
+
 ### Job Sequence
 
 ```text
-spec-validation → contract-tests → call-art-creator (7 parallel jobs)
+spec-validation → contract-tests → determine-pattern-set → call-art-creator (filtered matrix)
 ```
 
 1. **spec-validation** - Validates specs exist and are consistent
 2. **contract-tests** - Runs `tests/contracts/test_validation_contract.py`
-3. **call-art-creator** - Calls art-creator.yml 7 times with matrix inputs
+3. **determine-pattern-set** - Decides which patterns to run based on trigger type and inputs
+4. **call-art-creator** - Calls art-creator.yml with filtered matrix items
 
 ### Test Matrix Coverage
 
@@ -251,17 +281,35 @@ spec-validation → contract-tests → call-art-creator (7 parallel jobs)
 
 ### Test Parameters
 
-All 7 jobs use:
+Parameters vary by trigger type:
 
+**PR runs (validation):**
+- `pattern_set: 'all'` - All 7 patterns
 - `duration: '5s'` - Minimum per GUARDRAILS.md
 - `skip_artifact_upload: 'true'` - No artifact storage
+- `upload: false` - No YouTube upload
+
+**Scheduled runs (production testing):**
+- `pattern_set: auto` - Rotates by day (set1/set2/set3)
+- `duration: '5min'` - Quality test video
+- `skip_artifact_upload: 'false'` - Save artifacts
+- `upload: true` - Upload to Brand YouTube
+
+**Manual runs:**
+- Configurable via workflow_dispatch inputs
 - `test_id: ${{ matrix.test_id }}` - **Required for parallel execution**
 
 ### Outputs
 
+**PR runs:**
 - No artifacts saved
 - No YouTube upload
 - Failure in any test case blocks PR merge
+
+**Scheduled/Manual with upload:**
+- Artifacts saved (7-day retention)
+- Videos uploaded to Brand YouTube channel
+- Catalog updates committed
 
 ## Invariants
 

@@ -6,12 +6,42 @@
 name: Test Art Creator - All Combinations
 
 on:
+  # Daily cron schedule - rotates through different pattern combinations
+  # each day to stay within 10 uploads per 24 hours limit
+  schedule:
+    - cron: '0 3 * * *'  # Daily at 3 AM UTC
+
   workflow_dispatch:
     inputs:
       reason:
         description: 'Reason for running tests (optional)'
         required: false
         default: 'Manual test run'
+      pattern_set:
+        description: 'Pattern set to test (auto=rotate by day, all=all 7 patterns, 1-7=specific patterns)'
+        required: false
+        type: choice
+        default: 'auto'
+        options:
+          - 'auto'      # Rotate by day of week
+          - 'all'       # All 7 patterns (no upload)
+          - 'set1'      # Patterns 1-3 (3 uploads)
+          - 'set2'      # Patterns 4-5 (2 uploads)
+          - 'set3'      # Patterns 6-7 (2 uploads)
+      duration:
+        description: 'Video duration (5s for tests, longer for uploads)'
+        required: false
+        type: choice
+        default: '5s'
+        options:
+          - '5s'
+          - '5min'
+          - '10min'
+      upload_to_brand:
+        description: 'Upload generated videos to Brand YouTube channel'
+        required: false
+        type: boolean
+        default: false
 
   pull_request:
     paths:
@@ -194,16 +224,72 @@ jobs:
           # Generator tests are slow and run via matrix
           python -m pytest tests/contracts/test_validation_contract.py tests/contracts/test_workflow_metadata_consistency.py -v --tb=short
 
-  # Run art-creator matrix tests (slower, needs contract tests to pass)
-  # Matrix strategy calls art-creator.yml 7 times with different input combinations
-  call-art-creator:
+  # Determine which pattern set to run based on inputs or day of week
+  determine-pattern-set:
     needs: contract-tests
+    runs-on: ubuntu-latest
+    outputs:
+      pattern_set: ${{ steps.determine.outputs.pattern_set }}
+      duration: ${{ steps.determine.outputs.duration }}
+      upload: ${{ steps.determine.outputs.upload }}
+    steps:
+      - name: Determine pattern set
+        id: determine
+        run: |
+          # Default values for PR and manual runs
+          PATTERN_SET="all"
+          DURATION="5s"
+          UPLOAD="false"
+          
+          # For scheduled runs, rotate pattern sets by day of week
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            DOW=$(date +%u)  # 1=Monday, 7=Sunday
+            case $DOW in
+              1|4|7)  # Mon, Thu, Sun: Test patterns 1-3 (3 videos)
+                PATTERN_SET="set1"
+                ;;
+              2|5)    # Tue, Fri: Test patterns 4-5 (2 videos)
+                PATTERN_SET="set2"
+                ;;
+              3|6)    # Wed, Sat: Test patterns 6-7 (2 videos)
+                PATTERN_SET="set3"
+                ;;
+            esac
+            DURATION="5min"
+            UPLOAD="true"
+          fi
+          
+          # Override with manual inputs if provided
+          if [ -n "${{ github.event.inputs.pattern_set }}" ] && [ "${{ github.event.inputs.pattern_set }}" != "auto" ]; then
+            PATTERN_SET="${{ github.event.inputs.pattern_set }}"
+          fi
+          if [ -n "${{ github.event.inputs.duration }}" ]; then
+            DURATION="${{ github.event.inputs.duration }}"
+          fi
+          if [ "${{ github.event.inputs.upload_to_brand }}" = "true" ]; then
+            UPLOAD="true"
+          fi
+          
+          echo "pattern_set=${PATTERN_SET}" >> $GITHUB_OUTPUT
+          echo "duration=${DURATION}" >> $GITHUB_OUTPUT
+          echo "upload=${UPLOAD}" >> $GITHUB_OUTPUT
+          
+          echo "📊 Pattern Set: ${PATTERN_SET}"
+          echo "⏱️ Duration: ${DURATION}"
+          echo "📤 Upload: ${UPLOAD}"
+
+  # Run art-creator matrix tests (slower, needs contract tests to pass)
+  # Matrix strategy calls art-creator.yml with different input combinations
+  # Pattern set is filtered based on determine-pattern-set job
+  call-art-creator:
+    needs: determine-pattern-set
     strategy:
       fail-fast: false
       matrix:
         include:
           # Test 1: Cave art with awakening journey
           - test_id: '1'
+            pattern_set: 'set1'
             art_period: 'cave_art'
             visual_pattern: 'organic_flow'
             music_style: 'heartbeat'
@@ -211,6 +297,7 @@ jobs:
             journey_intensity: 'subtle'
           # Test 2: Renaissance with breathing journey
           - test_id: '2'
+            pattern_set: 'set1'
             art_period: 'renaissance'
             visual_pattern: 'fibonacci_spiral'
             music_style: 'gnawa'
@@ -218,6 +305,7 @@ jobs:
             journey_intensity: 'moderate'
           # Test 3: Modern with trance journey
           - test_id: '3'
+            pattern_set: 'set1'
             art_period: 'modern'
             visual_pattern: 'geometric_morph'
             music_style: 'gamelan'
@@ -225,6 +313,7 @@ jobs:
             journey_intensity: 'dramatic'
           # Test 4: Future with deep_dive journey
           - test_id: '4'
+            pattern_set: 'set2'
             art_period: 'future'
             visual_pattern: 'starfield'
             music_style: 'none'
@@ -232,6 +321,7 @@ jobs:
             journey_intensity: 'moderate'
           # Test 5: Impressionist with waves journey
           - test_id: '5'
+            pattern_set: 'set2'
             art_period: 'impressionist'
             visual_pattern: 'flowing_waves'
             music_style: 'candomble'
@@ -239,6 +329,7 @@ jobs:
             journey_intensity: 'subtle'
           # Test 6: Baroque with crescendo journey
           - test_id: '6'
+            pattern_set: 'set3'
             art_period: 'baroque'
             visual_pattern: 'julia'
             music_style: 'taiko'
@@ -246,11 +337,16 @@ jobs:
             journey_intensity: 'dramatic'
           # Test 7: Medieval with steady journey
           - test_id: '7'
+            pattern_set: 'set3'
             art_period: 'medieval'
             visual_pattern: 'sacred_geometry'
             music_style: 'burundi'
             journey: 'steady'
             journey_intensity: 'moderate'
+    # Filter matrix based on pattern set (all=run all, set1/set2/set3=run subset)
+    if: |
+      needs.determine-pattern-set.outputs.pattern_set == 'all' ||
+      matrix.pattern_set == needs.determine-pattern-set.outputs.pattern_set
     uses: ./.github/workflows/art-creator.yml
     with:
       art_period: ${{ matrix.art_period }}
@@ -258,7 +354,8 @@ jobs:
       music_style: ${{ matrix.music_style }}
       journey: ${{ matrix.journey }}
       journey_intensity: ${{ matrix.journey_intensity }}
-      duration: '5s'  # Minimum per GUARDRAILS.md - fast test validation
+      duration: ${{ needs.determine-pattern-set.outputs.duration }}
       test_id: ${{ matrix.test_id }}
-      skip_artifact_upload: 'true'  # Tests don't need artifacts saved
+      skip_artifact_upload: ${{ needs.determine-pattern-set.outputs.upload == 'false' && 'true' || 'false' }}
+      upload_to_brand: ${{ needs.determine-pattern-set.outputs.upload }}
     secrets: inherit

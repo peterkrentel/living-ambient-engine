@@ -277,6 +277,11 @@ on:
         required: false
         default: 'false'
         description: 'Skip artifact upload for faster tests'
+      upload_to_brand:
+        type: string
+        required: false
+        default: 'false'
+        description: 'Upload to Brand YouTube Channel (true/false)'
 
 # Prevent overlapping runs and resource contention
 # Include test_id to allow parallel matrix jobs from test-art-creator.yml
@@ -324,7 +329,7 @@ jobs:
           echo "seed=${{ github.event.inputs.seed || '' }}" >> $GITHUB_OUTPUT
           echo "title=${{ github.event.inputs.title || '' }}" >> $GITHUB_OUTPUT
           echo "description=${{ github.event.inputs.description || '' }}" >> $GITHUB_OUTPUT
-          echo "upload_to_brand=${{ github.event.inputs.upload_to_brand || 'false' }}" >> $GITHUB_OUTPUT
+          echo "upload_to_brand=${{ inputs.upload_to_brand || github.event.inputs.upload_to_brand || 'false' }}" >> $GITHUB_OUTPUT
           echo "custom_primary_rgb=${{ github.event.inputs.custom_primary_rgb || '100,150,200' }}" >> $GITHUB_OUTPUT
           echo "custom_secondary_rgb=${{ github.event.inputs.custom_secondary_rgb || '200,100,150' }}" >> $GITHUB_OUTPUT
           echo "custom_accent_rgb=${{ github.event.inputs.custom_accent_rgb || '255,255,100' }}" >> $GITHUB_OUTPUT
