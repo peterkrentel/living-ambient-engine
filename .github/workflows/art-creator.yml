@@ -297,7 +297,7 @@ jobs:
   # =============================================================================
   create_art:
     runs-on: ubuntu-latest
-    timeout-minutes: 120
+    timeout-minutes: 300  # 5 hours for 4h video generation + processing
 
     steps:
       - name: Checkout repository
