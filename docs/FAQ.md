@@ -339,7 +339,7 @@ Key: Consistency + unique branding + SEO
 
 ### How do I use AI agents with this project?
 
-Read [`.github/AGENT_INSTRUCTIONS.md`](.github/AGENT_INSTRUCTIONS.md) first. AI agents working on this codebase should:
+Read [`../.github/AGENT_INSTRUCTIONS.md`](../.github/AGENT_INSTRUCTIONS.md) first. AI agents working on this codebase should:
 - Check `docs/spec/GUARDRAILS.md` before any changes
 - Follow the spec-driven development process
 - Update documentation with code changes
