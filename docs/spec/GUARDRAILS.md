@@ -254,7 +254,9 @@ duration: str | int
 
 # Workflow timeout
 workflow_timeout: int (minutes)
-  max: 360     # 6 hours GitHub Actions limit
+  create_art: 300   # 5 hours for 4h video generation + processing
+  upload: 30        # Upload step timeout
+  max: 360          # 6 hours GitHub Actions limit
   enforcement: VALIDATE
 
 # Concurrency group (art-creator.yml)
