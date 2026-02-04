@@ -31,10 +31,21 @@ Generative ambient art with:
 - 🚀 **7 Dynamic journeys** - Synchronized audio-visual evolution (awakening, deep_dive, waves...)
 - ⚡ **Full parameter control** - Speed, complexity, tempo, frequencies
 - 🎲 **Reproducible seeds** - Recreate or share your exact creations
+- 🤖 **Automated daily generation** - NEW! Automatic cycling through curated combinations
 
 👉 **[Start Creating Art Now →](docs/ART_CREATOR.md)**
 
 *Anyone can run the Art Creator workflow—no coding required!*
+
+### Daily Art Creator (Automated)
+
+A new scheduled workflow automatically generates unique art pieces every day:
+- ⏰ Runs daily at 1:10pm CST (19:10 UTC)
+- 🔄 Cycles through 20 curated combinations (non-repeating)
+- 📝 Tracks progress automatically
+- 🎨 Each day brings a new artistic vision
+
+See [`.github/data/README.md`](.github/data/README.md) for details.
 
 ## Quick Start
 
