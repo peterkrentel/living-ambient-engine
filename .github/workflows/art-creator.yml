@@ -865,8 +865,9 @@ jobs:
   upload:
     needs: create_art
     runs-on: ubuntu-latest
-    # Handle both workflow_dispatch (string 'true'/'false') and workflow_call (boolean or string)
-    if: ${{ (github.event_name == 'workflow_dispatch' && fromJSON(github.event.inputs.upload_to_brand || 'false')) || (github.event_name == 'workflow_call' && (inputs.upload_to_brand == true || inputs.upload_to_brand == 'true')) }}
+    # Use inputs.upload_to_brand for workflow_call, github.event.inputs for workflow_dispatch
+    # inputs.upload_to_brand is set for workflow_call; github.event.inputs.upload_to_brand for dispatch
+    if: ${{ inputs.upload_to_brand == true || inputs.upload_to_brand == 'true' || fromJSON(github.event.inputs.upload_to_brand || 'false') }}
     timeout-minutes: 30
     
     steps:
