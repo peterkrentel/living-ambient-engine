@@ -117,6 +117,7 @@ jobs:
           echo "📅 Day $DAY of 81 ($(( (DAY * 3) + 3 )) of 243 total videos)"
 
   # Job 2-4: Generate 3 videos in parallel using art-creator
+  # Each job gets unique test_id to avoid concurrency conflicts
   generate-1:
     needs: schedule
     uses: ./.github/workflows/art-creator.yml
@@ -135,6 +136,7 @@ jobs:
       rhythm_volume: '0.5'
       journey: ${{ needs.schedule.outputs.journey_1 }}
       journey_intensity: 'moderate'
+      test_id: 'batch-1'
     secrets: inherit
 
   generate-2:
@@ -155,6 +157,7 @@ jobs:
       rhythm_volume: '0.5'
       journey: ${{ needs.schedule.outputs.journey_2 }}
       journey_intensity: 'moderate'
+      test_id: 'batch-2'
     secrets: inherit
 
   generate-3:
@@ -175,6 +178,7 @@ jobs:
       rhythm_volume: '0.5'
       journey: ${{ needs.schedule.outputs.journey_3 }}
       journey_intensity: 'moderate'
+      test_id: 'batch-3'
     secrets: inherit
 
   # Job 5: Summary
