@@ -21,6 +21,7 @@ Four workflows automate video generation, YouTube deployment, and testing.
 | WF-CF | `content-factory.yml` | Schedule + Manual | Batch generation + upload | Personal |
 | WF-CFB | `content-factory-brand.yml` | Manual only | Batch generation + upload | Brand |
 | WF-ART | `art-creator.yml` | Manual / workflow_call | Single custom video | Brand (optional) |
+| WF-BATCH | `art-creator-batch.yml` | Schedule + Manual | Daily matrix generation | Brand |
 | WF-TEST | `test-art-creator.yml` | Manual + PR (path filter) | Test all input combinations | None (test only) |
 
 ## Gating Rules
@@ -203,6 +204,70 @@ See: `tests/contracts/` for enforcement via `spec-validation` job.
 ```yaml
 permissions:
   contents: write  # Required for catalog commit
+```
+
+## art-creator-batch.yml
+
+### Purpose
+
+Scheduled batch generation that systematically covers all art_period × music_style combinations.
+Runs daily, generating 3 videos (5 min each), uploading to brand channel.
+
+**Full matrix coverage:** 8 art periods × 9 music styles = 72 combinations over ~24 days.
+
+### Trigger
+
+```yaml
+schedule:
+  - cron: '0 6 * * *'  # Daily at 6 AM UTC
+workflow_dispatch:      # Manual with day override
+```
+
+### Concurrency
+
+```yaml
+concurrency:
+  group: art-creator-batch
+  cancel-in-progress: false
+```
+
+### Inputs (Manual)
+
+| Input | Type | Default | Description |
+|-------|------|---------|-------------|
+| `day_override` | string | '' | Override day of week (0-7, 0=Sunday) |
+| `dry_run` | boolean | `false` | Generate but don't upload |
+
+### Daily Rotation Schedule
+
+| Day | Art Period | Music Styles |
+|-----|------------|--------------|
+| 0 (Sun) | modern | gnawa, taiko, gamelan |
+| 1 (Mon) | renaissance | burundi, kuku, candomble |
+| 2 (Tue) | baroque | bamboula, heartbeat, none |
+| 3 (Wed) | impressionist | gnawa, taiko, gamelan |
+| 4 (Thu) | cave_art | burundi, kuku, candomble |
+| 5 (Fri) | ancient | bamboula, heartbeat, none |
+| 6 (Sat) | medieval | gnawa, taiko, gamelan |
+| 7 | future | burundi, kuku, candomble |
+
+### Job Sequence
+
+```text
+schedule → generate-1, generate-2, generate-3 (parallel) → summary
+```
+
+### Secrets Required
+
+| Secret | Purpose |
+|--------|---------|
+| `YOUTUBE_TOKEN_PICKLE_BRAND` | Brand channel OAuth |
+
+### Permissions
+
+```yaml
+permissions:
+  contents: write
 ```
 
 ## test-art-creator.yml

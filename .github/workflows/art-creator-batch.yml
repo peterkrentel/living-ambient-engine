@@ -1,0 +1,166 @@
+# Art Creator Batch - Scheduled Matrix Generation
+# Runs daily, rotates through all art_period + music_style combinations
+# Generates 5min videos, uploads to brand channel (10/day limit)
+# Spec: docs/spec/workflows.md#art-creator-batchyml
+
+name: Art Creator Batch
+
+on:
+  # Run daily at 6 AM UTC (adjust to your timezone)
+  schedule:
+    - cron: '0 6 * * *'
+
+  # Manual trigger with day override
+  workflow_dispatch:
+    inputs:
+      day_override:
+        description: 'Day override (0-7, 0=Sunday). Leave empty for auto-detect.'
+        required: false
+        default: ''
+      dry_run:
+        description: 'Dry run - generate but do not upload'
+        required: false
+        type: boolean
+        default: false
+
+# Prevent overlapping runs
+concurrency:
+  group: art-creator-batch
+  cancel-in-progress: false
+
+env:
+  PYTHON_VERSION: '3.11'
+
+permissions:
+  contents: write
+
+jobs:
+  # Job 1: Determine today's art_period and music_styles
+  schedule:
+    runs-on: ubuntu-latest
+    outputs:
+      art_period: ${{ steps.pick.outputs.art_period }}
+      style_1: ${{ steps.pick.outputs.style_1 }}
+      style_2: ${{ steps.pick.outputs.style_2 }}
+      style_3: ${{ steps.pick.outputs.style_3 }}
+      day_num: ${{ steps.pick.outputs.day_num }}
+
+    steps:
+      - name: Pick today's combinations
+        id: pick
+        run: |
+          # Get day of week (0=Sunday, 1=Monday, etc.)
+          if [ -n "${{ github.event.inputs.day_override }}" ]; then
+            DAY="${{ github.event.inputs.day_override }}"
+          else
+            DAY=$(date +%w)
+          fi
+          echo "day_num=$DAY" >> $GITHUB_OUTPUT
+
+          # Art periods (8 total) - each day gets one
+          case $((DAY % 8)) in
+            0) ART_PERIOD="modern" ;;
+            1) ART_PERIOD="renaissance" ;;
+            2) ART_PERIOD="baroque" ;;
+            3) ART_PERIOD="impressionist" ;;
+            4) ART_PERIOD="cave_art" ;;
+            5) ART_PERIOD="ancient" ;;
+            6) ART_PERIOD="medieval" ;;
+            7) ART_PERIOD="future" ;;
+          esac
+          echo "art_period=$ART_PERIOD" >> $GITHUB_OUTPUT
+
+          # Music styles - 3 per day, rotating through 9 styles
+          # Full cycle = 3 days of styles × 8 art periods = 24 days for all combos
+          case $((DAY % 3)) in
+            0) S1="gnawa"; S2="taiko"; S3="gamelan" ;;
+            1) S1="burundi"; S2="kuku"; S3="candomble" ;;
+            2) S1="bamboula"; S2="heartbeat"; S3="none" ;;
+          esac
+          echo "style_1=$S1" >> $GITHUB_OUTPUT
+          echo "style_2=$S2" >> $GITHUB_OUTPUT
+          echo "style_3=$S3" >> $GITHUB_OUTPUT
+
+          echo "📅 Day $DAY: Art Period = $ART_PERIOD"
+          echo "   Styles: $S1, $S2, $S3"
+
+  # Job 2-4: Generate 3 videos in parallel using art-creator
+  generate-1:
+    needs: schedule
+    uses: ./.github/workflows/art-creator.yml
+    with:
+      art_period: ${{ needs.schedule.outputs.art_period }}
+      music_style: ${{ needs.schedule.outputs.style_1 }}
+      duration: '5min'
+      upload_to_brand: ${{ github.event.inputs.dry_run != 'true' }}
+      visual_pattern: 'auto'
+      visual_speed: 'auto'
+      visual_complexity: 'auto'
+      color_palette: 'auto'
+      tempo: '60'
+      brainwave_frequency: '10'
+      solfeggio_frequency: '528'
+      rhythm_volume: '0.5'
+      journey: 'breathing'
+      journey_intensity: 'moderate'
+    secrets: inherit
+
+  generate-2:
+    needs: schedule
+    uses: ./.github/workflows/art-creator.yml
+    with:
+      art_period: ${{ needs.schedule.outputs.art_period }}
+      music_style: ${{ needs.schedule.outputs.style_2 }}
+      duration: '5min'
+      upload_to_brand: ${{ github.event.inputs.dry_run != 'true' }}
+      visual_pattern: 'auto'
+      visual_speed: 'auto'
+      visual_complexity: 'auto'
+      color_palette: 'auto'
+      tempo: '60'
+      brainwave_frequency: '10'
+      solfeggio_frequency: '528'
+      rhythm_volume: '0.5'
+      journey: 'breathing'
+      journey_intensity: 'moderate'
+    secrets: inherit
+
+  generate-3:
+    needs: schedule
+    uses: ./.github/workflows/art-creator.yml
+    with:
+      art_period: ${{ needs.schedule.outputs.art_period }}
+      music_style: ${{ needs.schedule.outputs.style_3 }}
+      duration: '5min'
+      upload_to_brand: ${{ github.event.inputs.dry_run != 'true' }}
+      visual_pattern: 'auto'
+      visual_speed: 'auto'
+      visual_complexity: 'auto'
+      color_palette: 'auto'
+      tempo: '60'
+      brainwave_frequency: '10'
+      solfeggio_frequency: '528'
+      rhythm_volume: '0.5'
+      journey: 'breathing'
+      journey_intensity: 'moderate'
+    secrets: inherit
+
+  # Job 5: Summary
+  summary:
+    needs: [schedule, generate-1, generate-2, generate-3]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Report
+        run: |
+          echo "## 📊 Art Creator Batch Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Day:** ${{ needs.schedule.outputs.day_num }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Art Period:** ${{ needs.schedule.outputs.art_period }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Style | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| ${{ needs.schedule.outputs.style_1 }} | ${{ needs.generate-1.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| ${{ needs.schedule.outputs.style_2 }} | ${{ needs.generate-2.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| ${{ needs.schedule.outputs.style_3 }} | ${{ needs.generate-3.result }} |" >> $GITHUB_STEP_SUMMARY
+
