@@ -277,6 +277,11 @@ on:
         required: false
         default: 'false'
         description: 'Skip artifact upload for faster tests'
+      upload_to_brand:
+        type: boolean
+        required: false
+        default: false
+        description: 'Upload to Brand YouTube Channel'
 
 # Prevent overlapping runs and resource contention
 # Include test_id to allow parallel matrix jobs from test-art-creator.yml
@@ -324,8 +329,8 @@ jobs:
           echo "seed=${{ github.event.inputs.seed || '' }}" >> $GITHUB_OUTPUT
           echo "title=${{ github.event.inputs.title || '' }}" >> $GITHUB_OUTPUT
           echo "description=${{ github.event.inputs.description || '' }}" >> $GITHUB_OUTPUT
-          # Boolean inputs return 'true' or 'false' strings - pass directly
-          echo "upload_to_brand=${{ github.event.inputs.upload_to_brand }}" >> $GITHUB_OUTPUT
+          # Boolean inputs - handle both workflow_dispatch (string) and workflow_call (boolean)
+          echo "upload_to_brand=${{ inputs.upload_to_brand || github.event.inputs.upload_to_brand || 'false' }}" >> $GITHUB_OUTPUT
           echo "custom_primary_rgb=${{ github.event.inputs.custom_primary_rgb || '100,150,200' }}" >> $GITHUB_OUTPUT
           echo "custom_secondary_rgb=${{ github.event.inputs.custom_secondary_rgb || '200,100,150' }}" >> $GITHUB_OUTPUT
           echo "custom_accent_rgb=${{ github.event.inputs.custom_accent_rgb || '255,255,100' }}" >> $GITHUB_OUTPUT
@@ -856,12 +861,12 @@ jobs:
           echo "💡 **Tip**: Use the seed value to recreate this exact video, or try new parameters for a completely different experience!" >> $GITHUB_STEP_SUMMARY
   
   # Job 2: Upload to YouTube (Brand Channel)
-  # Only runs for manual workflow_dispatch when upload_to_brand is true
-  # Skipped for workflow_call tests
+  # Runs when upload_to_brand is true (from workflow_dispatch OR workflow_call)
   upload:
     needs: create_art
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'workflow_dispatch' && fromJSON(github.event.inputs.upload_to_brand) }}
+    # Handle both workflow_dispatch (string 'true'/'false') and workflow_call (boolean)
+    if: ${{ (github.event_name == 'workflow_dispatch' && fromJSON(github.event.inputs.upload_to_brand)) || (github.event_name == 'workflow_call' && inputs.upload_to_brand) }}
     timeout-minutes: 30
     
     steps:

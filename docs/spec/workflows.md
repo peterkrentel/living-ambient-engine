@@ -21,6 +21,7 @@ Four workflows automate video generation, YouTube deployment, and testing.
 | WF-CF | `content-factory.yml` | Schedule + Manual | Batch generation + upload | Personal |
 | WF-CFB | `content-factory-brand.yml` | Manual only | Batch generation + upload | Brand |
 | WF-ART | `art-creator.yml` | Manual / workflow_call | Single custom video | Brand (optional) |
+| WF-BATCH | `art-creator-batch.yml` | Schedule + Manual | Daily matrix generation | Brand |
 | WF-TEST | `test-art-creator.yml` | Manual + PR (path filter) | Test all input combinations | None (test only) |
 
 ## Gating Rules
@@ -203,6 +204,75 @@ See: `tests/contracts/` for enforcement via `spec-validation` job.
 ```yaml
 permissions:
   contents: write  # Required for catalog commit
+```
+
+## art-creator-batch.yml
+
+### Purpose
+
+Scheduled batch generation that systematically covers ALL parameter combinations.
+Runs daily, generating 3 videos (5 min each), uploading to brand channel.
+
+**Full matrix coverage:**
+- 9 art_periods × 9 music_styles = 81 unique title combinations
+- 3 videos/day = **27 days for complete coverage**
+- Also rotates: visual_pattern (14), color_palette (10), journey (7), solfeggio (9)
+
+### Trigger
+
+```yaml
+schedule:
+  - cron: '0 6 * * *'  # Daily at 6 AM UTC
+workflow_dispatch:      # Manual with day override
+```
+
+### Concurrency
+
+```yaml
+concurrency:
+  group: art-creator-batch
+  cancel-in-progress: false
+```
+
+### Inputs (Manual)
+
+| Input | Type | Default | Description |
+|-------|------|---------|-------------|
+| `day_override` | string | '' | Day number 0-80 (overrides auto-counter) |
+| `dry_run` | boolean | `false` | Generate but don't upload |
+
+### Rotation Logic
+
+Each video gets a **unique art_period × music_style combination** (no duplicate titles).
+
+| Parameter | Options | Rotation |
+|-----------|---------|----------|
+| art_period | 9 | Sequential through 81 combos |
+| music_style | 9 | Sequential through 81 combos |
+| visual_pattern | 14 | Cycles every 14 videos |
+| color_palette | 10 | Cycles every 10 videos |
+| journey | 7 | Cycles every 7 videos |
+| solfeggio | 9 | Cycles every 9 videos |
+
+Day counter uses days since epoch (mod 81) for consistent sequencing across runs.
+
+### Job Sequence
+
+```text
+schedule → generate-1, generate-2, generate-3 (parallel) → summary
+```
+
+### Secrets Required
+
+| Secret | Purpose |
+|--------|---------|
+| `YOUTUBE_TOKEN_PICKLE_BRAND` | Brand channel OAuth |
+
+### Permissions
+
+```yaml
+permissions:
+  contents: write
 ```
 
 ## test-art-creator.yml
