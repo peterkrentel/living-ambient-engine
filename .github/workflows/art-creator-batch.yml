@@ -35,6 +35,7 @@ env:
 
 permissions:
   contents: write
+  actions: read
 
 jobs:
   # Job 1: Calculate today's unique parameter combinations
