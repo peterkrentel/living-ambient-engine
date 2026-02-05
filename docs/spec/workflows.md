@@ -210,10 +210,13 @@ permissions:
 
 ### Purpose
 
-Scheduled batch generation that systematically covers all art_period × music_style combinations.
+Scheduled batch generation that systematically covers ALL parameter combinations.
 Runs daily, generating 3 videos (5 min each), uploading to brand channel.
 
-**Full matrix coverage:** 8 art periods × 9 music styles = 72 combinations over ~24 days.
+**Full matrix coverage:**
+- 9 art_periods × 9 music_styles = 81 unique title combinations
+- 3 videos/day = **27 days for complete coverage**
+- Also rotates: visual_pattern (14), color_palette (10), journey (7), solfeggio (9)
 
 ### Trigger
 
@@ -235,21 +238,23 @@ concurrency:
 
 | Input | Type | Default | Description |
 |-------|------|---------|-------------|
-| `day_override` | string | '' | Override day of week (0-7, 0=Sunday) |
+| `day_override` | string | '' | Day number 0-80 (overrides auto-counter) |
 | `dry_run` | boolean | `false` | Generate but don't upload |
 
-### Daily Rotation Schedule
+### Rotation Logic
 
-| Day | Art Period | Music Styles |
-|-----|------------|--------------|
-| 0 (Sun) | modern | gnawa, taiko, gamelan |
-| 1 (Mon) | renaissance | burundi, kuku, candomble |
-| 2 (Tue) | baroque | bamboula, heartbeat, none |
-| 3 (Wed) | impressionist | gnawa, taiko, gamelan |
-| 4 (Thu) | cave_art | burundi, kuku, candomble |
-| 5 (Fri) | ancient | bamboula, heartbeat, none |
-| 6 (Sat) | medieval | gnawa, taiko, gamelan |
-| 7 | future | burundi, kuku, candomble |
+Each video gets a **unique art_period × music_style combination** (no duplicate titles).
+
+| Parameter | Options | Rotation |
+|-----------|---------|----------|
+| art_period | 9 | Sequential through 81 combos |
+| music_style | 9 | Sequential through 81 combos |
+| visual_pattern | 14 | Cycles every 14 videos |
+| color_palette | 10 | Cycles every 10 videos |
+| journey | 7 | Cycles every 7 videos |
+| solfeggio | 9 | Cycles every 9 videos |
+
+Day counter uses days since epoch (mod 81) for consistent sequencing across runs.
 
 ### Job Sequence
 

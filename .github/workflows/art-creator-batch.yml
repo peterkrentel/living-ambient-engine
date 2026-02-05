@@ -1,12 +1,14 @@
 # Art Creator Batch - Scheduled Matrix Generation
-# Runs daily, rotates through all art_period + music_style combinations
-# Generates 5min videos, uploads to brand channel (10/day limit)
+# Runs daily, rotates through ALL parameter combinations
+# Generates 3x 5min videos/day, uploads to brand channel
+# Full coverage: 81 unique art_period×music_style combos in 27 days
+# Also rotates: visual_pattern, color_palette, journey, solfeggio
 # Spec: docs/spec/workflows.md#art-creator-batchyml
 
 name: Art Creator Batch
 
 on:
-  # Run daily at 6 AM UTC (adjust to your timezone)
+  # Run daily at 6 AM UTC
   schedule:
     - cron: '0 6 * * *'
 
@@ -14,7 +16,7 @@ on:
   workflow_dispatch:
     inputs:
       day_override:
-        description: 'Day override (0-7, 0=Sunday). Leave empty for auto-detect.'
+        description: 'Day number (0-80). Leave empty for auto from epoch.'
         required: false
         default: ''
       dry_run:
@@ -35,73 +37,102 @@ permissions:
   contents: write
 
 jobs:
-  # Job 1: Determine today's art_period and music_styles
+  # Job 1: Calculate today's unique parameter combinations
   schedule:
     runs-on: ubuntu-latest
     outputs:
-      art_period: ${{ steps.pick.outputs.art_period }}
-      style_1: ${{ steps.pick.outputs.style_1 }}
-      style_2: ${{ steps.pick.outputs.style_2 }}
-      style_3: ${{ steps.pick.outputs.style_3 }}
       day_num: ${{ steps.pick.outputs.day_num }}
+      # Video 1
+      art_period_1: ${{ steps.pick.outputs.art_period_1 }}
+      music_style_1: ${{ steps.pick.outputs.music_style_1 }}
+      visual_pattern_1: ${{ steps.pick.outputs.visual_pattern_1 }}
+      color_palette_1: ${{ steps.pick.outputs.color_palette_1 }}
+      journey_1: ${{ steps.pick.outputs.journey_1 }}
+      solfeggio_1: ${{ steps.pick.outputs.solfeggio_1 }}
+      # Video 2
+      art_period_2: ${{ steps.pick.outputs.art_period_2 }}
+      music_style_2: ${{ steps.pick.outputs.music_style_2 }}
+      visual_pattern_2: ${{ steps.pick.outputs.visual_pattern_2 }}
+      color_palette_2: ${{ steps.pick.outputs.color_palette_2 }}
+      journey_2: ${{ steps.pick.outputs.journey_2 }}
+      solfeggio_2: ${{ steps.pick.outputs.solfeggio_2 }}
+      # Video 3
+      art_period_3: ${{ steps.pick.outputs.art_period_3 }}
+      music_style_3: ${{ steps.pick.outputs.music_style_3 }}
+      visual_pattern_3: ${{ steps.pick.outputs.visual_pattern_3 }}
+      color_palette_3: ${{ steps.pick.outputs.color_palette_3 }}
+      journey_3: ${{ steps.pick.outputs.journey_3 }}
+      solfeggio_3: ${{ steps.pick.outputs.solfeggio_3 }}
 
     steps:
       - name: Pick today's combinations
         id: pick
         run: |
-          # Get day of week (0=Sunday, 1=Monday, etc.)
+          # Day counter - use days since epoch for consistent sequencing
+          # Or manual override for testing specific days
           if [ -n "${{ github.event.inputs.day_override }}" ]; then
             DAY="${{ github.event.inputs.day_override }}"
           else
-            DAY=$(date +%w)
+            # Days since Jan 1, 2025 (gives us a rolling counter)
+            EPOCH_DAY=$(( ($(date +%s) / 86400) - 20089 ))
+            DAY=$((EPOCH_DAY % 81))  # Cycle every 81 days (full matrix)
           fi
           echo "day_num=$DAY" >> $GITHUB_OUTPUT
 
-          # Art periods (8 total) - each day gets one
-          case $((DAY % 8)) in
-            0) ART_PERIOD="modern" ;;
-            1) ART_PERIOD="renaissance" ;;
-            2) ART_PERIOD="baroque" ;;
-            3) ART_PERIOD="impressionist" ;;
-            4) ART_PERIOD="cave_art" ;;
-            5) ART_PERIOD="ancient" ;;
-            6) ART_PERIOD="medieval" ;;
-            7) ART_PERIOD="future" ;;
-          esac
-          echo "art_period=$ART_PERIOD" >> $GITHUB_OUTPUT
+          # === ARRAYS ===
+          ART_PERIODS=("cave_art" "ancient" "medieval" "renaissance" "baroque" "impressionist" "modern" "contemporary" "future")
+          MUSIC_STYLES=("gnawa" "taiko" "gamelan" "burundi" "kuku" "candomble" "bamboula" "heartbeat" "none")
+          VISUAL_PATTERNS=("fractal_zoom" "mandelbrot" "julia" "fibonacci_spiral" "sacred_geometry" "particle_flow" "organic_flow" "geometric_morph" "platonic_solids" "slow_waves" "flowing_waves" "starfield" "rain_window" "fireplace")
+          COLOR_PALETTES=("cave_earth" "ancient_gold" "medieval_rich" "renaissance_warm" "impressionist_soft" "psychedelic" "cyberpunk" "sunset" "ocean" "forest")
+          JOURNEYS=("steady" "awakening" "deep_dive" "breathing" "crescendo" "trance" "waves")
+          SOLFEGGIOS=("174" "285" "396" "417" "528" "639" "741" "852" "963")
 
-          # Music styles - 3 per day, rotating through 9 styles
-          # Full cycle = 3 days of styles × 8 art periods = 24 days for all combos
-          case $((DAY % 3)) in
-            0) S1="gnawa"; S2="taiko"; S3="gamelan" ;;
-            1) S1="burundi"; S2="kuku"; S3="candomble" ;;
-            2) S1="bamboula"; S2="heartbeat"; S3="none" ;;
-          esac
-          echo "style_1=$S1" >> $GITHUB_OUTPUT
-          echo "style_2=$S2" >> $GITHUB_OUTPUT
-          echo "style_3=$S3" >> $GITHUB_OUTPUT
+          # === UNIQUE ART×MUSIC COMBOS ===
+          # 3 videos per day, 81 total combos (9×9), so 27 days for full coverage
+          # Video N on day D uses combo index: D*3 + N
+          for i in 0 1 2; do
+            COMBO_IDX=$(( (DAY * 3 + i) % 81 ))
+            ART_IDX=$((COMBO_IDX / 9))
+            MUSIC_IDX=$((COMBO_IDX % 9))
 
-          echo "📅 Day $DAY: Art Period = $ART_PERIOD"
-          echo "   Styles: $S1, $S2, $S3"
+            # Other params rotate independently (no duplicates needed)
+            PATTERN_IDX=$(( (DAY * 3 + i) % 14 ))
+            COLOR_IDX=$(( (DAY * 3 + i) % 10 ))
+            JOURNEY_IDX=$(( (DAY * 3 + i) % 7 ))
+            SOLFEGGIO_IDX=$(( (DAY * 3 + i) % 9 ))
+
+            V=$((i + 1))
+            echo "art_period_${V}=${ART_PERIODS[$ART_IDX]}" >> $GITHUB_OUTPUT
+            echo "music_style_${V}=${MUSIC_STYLES[$MUSIC_IDX]}" >> $GITHUB_OUTPUT
+            echo "visual_pattern_${V}=${VISUAL_PATTERNS[$PATTERN_IDX]}" >> $GITHUB_OUTPUT
+            echo "color_palette_${V}=${COLOR_PALETTES[$COLOR_IDX]}" >> $GITHUB_OUTPUT
+            echo "journey_${V}=${JOURNEYS[$JOURNEY_IDX]}" >> $GITHUB_OUTPUT
+            echo "solfeggio_${V}=${SOLFEGGIOS[$SOLFEGGIO_IDX]}" >> $GITHUB_OUTPUT
+
+            echo "📹 Video $V: ${ART_PERIODS[$ART_IDX]} + ${MUSIC_STYLES[$MUSIC_IDX]} | ${VISUAL_PATTERNS[$PATTERN_IDX]} | ${COLOR_PALETTES[$COLOR_IDX]} | ${JOURNEYS[$JOURNEY_IDX]} | ${SOLFEGGIOS[$SOLFEGGIO_IDX]}Hz"
+          done
+
+          echo ""
+          echo "📅 Day $DAY of 81 ($(( (DAY * 3) + 3 )) of 243 total videos)"
 
   # Job 2-4: Generate 3 videos in parallel using art-creator
   generate-1:
     needs: schedule
     uses: ./.github/workflows/art-creator.yml
     with:
-      art_period: ${{ needs.schedule.outputs.art_period }}
-      music_style: ${{ needs.schedule.outputs.style_1 }}
+      art_period: ${{ needs.schedule.outputs.art_period_1 }}
+      music_style: ${{ needs.schedule.outputs.music_style_1 }}
       duration: '5min'
       upload_to_brand: ${{ github.event.inputs.dry_run != 'true' }}
-      visual_pattern: 'auto'
+      visual_pattern: ${{ needs.schedule.outputs.visual_pattern_1 }}
       visual_speed: 'auto'
       visual_complexity: 'auto'
-      color_palette: 'auto'
+      color_palette: ${{ needs.schedule.outputs.color_palette_1 }}
       tempo: '60'
       brainwave_frequency: '10'
-      solfeggio_frequency: '528'
+      solfeggio_frequency: ${{ needs.schedule.outputs.solfeggio_1 }}
       rhythm_volume: '0.5'
-      journey: 'breathing'
+      journey: ${{ needs.schedule.outputs.journey_1 }}
       journey_intensity: 'moderate'
     secrets: inherit
 
@@ -109,19 +140,19 @@ jobs:
     needs: schedule
     uses: ./.github/workflows/art-creator.yml
     with:
-      art_period: ${{ needs.schedule.outputs.art_period }}
-      music_style: ${{ needs.schedule.outputs.style_2 }}
+      art_period: ${{ needs.schedule.outputs.art_period_2 }}
+      music_style: ${{ needs.schedule.outputs.music_style_2 }}
       duration: '5min'
       upload_to_brand: ${{ github.event.inputs.dry_run != 'true' }}
-      visual_pattern: 'auto'
+      visual_pattern: ${{ needs.schedule.outputs.visual_pattern_2 }}
       visual_speed: 'auto'
       visual_complexity: 'auto'
-      color_palette: 'auto'
+      color_palette: ${{ needs.schedule.outputs.color_palette_2 }}
       tempo: '60'
       brainwave_frequency: '10'
-      solfeggio_frequency: '528'
+      solfeggio_frequency: ${{ needs.schedule.outputs.solfeggio_2 }}
       rhythm_volume: '0.5'
-      journey: 'breathing'
+      journey: ${{ needs.schedule.outputs.journey_2 }}
       journey_intensity: 'moderate'
     secrets: inherit
 
@@ -129,19 +160,19 @@ jobs:
     needs: schedule
     uses: ./.github/workflows/art-creator.yml
     with:
-      art_period: ${{ needs.schedule.outputs.art_period }}
-      music_style: ${{ needs.schedule.outputs.style_3 }}
+      art_period: ${{ needs.schedule.outputs.art_period_3 }}
+      music_style: ${{ needs.schedule.outputs.music_style_3 }}
       duration: '5min'
       upload_to_brand: ${{ github.event.inputs.dry_run != 'true' }}
-      visual_pattern: 'auto'
+      visual_pattern: ${{ needs.schedule.outputs.visual_pattern_3 }}
       visual_speed: 'auto'
       visual_complexity: 'auto'
-      color_palette: 'auto'
+      color_palette: ${{ needs.schedule.outputs.color_palette_3 }}
       tempo: '60'
       brainwave_frequency: '10'
-      solfeggio_frequency: '528'
+      solfeggio_frequency: ${{ needs.schedule.outputs.solfeggio_3 }}
       rhythm_volume: '0.5'
-      journey: 'breathing'
+      journey: ${{ needs.schedule.outputs.journey_3 }}
       journey_intensity: 'moderate'
     secrets: inherit
 
@@ -155,12 +186,11 @@ jobs:
         run: |
           echo "## 📊 Art Creator Batch Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Day:** ${{ needs.schedule.outputs.day_num }}" >> $GITHUB_STEP_SUMMARY
-          echo "**Art Period:** ${{ needs.schedule.outputs.art_period }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Day:** ${{ needs.schedule.outputs.day_num }} of 81" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Style | Status |" >> $GITHUB_STEP_SUMMARY
-          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
-          echo "| ${{ needs.schedule.outputs.style_1 }} | ${{ needs.generate-1.result }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| ${{ needs.schedule.outputs.style_2 }} | ${{ needs.generate-2.result }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| ${{ needs.schedule.outputs.style_3 }} | ${{ needs.generate-3.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| # | Art Period | Music Style | Pattern | Colors | Journey | Solfeggio | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|---|------------|-------------|---------|--------|---------|-----------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| 1 | ${{ needs.schedule.outputs.art_period_1 }} | ${{ needs.schedule.outputs.music_style_1 }} | ${{ needs.schedule.outputs.visual_pattern_1 }} | ${{ needs.schedule.outputs.color_palette_1 }} | ${{ needs.schedule.outputs.journey_1 }} | ${{ needs.schedule.outputs.solfeggio_1 }}Hz | ${{ needs.generate-1.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 2 | ${{ needs.schedule.outputs.art_period_2 }} | ${{ needs.schedule.outputs.music_style_2 }} | ${{ needs.schedule.outputs.visual_pattern_2 }} | ${{ needs.schedule.outputs.color_palette_2 }} | ${{ needs.schedule.outputs.journey_2 }} | ${{ needs.schedule.outputs.solfeggio_2 }}Hz | ${{ needs.generate-2.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| 3 | ${{ needs.schedule.outputs.art_period_3 }} | ${{ needs.schedule.outputs.music_style_3 }} | ${{ needs.schedule.outputs.visual_pattern_3 }} | ${{ needs.schedule.outputs.color_palette_3 }} | ${{ needs.schedule.outputs.journey_3 }} | ${{ needs.schedule.outputs.solfeggio_3 }}Hz | ${{ needs.generate-3.result }} |" >> $GITHUB_STEP_SUMMARY
 
