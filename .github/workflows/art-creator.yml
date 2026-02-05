@@ -889,7 +889,7 @@ jobs:
       - name: Download artwork artifacts
         uses: actions/download-artifact@v4
         with:
-          name: artistic-creation-${{ github.run_number }}-manual
+          name: artistic-creation-${{ github.run_number }}-${{ inputs.test_id || 'manual' }}
           path: ./art_output
       
       - name: Restore YouTube credentials (Brand Channel)
