@@ -431,10 +431,20 @@ jobs:
             COMPLEXITY_VALUE="0.7"  # Placeholder, will be overwritten by art period
           fi
 
+          # SEO title template - use custom title if provided, otherwise generate SEO-optimized title
+          # Per GUARDRAILS.md: titles MUST originate from moods.yaml title_template
+          if [ -n "$TITLE_INPUT" ] && [ "$TITLE_INPUT" != "" ]; then
+            TITLE_TEMPLATE="$TITLE_INPUT"
+          else
+            # SEO format: "Intent | Duration | Differentiator"
+            # Example: "Focus Music | 1 Hour | Evolving Ambient That Never Repeats"
+            TITLE_TEMPLATE="Ambient $ART_PERIOD | {duration_str} | Evolving $MUSIC_STYLE Soundscape"
+          fi
+
           cat > /tmp/art_creator_config.yaml << EOF
           custom_creation:
-            description: "Custom artistic creation"
-            title_template: "$TITLE_INPUT"
+            description: "Custom artistic creation with $ART_PERIOD visuals and $MUSIC_STYLE audio"
+            title_template: "$TITLE_TEMPLATE"
             art_period: "$ART_PERIOD"
             journey: "$JOURNEY"
             journey_intensity: "$JOURNEY_INTENSITY"
@@ -671,6 +681,8 @@ jobs:
           BRAINWAVE_FREQ_INPUT: ${{ steps.inputs.outputs.brainwave_frequency }}
           SOLFEGGIO_FREQ_INPUT: ${{ steps.inputs.outputs.solfeggio_frequency }}
           GITHUB_ACTOR_NAME: ${{ github.actor }}
+          CUSTOM_TITLE: ${{ steps.inputs.outputs.title }}
+          CUSTOM_DESCRIPTION: ${{ steps.inputs.outputs.description }}
         run: |
           echo "🎨 Creating your unique artistic video..."
           echo "   Art Period: $ART_PERIOD_INPUT"
@@ -764,67 +776,10 @@ jobs:
               with open(f"{output_dir}/creation_info.json", 'w') as f:
                   json.dump(creation_info, f, indent=2)
 
-              # Generate metadata.json for youtube_upload.py (metadata consistency rule)
-              # See: docs/spec/GUARDRAILS.md § Metadata Consistency Violations
-              art_period = os.environ.get('ART_PERIOD_INPUT', 'modern')
-              visual_pattern = os.environ.get('VISUAL_PATTERN_INPUT', 'fractal_zoom')
-              music_style = os.environ.get('MUSIC_STYLE_INPUT', 'ambient')
-
-              # SEO-optimized metadata for algorithmic art
-              custom_title = os.environ.get('CUSTOM_TITLE', '').strip()
-              if custom_title:
-                  video_title = custom_title
-              else:
-                  video_title = f"{art_period.replace('_', ' ').title()} {visual_pattern.replace('_', ' ').title()} - Ambient {music_style.replace('_', ' ').title()}"
-
-              # Build description using join to avoid YAML parsing issues with f-string braces
-              desc_lines = [
-                  f"ASMR Algorithmic Art | {art_period.replace('_', ' ').title()} Inspired Ambient",
-                  "",
-                  "🎨 Unique algorithmic art created with Living Ambient Engine.",
-                  "",
-                  "✨ Art Configuration:",
-                  f"• Period: {art_period.replace('_', ' ').title()}",
-                  f"• Visual Pattern: {visual_pattern.replace('_', ' ').title()}",
-                  f"• Music Style: {music_style.replace('_', ' ').title()}",
-                  "",
-                  "🎵 Audio:",
-                  f"• Tempo: {os.environ.get('TEMPO_INPUT', 'N/A')} BPM",
-                  f"• Brainwave: {os.environ.get('BRAINWAVE_FREQ_INPUT', 'N/A')} Hz",
-                  f"• Solfeggio: {os.environ.get('SOLFEGGIO_FREQ_INPUT', 'N/A')} Hz",
-                  "",
-                  f"Seed: {result['metadata'].get('seed', 'N/A')} (save to recreate)",
-                  f"Created by: @{os.environ.get('GITHUB_ACTOR_NAME', 'unknown')}",
-                  "",
-                  "#ASMR #ambient #meditation #algorithmicart #focusmusic"
-              ]
-
-              youtube_metadata = {
-                  'video_title': video_title,
-                  'description_template': '\n'.join(desc_lines),
-                  'tags': [
-                      'ASMR',
-                      'algorithmic art',
-                      'ambient',
-                      'meditation music',
-                      'focus music',
-                      'binaural beats',
-                      art_period.replace('_', ' '),
-                      visual_pattern.replace('_', ' '),
-                      music_style.replace('_', ' '),
-                      'generative art',
-                      'procedural art',
-                      'sleep music',
-                      'relaxation'
-                  ]
-              }
-
-              # Write metadata.json next to video file
-              video_stem = Path(result['video_path']).stem
-              metadata_path = f"{output_dir}/{video_stem}.json"
-              with open(metadata_path, 'w') as f:
-                  json.dump(youtube_metadata, f, indent=2)
-              print(f"📝 Metadata written: {metadata_path}")
+              # Metadata is generated by orchestrator via title_template in custom_creation config
+              # Per GUARDRAILS.md: "All metadata MUST originate from moods.yaml → metadata.json"
+              # The orchestrator writes {video_stem}.json with video_title, mood, duration_str, etc.
+              print(f"📝 Metadata: {result['metadata_path']}")
 
           except Exception as e:
               print(f"❌ Error during video generation: {type(e).__name__}: {e}")
