@@ -125,7 +125,7 @@ jobs:
       art_period: ${{ needs.schedule.outputs.art_period_1 }}
       music_style: ${{ needs.schedule.outputs.music_style_1 }}
       duration: '5min'
-      upload_to_brand: ${{ github.event.inputs.dry_run != 'true' }}
+      upload_to_brand: ${{ github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true' }}
       visual_pattern: ${{ needs.schedule.outputs.visual_pattern_1 }}
       visual_speed: 'auto'
       visual_complexity: 'auto'
@@ -146,7 +146,7 @@ jobs:
       art_period: ${{ needs.schedule.outputs.art_period_2 }}
       music_style: ${{ needs.schedule.outputs.music_style_2 }}
       duration: '5min'
-      upload_to_brand: ${{ github.event.inputs.dry_run != 'true' }}
+      upload_to_brand: ${{ github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true' }}
       visual_pattern: ${{ needs.schedule.outputs.visual_pattern_2 }}
       visual_speed: 'auto'
       visual_complexity: 'auto'
@@ -167,7 +167,7 @@ jobs:
       art_period: ${{ needs.schedule.outputs.art_period_3 }}
       music_style: ${{ needs.schedule.outputs.music_style_3 }}
       duration: '5min'
-      upload_to_brand: ${{ github.event.inputs.dry_run != 'true' }}
+      upload_to_brand: ${{ github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true' }}
       visual_pattern: ${{ needs.schedule.outputs.visual_pattern_3 }}
       visual_speed: 'auto'
       visual_complexity: 'auto'
