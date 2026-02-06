@@ -213,6 +213,23 @@ permissions:
 Scheduled batch generation that systematically covers ALL parameter combinations.
 Runs daily, generating 3 videos (5 min each), uploading to brand channel.
 
+**Strategy: Algorithm Discovery (not human search SEO)**
+
+Unlike content-factory-brand which targets human search queries ("focus music", "rain for sleep"),
+art-creator-batch uses a **volume/variety strategy** for YouTube algorithm discovery:
+
+| Approach | Why It Works |
+|----------|--------------|
+| 81 unique title combinations | More videos = more chances for algorithm recommendation |
+| Distinct art_period × music_style pairs | Each combo attracts different audience segments |
+| Parameter-based titles | Variety signals fresh content to algorithm |
+| Never-repeating content | Algorithm favors unique over duplicate |
+
+**Title format:** `"Ambient {art_period} | {duration_str} | Evolving {music_style} Soundscape"`
+
+This is intentionally different from moods.yaml SEO templates. The goal is casting a wide net
+for algorithm discovery, not optimizing individual titles for human search.
+
 **Full matrix coverage:**
 - 9 art_periods × 9 music_styles = 81 unique title combinations
 - 3 videos/day = **27 days for complete coverage**
@@ -354,6 +371,11 @@ All 7 jobs use:
 ```
 moods.yaml → orchestrator → metadata.json → youtube_upload.py → YouTube
 ```
+
+**Exception: art-creator.yml / art-creator-batch.yml**
+
+These workflows use parameter-based metadata generation (not moods.yaml) intentionally.
+See [GUARDRAILS.md](./GUARDRAILS.md) § Metadata Consistency Violations for rationale.
 
 **Enforcement:**
 - Contract test: `tests/contracts/test_workflow_metadata_consistency.py`
