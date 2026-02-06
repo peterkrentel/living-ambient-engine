@@ -111,6 +111,21 @@ These conditions must **never** occur. If detected, the system must halt with an
 - All metadata (title, description, tags) MUST originate from `moods.yaml` → `metadata.json` → `youtube_upload.py`
 - Inline Python in workflows MUST NOT generate YouTube metadata directly
 
+**Exception: art-creator.yml and art-creator-batch.yml**
+
+These workflows use a **different metadata strategy** intentionally:
+
+| Workflow | Strategy | Why |
+|----------|----------|-----|
+| content-factory-brand | SEO-optimized (moods.yaml) | Human search discovery ("focus music") |
+| art-creator-batch | Parameter-based variety | Algorithm discovery (volume/variety) |
+
+art-creator generates titles from parameters (`"Ambient {art_period} | {duration} | Evolving {music_style} Soundscape"`)
+rather than moods.yaml. This is intentional - the goal is 81 unique title combinations to maximize
+algorithm recommendation chances, not individual title SEO optimization.
+
+**This exception applies ONLY to art-creator workflows. All other workflows MUST use moods.yaml.**
+
 Contract test: `tests/contracts/test_workflow_metadata_consistency.py`
 
 **Memory Enforcement via Chunked Generation:**
