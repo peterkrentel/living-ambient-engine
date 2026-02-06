@@ -20,6 +20,7 @@ Four workflows automate video generation, YouTube deployment, and testing.
 |----|----------|---------|---------|---------|
 | WF-CF | `content-factory.yml` | Schedule + Manual | Batch generation + upload | Personal |
 | WF-CFB | `content-factory-brand.yml` | Manual only | Batch generation + upload | Brand |
+| WF-CFBATCH | `content-factory-batch.yml` | Schedule + Manual | Daily mood rotation (SEO) | Brand |
 | WF-ART | `art-creator.yml` | Manual / workflow_call | Single custom video | Brand (optional) |
 | WF-BATCH | `art-creator-batch.yml` | Schedule + Manual | Daily matrix generation | Brand |
 | WF-TEST | `test-art-creator.yml` | Manual + PR (path filter) | Test all input combinations | None (test only) |
@@ -129,6 +130,77 @@ Same as `content-factory.yml` except:
 | Secret | `YOUTUBE_TOKEN_PICKLE` | `YOUTUBE_TOKEN_PICKLE_BRAND` |
 | Channel | Personal | Brand |
 | Concurrency group | `content-factory` | `content-factory-brand` |
+
+## content-factory-batch.yml
+
+### Purpose
+
+Scheduled batch generation that rotates through ALL 14 moods with SEO-optimized metadata.
+Runs daily, generating 3 videos (5 min each), uploading to brand channel.
+
+**Strategy: Human Search SEO**
+
+Unlike art-creator-batch which uses parameter-based variety for algorithm discovery,
+content-factory-batch uses **SEO-optimized metadata from moods.yaml** for human search discovery:
+
+| Approach | Why It Works |
+|----------|--------------|
+| 14 SEO-optimized moods | Targets high-volume search queries ("focus music", "rain for sleep") |
+| moods.yaml metadata | Carefully crafted titles, descriptions, tags |
+| Full mood coverage | 3 moods/day = ~5 days for complete rotation |
+
+**Full coverage:**
+- 14 moods total
+- 3 videos/day = **~5 days for complete coverage**
+
+### Trigger
+
+```yaml
+schedule:
+  - cron: '0 8 * * *'  # Daily at 8 AM UTC (2 hours after art-creator-batch)
+workflow_dispatch:      # Manual with day override
+```
+
+### Concurrency
+
+```yaml
+concurrency:
+  group: content-factory-batch
+  cancel-in-progress: false
+```
+
+### Inputs (Manual)
+
+| Input | Type | Default | Description |
+|-------|------|---------|-------------|
+| `day_override` | string | '' | Day number 0-13 (overrides auto-counter) |
+| `dry_run` | boolean | `false` | Generate but don't upload |
+
+### Rotation Logic
+
+Each day generates 3 moods, rotating through all 14:
+
+| Day | Moods |
+|-----|-------|
+| 0 | deep_focus, sleep, chill |
+| 1 | study, energize, trance |
+| 2 | ceremony, warrior, rain_sleep |
+| 3 | fireplace, ocean_waves, lofi_study |
+| 4 | piano_relax, forest_morning, deep_focus |
+
+### Secrets Required
+
+| Secret | Purpose |
+|--------|---------|
+| `YOUTUBE_TOKEN_PICKLE_BRAND` | Brand channel OAuth |
+| `YOUTUBE_CLIENT_SECRETS` | OAuth client config |
+
+### Permissions
+
+```yaml
+permissions:
+  contents: write
+```
 
 ## art-creator.yml
 

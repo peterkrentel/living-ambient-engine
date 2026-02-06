@@ -1,0 +1,193 @@
+# Content Factory Batch - Scheduled Mood Rotation
+# Runs daily, rotates through ALL 14 moods with SEO-optimized metadata
+# Generates 3x 5min videos/day, uploads to brand channel
+# Full coverage: 14 moods in ~5 days
+# Spec: docs/spec/workflows.md#content-factory-batchyml
+
+name: Content Factory Batch
+
+on:
+  # Run daily at 8 AM UTC (2 hours after art-creator-batch)
+  schedule:
+    - cron: '0 8 * * *'
+
+  # Manual trigger with day override
+  workflow_dispatch:
+    inputs:
+      day_override:
+        description: 'Day number (0-13). Leave empty for auto from epoch.'
+        required: false
+        default: ''
+      dry_run:
+        description: 'Dry run - generate but do not upload'
+        required: false
+        type: boolean
+        default: false
+
+# Prevent overlapping runs
+concurrency:
+  group: content-factory-batch
+  cancel-in-progress: false
+
+env:
+  PYTHON_VERSION: '3.11'
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  # Job 1: Calculate today's moods
+  schedule:
+    runs-on: ubuntu-latest
+    outputs:
+      day_num: ${{ steps.pick.outputs.day_num }}
+      mood_1: ${{ steps.pick.outputs.mood_1 }}
+      mood_2: ${{ steps.pick.outputs.mood_2 }}
+      mood_3: ${{ steps.pick.outputs.mood_3 }}
+
+    steps:
+      - name: Pick today's moods
+        id: pick
+        run: |
+          # Use day override if provided, otherwise calculate from epoch
+          if [ -n "${{ github.event.inputs.day_override }}" ]; then
+            DAY=${{ github.event.inputs.day_override }}
+          else
+            # Days since epoch, mod 14 for mood rotation
+            DAY=$(( $(date +%s) / 86400 % 14 ))
+          fi
+          echo "day_num=$DAY" >> $GITHUB_OUTPUT
+          echo "📅 Day number: $DAY"
+
+          # All 14 moods from moods.yaml
+          MOODS=(
+            "deep_focus"
+            "sleep"
+            "chill"
+            "study"
+            "energize"
+            "trance"
+            "ceremony"
+            "warrior"
+            "rain_sleep"
+            "fireplace"
+            "ocean_waves"
+            "lofi_study"
+            "piano_relax"
+            "forest_morning"
+          )
+
+          # 3 moods per day, rotating through all 14
+          # Day 0: moods 0,1,2 | Day 1: moods 3,4,5 | etc.
+          for i in 0 1 2; do
+            MOOD_IDX=$(( (DAY * 3 + i) % 14 ))
+            V=$((i + 1))
+            echo "mood_${V}=${MOODS[$MOOD_IDX]}" >> $GITHUB_OUTPUT
+            echo "📹 Video $V: ${MOODS[$MOOD_IDX]}"
+          done
+
+          echo ""
+          echo "📅 Day $DAY of 14 ($(( DAY * 3 + 3 )) of 42 total mood slots)"
+
+  # Job 2: Generate all 3 videos
+  generate:
+    needs: schedule
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install FFmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Generate videos
+        run: |
+          MOODS="${{ needs.schedule.outputs.mood_1 }},${{ needs.schedule.outputs.mood_2 }},${{ needs.schedule.outputs.mood_3 }}"
+          echo "🎬 Generating moods: $MOODS"
+          python batch_generate.py \
+            --moods "$MOODS" \
+            --durations "5min" \
+            --output ./generated
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: content-factory-batch-videos
+          path: ./generated/
+          retention-days: 7
+
+      - name: Generation summary
+        run: |
+          echo "## 🎬 Content Factory Batch - Day ${{ needs.schedule.outputs.day_num }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Moods:** ${{ needs.schedule.outputs.mood_1 }}, ${{ needs.schedule.outputs.mood_2 }}, ${{ needs.schedule.outputs.mood_3 }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          ls -la ./generated/*.mp4 2>/dev/null | while read line; do
+            echo "- $line" >> $GITHUB_STEP_SUMMARY
+          done
+
+  # Job 3: Upload to YouTube
+  upload:
+    needs: [schedule, generate]
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true' }}
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install google-auth-oauthlib google-api-python-client
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: content-factory-batch-videos
+          path: ./generated
+
+      - name: Restore YouTube credentials
+        run: |
+          printf "%s" "${{ secrets.YOUTUBE_TOKEN_PICKLE_BRAND }}" | base64 -d > youtube_token.pickle
+          printf "%s" '${{ secrets.YOUTUBE_CLIENT_SECRETS }}' > client_secrets.json
+
+      - name: Upload to YouTube
+        run: |
+          python youtube_upload.py --batch ./generated
+
+      - name: Cleanup credentials
+        if: always()
+        run: |
+          rm -f youtube_token.pickle client_secrets.json
+
+      - name: Upload summary
+        run: |
+          echo "## ✅ YouTube Upload Complete" >> $GITHUB_STEP_SUMMARY
+          echo "**Day:** ${{ needs.schedule.outputs.day_num }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Moods:** ${{ needs.schedule.outputs.mood_1 }}, ${{ needs.schedule.outputs.mood_2 }}, ${{ needs.schedule.outputs.mood_3 }}" >> $GITHUB_STEP_SUMMARY
+
