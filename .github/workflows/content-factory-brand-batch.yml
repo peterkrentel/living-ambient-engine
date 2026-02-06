@@ -1,10 +1,10 @@
-# Content Factory Batch - Scheduled Mood Rotation
+# Content Factory Brand Batch - Scheduled Mood Rotation
 # Runs daily, rotates through ALL 14 moods with SEO-optimized metadata
 # Generates 3x 5min videos/day, uploads to brand channel
 # Full coverage: 14 moods in ~5 days
-# Spec: docs/spec/workflows.md#content-factory-batchyml
+# Spec: docs/spec/workflows.md#content-factory-brand-batchyml
 
-name: Content Factory Batch
+name: Content Factory Brand Batch
 
 on:
   # Run daily at 8 AM UTC (2 hours after art-creator-batch)
