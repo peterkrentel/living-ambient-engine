@@ -20,7 +20,7 @@ Four workflows automate video generation, YouTube deployment, and testing.
 |----|----------|---------|---------|---------|
 | WF-CF | `content-factory.yml` | Schedule + Manual | Batch generation + upload | Personal |
 | WF-CFB | `content-factory-brand.yml` | Manual only | Batch generation + upload | Brand |
-| WF-CFBATCH | `content-factory-batch.yml` | Schedule + Manual | Daily mood rotation (SEO) | Brand |
+| WF-CFBATCH | `content-factory-brand-batch.yml` | Schedule + Manual | Daily mood rotation (SEO) | Brand |
 | WF-ART | `art-creator.yml` | Manual / workflow_call | Single custom video | Brand (optional) |
 | WF-BATCH | `art-creator-batch.yml` | Schedule + Manual | Daily matrix generation | Brand |
 | WF-TEST | `test-art-creator.yml` | Manual + PR (path filter) | Test all input combinations | None (test only) |
@@ -131,7 +131,7 @@ Same as `content-factory.yml` except:
 | Channel | Personal | Brand |
 | Concurrency group | `content-factory` | `content-factory-brand` |
 
-## content-factory-batch.yml
+## content-factory-brand-batch.yml
 
 ### Purpose
 
