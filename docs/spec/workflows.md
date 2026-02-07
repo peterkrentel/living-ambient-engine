@@ -24,6 +24,7 @@ Four workflows automate video generation, YouTube deployment, and testing.
 | WF-ART | `art-creator.yml` | Manual / workflow_call | Single custom video | Brand (optional) |
 | WF-BATCH | `art-creator-batch.yml` | Schedule + Manual | Daily matrix generation | Brand |
 | WF-TEST | `test-art-creator.yml` | Manual + PR (path filter) | Test all input combinations | None (test only) |
+| WF-AGENT | `analytics-agent.yml` | Schedule (weekly) + Manual | Fetch YouTube stats, generate reports | N/A |
 
 ## Gating Rules
 
@@ -453,6 +454,62 @@ See [GUARDRAILS.md](./GUARDRAILS.md) § Metadata Consistency Violations for rati
 - Contract test: `tests/contracts/test_workflow_metadata_consistency.py`
 - See: [GUARDRAILS.md](./GUARDRAILS.md) § Metadata Consistency Violations
 - See: [orchestrator-youtube.md](./contracts/orchestrator-youtube.md) § Workflow Integration
+
+## analytics-agent.yml
+
+**Purpose:** Fetch YouTube Analytics data and generate performance reports.
+
+**Spec:** [AGENT.md](./AGENT.md)
+
+### Trigger
+
+```yaml
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # Every Sunday at midnight UTC
+  workflow_dispatch: {}   # Manual trigger
+```
+
+### Jobs
+
+| Job | Purpose | Depends On |
+|-----|---------|------------|
+| `analyze` | Fetch analytics + generate report | None |
+
+### Job: analyze
+
+**Steps:**
+
+1. Checkout repository
+2. Setup Python 3.11
+3. Install dependencies (`pip install -r requirements.txt`)
+4. Fetch YouTube Analytics (`python -m agent.fetch_analytics`)
+5. Generate weekly report (`python -m agent.report`)
+6. Commit and push data files
+
+### Outputs
+
+| Output | Location | Description |
+|--------|----------|-------------|
+| Analytics data | `data/analytics.json` | YouTube performance metrics |
+| Weekly report | `data/reports/YYYY-WW.md` | Human-readable summary |
+
+### Secrets Required
+
+| Secret | Purpose |
+|--------|---------|
+| `YOUTUBE_TOKEN_PICKLE` | YouTube API authentication |
+
+### Guardrails
+
+- **Rate limits:** Stop at 90% daily quota (9,000 units)
+- **Data retention:** All data kept indefinitely in repo
+- **Privacy:** No PII logged, no viewer data stored
+- **Writes:** Only to `data/` directory
+
+See: [GUARDRAILS.md](./GUARDRAILS.md) § Analytics Agent Guardrails
+
+---
 
 ## Adding a New Workflow Input
 
