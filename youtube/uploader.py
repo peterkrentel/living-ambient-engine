@@ -32,7 +32,10 @@ except ImportError:
     GOOGLE_API_AVAILABLE = False
 
 
-SCOPES = ['https://www.googleapis.com/auth/youtube.upload']
+SCOPES = [
+    'https://www.googleapis.com/auth/youtube.upload',
+    'https://www.googleapis.com/auth/yt-analytics.readonly'
+]
 TOKEN_FILE = os.environ.get('YOUTUBE_TOKEN_FILE', 'youtube_token.pickle')
 CLIENT_SECRETS_FILE = 'client_secrets.json'
 
