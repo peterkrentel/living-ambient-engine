@@ -1,23 +1,23 @@
 # Content Library
 
-*Last updated: 2026-02-03T04:15:29.507021*
+*Last updated: 2026-02-12T21:08:36.367011*
 
 ## Statistics
 
-- **Total Videos:** 14
-- **Total Duration:** 2.1 hours
-- **Average Duration:** 9.0 minutes
+- **Total Videos:** 20
+- **Total Duration:** 2.15 hours
+- **Average Duration:** 6.45 minutes
 
 ### Videos by Mood
 
 - **Ceremony:** 1 videos
 - **Chill:** 1 videos
-- **Deep Focus:** 3 videos
+- **Deep Focus:** 5 videos
 - **Energize:** 1 videos
 - **Fireplace:** 1 videos
 - **Forest Morning:** 2 videos
-- **Ocean Waves:** 1 videos
-- **Rain Sleep:** 1 videos
+- **Ocean Waves:** 3 videos
+- **Rain Sleep:** 3 videos
 - **Sleep:** 1 videos
 - **Study:** 1 videos
 - **Warrior:** 1 videos
@@ -80,6 +80,26 @@
 - **Seed:** `None`
 - **Catalog ID:** `video_0014_20260203_041529_9cbaada8`
 
+#### Sounds for an Overactive Mind | 30 Seconds Evolving Focus Music | No Loops [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=UpuS1tSTY18](https://youtube.com/watch?v=UpuS1tSTY18)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-12
+- **Seed:** `None`
+- **Catalog ID:** `video_0017_20260212_210832_9f0faba7`
+
+#### Sounds for an Overactive Mind | 30 Seconds Evolving Focus Music | No Loops [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=VW0cNXG6rk8](https://youtube.com/watch?v=VW0cNXG6rk8)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-12
+- **Seed:** `None`
+- **Catalog ID:** `video_0018_20260212_210833_039cd6ff`
+
 ### Energize
 
 #### Get Moving | 30 Seconds Energizing Ambient Beats | Non-Repeating Flow
@@ -138,6 +158,26 @@
 - **Seed:** `None`
 - **Catalog ID:** `video_0012_20260201_050209_a4c18440`
 
+#### Drift Off to Ocean Waves | 30 Seconds | Endless Tides, Never Repeats [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=N3dQfqDNgNM](https://youtube.com/watch?v=N3dQfqDNgNM)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-12
+- **Seed:** `None`
+- **Catalog ID:** `video_0019_20260212_210835_f38100df`
+
+#### Drift Off to Ocean Waves | 30 Seconds | Endless Tides, Never Repeats [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=35JBP3XJTqE](https://youtube.com/watch?v=35JBP3XJTqE)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-12
+- **Seed:** `None`
+- **Catalog ID:** `video_0020_20260212_210836_c417fa10`
+
 ### Rain Sleep
 
 #### Fall Asleep to Gentle Rain | 30 Seconds | Evolving Storm, Never Loops
@@ -149,6 +189,26 @@
 - **Uploaded:** 2026-02-01
 - **Seed:** `None`
 - **Catalog ID:** `video_0010_20260201_050206_156c61a0`
+
+#### Fall Asleep to Gentle Rain | 30 Seconds | Evolving Storm, Never Loops [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=5Ipggwas5Hk](https://youtube.com/watch?v=5Ipggwas5Hk)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-12
+- **Seed:** `None`
+- **Catalog ID:** `video_0015_20260212_210829_830cda70`
+
+#### Fall Asleep to Gentle Rain | 30 Seconds | Evolving Storm, Never Loops [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=IIiabn_Fc8A](https://youtube.com/watch?v=IIiabn_Fc8A)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-12
+- **Seed:** `None`
+- **Catalog ID:** `video_0016_20260212_210830_d6d14878`
 
 ### Sleep
 
