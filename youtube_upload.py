@@ -336,12 +336,15 @@ def main(video: str, metadata: str, privacy: str, auth: bool, batch: str, update
         # Final manifest save
         save_manifest()
 
+        # Calculate failed count
+        failed_count = len(videos) - uploaded_count - skipped_count - already_uploaded
+
         # Summary
         click.echo(f"\n{'='*60}")
         click.echo(f"✨ BATCH UPLOAD COMPLETE")
         click.echo(f"   Uploaded: {uploaded_count}")
         click.echo(f"   Skipped (already uploaded): {skipped_count}")
-        click.echo(f"   Failed: {len(videos) - uploaded_count - skipped_count - already_uploaded}")
+        click.echo(f"   Failed: {failed_count}")
 
         # Export markdown summary if catalog was updated
         if library and uploaded_count > 0:
@@ -351,6 +354,10 @@ def main(video: str, metadata: str, privacy: str, auth: bool, batch: str, update
                 click.echo(f"📄 Markdown export: {md_path}")
             except Exception as e:
                 click.echo(f"\n⚠️  Warning: Could not export markdown: {e}")
+
+        # Exit with error code if any uploads failed
+        if failed_count > 0:
+            sys.exit(1)
 
         return
     
