@@ -23,6 +23,8 @@ try:
     HAS_GOOGLE_API = True
 except ImportError:
     HAS_GOOGLE_API = False
+    Credentials = Any  # type: ignore - fallback for type hints
+    HttpError = Exception  # type: ignore
 
 
 DATA_DIR = Path("data")
@@ -132,10 +134,10 @@ class AnalyticsFetcher:
         """Parse API response into our schema."""
         if not response.get("rows"):
             return {}
-        
+
         row = response["rows"][0]
         headers = [h["name"] for h in response["columnHeaders"]]
-        
+
         return {
             "views": row[headers.index("views")] if "views" in headers else 0,
             "watch_time_minutes": row[headers.index("estimatedMinutesWatched")] if "estimatedMinutesWatched" in headers else 0,
@@ -148,6 +150,142 @@ class AnalyticsFetcher:
             "comments": row[headers.index("comments")] if "comments" in headers else 0,
             "shares": row[headers.index("shares")] if "shares" in headers else 0,
         }
+
+    def list_channel_videos(self, max_results: int = 50) -> List[Dict[str, Any]]:
+        """List all videos from the authenticated channel.
+
+        Uses YouTube Data API to fetch video list.
+
+        Args:
+            max_results: Maximum number of videos to return (for quota management)
+
+        Returns:
+            List of video metadata dicts with id, title, description, publishedAt
+        """
+        channel_id = self.get_channel_id()
+        videos = []
+        page_token = None
+
+        while len(videos) < max_results:
+            request = self.youtube.search().list(
+                part="id,snippet",
+                channelId=channel_id,
+                type="video",
+                order="date",
+                maxResults=min(50, max_results - len(videos)),
+                pageToken=page_token,
+            )
+            response = request.execute()
+
+            for item in response.get("items", []):
+                videos.append({
+                    "video_id": item["id"]["videoId"],
+                    "title": item["snippet"]["title"],
+                    "description": item["snippet"]["description"],
+                    "published_at": item["snippet"]["publishedAt"],
+                })
+
+            page_token = response.get("nextPageToken")
+            if not page_token:
+                break
+
+        return videos[:max_results]
+
+    def fetch_all(
+        self,
+        start_date: Optional[date] = None,
+        end_date: Optional[date] = None,
+        max_results: int = 50,
+    ) -> Dict[str, Any]:
+        """Fetch analytics for all channel videos.
+
+        Per contract: docs/spec/contracts/agent-youtube.md
+
+        1. Lists all videos from channel (YouTube Data API)
+        2. Fetches analytics for each video (YouTube Analytics API)
+        3. Returns combined data with video metadata
+
+        Args:
+            start_date: Start of date range (default: 28 days ago)
+            end_date: End of date range (default: yesterday)
+            max_results: Maximum videos to fetch (for API quota)
+
+        Returns:
+            Dict with fetched_at, date_range, and videos with metadata + metrics
+        """
+        if start_date is None:
+            start_date = date.today() - timedelta(days=28)
+        if end_date is None:
+            end_date = date.today() - timedelta(days=1)
+
+        if start_date > end_date:
+            raise ValueError("start_date must be <= end_date")
+
+        # Step 1: List all channel videos
+        print(f"📋 Listing channel videos (max {max_results})...")
+        videos = self.list_channel_videos(max_results=max_results)
+        print(f"   Found {len(videos)} videos")
+
+        if not videos:
+            return {
+                "fetched_at": datetime.now(timezone.utc).isoformat(),
+                "date_range": {"start": start_date.isoformat(), "end": end_date.isoformat()},
+                "videos": [],
+            }
+
+        # Step 2: Fetch analytics for each video
+        channel_id = self.get_channel_id()
+        results = []
+
+        for video in videos:
+            video_id = video["video_id"]
+            try:
+                response = self.analytics.reports().query(
+                    ids=f"channel=={channel_id}",
+                    startDate=start_date.isoformat(),
+                    endDate=end_date.isoformat(),
+                    metrics="views,estimatedMinutesWatched,averageViewDuration,"
+                            "averageViewPercentage,subscribersGained,subscribersLost,"
+                            "likes,dislikes,comments,shares",
+                    filters=f"video=={video_id}",
+                ).execute()
+
+                metrics = self._parse_metrics(response)
+                results.append({
+                    "video_id": video_id,
+                    "title": video["title"],
+                    "description": video["description"],
+                    "published_at": video["published_at"],
+                    "metrics": metrics,
+                })
+
+            except HttpError as e:
+                print(f"⚠️ Error fetching analytics for {video_id}: {e}")
+                # Still include video metadata even if analytics failed
+                results.append({
+                    "video_id": video_id,
+                    "title": video["title"],
+                    "description": video["description"],
+                    "published_at": video["published_at"],
+                    "metrics": {},
+                    "error": str(e),
+                })
+
+        return {
+            "fetched_at": datetime.now(timezone.utc).isoformat(),
+            "date_range": {"start": start_date.isoformat(), "end": end_date.isoformat()},
+            "videos": results,
+        }
+
+    # Alias for contract compatibility
+    def fetch(
+        self,
+        video_ids: List[str],
+        start_date: Optional[date] = None,
+        end_date: Optional[date] = None,
+    ) -> Dict[str, Any]:
+        """Fetch analytics for specific videos (alias for fetch_video_metrics)."""
+        return self.fetch_video_metrics(video_ids, start_date, end_date)
 
 
 def load_analytics() -> Dict[str, Any]:
@@ -177,29 +315,37 @@ def get_tracked_video_ids() -> List[str]:
 
 
 def main():
-    """CLI entry point - fetch analytics for all tracked videos."""
+    """CLI entry point - fetch analytics for all channel videos.
+
+    Uses fetch_all() to list videos from the channel via YouTube Data API,
+    then fetches analytics for each. No generations.json required.
+    """
     import argparse
 
     parser = argparse.ArgumentParser(description="Fetch YouTube Analytics")
     parser.add_argument("--days", type=int, default=28, help="Days of data to fetch")
+    parser.add_argument("--max-videos", type=int, default=50, help="Max videos to fetch")
     args = parser.parse_args()
 
-    video_ids = get_tracked_video_ids()
-
-    if not video_ids:
-        print("📊 No videos to fetch analytics for (generations.json is empty)")
-        return
-
-    print(f"📊 Fetching analytics for {len(video_ids)} videos...")
+    print(f"📊 Fetching analytics from YouTube channel...")
 
     try:
         fetcher = AnalyticsFetcher()
         start_date = date.today() - timedelta(days=args.days)
         end_date = date.today() - timedelta(days=1)
 
-        result = fetcher.fetch_video_metrics(video_ids, start_date, end_date)
+        # Use fetch_all() to get all channel videos (no generations.json needed)
+        result = fetcher.fetch_all(
+            start_date=start_date,
+            end_date=end_date,
+            max_results=args.max_videos,
+        )
 
-        # Merge with existing data
+        if not result["videos"]:
+            print("📊 No videos found on channel")
+            return
+
+        # Merge with existing data (preserve historical snapshots)
         existing = load_analytics()
         existing_ids = {v["video_id"]: i for i, v in enumerate(existing.get("videos", []))}
 
@@ -215,7 +361,7 @@ def main():
 
         save_analytics(existing)
         print(f"✅ Analytics saved to {ANALYTICS_FILE}")
-        print(f"   Videos with data: {len(result['videos'])}")
+        print(f"   Videos tracked: {len(result['videos'])}")
 
     except ImportError as e:
         print(f"❌ Missing dependencies: {e}")
