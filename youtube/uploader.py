@@ -34,6 +34,7 @@ except ImportError:
 
 SCOPES = [
     'https://www.googleapis.com/auth/youtube.upload',
+    'https://www.googleapis.com/auth/youtube.readonly',  # For listing channel videos
     'https://www.googleapis.com/auth/yt-analytics.readonly'
 ]
 TOKEN_FILE = os.environ.get('YOUTUBE_TOKEN_FILE', 'youtube_token.pickle')
