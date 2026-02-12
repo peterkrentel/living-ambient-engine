@@ -322,6 +322,64 @@ complexity = max(0.1, min(1.0, complexity))
 | Tags total length | 500 chars | Prioritize important tags |
 | Upload retries | 3 | Exponential backoff |
 
+## Analytics Agent Guardrails
+
+### API Rate Limits
+
+| Limit | Value | Enforcement |
+|-------|-------|-------------|
+| YouTube Analytics daily quota | 10,000 units | Stop at 90% (9,000 units) |
+| Queries per 100 seconds | 100 | Rate limit with backoff |
+| Max videos per fetch | 50 | Paginate larger requests |
+| Fetch frequency | Weekly minimum | Cron schedule enforced |
+
+### Data Retention
+
+| Data Type | Retention | Location |
+|-----------|-----------|----------|
+| Generation logs | Indefinite | `data/generations.json` |
+| Analytics data | Indefinite | `data/analytics.json` |
+| Weekly reports | Indefinite | `data/reports/YYYY-WW.md` |
+| Temporary files | Delete after use | `temp/` |
+
+### Privacy & Security
+
+| Forbidden | Reason | Enforcement |
+|-----------|--------|-------------|
+| PII in logs | Privacy | Never log viewer data |
+| Tokens in commits | Security | .gitignore, pre-commit |
+| Raw API responses | Data minimization | Extract only needed fields |
+| External data sharing | Privacy | Data stays in repo |
+
+### Data Integrity
+
+| Requirement | Description | Enforcement |
+|-------------|-------------|-------------|
+| Schema validation | All JSON must match schema | Validate on write |
+| Idempotent writes | Re-runs don't duplicate | Check before insert |
+| Graceful degradation | Partial data saved on error | Try-catch with save |
+| Audit trail | Track data modifications | Timestamps in data |
+
+### File System Paths (Agent)
+
+**Allowed Write Paths:**
+```
+data/generations.json    # Generation parameter logs
+data/analytics.json      # YouTube performance data
+data/reports/            # Weekly report markdown files
+```
+
+**Forbidden Write Paths:**
+```
+config/                  # Agent cannot modify config
+moods.yaml               # Agent cannot modify moods
+*.py                     # Agent cannot modify code
+.github/                 # Agent cannot modify workflows
+```
+
+**Rationale:** Phase 1 is observation-only. Agent collects data for human review,
+does not make automated changes to generation parameters.
+
 ## Monitoring & Alerting
 
 ### Metrics to Track

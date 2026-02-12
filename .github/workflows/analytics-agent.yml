@@ -1,0 +1,103 @@
+# Analytics Agent - Fetch YouTube Stats and Generate Reports
+# Runs weekly, fetches YouTube Analytics data, generates performance reports
+# Spec: docs/spec/workflows.md#analytics-agentyml
+# Agent Spec: docs/spec/AGENT.md
+
+name: Analytics Agent
+
+on:
+  schedule:
+    # Every Sunday at midnight UTC
+    - cron: '0 0 * * 0'
+  
+  workflow_dispatch:
+    inputs:
+      days:
+        description: 'Days of analytics data to fetch'
+        required: false
+        default: '28'
+        type: string
+
+permissions:
+  contents: write
+
+env:
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  analyze:
+    name: Fetch Analytics & Generate Report
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+      
+      - name: Install Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install google-api-python-client google-auth google-auth-oauthlib
+          # Install project dependencies if requirements.txt exists
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+      
+      - name: Fetch YouTube Analytics
+        env:
+          YOUTUBE_TOKEN_PICKLE: ${{ secrets.YOUTUBE_TOKEN_PICKLE }}
+          YOUTUBE_TOKEN_PICKLE_BRAND: ${{ secrets.YOUTUBE_TOKEN_PICKLE_BRAND }}
+        run: |
+          echo "📊 Fetching YouTube Analytics..."
+          DAYS="${{ inputs.days }}"
+          DAYS="${DAYS:-28}"
+          python -m agent.fetch_analytics --days "$DAYS"
+      
+      - name: Generate Weekly Report
+        run: |
+          echo "📈 Generating performance report..."
+          python -m agent.report
+      
+      - name: Commit Data
+        run: |
+          git config user.name "Analytics Agent"
+          git config user.email "actions@github.com"
+          
+          # Add data files
+          git add data/analytics.json data/reports/ || true
+          
+          # Check if there are changes
+          if git diff --staged --quiet; then
+            echo "📊 No changes to commit"
+          else
+            WEEK=$(date +%Y-W%V)
+            git commit -m "📊 Analytics update ${WEEK} [skip ci]"
+            git push
+            echo "✅ Data committed and pushed"
+          fi
+      
+      - name: Summary
+        run: |
+          echo "## Analytics Agent Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [ -f data/analytics.json ]; then
+            VIDEO_COUNT=$(python -c "import json; d=json.load(open('data/analytics.json')); print(len(d.get('videos', [])))")
+            echo "- **Videos tracked:** $VIDEO_COUNT" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          LATEST_REPORT=$(ls -t data/reports/*.md 2>/dev/null | head -1)
+          if [ -n "$LATEST_REPORT" ]; then
+            echo "- **Latest report:** $LATEST_REPORT" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### Report Preview" >> $GITHUB_STEP_SUMMARY
+            head -50 "$LATEST_REPORT" >> $GITHUB_STEP_SUMMARY
+          fi
+
