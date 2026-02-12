@@ -36,32 +36,85 @@ def load_analytics() -> Dict[str, Any]:
     return {"videos": []}
 
 
+def parse_mood_from_title(title: str) -> Optional[str]:
+    """Extract mood from video title.
+
+    Titles are structured like:
+    - "Deep Focus | 5 Minutes | ..." -> deep_focus
+    - "Ambient Baroque | ..." -> (art-creator, no mood)
+    - "Rain Sleep | ..." -> rain_sleep
+    """
+    if not title:
+        return None
+
+    # Known mood keywords (from moods.yaml)
+    mood_patterns = {
+        "deep focus": "deep_focus",
+        "rain sleep": "rain_sleep",
+        "ocean waves": "ocean_waves",
+        "fireplace": "fireplace",
+        "forest morning": "forest_morning",
+        "sleep": "sleep",
+        "chill": "chill",
+        "study": "study",
+        "energize": "energize",
+        "lofi study": "lofi_study",
+        "piano relax": "piano_relax",
+        "warrior": "warrior",
+        "ceremony": "ceremony",
+        "trance": "trance",
+    }
+
+    title_lower = title.lower()
+    for pattern, mood in mood_patterns.items():
+        if pattern in title_lower:
+            return mood
+
+    # Art-creator titles start with "Ambient" but don't have moods
+    if title_lower.startswith("ambient"):
+        return "art_creator"
+
+    return None
+
+
 def correlate_data() -> List[Dict[str, Any]]:
-    """Merge generation params with analytics for each video."""
-    generations = load_generations()
+    """Get video data from analytics (fetch_all stores video metadata).
+
+    Since fetch_all() now stores title/description/published_at directly
+    in analytics.json, we can work without generations.json.
+    """
     analytics = load_analytics()
-    
-    # Index analytics by video_id
-    analytics_by_id = {v["video_id"]: v.get("metrics", {}) for v in analytics.get("videos", [])}
-    
+
+    # Try generations.json first for richer data (if available)
+    generations = load_generations()
+    gen_by_id = {v["video_id"]: v for v in generations.get("videos", []) if v.get("video_id")}
+
     correlated = []
-    for gen in generations.get("videos", []):
-        vid = gen.get("video_id")
+    for video in analytics.get("videos", []):
+        vid = video.get("video_id")
         if not vid:
             continue
-        
+
+        # If we have generation data, use it
+        gen = gen_by_id.get(vid, {})
+
+        # Parse mood from title if not in generation data
+        title = video.get("title") or gen.get("metadata", {}).get("title", "")
+        mood = gen.get("mood") or parse_mood_from_title(title)
+
         entry = {
             "video_id": vid,
+            "title": title,
             "workflow": gen.get("workflow"),
-            "mood": gen.get("mood"),
+            "mood": mood,
             "duration_seconds": gen.get("duration_seconds"),
             "params": gen.get("params", {}),
-            "metadata": gen.get("metadata", {}),
-            "generated_at": gen.get("generated_at"),
-            "metrics": analytics_by_id.get(vid, {}),
+            "metadata": {"title": title, "description": video.get("description", "")},
+            "generated_at": gen.get("generated_at") or video.get("published_at"),
+            "metrics": video.get("metrics", {}),
         }
         correlated.append(entry)
-    
+
     return correlated
 
 
@@ -121,7 +174,7 @@ def generate_report(data: List[Dict[str, Any]], week: Optional[str] = None) -> s
             "|-------|------|-------------|-------|",
         ])
         for v in top_retention:
-            title = v.get("metadata", {}).get("title", v["video_id"])[:40]
+            title = (v.get("title") or v.get("metadata", {}).get("title") or v["video_id"])[:40]
             mood = v.get("mood", "N/A")
             ret = v["metrics"]["average_view_percentage"]
             views = v["metrics"].get("views", 0)
@@ -140,7 +193,7 @@ def generate_report(data: List[Dict[str, Any]], week: Optional[str] = None) -> s
             "|-------|------|-------|------------------|",
         ])
         for v in top_views:
-            title = v.get("metadata", {}).get("title", v["video_id"])[:40]
+            title = (v.get("title") or v.get("metadata", {}).get("title") or v["video_id"])[:40]
             mood = v.get("mood", "N/A")
             views = v["metrics"]["views"]
             wt = v["metrics"].get("watch_time_minutes", 0)
@@ -203,7 +256,11 @@ def save_report(content: str, week: Optional[str] = None) -> Path:
 
 
 def main():
-    """CLI entry point - generate weekly report."""
+    """CLI entry point - generate weekly report.
+
+    Works directly from analytics.json (populated by fetch_all).
+    No generations.json required.
+    """
     import argparse
 
     parser = argparse.ArgumentParser(description="Generate analytics report")
@@ -215,7 +272,7 @@ def main():
     data = correlate_data()
 
     if not data:
-        print("⚠️ No data to report (generations.json is empty)")
+        print("⚠️ No data to report (analytics.json is empty - run fetch_analytics first)")
         return
 
     content = generate_report(data, args.week)
