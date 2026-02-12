@@ -5,9 +5,10 @@
 name: Content Factory
 
 on:
-  # Run daily at 2 AM UTC
-  schedule:
-    - cron: '0 2 * * *'
+  # DISABLED: Schedule paused while personal channel strategy TBD
+  # Re-enable when ready to resume daily uploads to personal channel
+  # schedule:
+  #   - cron: '0 2 * * *'
 
   # Manual trigger with options
   workflow_dispatch:
