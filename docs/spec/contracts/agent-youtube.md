@@ -140,8 +140,8 @@ https://www.googleapis.com/auth/yt-analytics.readonly
 
 ### Token Sources (in order)
 
-1. `YOUTUBE_TOKEN_PICKLE` environment variable (base64)
-2. `YOUTUBE_TOKEN_PICKLE_BRAND` environment variable
+1. `YOUTUBE_TOKEN_PICKLE_BRAND` environment variable (brand account)
+2. `YOUTUBE_TOKEN_PICKLE` environment variable (personal account fallback)
 3. Constructor parameter
 4. Default file `youtube_token.pickle`
 

@@ -50,24 +50,24 @@ class AnalyticsFetcher:
     
     def _load_credentials(self, token_env: str) -> Credentials:
         """Load OAuth credentials from environment or file."""
-        # Try environment variable first
-        token_b64 = os.environ.get(token_env)
-        if token_b64:
-            token_data = base64.b64decode(token_b64)
-            return pickle.loads(token_data)
-        
-        # Try brand channel token
+        # Try brand channel token first (analytics uses brand account)
         token_b64 = os.environ.get("YOUTUBE_TOKEN_PICKLE_BRAND")
         if token_b64:
             token_data = base64.b64decode(token_b64)
             return pickle.loads(token_data)
-        
+
+        # Try personal token (fallback)
+        token_b64 = os.environ.get(token_env)
+        if token_b64:
+            token_data = base64.b64decode(token_b64)
+            return pickle.loads(token_data)
+
         # Try local file
         token_file = Path("youtube_token.pickle")
         if token_file.exists():
             with open(token_file, "rb") as f:
                 return pickle.load(f)
-        
+
         raise ValueError("No YouTube credentials found")
     
     def get_channel_id(self) -> str:
