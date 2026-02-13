@@ -1,405 +1,905 @@
 {
-  "fetched_at": "2026-02-13T00:26:21.012202+00:00",
+  "fetched_at": "2026-02-13T00:29:47.582009+00:00",
   "videos": [
     {
       "video_id": "51fnkvOtr7I",
       "title": "Unwind After a Long Day | 5 Mins Chill Ambient | Continuously Evolving",
       "description": "Created to help you decompress and find your calm. \u2728 This soundscape evolves through phases and never repeats. Best for: ...",
       "published_at": "2026-02-12T08:42:19Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3D51fnkvOtr7I&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 0,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 0,
+        "average_view_percentage": 0,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "nJWdpnpcNX0",
       "title": "Can&#39;t Sleep? | 5 Mins Gentle Drift | Evolving Sounds That Never Repeat",
       "description": "Created to guide you gently into restful, restorative sleep. \u2728 This soundscape evolves through phases and never repeats.",
       "published_at": "2026-02-12T08:42:22Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DnJWdpnpcNX0&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 0,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 0,
+        "average_view_percentage": 0,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "5SnLe9Zmh3E",
       "title": "Sounds for an Overactive Mind | 5 Mins Evolving Focus Music | No Loops",
       "description": "Created to quiet an overactive mind and unlock deep concentration. \u2728 This soundscape evolves through phases and never ...",
       "published_at": "2026-02-12T08:42:15Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3D5SnLe9Zmh3E&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 0,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 0,
+        "average_view_percentage": 0,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "5Qn0D877w8Q",
       "title": "Ambient cave_art | 5 Mins | Evolving none Soundscape",
       "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
       "published_at": "2026-02-12T07:08:28Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3D5Qn0D877w8Q&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 0,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 0,
+        "average_view_percentage": 0,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "kacoyPv4VJY",
       "title": "Ambient cave_art | 5 Mins | Evolving bamboula Soundscape",
       "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
       "published_at": "2026-02-12T07:08:38Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DkacoyPv4VJY&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 0,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 0,
+        "average_view_percentage": 0,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "0iBpP0x58Z0",
       "title": "Ambient cave_art | 5 Mins | Evolving heartbeat Soundscape",
       "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
       "published_at": "2026-02-12T07:08:36Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3D0iBpP0x58Z0&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 0,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 0,
+        "average_view_percentage": 0,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "vJoiJsAtVvU",
       "title": "Let Go of Stress | 5 Mins Soft Piano | Gently Evolving Melodies",
       "description": "Created to melt away tension with soft, evolving piano. \u2728 This soundscape evolves through phases and never repeats. Best for: ...",
       "published_at": "2026-02-11T08:44:39Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DvJoiJsAtVvU&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 0,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 0,
+        "average_view_percentage": 0,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "ICQ8fxZVKo4",
       "title": "Study to Chill Beats | 5 Mins Lofi | Drifts &amp; Evolves Endlessly",
       "description": "Created to keep you in the zone with chill, drifting beats. \u2728 This soundscape evolves through phases and never repeats. Best for: ...",
       "published_at": "2026-02-11T08:44:52Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DICQ8fxZVKo4&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 0,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 0,
+        "average_view_percentage": 0,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "oiVPFkZnqcQ",
       "title": "Wake Up in the Forest | 5 Mins | Birds, Wind, Ever-Changing",
       "description": "Created to transport you to a peaceful forest clearing at dawn. \u2728 This soundscape evolves continuously and never loops. Best for: ...",
       "published_at": "2026-02-11T08:44:42Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DoiVPFkZnqcQ&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 0,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 0,
+        "average_view_percentage": 0,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "N5BBz2Pa8Hg",
       "title": "Ambient cave_art | 5 Mins | Evolving kuku Soundscape",
       "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
       "published_at": "2026-02-11T07:09:12Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DN5BBz2Pa8Hg&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 0,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 0,
+        "average_view_percentage": 0,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "r1ucHZKwpz8",
       "title": "Ambient cave_art | 5 Mins | Evolving burundi Soundscape",
       "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
       "published_at": "2026-02-11T07:09:29Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3Dr1ucHZKwpz8&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 0,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 0,
+        "average_view_percentage": 0,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "VbSjcYtJ8wk",
       "title": "Ambient cave_art | 5 Mins | Evolving candomble Soundscape",
       "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
       "published_at": "2026-02-11T07:08:35Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DVbSjcYtJ8wk&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 0,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 0,
+        "average_view_percentage": 0,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "JzRsMv60_vs",
       "title": "Fall Asleep to Gentle Rain | 5 Mins | Evolving Storm, Never Loops",
       "description": "Created to help you fall asleep naturally with gentle, ever-changing rain. \u2728 This soundscape evolves continuously and never ...",
       "published_at": "2026-02-10T08:46:07Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DJzRsMv60_vs&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 1,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 7,
+        "average_view_percentage": 2.58,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "dV7Ln6UxV1U",
       "title": "Cozy Night by the Fire | 5 Mins | Crackling That Shifts &amp; Breathes",
       "description": "Created to wrap you in the warm comfort of a crackling fire. \u2728 This soundscape evolves continuously and never loops. Best for: ...",
       "published_at": "2026-02-10T08:46:02Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DdV7Ln6UxV1U&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 1,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 14,
+        "average_view_percentage": 4.68,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "XJwEynDMaTQ",
       "title": "Drift Off to Ocean Waves | 5 Mins | Endless Tides, Never Repeats",
       "description": "Created to carry your mind away on endless, evolving ocean tides. \u2728 This soundscape evolves continuously and never loops.",
       "published_at": "2026-02-10T08:46:07Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DXJwEynDMaTQ&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 1,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 17,
+        "average_view_percentage": 5.68,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "B15K2WXYxaM",
       "title": "Ambient cave_art | 5 Mins | Evolving gamelan Soundscape",
       "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
       "published_at": "2026-02-10T07:11:35Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DB15K2WXYxaM&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 1,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 9,
+        "average_view_percentage": 3.29,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "h4IUb0HNe5U",
       "title": "Ambient cave_art | 5 Mins | Evolving taiko Soundscape",
       "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
       "published_at": "2026-02-10T07:11:15Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3Dh4IUb0HNe5U&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 1,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 6,
+        "average_view_percentage": 2.11,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "09bYEN6qBFE",
       "title": "Ambient cave_art | 5 Mins | Evolving gnawa Soundscape",
       "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
       "published_at": "2026-02-10T07:11:15Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3D09bYEN6qBFE&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 1,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 10,
+        "average_view_percentage": 3.61,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "DRpJOywhFKo",
       "title": "Journey Inward | 5 Mins Hypnotic Trance | Never-Repeating Soundscape",
       "description": "Created to take you on an inward journey of hypnotic depth. \u2728 This soundscape evolves through phases and never repeats.",
       "published_at": "2026-02-09T08:47:41Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DDRpJOywhFKo&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 1,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 14,
+        "average_view_percentage": 4.77,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "pR10DgSR4fU",
       "title": "Find Your Strength | 5 Mins Power Drums | Builds &amp; Evolves",
       "description": "Created to fuel your inner fire and strengthen your resolve. \u2728 This soundscape evolves through phases and never repeats.",
       "published_at": "2026-02-09T08:47:43Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DpR10DgSR4fU&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 1,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 6,
+        "average_view_percentage": 2.1,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "Pbbv6nMIGAg",
       "title": "Ambient future | 5 Mins | Evolving none Soundscape",
       "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
       "published_at": "2026-02-09T07:12:21Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DPbbv6nMIGAg&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 1,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 5,
+        "average_view_percentage": 1.7000000000000002,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "Iqnal_KZEKw",
       "title": "Ambient future | 5 Mins | Evolving heartbeat Soundscape",
       "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
       "published_at": "2026-02-09T07:12:33Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DIqnal_KZEKw&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 1,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 11,
+        "average_view_percentage": 3.81,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "KszQbhjTovE",
       "title": "Ambient future | 5 Mins | Evolving bamboula Soundscape",
       "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
       "published_at": "2026-02-09T07:11:11Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DKszQbhjTovE&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 1,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 4,
+        "average_view_percentage": 1.47,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "VSPxshDgxhk",
       "title": "Study Without Distractions | 5 Mins Focus Soundscape | Always Evolving",
       "description": "Created to keep you focused without pulling your attention. \u2728 This soundscape evolves through phases and never repeats.",
       "published_at": "2026-02-08T08:30:05Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DVSPxshDgxhk&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 1,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 11,
+        "average_view_percentage": 3.73,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "6anlN7ZUEoc",
       "title": "Get Moving | 5 Mins Energizing Ambient Beats | Non-Repeating Flow",
       "description": "Created to build energy and momentum when you need a boost. \u2728 This soundscape evolves through phases and never repeats.",
       "published_at": "2026-02-08T08:30:12Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3D6anlN7ZUEoc&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 1,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 21,
+        "average_view_percentage": 6.99,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "Hz8uAZbfQM0",
       "title": "Unwind After a Long Day | 5 Mins Chill Ambient | Continuously Evolving",
       "description": "Created to help you decompress and find your calm. \u2728 This soundscape evolves through phases and never repeats. Best for: ...",
       "published_at": "2026-02-08T08:30:00Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DHz8uAZbfQM0&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 1,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 9,
+        "average_view_percentage": 3.2199999999999998,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "vnE2fkkDueU",
       "title": "Ambient future | 5 Mins | Evolving candomble Soundscape",
       "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
       "published_at": "2026-02-08T06:57:38Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DvnE2fkkDueU&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 1,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 17,
+        "average_view_percentage": 5.88,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "65FMeMWytR0",
       "title": "Ambient future | 5 Mins | Evolving burundi Soundscape",
       "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
       "published_at": "2026-02-08T06:57:24Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3D65FMeMWytR0&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 1,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 12,
+        "average_view_percentage": 4.02,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "Ycbg55GQbHg",
       "title": "Ambient future | 5 Mins | Evolving kuku Soundscape",
       "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
       "published_at": "2026-02-08T06:57:18Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DYcbg55GQbHg&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 1,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 20,
+        "average_view_percentage": 6.81,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "33wYG3ocQOw",
       "title": "Wake Up in the Forest | 5 Mins | Birds, Wind, Ever-Changing",
       "description": "Created to transport you to a peaceful forest clearing at dawn. \u2728 This soundscape evolves continuously and never loops. Best for: ...",
       "published_at": "2026-02-07T08:26:11Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3D33wYG3ocQOw&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 1,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 4,
+        "average_view_percentage": 1.45,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "mCk-4GyhEgg",
       "title": "Sounds for an Overactive Mind | 5 Mins Evolving Focus Music | No Loops",
       "description": "Created to quiet an overactive mind and unlock deep concentration. \u2728 This soundscape evolves through phases and never ...",
       "published_at": "2026-02-07T08:26:27Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DmCk-4GyhEgg&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 1,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 6,
+        "average_view_percentage": 2.05,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "_TGd3zKJWB8",
       "title": "Ambient future | 5 Mins | Evolving taiko Soundscape",
       "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
       "published_at": "2026-02-07T06:50:19Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3D_TGd3zKJWB8&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 1,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 14,
+        "average_view_percentage": 4.77,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "2iJucIkZJVs",
       "title": "Ambient future | 5 Mins | Evolving gamelan Soundscape",
       "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
       "published_at": "2026-02-07T06:50:25Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3D2iJucIkZJVs&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 1,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 15,
+        "average_view_percentage": 5.17,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "czqS7JK0nWE",
       "title": "Let Go of Stress | 5 Mins Soft Piano | Gently Evolving Melodies",
       "description": "Created to melt away tension with soft, evolving piano. \u2728 This soundscape evolves through phases and never repeats. Best for: ...",
       "published_at": "2026-02-06T23:01:08Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DczqS7JK0nWE&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 1,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 59,
+        "average_view_percentage": 19.85,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "QxB7fRrmHzg",
       "title": "Study to Chill Beats | 5 Mins Lofi | Drifts &amp; Evolves Endlessly",
       "description": "Created to keep you in the zone with chill, drifting beats. \u2728 This soundscape evolves through phases and never repeats. Best for: ...",
       "published_at": "2026-02-06T23:00:59Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DQxB7fRrmHzg&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 1,
+        "watch_time_minutes": 1,
+        "average_view_duration_seconds": 95,
+        "average_view_percentage": 31.759999999999998,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "gDVmRXCUbpk",
       "title": "Drift Off to Ocean Waves | 5 Mins | Endless Tides, Never Repeats",
       "description": "Created to carry your mind away on endless, evolving ocean tides. \u2728 This soundscape evolves continuously and never loops.",
       "published_at": "2026-02-06T23:00:54Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DgDVmRXCUbpk&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 2,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 24,
+        "average_view_percentage": 8.06,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "C7PRJvF0ED8",
       "title": "Ambient contemporary | 5 Mins | Evolving none Soundscape",
       "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
       "published_at": "2026-02-06T22:08:34Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DC7PRJvF0ED8&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 3,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 10,
+        "average_view_percentage": 3.42,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "Vy8qafVj6cI",
       "title": "Ambient contemporary | 5 Mins | Evolving heartbeat Soundscape",
       "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
       "published_at": "2026-02-06T22:08:42Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DVy8qafVj6cI&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 1,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 11,
+        "average_view_percentage": 3.9699999999999998,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "XTDZgL3a9ic",
       "title": "Ambient contemporary | 5 Mins | Evolving bamboula Soundscape",
       "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
       "published_at": "2026-02-06T22:08:32Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DXTDZgL3a9ic&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 1,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 8,
+        "average_view_percentage": 2.71,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "kPBZn1H1wAQ",
       "title": "Ambient contemporary | 5 Mins | Evolving burundi Soundscape",
       "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
       "published_at": "2026-02-05T19:56:13Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DkPBZn1H1wAQ&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 0,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 0,
+        "average_view_percentage": 0,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "SiwIgdu9y_M",
       "title": "Ambient contemporary | 5 Mins | Evolving candomble Soundscape",
       "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
       "published_at": "2026-02-05T19:55:22Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DSiwIgdu9y_M&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 0,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 0,
+        "average_view_percentage": 0,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "eCPRTRW4LHA",
       "title": "Ambient contemporary | 5 Mins | Evolving kuku Soundscape",
       "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
       "published_at": "2026-02-05T19:55:24Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DeCPRTRW4LHA&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 0,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 0,
+        "average_view_percentage": 0,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "K7kgM7C55mU",
       "title": "Ambient contemporary | 5 Mins | Evolving burundi Soundscape",
       "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
       "published_at": "2026-02-05T17:15:47Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DK7kgM7C55mU&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 0,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 0,
+        "average_view_percentage": 0,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "SP_WM9UrjEM",
       "title": "Ambient contemporary | 5 Mins | Evolving candomble Soundscape",
       "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
       "published_at": "2026-02-05T17:15:03Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DSP_WM9UrjEM&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 0,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 0,
+        "average_view_percentage": 0,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "oqYb-zu-Jk0",
       "title": "Ambient contemporary | 5 Mins | Evolving kuku Soundscape",
       "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
       "published_at": "2026-02-05T17:14:48Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DoqYb-zu-Jk0&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 0,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 0,
+        "average_view_percentage": 0,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "mqKzLAIrqs0",
       "title": "Ambient future | 5 Mins | Evolving none Soundscape",
       "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
       "published_at": "2026-02-05T02:58:53Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DmqKzLAIrqs0&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 1,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 29,
+        "average_view_percentage": 9.84,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "MGIlCenUO0I",
       "title": "Modern Auto - Ambient Gnawa",
       "description": "ASMR Algorithmic Art | Modern Inspired Ambient Unique algorithmic art created with Living Ambient Engine.",
       "published_at": "2026-02-05T02:31:52Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DMGIlCenUO0I&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 1,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 2,
+        "average_view_percentage": 0.73,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "trCLuBbcxIo",
       "title": "Future Fibonacci Spiral - Ambient Bamboula",
       "description": "ASMR Algorithmic Art | Future Inspired Ambient Unique algorithmic art created with Living Ambient Engine.",
       "published_at": "2026-02-03T13:25:06Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DtrCLuBbcxIo&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 4,
+        "watch_time_minutes": 1,
+        "average_view_duration_seconds": 18,
+        "average_view_percentage": 0.53,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "SPtwcoH_lpM",
       "title": "Sounds for an Overactive Mind | 1 Hour Evolving Focus Music | No Loops [Pure Ambience]",
       "description": "Created to quiet an overactive mind and unlock deep concentration. \u2728 This soundscape evolves through phases and never ...",
       "published_at": "2026-02-03T04:17:24Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DSPtwcoH_lpM&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 1,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 28,
+        "average_view_percentage": 0.79,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     },
     {
       "video_id": "TUalxakG9LI",
       "title": "Modern Auto - Ambient Gnawa",
       "description": "ASMR Algorithmic Art | Modern Inspired Ambient Unique algorithmic art created with Living Ambient Engine.",
       "published_at": "2026-02-03T04:18:51Z",
-      "metrics": {},
-      "error": "<HttpError 403 when requesting https://youtubeanalytics.googleapis.com/v2/reports?ids=channel%3D%3DUC4AXP1a6jkdfg4tVP6cQxdQ&startDate=2026-01-16&endDate=2026-02-12&metrics=views%2CestimatedMinutesWatched%2CaverageViewDuration%2CaverageViewPercentage%2CsubscribersGained%2CsubscribersLost%2Clikes%2Cdislikes%2Ccomments%2Cshares&filters=video%3D%3DTUalxakG9LI&alt=json returned \"YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.\". Details: \"[{'message': 'YouTube Analytics API has not been used in project 130285299228 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=130285299228 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry.', 'domain': 'usageLimits', 'reason': 'accessNotConfigured', 'extendedHelp': 'https://console.developers.google.com'}]\">"
+      "metrics": {
+        "views": 2,
+        "watch_time_minutes": 1,
+        "average_view_duration_seconds": 35,
+        "average_view_percentage": 0.98,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
     }
   ],
   "date_range": {
