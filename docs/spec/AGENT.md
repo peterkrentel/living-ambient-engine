@@ -100,18 +100,28 @@ analytics-agent.yml
 
 ## Data Schemas
 
+**Schema version:** 2 (added versioning, hashes, snapshots)
+
 ### generations.json
 
 ```json
 {
+  "schema_version": 2,
   "videos": [
     {
       "video_id": "dQw4w9WgXcQ",
+      "generation_id": "uuid-v4-here",
       "generated_at": "2026-02-07T08:00:00Z",
       "uploaded_at": "2026-02-07T08:30:00Z",
       "workflow": "content-factory-brand-batch",
       "mood": "deep_focus",
       "duration_seconds": 300,
+      "versioning": {
+        "repo_sha": "abc123",
+        "config_hash": "sha256:...",
+        "seed": 42,
+        "thumbnail_hash": "sha256:..."
+      },
       "params": {
         "art_period": null,
         "music_style": "gnawa",
@@ -123,6 +133,7 @@ analytics-agent.yml
       },
       "metadata": {
         "title": "Deep Focus | 5 Minutes | Gnawa Drums for Concentration",
+        "title_hash": "sha256:...",
         "tags": ["focus", "concentration", "study music"]
       }
     }
@@ -132,28 +143,54 @@ analytics-agent.yml
 
 ### analytics.json
 
+**Note:** Uses snapshots to track metrics over time (not just latest).
+
 ```json
 {
-  "fetched_at": "2026-02-14T00:00:00Z",
+  "schema_version": 2,
   "videos": [
     {
       "video_id": "dQw4w9WgXcQ",
-      "metrics": {
-        "views": 1234,
-        "watch_time_minutes": 5678,
-        "average_view_duration_seconds": 180,
-        "average_view_percentage": 60.0,
-        "impressions": 10000,
-        "ctr": 12.34,
-        "subscribers_gained": 5,
-        "likes": 50,
-        "comments": 3
-      },
-      "retention_curve": [100, 95, 90, 85, 80, 75, 70, 65, 60]
+      "published_at": "2026-02-07T08:30:00Z",
+      "title": "Deep Focus | 5 Minutes",
+      "snapshots": [
+        {
+          "fetched_at": "2026-02-14T00:00:00Z",
+          "window": {"start": "2026-02-07", "end": "2026-02-14"},
+          "metrics": {
+            "views": 1234,
+            "watch_time_minutes": 5678,
+            "average_view_duration_seconds": 180,
+            "average_view_percentage": 60.0,
+            "impressions": 10000,
+            "ctr": 12.34,
+            "subscribers_gained": 5,
+            "likes": 50,
+            "comments": 3
+          },
+          "retention_features": {
+            "drop_0_30s": 15.0,
+            "drop_midpoint": 25.0,
+            "area_under_curve": 0.72
+          },
+          "traffic_source_percent": {
+            "browse": 40,
+            "search": 30,
+            "suggested": 25,
+            "other": 5
+          }
+        }
+      ]
     }
   ]
 }
 ```
+
+**Snapshot dedupe:** Unique key is `(video_id, window.start, window.end)`. If re-run, overwrite existing snapshot for same window.
+
+**Window definition:** 7 days, inclusive start, exclusive end (standard analytics practice), aligned to cron (Sunday UTC). Example: `start: 2026-02-07, end: 2026-02-14` = [Feb 7, Feb 14).
+
+**Why snapshots:** Distinguishes "spike then die" vs "slow burn" patterns.
 
 ## Workflow: analytics-agent.yml
 
@@ -195,9 +232,91 @@ jobs:
 | Report generation | Automated | No manual intervention |
 | Correlation accuracy | Best/worst identified | Actionable insights |
 
-## Future Phases
+## Data Quality Checks
 
-### Phase 1.5: Aggregation & Learning (Current)
+Run these checks before trusting any analysis:
+
+| Check | What it catches | Action |
+|-------|-----------------|--------|
+| Missing analytics | Videos with no metrics | Flag in report |
+| Mismatched IDs | video_id not in generations | Investigate |
+| Low-view videos | views < 20 | Exclude from retention correlation (keep for CTR analysis) |
+| Outlier detection | 10x above/below mean | Flag for review |
+| Sample size | See actionability gates below | Filter appropriately |
+
+**Actionability Gates (consistent sample size rules):**
+
+| Threshold | Classification | Action |
+|-----------|----------------|--------|
+| n ≥ 5 AND group_views ≥ 200 | **Actionable** | Generate increase/decrease suggestions |
+| n ≥ 3 (but fails above) | **Exploratory** | Show as "observation", not actionable |
+| n < 3 | **Ignore** | Too noisy, don't report |
+
+## Failure Modes & Mitigations
+
+| Failure | Impact | Mitigation |
+|---------|--------|------------|
+| YouTube API quota exhausted | No new data | Use cached analytics, alert |
+| Corrupted JSON | Script crashes | Validate schema, keep backups |
+| Missing retention curves | Incomplete analysis | Fall back to basic metrics |
+| Git push conflicts | Data not saved | Retry with rebase, alert |
+| Token expiry | Auth fails | Refresh token, alert |
+
+**Failure behavior:**
+- Fetch fails → Report runs with last-known analytics
+- Report fails → Job fails (alerts via GitHub)
+- Correlation fails → Job continues, logs warning
+
+## Confounders to Track
+
+**Warning:** Your generator params might matter less than these:
+
+| Confounder | Why it matters | How to track |
+|------------|----------------|--------------|
+| Title/thumbnail | Dominates CTR | Store `title_hash`, `thumbnail_hash` |
+| Upload time | Algorithm timing | Store `uploaded_at` with timezone |
+| Traffic source | Browse vs Search vs Suggested | Store `traffic_source` breakdown |
+| Audience size | Returning vs new viewers | Store `new_vs_returning` if available |
+| Video age | Older videos have more views | Normalize by `days_since_upload` |
+
+**Rule:** Never credit tempo/mood for a better thumbnail.
+
+## ML Learning Path
+
+Your phased approach to learning MLOps:
+
+```
+┌───────────────────────────────────────────────────────────────────────────────────────┐
+│                              ML LEARNING JOURNEY                                      │
+├───────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                       │
+│  Phase 1       Phase 1.5      Phase 2        Phase 2.5      Phase 3       Phase 4   │
+│  ─────────     ──────────     ─────────      ──────────     ─────────     ─────────  │
+│  Data          Aggregation    Correlation    Statistical    Predictive    Optimize   │
+│  Pipeline                                    Rigor          Modeling                 │
+│                                                                                       │
+│  ✅ DONE       ✅ DONE        🔄 CURRENT     ⏳ NEXT        ⏳ 100+ vids  ⏳ 500+    │
+│                                                                                       │
+│  • Cron        • Group by     • Find         • Confidence   • Linear      • Bayesian │
+│  • Fetch API     category       patterns       intervals      regression  • Multi-obj│
+│  • Store JSON  • Rank by      • Std dev      • Z-scores     • Random      • Reinforce│
+│  • Reports       metric       • Sample n     • Effect size    forest        learning │
+│                                                                                       │
+└───────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+| Phase | What You Learn | Key Files | Status |
+|-------|----------------|-----------|--------|
+| **1** | Data pipelines, API integration | `fetch_analytics.py`, `report.py` | ✅ Done |
+| **1.5** | Aggregation, feature extraction | `analyze_data.py` | ✅ Done |
+| **2** | Correlation, statistical rigor | `correlate.py`, `suggestions.json` | 🔄 Current |
+| **2.5** | Confidence intervals, z-scores | `correlate.py` enhancements | ⏳ Next |
+| **3** | Predictive modeling (100+ videos) | sklearn models | ⏳ Future |
+| **4** | Optimization, recommendations | Bayesian/RL | ⏳ Future |
+
+---
+
+### Phase 1.5: Aggregation & Learning ✅
 
 **Goal:** Learn MLOps fundamentals by building a simple feedback loop.
 
@@ -226,22 +345,276 @@ jobs:
 | **Aggregation** | Group by type, calculate averages |
 | **Feedback Loop** | Data → Report → Human Decision → Config Change |
 
-**When to move to Phase 2:**
-- 500+ total views across videos
-- Clear patterns emerging (some types consistently outperform)
-- You understand why certain types perform better
+---
 
-### Phase 2: ML Correlation
-- Train model on params → performance data
-- Identify which parameters correlate with high retention
-- Suggest parameter adjustments
-- **MLOps concepts:** Feature engineering, model training, evaluation metrics
+### Phase 2: Statistical Correlation 🔄
 
-### Phase 3: Agent Optimization
-- Goal-directed generation ("optimize for retention")
-- Automated parameter tuning based on ML predictions
+**Goal:** Automatically find patterns and suggest optimizations.
+
+```
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│  COLLECT    │ ──► │  CORRELATE  │ ──► │  SUGGEST    │
+│             │     │             │     │             │
+│  analytics  │     │  ML finds   │     │  Output to  │
+│  .json      │     │  patterns   │     │  Step Sum   │
+└─────────────┘     └─────────────┘     └─────────────┘
+     ✅ Auto           ✅ Auto            ✅ Auto
+                                              │
+                                              ▼
+                                         📝 Human
+                                         reviews &
+                                         decides
+```
+
+**Components:**
+| File | Purpose |
+|------|---------|
+| `scripts/correlate.py` | ML correlation analysis |
+| `data/suggestions.json` | Machine-readable suggestions |
+| GitHub Step Summary | Human-readable suggestions |
+
+**What it outputs (suggestions.json):**
+```json
+{
+  "suggestions": [
+    {
+      "action": "increase",
+      "type": "mood",
+      "name": "lofi_study",
+      "n": 5,
+      "delta": 15.2,
+      "std_dev": 3.1,
+      "ci_low": 12.1,
+      "ci_high": 18.3,
+      "confidence": "medium",
+      "metric": "average_view_percentage"
+    }
+  ]
+}
+```
+
+**Required fields per suggestion:**
+| Field | Purpose |
+|-------|---------|
+| `n` | Sample size |
+| `delta` | Difference from overall avg |
+| `std_dev` | Spread within group |
+| `ci_low`, `ci_high` | Confidence interval (optional until Phase 2.5) |
+| `confidence` | low/medium/high based on n |
+| `metric` | Which metric this suggestion optimizes |
+
+**How correlation works (simple stats, no neural nets):**
+1. Group videos by type (mood, art_period, music_style)
+2. Calculate average retention % per group (exclude views < 20)
+3. Calculate std dev per group
+4. Compare to overall average
+5. Rank by performance delta
+6. Apply actionability gates (n ≥ 5 AND group_views ≥ 200 = actionable)
+7. Output suggestions with uncertainty
+
+**MLOps concepts learned:**
+| Concept | Implementation |
+|---------|----------------|
+| **Feature engineering** | Extract mood/style from title |
+| **Aggregation** | Group by category, calc averages |
+| **Uncertainty quantification** | Std dev, sample size, CI |
+| **Model output** | Structured suggestions (JSON) |
+| **Human-in-the-loop** | You review before acting |
+
+**When to move to Phase 3:**
+- Suggestions are consistently accurate
+- Most groups have n ≥ 10 (high confidence)
+- You trust the patterns
+
+### Phase 3: Agent Optimization (Future)
+
+**Goal:** Agent acts on suggestions automatically.
+
+```
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│  SUGGEST    │ ──► │  AGENT      │ ──► │  PR         │
+│             │     │             │     │             │
+│  suggestions│     │  Reads JSON │     │  Auto-create│
+│  .json      │     │  edits YAML │     │  for review │
+└─────────────┘     └─────────────┘     └─────────────┘
+     ✅ Auto           ✅ Auto            ✅ Auto
+                                              │
+                                              ▼
+                                         📝 Human
+                                         approves PR
+```
+
+**What it does:**
+- Reads `data/suggestions.json`
+- Modifies `config/moods.yaml` (adjust variations, weights)
+- Creates PR with changes
+- You approve/reject
+
+**MLOps concepts:**
+- Automated model deployment
+- Continuous learning
 - A/B testing of parameter variations
-- **MLOps concepts:** Online learning, experiment tracking, model deployment
+- Experiment tracking
+
+---
+
+## ⚠️ Important: What This Is (and Isn't)
+
+### What You're Learning (Real MLOps)
+
+| Concept | Your Implementation | Why It Matters |
+|---------|---------------------|----------------|
+| **Data Pipeline** | Cron → API → JSON | Most courses skip this |
+| **Feature Engineering** | Extract mood/tempo/style from videos | Core ML skill |
+| **Feedback Loops** | Data → Analysis → Human Decision → Config | How real products work |
+| **Experiment Tracking** | `generations.json`, `analytics.json` | Production ML requirement |
+| **Human-in-the-loop** | You review before acting | Prevents bad automation |
+
+### What Phase 2 Is NOT (Yet)
+
+Phase 2 correlation is **statistics**, not machine learning:
+- No model learning weights
+- No loss minimization
+- No prediction of unseen samples
+- No generalization
+
+**And that's fine.** You shouldn't jump to ML without enough data.
+
+### The Biggest Risks
+
+| Risk | Problem | Mitigation |
+|------|---------|------------|
+| **Too little data** | 5-20 videos = noise | Wait for 100+ videos |
+| **False confidence** | "Gnawa +12%!" (but n=2) | Track sample size, require n≥5 |
+| **Correlation ≠ causation** | Is it tempo? Or title? Or algorithm? | Stay skeptical |
+
+### Data Volume Reality
+
+| Videos | Signal Quality |
+|--------|----------------|
+| 5 | Noise |
+| 20 | Mostly noise |
+| 100+ | Patterns stabilize |
+| 500+ | Real insights |
+
+---
+
+## Phase 2.5: Statistical Rigor (Before Real ML)
+
+Before adding predictive models, add:
+
+| Feature | Purpose |
+|---------|---------|
+| Measure | Purpose | Status |
+|---------|---------|--------|
+| Sample size threshold | n ≥ 5 actionable, 3-4 exploratory, <3 ignore | ✅ Added |
+| Standard deviation | Measure spread within groups | ✅ Added |
+| Confidence intervals | Know when to trust results | ⏳ Future |
+| Z-score vs global mean | Statistical significance | ⏳ Future |
+| Effect size (Cohen's d) | Practical significance | ⏳ Future |
+
+**Why this matters:** This teaches more than throwing sklearn at it. You learn to distrust small samples and understand variance before building models.
+
+---
+
+## Phase 3: Predictive Modeling (Future - 100+ videos)
+
+**Trigger:** Move here when you have 100+ videos with views.
+
+When you have enough data, move from:
+> "What performed best historically?"
+
+To:
+> "Given these parameters, what retention will this video likely get?"
+
+**Models to try (in order):**
+
+| Model | Complexity | When to use |
+|-------|------------|-------------|
+| Linear regression | Simple | First attempt, baseline |
+| Random forest | Medium | Better with non-linear patterns |
+| Gradient boosting | Complex | Best accuracy, needs more data |
+
+```python
+X = [tempo, visual_speed, complexity, duration, mood_encoded]
+y = average_view_percentage
+
+# Train regression model
+# Predict expected retention
+# Optimize inputs
+```
+
+**What you'll learn:**
+- Train/test split
+- Overfitting
+- Feature importance
+- Cross-validation
+
+---
+
+## Phase 4: Optimization (Future - 500+ videos)
+
+**Trigger:** Move here when predictive models are accurate.
+
+Turn predictions into optimization:
+- Predict retention for parameter combinations
+- Search parameter space
+- Recommend optimal settings
+
+This is where it becomes a **mini-recommender system**.
+
+**Advanced concepts:**
+
+| Technique | What it does |
+|-----------|--------------|
+| Bayesian optimization | Efficiently search parameter space |
+| Multi-objective optimization | Balance retention vs. other goals |
+| Reinforcement learning | Learn from ongoing experiments |
+
+---
+
+## 🎯 Why This Approach Works
+
+> "It's better than 90% of ML courses because it forces you to build the infrastructure and thinking that ML actually depends on."
+
+**Your plan is:**
+- ✅ Realistic
+- ✅ Technically sound
+- ✅ Aligned with real MLOps
+- ✅ Phased correctly
+- ✅ Grounded in data
+- ✅ Designed for learning the right things in the right order
+
+**It's not "ML" yet — but it's the correct path to ML.**
+
+You're building a **tiny YouTube experimentation platform** - that's closer to:
+- Growth engineering
+- Experimentation platforms
+- Recommender optimization
+
+Which is how YouTube itself operates.
+
+---
+
+## Future: Experiment Registry (Placeholder)
+
+When the system matures, add formal experiment tracking:
+
+| Component | Purpose |
+|-----------|---------|
+| Experiment ID | Unique identifier for each test |
+| Parameter set | Frozen config snapshot |
+| Model version | Which correlation/prediction model |
+| Evaluation metrics | What we measured |
+| Outcome | Did it improve? |
+
+This enables:
+- Reproducible experiments
+- A/B test tracking
+- Model versioning
+- Rollback capability
+
+**Not building yet** - but acknowledging it shows foresight.
 
 ## Related Specs
 

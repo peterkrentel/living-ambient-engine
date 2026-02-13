@@ -1,0 +1,234 @@
+{
+  "generated_at": "2026-02-13T18:30:15.612032Z",
+  "overall_avg_retention": 5.08,
+  "videos_analyzed": 50,
+  "videos_with_views": 32,
+  "suggestions": [
+    {
+      "action": "increase",
+      "type": "mood",
+      "name": "lofi_study",
+      "reason": "+26.7% vs avg (n=1, need 3+)",
+      "confidence": "low",
+      "sample_size": 1
+    },
+    {
+      "action": "increase",
+      "type": "mood",
+      "name": "piano_relax",
+      "reason": "+14.8% vs avg (n=1, need 3+)",
+      "confidence": "low",
+      "sample_size": 1
+    },
+    {
+      "action": "reduce",
+      "type": "mood",
+      "name": "warrior",
+      "reason": "-3.0% vs avg (n=1, need 3+)",
+      "confidence": "low",
+      "sample_size": 1
+    },
+    {
+      "action": "reduce",
+      "type": "music_style",
+      "name": "bamboula",
+      "reason": "-3.0% vs avg (n=2, need 3+)",
+      "confidence": "low",
+      "sample_size": 2
+    },
+    {
+      "action": "reduce",
+      "type": "mood",
+      "name": "forest_morning",
+      "reason": "-3.6% vs avg (n=1, need 3+)",
+      "confidence": "low",
+      "sample_size": 1
+    }
+  ],
+  "all_stats": [
+    {
+      "type": "mood",
+      "name": "lofi_study",
+      "avg": 31.759999999999998,
+      "delta": 26.6809375,
+      "count": 1,
+      "std_dev": 0
+    },
+    {
+      "type": "mood",
+      "name": "piano_relax",
+      "avg": 19.85,
+      "delta": 14.770937500000002,
+      "count": 1,
+      "std_dev": 0
+    },
+    {
+      "type": "mood",
+      "name": "energize",
+      "avg": 6.99,
+      "delta": 1.910937500000001,
+      "count": 1,
+      "std_dev": 0
+    },
+    {
+      "type": "mood",
+      "name": "ocean_waves",
+      "avg": 6.87,
+      "delta": 1.790937500000001,
+      "count": 2,
+      "std_dev": 1.6829141392239837
+    },
+    {
+      "type": "music_style",
+      "name": "kuku",
+      "avg": 6.81,
+      "delta": 1.7309375000000005,
+      "count": 1,
+      "std_dev": 0
+    },
+    {
+      "type": "music_style",
+      "name": "candomble",
+      "avg": 5.88,
+      "delta": 0.8009375000000007,
+      "count": 1,
+      "std_dev": 0
+    },
+    {
+      "type": "music_style",
+      "name": "none",
+      "avg": 4.986666666666667,
+      "delta": -0.0923958333333319,
+      "count": 3,
+      "std_dev": 4.290190360966903
+    },
+    {
+      "type": "art_period",
+      "name": "future",
+      "avg": 4.83,
+      "delta": -0.24906249999999908,
+      "count": 9,
+      "std_dev": 2.574519372620839
+    },
+    {
+      "type": "mood",
+      "name": "trance",
+      "avg": 4.77,
+      "delta": -0.3090624999999996,
+      "count": 1,
+      "std_dev": 0
+    },
+    {
+      "type": "mood",
+      "name": "fireplace",
+      "avg": 4.68,
+      "delta": -0.39906249999999943,
+      "count": 1,
+      "std_dev": 0
+    },
+    {
+      "type": "music_style",
+      "name": "gamelan",
+      "avg": 4.23,
+      "delta": -0.8490624999999987,
+      "count": 2,
+      "std_dev": 1.3293607486307093
+    },
+    {
+      "type": "music_style",
+      "name": "burundi",
+      "avg": 4.02,
+      "delta": -1.0590624999999996,
+      "count": 1,
+      "std_dev": 0
+    },
+    {
+      "type": "music_style",
+      "name": "heartbeat",
+      "avg": 3.8899999999999997,
+      "delta": -1.1890624999999995,
+      "count": 2,
+      "std_dev": 0.1131370849898474
+    },
+    {
+      "type": "music_style",
+      "name": "gnawa",
+      "avg": 3.61,
+      "delta": -1.4690624999999993,
+      "count": 1,
+      "std_dev": 0
+    },
+    {
+      "type": "music_style",
+      "name": "taiko",
+      "avg": 3.4399999999999995,
+      "delta": -1.6390624999999996,
+      "count": 2,
+      "std_dev": 1.880904037956216
+    },
+    {
+      "type": "art_period",
+      "name": "contemporary",
+      "avg": 3.3666666666666667,
+      "delta": -1.7123958333333325,
+      "count": 3,
+      "std_dev": 0.6316908526592206
+    },
+    {
+      "type": "mood",
+      "name": "chill",
+      "avg": 3.2199999999999998,
+      "delta": -1.8590624999999994,
+      "count": 1,
+      "std_dev": 0
+    },
+    {
+      "type": "art_period",
+      "name": "cave_art",
+      "avg": 3.0033333333333334,
+      "delta": -2.0757291666666657,
+      "count": 3,
+      "std_dev": 0.7900210967647214
+    },
+    {
+      "type": "mood",
+      "name": "rain_sleep",
+      "avg": 2.58,
+      "delta": -2.499062499999999,
+      "count": 1,
+      "std_dev": 0
+    },
+    {
+      "type": "mood",
+      "name": "deep_focus",
+      "avg": 2.19,
+      "delta": -2.889062499999999,
+      "count": 3,
+      "std_dev": 1.4749915253993833
+    },
+    {
+      "type": "mood",
+      "name": "warrior",
+      "avg": 2.1,
+      "delta": -2.979062499999999,
+      "count": 1,
+      "std_dev": 0
+    },
+    {
+      "type": "music_style",
+      "name": "bamboula",
+      "avg": 2.09,
+      "delta": -2.9890624999999993,
+      "count": 2,
+      "std_dev": 0.8768124086713189
+    },
+    {
+      "type": "mood",
+      "name": "forest_morning",
+      "avg": 1.45,
+      "delta": -3.629062499999999,
+      "count": 1,
+      "std_dev": 0
+    }
+  ]
+}
