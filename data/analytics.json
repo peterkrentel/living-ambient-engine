@@ -1,5 +1,5 @@
 {
-  "fetched_at": "2026-02-13T00:29:47.582009+00:00",
+  "fetched_at": "2026-02-13T16:39:02.342859+00:00",
   "videos": [
     {
       "video_id": "51fnkvOtr7I",
@@ -893,6 +893,114 @@
         "watch_time_minutes": 1,
         "average_view_duration_seconds": 35,
         "average_view_percentage": 0.98,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
+    },
+    {
+      "video_id": "wdypd5h7BMs",
+      "title": "Ambient ancient | 5 Mins | Evolving gnawa Soundscape",
+      "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
+      "published_at": "2026-02-13T09:04:40Z",
+      "metrics": {
+        "views": 0,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 0,
+        "average_view_percentage": 0,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
+    },
+    {
+      "video_id": "Vp_koAwurxU",
+      "title": "Ambient ancient | 5 Mins | Evolving taiko Soundscape",
+      "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
+      "published_at": "2026-02-13T08:59:01Z",
+      "metrics": {
+        "views": 0,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 0,
+        "average_view_percentage": 0,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
+    },
+    {
+      "video_id": "-JqrWyTgB0Y",
+      "title": "Get Moving | 5 Mins Energizing Ambient Beats | Non-Repeating Flow",
+      "description": "Created to build energy and momentum when you need a boost. \u2728 This soundscape evolves through phases and never repeats.",
+      "published_at": "2026-02-13T08:39:17Z",
+      "metrics": {
+        "views": 0,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 0,
+        "average_view_percentage": 0,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
+    },
+    {
+      "video_id": "mAGw_7fe6bE",
+      "title": "Study Without Distractions | 5 Mins Focus Soundscape | Always Evolving",
+      "description": "Created to keep you focused without pulling your attention. \u2728 This soundscape evolves through phases and never repeats.",
+      "published_at": "2026-02-13T08:39:15Z",
+      "metrics": {
+        "views": 0,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 0,
+        "average_view_percentage": 0,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
+    },
+    {
+      "video_id": "mkWKR9olgIE",
+      "title": "Journey Inward | 5 Mins Hypnotic Trance | Never-Repeating Soundscape",
+      "description": "Created to take you on an inward journey of hypnotic depth. \u2728 This soundscape evolves through phases and never repeats.",
+      "published_at": "2026-02-13T08:39:28Z",
+      "metrics": {
+        "views": 0,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 0,
+        "average_view_percentage": 0,
+        "subscribers_gained": 0,
+        "subscribers_lost": 0,
+        "likes": 0,
+        "dislikes": 0,
+        "comments": 0,
+        "shares": 0
+      }
+    },
+    {
+      "video_id": "5hk8AJ0m_D4",
+      "title": "Ambient ancient | 5 Mins | Evolving gamelan Soundscape",
+      "description": "Created to support focus and relaxation. \u2728 This soundscape evolves through phases and never repeats. Best for: focus ...",
+      "published_at": "2026-02-13T07:05:29Z",
+      "metrics": {
+        "views": 0,
+        "watch_time_minutes": 0,
+        "average_view_duration_seconds": 0,
+        "average_view_percentage": 0,
         "subscribers_gained": 0,
         "subscribers_lost": 0,
         "likes": 0,
