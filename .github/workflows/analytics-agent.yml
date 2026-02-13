@@ -75,15 +75,20 @@ jobs:
         run: |
           echo "🔬 Running performance analysis..."
           python scripts/analyze_data.py
-      
+
+      - name: Run ML Correlation
+        run: |
+          echo "🤖 Running ML correlation analysis..."
+          python scripts/correlate.py
+
       - name: Commit Data
         run: |
           git config user.name "Analytics Agent"
           git config user.email "actions@github.com"
-          
-          # Add data files
-          git add data/analytics.json data/reports/ || true
-          
+
+          # Add data files (including suggestions.json)
+          git add data/analytics.json data/reports/ data/suggestions.json || true
+
           # Check if there are changes
           if git diff --staged --quiet; then
             echo "📊 No changes to commit"
@@ -93,22 +98,60 @@ jobs:
             git push
             echo "✅ Data committed and pushed"
           fi
-      
+
       - name: Summary
         run: |
-          echo "## Analytics Agent Summary" >> $GITHUB_STEP_SUMMARY
+          echo "## 📊 Analytics Agent Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          
+
           if [ -f data/analytics.json ]; then
             VIDEO_COUNT=$(python -c "import json; d=json.load(open('data/analytics.json')); print(len(d.get('videos', [])))")
             echo "- **Videos tracked:** $VIDEO_COUNT" >> $GITHUB_STEP_SUMMARY
           fi
-          
+
+          # Add ML suggestions to summary
+          if [ -f data/suggestions.json ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "## 🤖 ML Suggestions" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+
+            # Parse suggestions from JSON
+            python3 << 'EOF' >> $GITHUB_STEP_SUMMARY
+          import json
+          with open('data/suggestions.json') as f:
+              data = json.load(f)
+
+          print(f"**Overall avg retention:** {data['overall_avg_retention']}%")
+          print(f"**Videos analyzed:** {data['videos_with_views']} with views / {data['videos_analyzed']} total")
+          print("")
+
+          if not data['suggestions']:
+              print("⚠️ No strong patterns yet - need more data")
+          else:
+              print("| Action | Type | Name | Reason | Confidence |")
+              print("|--------|------|------|--------|------------|")
+              for s in data['suggestions']:
+                  icon = "⬆️" if s['action'] == 'increase' else "⬇️"
+                  print(f"| {icon} {s['action']} | {s['type']} | {s['name']} | {s['reason']} | {s['confidence']} |")
+
+          print("")
+          print("### Top Performers")
+          print("")
+          print("| Type | Name | Avg Retention | vs Average |")
+          print("|------|------|---------------|------------|")
+          for s in data['all_stats'][:10]:
+              print(f"| {s['type']} | {s['name']} | {s['avg']:.1f}% | {s['delta']:+.1f}% |")
+          EOF
+          fi
+
+          # Add report preview
           LATEST_REPORT=$(ls -t data/reports/*.md 2>/dev/null | head -1)
           if [ -n "$LATEST_REPORT" ]; then
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "## 📈 Weekly Report Preview" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
             echo "- **Latest report:** $LATEST_REPORT" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "### Report Preview" >> $GITHUB_STEP_SUMMARY
-            head -50 "$LATEST_REPORT" >> $GITHUB_STEP_SUMMARY
+            head -30 "$LATEST_REPORT" >> $GITHUB_STEP_SUMMARY
           fi
 
