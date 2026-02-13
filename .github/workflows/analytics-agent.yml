@@ -52,16 +52,14 @@ jobs:
       
       - name: Debug Token Scopes
         env:
-          YOUTUBE_TOKEN_PICKLE: ${{ secrets.YOUTUBE_TOKEN_PICKLE }}
-          YOUTUBE_TOKEN_PICKLE_BRAND: ${{ secrets.YOUTUBE_TOKEN_PICKLE_BRAND }}
+          YOUTUBE_TOKEN_PICKLE: ${{ secrets.YOUTUBE_TOKEN_PICKLE_BRAND }}
         run: |
           echo "🔍 Checking token scopes..."
-          python -c "import base64; import pickle; import os; token = os.environ.get('YOUTUBE_TOKEN_PICKLE_BRAND') or os.environ.get('YOUTUBE_TOKEN_PICKLE'); creds = pickle.loads(base64.b64decode(token)) if token else None; print('Scopes:', creds.scopes if creds else 'No token')"
+          python -c "import base64; import pickle; import os; token = os.environ.get('YOUTUBE_TOKEN_PICKLE'); creds = pickle.loads(base64.b64decode(token)) if token else None; print('Scopes:', creds.scopes if creds else 'No token')"
 
       - name: Fetch YouTube Analytics
         env:
-          YOUTUBE_TOKEN_PICKLE: ${{ secrets.YOUTUBE_TOKEN_PICKLE }}
-          YOUTUBE_TOKEN_PICKLE_BRAND: ${{ secrets.YOUTUBE_TOKEN_PICKLE_BRAND }}
+          YOUTUBE_TOKEN_PICKLE: ${{ secrets.YOUTUBE_TOKEN_PICKLE_BRAND }}
         run: |
           echo "📊 Fetching YouTube Analytics..."
           DAYS="${{ inputs.days }}"

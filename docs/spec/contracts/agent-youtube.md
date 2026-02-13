@@ -145,6 +145,13 @@ https://www.googleapis.com/auth/yt-analytics.readonly
 3. Constructor parameter
 4. Default file `youtube_token.pickle`
 
+### Token Usage by Workflow
+
+| Workflow | Token | Notes |
+|----------|-------|-------|
+| Analytics Agent | `YOUTUBE_TOKEN_PICKLE_BRAND` | Brand channel analytics |
+| Content Factory | `YOUTUBE_TOKEN_PICKLE` | Personal account uploads |
+
 ## Contract Test
 
 ```python
