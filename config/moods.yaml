@@ -48,30 +48,42 @@ deep_focus:
       accent: [0, 220, 255]       # Cyan glow (clarity)
     pattern: "mandelbrot"
     speed: 0.5                    # Smooth zoom
+    speed_variation: 0.15         # 0.35 to 0.65
     complexity: 0.85              # High detail fractals
+    complexity_variation: 0.1     # 0.75 to 0.95
     symmetry: 8                   # Octagonal
     pulse_frequency: 0.08         # Subtle breathing pulse
+    pulse_frequency_variation: 0.02  # 0.06 to 0.10
   audio:
     rhythm: "gnawa"               # Moroccan trance rhythm
     rhythm_volume: 0.5            # Balanced drums
+    rhythm_volume_variation: 0.1  # 0.4 to 0.6
     base_frequency: 40            # Gamma waves (focus)
+    base_frequency_variation: 5   # 35 to 45 Hz
     binaural_beat: 40             # 40 Hz (concentration)
+    binaural_beat_variation: 5    # 35 to 45 Hz
     layers:
       - type: "sine"
         frequency: 432            # A=432Hz (natural tuning)
         amplitude: 0.1
+        amplitude_variation: 0.02
       - type: "melody"
         scale: "pentatonic_minor"
         root: 220                 # A3
         tempo: 60                 # Slow, hypnotic
+        tempo_variation: 10       # 50 to 70 BPM
         amplitude: 0.15
+        amplitude_variation: 0.03
       - type: "pad"
         frequency: 110            # A2 pad
         amplitude: 0.08
+        amplitude_variation: 0.02
       - type: "binaural"
         carrier: 200
+        carrier_variation: 20     # 180 to 220 Hz
         beat: 40
         amplitude: 0.12
+        amplitude_variation: 0.02
 
 sleep:
   description: "Deep relaxation and sleep induction - Gentle fractal drift"
@@ -119,32 +131,46 @@ sleep:
       accent: [100, 80, 140]      # Lavender glow (peace)
     pattern: "julia"              # Softer, dreamier fractals
     speed: 0.2                    # Very slow drift
+    speed_variation: 0.08         # 0.12 to 0.28
     complexity: 0.6               # Medium detail, not overwhelming
+    complexity_variation: 0.15    # 0.45 to 0.75
     symmetry: 6                   # Hexagonal harmony
     pulse_frequency: 0.03         # Very slow breathing
+    pulse_frequency_variation: 0.01  # 0.02 to 0.04
   audio:
     rhythm: "heartbeat"           # Primal heartbeat
     rhythm_volume: 0.35           # Subtle heartbeat
+    rhythm_volume_variation: 0.08 # 0.27 to 0.43
     base_frequency: 2             # Delta waves (deep sleep)
+    base_frequency_variation: 0.5 # 1.5 to 2.5 Hz
     binaural_beat: 2              # 2Hz Delta
+    binaural_beat_variation: 0.5  # 1.5 to 2.5 Hz
     layers:
       - type: "sine"
         frequency: 528            # 528Hz healing frequency
         amplitude: 0.1
+        amplitude_variation: 0.02
       - type: "melody"
         scale: "pentatonic_major"
         root: 174                 # Low, grounding
         tempo: 40                 # Very slow lullaby
+        tempo_variation: 8        # 32 to 48 BPM
         amplitude: 0.12
+        amplitude_variation: 0.03
       - type: "pad"
         frequency: 87             # F2 - warm low pad
+        frequency_variation: 10   # 77 to 97 Hz
         amplitude: 0.1
+        amplitude_variation: 0.02
       - type: "pink_noise"
         amplitude: 0.06
+        amplitude_variation: 0.02
       - type: "binaural"
         carrier: 108
+        carrier_variation: 15     # 93 to 123 Hz
         beat: 2
         amplitude: 0.1
+        amplitude_variation: 0.02
 
 chill:
   description: "Relaxed and peaceful state - Gamelan rhythm"
@@ -192,27 +218,38 @@ chill:
       accent: [255, 200, 100]     # Golden
     pattern: "organic_flow"
     speed: 0.4                    # Medium-slow
+    speed_variation: 0.12         # 0.28 to 0.52
     complexity: 0.5               # Medium detail
+    complexity_variation: 0.15    # 0.35 to 0.65
     symmetry: 3                   # Triangular
     pulse_frequency: 0.15
+    pulse_frequency_variation: 0.04  # 0.11 to 0.19
   audio:
     rhythm: "gamelan"             # Indonesian ethereal
     rhythm_volume: 0.55           # Drums forward
+    rhythm_volume_variation: 0.1  # 0.45 to 0.65
     base_frequency: 10            # Alpha waves (8-14Hz = relaxed awareness)
+    base_frequency_variation: 2   # 8 to 12 Hz
     binaural_beat: 10             # 10Hz Alpha - calm alertness
+    binaural_beat_variation: 2    # 8 to 12 Hz
     layers:
       - type: "sine"
         frequency: 639            # 639Hz - connection, relationships, harmony
         amplitude: 0.1
+        amplitude_variation: 0.02
       - type: "sine"
         frequency: 528            # 528Hz - love frequency layered
         amplitude: 0.06
+        amplitude_variation: 0.02
       - type: "pink_noise"
         amplitude: 0.05
+        amplitude_variation: 0.02
       - type: "binaural"
         carrier: 136.1            # 136.1Hz = "Om" frequency (C# cosmic)
+        carrier_variation: 15     # 121 to 151 Hz
         beat: 10                  # 10Hz Alpha
         amplitude: 0.12
+        amplitude_variation: 0.02
 
 study:
   description: "Alert focus and learning state - Taiko rhythm"
@@ -260,27 +297,38 @@ study:
       accent: [200, 220, 180]     # Pale yellow-green
     pattern: "platonic_solids"
     speed: 0.35                   # Medium
+    speed_variation: 0.1          # 0.25 to 0.45
     complexity: 0.6               # Medium-high
+    complexity_variation: 0.12    # 0.48 to 0.72
     symmetry: 4                   # Square
     pulse_frequency: 0.12
+    pulse_frequency_variation: 0.03  # 0.09 to 0.15
   audio:
     rhythm: "taiko"               # Japanese ceremonial
     rhythm_volume: 0.6            # Drums prominent
+    rhythm_volume_variation: 0.1  # 0.5 to 0.7
     base_frequency: 12            # Alpha/Beta border (12Hz = alert focus)
+    base_frequency_variation: 2   # 10 to 14 Hz
     binaural_beat: 12             # 12Hz - learning, memory retention
+    binaural_beat_variation: 2    # 10 to 14 Hz
     layers:
       - type: "sine"
         frequency: 432            # 432Hz - natural tuning, calm concentration
         amplitude: 0.1
+        amplitude_variation: 0.02
       - type: "sine"
         frequency: 528            # 528Hz - transformation, clarity
         amplitude: 0.05
+        amplitude_variation: 0.02
       - type: "pink_noise"
         amplitude: 0.03           # Pink noise helps focus
+        amplitude_variation: 0.01
       - type: "binaural"
         carrier: 144              # 144Hz = light, energy
+        carrier_variation: 15     # 129 to 159 Hz
         beat: 12                  # 12Hz high Alpha/low Beta
         amplitude: 0.1
+        amplitude_variation: 0.02
 
 energize:
   description: "Energized and motivated state - Kuku rhythm"
@@ -327,24 +375,34 @@ energize:
       accent: [255, 150, 100]     # Light orange
     pattern: "mandelbrot"
     speed: 0.6                    # Faster
+    speed_variation: 0.15         # 0.45 to 0.75
     complexity: 0.8               # High detail
+    complexity_variation: 0.1     # 0.7 to 0.9
     symmetry: 8                   # Octagonal
     pulse_frequency: 0.25         # More active pulse
+    pulse_frequency_variation: 0.05  # 0.20 to 0.30
   audio:
     rhythm: "kuku"                # West African energy
     rhythm_volume: 0.7            # Drums very prominent
+    rhythm_volume_variation: 0.1  # 0.6 to 0.8
     base_frequency: 25            # High beta (energy)
+    base_frequency_variation: 5   # 20 to 30 Hz
     binaural_beat: 25
+    binaural_beat_variation: 5    # 20 to 30 Hz
     layers:
       - type: "sine"
         frequency: 639            # Solfeggio (connection)
         amplitude: 0.1
+        amplitude_variation: 0.02
       - type: "white_noise"
         amplitude: 0.05
+        amplitude_variation: 0.02
       - type: "binaural"
         carrier: 210
+        carrier_variation: 25     # 185 to 235 Hz
         beat: 25
         amplitude: 0.12
+        amplitude_variation: 0.02
 
 # Additional tribal moods
 trance:
@@ -393,32 +451,46 @@ trance:
       accent: [0, 255, 200]       # Teal flash (contrast hook)
     pattern: "julia"
     speed: 0.7                    # Faster, more hypnotic
+    speed_variation: 0.2          # 0.5 to 0.9
     complexity: 0.95              # Maximum detail
+    complexity_variation: 0.05    # 0.9 to 1.0 (clamped)
     symmetry: 8
     pulse_frequency: 0.15         # Rhythmic pulse
+    pulse_frequency_variation: 0.04  # 0.11 to 0.19
   audio:
     rhythm: "bamboula"            # New Orleans hypnotic
     rhythm_volume: 0.6            # Strong drums
+    rhythm_volume_variation: 0.1  # 0.5 to 0.7
     base_frequency: 6             # Theta waves (trance)
+    base_frequency_variation: 1.5 # 4.5 to 7.5 Hz
     binaural_beat: 6              # 6Hz Theta
+    binaural_beat_variation: 1.5  # 4.5 to 7.5 Hz
     layers:
       - type: "melody"
         scale: "phrygian"         # Dark, exotic scale
         root: 165                 # E3
         tempo: 80                 # Driving tempo
+        tempo_variation: 15       # 65 to 95 BPM
         amplitude: 0.18
+        amplitude_variation: 0.04
       - type: "arpeggio"
         chord: "minor7"
         root: 110                 # A2
         tempo: 120                # Fast arpeggio
+        tempo_variation: 20       # 100 to 140 BPM
         amplitude: 0.12
+        amplitude_variation: 0.03
       - type: "pad"
         frequency: 55             # A1 - deep bass pad
+        frequency_variation: 10   # 45 to 65 Hz
         amplitude: 0.1
+        amplitude_variation: 0.02
       - type: "binaural"
         carrier: 111
+        carrier_variation: 15     # 96 to 126 Hz
         beat: 6
         amplitude: 0.1
+        amplitude_variation: 0.02
 
 ceremony:
   description: "Ritual and ceremony - Candomblé rhythm"
@@ -466,24 +538,34 @@ ceremony:
       accent: [255, 180, 80]      # Gold
     pattern: "sacred_geometry"
     speed: 0.4
+    speed_variation: 0.12         # 0.28 to 0.52
     complexity: 0.75
+    complexity_variation: 0.1     # 0.65 to 0.85
     symmetry: 6
     pulse_frequency: 0.18
+    pulse_frequency_variation: 0.04  # 0.14 to 0.22
   audio:
     rhythm: "candomble"           # Brazilian ceremony
     rhythm_volume: 0.7            # Drums very prominent
+    rhythm_volume_variation: 0.1  # 0.6 to 0.8
     base_frequency: 10            # Alpha waves
+    base_frequency_variation: 2   # 8 to 12 Hz
     binaural_beat: 10
+    binaural_beat_variation: 2    # 8 to 12 Hz
     layers:
       - type: "sine"
         frequency: 285            # Solfeggio (healing)
         amplitude: 0.08
+        amplitude_variation: 0.02
       - type: "pink_noise"
         amplitude: 0.04
+        amplitude_variation: 0.01
       - type: "binaural"
         carrier: 185
+        carrier_variation: 20     # 165 to 205 Hz
         beat: 10
         amplitude: 0.1
+        amplitude_variation: 0.02
 
 warrior:
   description: "Power and strength - Burundi rhythm"
@@ -530,24 +612,34 @@ warrior:
       accent: [255, 200, 50]      # Gold
     pattern: "platonic_solids"
     speed: 0.55
+    speed_variation: 0.15         # 0.4 to 0.7
     complexity: 0.7
+    complexity_variation: 0.12    # 0.58 to 0.82
     symmetry: 4
     pulse_frequency: 0.22
+    pulse_frequency_variation: 0.05  # 0.17 to 0.27
   audio:
     rhythm: "burundi"             # East African power
     rhythm_volume: 0.75           # Drums dominant
+    rhythm_volume_variation: 0.1  # 0.65 to 0.85
     base_frequency: 20            # Beta waves (power)
+    base_frequency_variation: 4   # 16 to 24 Hz
     binaural_beat: 20
+    binaural_beat_variation: 4    # 16 to 24 Hz
     layers:
       - type: "sine"
         frequency: 741            # Solfeggio (awakening)
         amplitude: 0.08
+        amplitude_variation: 0.02
       - type: "white_noise"
         amplitude: 0.05
+        amplitude_variation: 0.02
       - type: "binaural"
         carrier: 200
+        carrier_variation: 25     # 175 to 225 Hz
         beat: 20
         amplitude: 0.1
+        amplitude_variation: 0.02
 
 # ============================================
 # NATURE SOUNDS - High performing content types
