@@ -197,15 +197,51 @@ jobs:
 
 ## Future Phases
 
+### Phase 1.5: Aggregation & Learning (Current)
+
+**Goal:** Learn MLOps fundamentals by building a simple feedback loop.
+
+```
+┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│  COLLECT    │ ──► │  ANALYZE    │ ──► │  ADJUST     │
+│             │     │             │     │             │
+│  Weekly     │     │  Group by   │     │  Human      │
+│  analytics  │     │  type, rank │     │  reviews &  │
+│  fetch      │     │  by metric  │     │  tunes      │
+└─────────────┘     └─────────────┘     └─────────────┘
+     ✅ Auto           ✅ Auto            📝 Manual
+```
+
+**What runs automatically:**
+- `agent/fetch_analytics.py` → collects YouTube data
+- `agent/report.py` → generates markdown report
+- `scripts/analyze_data.py` → groups by type, ranks by retention %
+
+**What you learn:**
+| MLOps Concept | How We're Doing It |
+|---------------|-------------------|
+| **Data Pipeline** | Weekly cron fetches data → JSON |
+| **Feature Extraction** | Parse mood/type from video title |
+| **Metric Tracking** | Retention %, views, watch time |
+| **Aggregation** | Group by type, calculate averages |
+| **Feedback Loop** | Data → Report → Human Decision → Config Change |
+
+**When to move to Phase 2:**
+- 500+ total views across videos
+- Clear patterns emerging (some types consistently outperform)
+- You understand why certain types perform better
+
 ### Phase 2: ML Correlation
 - Train model on params → performance data
 - Identify which parameters correlate with high retention
 - Suggest parameter adjustments
+- **MLOps concepts:** Feature engineering, model training, evaluation metrics
 
 ### Phase 3: Agent Optimization
 - Goal-directed generation ("optimize for retention")
 - Automated parameter tuning based on ML predictions
 - A/B testing of parameter variations
+- **MLOps concepts:** Online learning, experiment tracking, model deployment
 
 ## Related Specs
 
