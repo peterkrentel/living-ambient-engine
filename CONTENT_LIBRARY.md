@@ -1,16 +1,16 @@
 # Content Library
 
-*Last updated: 2026-02-12T21:08:36.367011*
+*Last updated: 2026-02-14T16:47:58.430320*
 
 ## Statistics
 
-- **Total Videos:** 20
-- **Total Duration:** 2.15 hours
-- **Average Duration:** 6.45 minutes
+- **Total Videos:** 26
+- **Total Duration:** 8.15 hours
+- **Average Duration:** 18.81 minutes
 
 ### Videos by Mood
 
-- **Ceremony:** 1 videos
+- **Ceremony:** 3 videos
 - **Chill:** 1 videos
 - **Deep Focus:** 5 videos
 - **Energize:** 1 videos
@@ -20,7 +20,8 @@
 - **Rain Sleep:** 3 videos
 - **Sleep:** 1 videos
 - **Study:** 1 videos
-- **Warrior:** 1 videos
+- **Trance:** 2 videos
+- **Warrior:** 3 videos
 
 ## Videos
 
@@ -35,6 +36,26 @@
 - **Uploaded:** 2026-02-01
 - **Seed:** `None`
 - **Catalog ID:** `video_0008_20260201_050202_e91ecf29`
+
+#### Sacred Space | 1 Hour Ceremonial Sounds | Evolving Ritual Ambient [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=e5todrYr9HQ](https://youtube.com/watch?v=e5todrYr9HQ)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-14
+- **Seed:** `None`
+- **Catalog ID:** `video_0023_20260214_164634_3956269c`
+
+#### Sacred Space | 1 Hour Ceremonial Sounds | Evolving Ritual Ambient [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=x1MErO_qpoQ](https://youtube.com/watch?v=x1MErO_qpoQ)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-14
+- **Seed:** `None`
+- **Catalog ID:** `video_0024_20260214_164657_c95310b2`
 
 ### Chill
 
@@ -234,6 +255,28 @@
 - **Seed:** `None`
 - **Catalog ID:** `video_0006_20260201_050158_6288626f`
 
+### Trance
+
+#### Journey Inward | 1 Hour Hypnotic Trance | Never-Repeating Soundscape [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=2MaWFBmkWtw](https://youtube.com/watch?v=2MaWFBmkWtw)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-14
+- **Seed:** `None`
+- **Catalog ID:** `video_0025_20260214_164727_a4c306b6`
+
+#### Journey Inward | 1 Hour Hypnotic Trance | Never-Repeating Soundscape [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=nm_ZNZYULD8](https://youtube.com/watch?v=nm_ZNZYULD8)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-14
+- **Seed:** `None`
+- **Catalog ID:** `video_0026_20260214_164758_cec03251`
+
 ### Warrior
 
 #### Find Your Strength | 30 Seconds Power Drums | Builds & Evolves
@@ -245,3 +288,23 @@
 - **Uploaded:** 2026-02-01
 - **Seed:** `None`
 - **Catalog ID:** `video_0009_20260201_050204_eb9f915e`
+
+#### Find Your Strength | 1 Hour Power Drums | Builds & Evolves [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=kJnhD0AJSxA](https://youtube.com/watch?v=kJnhD0AJSxA)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-14
+- **Seed:** `None`
+- **Catalog ID:** `video_0021_20260214_164553_839813db`
+
+#### Find Your Strength | 1 Hour Power Drums | Builds & Evolves [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=V6Ulo4dR6NQ](https://youtube.com/watch?v=V6Ulo4dR6NQ)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-14
+- **Seed:** `None`
+- **Catalog ID:** `video_0022_20260214_164611_45b0002b`
