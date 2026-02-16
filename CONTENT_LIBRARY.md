@@ -1,22 +1,24 @@
 # Content Library
 
-*Last updated: 2026-02-14T16:47:58.430320*
+*Last updated: 2026-02-16T12:49:25.873346*
 
 ## Statistics
 
-- **Total Videos:** 26
-- **Total Duration:** 8.15 hours
-- **Average Duration:** 18.81 minutes
+- **Total Videos:** 32
+- **Total Duration:** 14.15 hours
+- **Average Duration:** 26.53 minutes
 
 ### Videos by Mood
 
 - **Ceremony:** 3 videos
 - **Chill:** 1 videos
 - **Deep Focus:** 5 videos
-- **Energize:** 1 videos
+- **Energize:** 3 videos
 - **Fireplace:** 1 videos
 - **Forest Morning:** 2 videos
+- **Lofi Study:** 2 videos
 - **Ocean Waves:** 3 videos
+- **Piano Relax:** 2 videos
 - **Rain Sleep:** 3 videos
 - **Sleep:** 1 videos
 - **Study:** 1 videos
@@ -133,6 +135,26 @@
 - **Seed:** `None`
 - **Catalog ID:** `video_0007_20260201_050200_d41e280c`
 
+#### Get Moving | 1 Hour Energizing Ambient Beats | Non-Repeating Flow [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=HEBy-uDZU-M](https://youtube.com/watch?v=HEBy-uDZU-M)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-16
+- **Seed:** `None`
+- **Catalog ID:** `video_0027_20260216_124800_2bb8edea`
+
+#### Get Moving | 1 Hour Energizing Ambient Beats | Non-Repeating Flow [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=MANwiLGfcBQ](https://youtube.com/watch?v=MANwiLGfcBQ)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-16
+- **Seed:** `None`
+- **Catalog ID:** `video_0028_20260216_124828_83490df1`
+
 ### Fireplace
 
 #### Cozy Night by the Fire | 30 Seconds | Crackling That Shifts & Breathes
@@ -167,6 +189,28 @@
 - **Seed:** `734327657`
 - **Catalog ID:** `video_0002_20260130_013828_32b0d507`
 
+### Lofi Study
+
+#### Study to Chill Beats | 1 Hour Lofi | Drifts & Evolves Endlessly [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=-cbMpX14mnc](https://youtube.com/watch?v=-cbMpX14mnc)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-16
+- **Seed:** `None`
+- **Catalog ID:** `video_0029_20260216_124841_27d3b5bd`
+
+#### Study to Chill Beats | 1 Hour Lofi | Drifts & Evolves Endlessly [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=75vKKkvfuL0](https://youtube.com/watch?v=75vKKkvfuL0)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-16
+- **Seed:** `None`
+- **Catalog ID:** `video_0030_20260216_124855_db1114c4`
+
 ### Ocean Waves
 
 #### Drift Off to Ocean Waves | 30 Seconds | Endless Tides, Never Repeats
@@ -198,6 +242,28 @@
 - **Uploaded:** 2026-02-12
 - **Seed:** `None`
 - **Catalog ID:** `video_0020_20260212_210836_c417fa10`
+
+### Piano Relax
+
+#### Let Go of Stress | 1 Hour Soft Piano | Gently Evolving Melodies [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=RyyvhPbgsT8](https://youtube.com/watch?v=RyyvhPbgsT8)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-16
+- **Seed:** `None`
+- **Catalog ID:** `video_0031_20260216_124908_2e860e59`
+
+#### Let Go of Stress | 1 Hour Soft Piano | Gently Evolving Melodies [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=GLlGe_X4Vec](https://youtube.com/watch?v=GLlGe_X4Vec)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-16
+- **Seed:** `None`
+- **Catalog ID:** `video_0032_20260216_124925_d96402fe`
 
 ### Rain Sleep
 
