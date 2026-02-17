@@ -151,43 +151,100 @@ class AnalyticsFetcher:
             "shares": row[headers.index("shares")] if "shares" in headers else 0,
         }
 
-    def list_channel_videos(self) -> List[Dict[str, Any]]:
-        """List ALL videos from the authenticated channel.
+    def list_videos_from_analytics(
+        self,
+        start_date: Optional[date] = None,
+        end_date: Optional[date] = None,
+    ) -> List[Dict[str, Any]]:
+        """List ALL videos that have analytics data.
 
-        Uses YouTube Data API to fetch complete video list.
-        Paginates automatically until all videos are retrieved.
+        Uses the Analytics API with dimensions=video as the source of truth.
+        This returns exactly the videos that YouTube Analytics tracks -
+        matching what YouTube Studio shows.
+
+        Args:
+            start_date: Start of date range (default: channel creation ~2020)
+            end_date: End of date range (default: yesterday)
 
         Returns:
-            List of video metadata dicts with id, title, description, publishedAt
+            List of dicts with video_id and metrics from Analytics API
         """
+        if start_date is None:
+            # Use a far-back date to capture all historical videos
+            start_date = date(2020, 1, 1)
+        if end_date is None:
+            end_date = date.today() - timedelta(days=1)
+
         channel_id = self.get_channel_id()
+
+        # Query Analytics API with dimensions=video to get ALL videos with data
+        response = self.analytics.reports().query(
+            ids=f"channel=={channel_id}",
+            startDate=start_date.isoformat(),
+            endDate=end_date.isoformat(),
+            dimensions="video",
+            metrics="views,estimatedMinutesWatched,averageViewDuration,"
+                    "averageViewPercentage,subscribersGained,subscribersLost,"
+                    "likes,dislikes,comments,shares",
+            maxResults=500,  # Should cover all videos
+            sort="-views",  # Sort by views descending
+        ).execute()
+
         videos = []
-        page_token = None
+        headers = [h["name"] for h in response.get("columnHeaders", [])]
 
-        while True:
-            request = self.youtube.search().list(
-                part="id,snippet",
-                channelId=channel_id,
-                type="video",
-                order="date",
-                maxResults=50,  # API max per page
-                pageToken=page_token,
-            )
-            response = request.execute()
+        for row in response.get("rows", []):
+            video_id = row[headers.index("video")] if "video" in headers else None
+            if not video_id:
+                continue
 
-            for item in response.get("items", []):
-                videos.append({
-                    "video_id": item["id"]["videoId"],
-                    "title": item["snippet"]["title"],
-                    "description": item["snippet"]["description"],
-                    "published_at": item["snippet"]["publishedAt"],
-                })
-
-            page_token = response.get("nextPageToken")
-            if not page_token:
-                break
+            videos.append({
+                "video_id": video_id,
+                "metrics": {
+                    "views": row[headers.index("views")] if "views" in headers else 0,
+                    "watch_time_minutes": row[headers.index("estimatedMinutesWatched")] if "estimatedMinutesWatched" in headers else 0,
+                    "average_view_duration_seconds": row[headers.index("averageViewDuration")] if "averageViewDuration" in headers else 0,
+                    "average_view_percentage": row[headers.index("averageViewPercentage")] if "averageViewPercentage" in headers else 0,
+                    "subscribers_gained": row[headers.index("subscribersGained")] if "subscribersGained" in headers else 0,
+                    "subscribers_lost": row[headers.index("subscribersLost")] if "subscribersLost" in headers else 0,
+                    "likes": row[headers.index("likes")] if "likes" in headers else 0,
+                    "dislikes": row[headers.index("dislikes")] if "dislikes" in headers else 0,
+                    "comments": row[headers.index("comments")] if "comments" in headers else 0,
+                    "shares": row[headers.index("shares")] if "shares" in headers else 0,
+                },
+            })
 
         return videos
+
+    def get_video_metadata(self, video_ids: List[str]) -> Dict[str, Dict[str, Any]]:
+        """Fetch video metadata (title, description, publishedAt) from Data API.
+
+        Args:
+            video_ids: List of video IDs to fetch metadata for
+
+        Returns:
+            Dict mapping video_id to metadata dict
+        """
+        metadata = {}
+
+        # YouTube Data API allows up to 50 video IDs per request
+        for i in range(0, len(video_ids), 50):
+            batch = video_ids[i:i + 50]
+            response = self.youtube.videos().list(
+                part="snippet",
+                id=",".join(batch),
+            ).execute()
+
+            for item in response.get("items", []):
+                vid = item["id"]
+                snippet = item.get("snippet", {})
+                metadata[vid] = {
+                    "title": snippet.get("title", ""),
+                    "description": snippet.get("description", ""),
+                    "published_at": snippet.get("publishedAt", ""),
+                }
+
+        return metadata
 
     def fetch_all(
         self,
@@ -196,11 +253,12 @@ class AnalyticsFetcher:
     ) -> Dict[str, Any]:
         """Fetch analytics for all channel videos.
 
-        Per contract: docs/spec/contracts/agent-youtube.md
+        Uses Analytics API as source of truth (dimensions=video).
+        This matches exactly what YouTube Studio shows.
 
-        1. Lists all videos from channel (YouTube Data API)
-        2. Fetches analytics for each video (YouTube Analytics API)
-        3. Returns combined data with video metadata
+        1. Query Analytics API with dimensions=video → ALL videos with data
+        2. Fetch video metadata from Data API for titles/descriptions
+        3. Returns combined data matching YouTube Studio count
 
         Args:
             start_date: Start of date range (default: 28 days ago)
@@ -217,55 +275,35 @@ class AnalyticsFetcher:
         if start_date > end_date:
             raise ValueError("start_date must be <= end_date")
 
-        # Step 1: List all channel videos
-        print("📋 Listing all channel videos...")
-        videos = self.list_channel_videos()
-        print(f"   Found {len(videos)} videos")
+        # Step 1: Get ALL videos from Analytics API (source of truth)
+        print("📊 Querying Analytics API for all videos with data...")
+        videos_with_metrics = self.list_videos_from_analytics(start_date, end_date)
+        print(f"   Found {len(videos_with_metrics)} videos with analytics data")
 
-        if not videos:
+        if not videos_with_metrics:
             return {
                 "fetched_at": datetime.now(timezone.utc).isoformat(),
                 "date_range": {"start": start_date.isoformat(), "end": end_date.isoformat()},
                 "videos": [],
             }
 
-        # Step 2: Fetch analytics for each video
-        channel_id = self.get_channel_id()
+        # Step 2: Fetch metadata for these videos from Data API
+        video_ids = [v["video_id"] for v in videos_with_metrics]
+        print(f"📋 Fetching metadata for {len(video_ids)} videos...")
+        metadata = self.get_video_metadata(video_ids)
+
+        # Step 3: Combine metrics with metadata
         results = []
-
-        for video in videos:
-            video_id = video["video_id"]
-            try:
-                response = self.analytics.reports().query(
-                    ids=f"channel=={channel_id}",
-                    startDate=start_date.isoformat(),
-                    endDate=end_date.isoformat(),
-                    metrics="views,estimatedMinutesWatched,averageViewDuration,"
-                            "averageViewPercentage,subscribersGained,subscribersLost,"
-                            "likes,dislikes,comments,shares",
-                    filters=f"video=={video_id}",
-                ).execute()
-
-                metrics = self._parse_metrics(response)
-                results.append({
-                    "video_id": video_id,
-                    "title": video["title"],
-                    "description": video["description"],
-                    "published_at": video["published_at"],
-                    "metrics": metrics,
-                })
-
-            except HttpError as e:
-                print(f"⚠️ Error fetching analytics for {video_id}: {e}")
-                # Still include video metadata even if analytics failed
-                results.append({
-                    "video_id": video_id,
-                    "title": video["title"],
-                    "description": video["description"],
-                    "published_at": video["published_at"],
-                    "metrics": {},
-                    "error": str(e),
-                })
+        for video in videos_with_metrics:
+            vid = video["video_id"]
+            meta = metadata.get(vid, {})
+            results.append({
+                "video_id": vid,
+                "title": meta.get("title", ""),
+                "description": meta.get("description", ""),
+                "published_at": meta.get("published_at", ""),
+                "metrics": video["metrics"],
+            })
 
         return {
             "fetched_at": datetime.now(timezone.utc).isoformat(),
