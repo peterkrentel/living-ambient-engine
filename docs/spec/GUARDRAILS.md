@@ -330,7 +330,7 @@ complexity = max(0.1, min(1.0, complexity))
 |-------|-------|-------------|
 | YouTube Analytics daily quota | 10,000 units | Stop at 90% (9,000 units) |
 | Queries per 100 seconds | 100 | Rate limit with backoff |
-| Max videos per fetch | 50 | Paginate larger requests |
+| Videos per fetch | All | Paginate automatically (50 per API call) |
 | Fetch frequency | Weekly minimum | Cron schedule enforced |
 
 ### Data Retention
