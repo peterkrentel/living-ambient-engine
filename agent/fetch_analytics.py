@@ -151,13 +151,11 @@ class AnalyticsFetcher:
             "shares": row[headers.index("shares")] if "shares" in headers else 0,
         }
 
-    def list_channel_videos(self, max_results: int = 50) -> List[Dict[str, Any]]:
-        """List all videos from the authenticated channel.
+    def list_channel_videos(self) -> List[Dict[str, Any]]:
+        """List ALL videos from the authenticated channel.
 
-        Uses YouTube Data API to fetch video list.
-
-        Args:
-            max_results: Maximum number of videos to return (for quota management)
+        Uses YouTube Data API to fetch complete video list.
+        Paginates automatically until all videos are retrieved.
 
         Returns:
             List of video metadata dicts with id, title, description, publishedAt
@@ -166,13 +164,13 @@ class AnalyticsFetcher:
         videos = []
         page_token = None
 
-        while len(videos) < max_results:
+        while True:
             request = self.youtube.search().list(
                 part="id,snippet",
                 channelId=channel_id,
                 type="video",
                 order="date",
-                maxResults=min(50, max_results - len(videos)),
+                maxResults=50,  # API max per page
                 pageToken=page_token,
             )
             response = request.execute()
@@ -189,13 +187,12 @@ class AnalyticsFetcher:
             if not page_token:
                 break
 
-        return videos[:max_results]
+        return videos
 
     def fetch_all(
         self,
         start_date: Optional[date] = None,
         end_date: Optional[date] = None,
-        max_results: int = 50,
     ) -> Dict[str, Any]:
         """Fetch analytics for all channel videos.
 
@@ -208,7 +205,6 @@ class AnalyticsFetcher:
         Args:
             start_date: Start of date range (default: 28 days ago)
             end_date: End of date range (default: yesterday)
-            max_results: Maximum videos to fetch (for API quota)
 
         Returns:
             Dict with fetched_at, date_range, and videos with metadata + metrics
@@ -222,8 +218,8 @@ class AnalyticsFetcher:
             raise ValueError("start_date must be <= end_date")
 
         # Step 1: List all channel videos
-        print(f"📋 Listing channel videos (max {max_results})...")
-        videos = self.list_channel_videos(max_results=max_results)
+        print("📋 Listing all channel videos...")
+        videos = self.list_channel_videos()
         print(f"   Found {len(videos)} videos")
 
         if not videos:
@@ -324,21 +320,19 @@ def main():
 
     parser = argparse.ArgumentParser(description="Fetch YouTube Analytics")
     parser.add_argument("--days", type=int, default=28, help="Days of data to fetch")
-    parser.add_argument("--max-videos", type=int, default=50, help="Max videos to fetch")
     args = parser.parse_args()
 
-    print(f"📊 Fetching analytics from YouTube channel...")
+    print("📊 Fetching analytics from YouTube channel...")
 
     try:
         fetcher = AnalyticsFetcher()
         start_date = date.today() - timedelta(days=args.days)
         end_date = date.today() - timedelta(days=1)
 
-        # Use fetch_all() to get all channel videos (no generations.json needed)
+        # Use fetch_all() to get all channel videos
         result = fetcher.fetch_all(
             start_date=start_date,
             end_date=end_date,
-            max_results=args.max_videos,
         )
 
         if not result["videos"]:
