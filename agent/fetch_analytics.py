@@ -178,14 +178,14 @@ class AnalyticsFetcher:
         channel_id = self.get_channel_id()
 
         # Query Analytics API with dimensions=video to get ALL videos with data
+        # Note: Only basic metrics are supported with dimensions=video
+        # averageViewPercentage, subscribersGained/Lost, dislikes are NOT supported
         response = self.analytics.reports().query(
             ids=f"channel=={channel_id}",
             startDate=start_date.isoformat(),
             endDate=end_date.isoformat(),
             dimensions="video",
-            metrics="views,estimatedMinutesWatched,averageViewDuration,"
-                    "averageViewPercentage,subscribersGained,subscribersLost,"
-                    "likes,dislikes,comments,shares",
+            metrics="views,estimatedMinutesWatched,averageViewDuration,likes,comments,shares",
             maxResults=500,  # Should cover all videos
             sort="-views",  # Sort by views descending
         ).execute()
@@ -204,11 +204,7 @@ class AnalyticsFetcher:
                     "views": row[headers.index("views")] if "views" in headers else 0,
                     "watch_time_minutes": row[headers.index("estimatedMinutesWatched")] if "estimatedMinutesWatched" in headers else 0,
                     "average_view_duration_seconds": row[headers.index("averageViewDuration")] if "averageViewDuration" in headers else 0,
-                    "average_view_percentage": row[headers.index("averageViewPercentage")] if "averageViewPercentage" in headers else 0,
-                    "subscribers_gained": row[headers.index("subscribersGained")] if "subscribersGained" in headers else 0,
-                    "subscribers_lost": row[headers.index("subscribersLost")] if "subscribersLost" in headers else 0,
                     "likes": row[headers.index("likes")] if "likes" in headers else 0,
-                    "dislikes": row[headers.index("dislikes")] if "dislikes" in headers else 0,
                     "comments": row[headers.index("comments")] if "comments" in headers else 0,
                     "shares": row[headers.index("shares")] if "shares" in headers else 0,
                 },
