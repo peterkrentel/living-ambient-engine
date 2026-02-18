@@ -1,17 +1,17 @@
 # Content Library
 
-*Last updated: 2026-02-16T12:49:25.873346*
+*Last updated: 2026-02-18T04:16:50.621866*
 
 ## Statistics
 
-- **Total Videos:** 32
-- **Total Duration:** 14.15 hours
-- **Average Duration:** 26.53 minutes
+- **Total Videos:** 38
+- **Total Duration:** 20.15 hours
+- **Average Duration:** 31.82 minutes
 
 ### Videos by Mood
 
 - **Ceremony:** 3 videos
-- **Chill:** 1 videos
+- **Chill:** 3 videos
 - **Deep Focus:** 5 videos
 - **Energize:** 3 videos
 - **Fireplace:** 1 videos
@@ -20,8 +20,8 @@
 - **Ocean Waves:** 3 videos
 - **Piano Relax:** 2 videos
 - **Rain Sleep:** 3 videos
-- **Sleep:** 1 videos
-- **Study:** 1 videos
+- **Sleep:** 3 videos
+- **Study:** 3 videos
 - **Trance:** 2 videos
 - **Warrior:** 3 videos
 
@@ -70,6 +70,26 @@
 - **Uploaded:** 2026-02-01
 - **Seed:** `None`
 - **Catalog ID:** `video_0005_20260201_050156_aba3a0bb`
+
+#### Unwind After a Long Day | 1 Hour Chill Ambient | Continuously Evolving [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=vzquqNRucVw](https://youtube.com/watch?v=vzquqNRucVw)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-18
+- **Seed:** `None`
+- **Catalog ID:** `video_0035_20260218_041611_6d359f62`
+
+#### Unwind After a Long Day | 1 Hour Chill Ambient | Continuously Evolving [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=T4v81dX3aKc](https://youtube.com/watch?v=T4v81dX3aKc)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-18
+- **Seed:** `None`
+- **Catalog ID:** `video_0036_20260218_041625_023a0e90`
 
 ### Deep Focus
 
@@ -309,6 +329,26 @@
 - **Seed:** `None`
 - **Catalog ID:** `video_0004_20260201_050155_74962989`
 
+#### Can't Sleep? | 1 Hour Gentle Drift | Evolving Sounds That Never Repeat [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=RtHjapv4Sk0](https://youtube.com/watch?v=RtHjapv4Sk0)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-18
+- **Seed:** `None`
+- **Catalog ID:** `video_0033_20260218_041533_61331dcd`
+
+#### Can't Sleep? | 1 Hour Gentle Drift | Evolving Sounds That Never Repeat [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=wOg35ac8Bn4](https://youtube.com/watch?v=wOg35ac8Bn4)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-18
+- **Seed:** `None`
+- **Catalog ID:** `video_0034_20260218_041558_92dd7107`
+
 ### Study
 
 #### Study Without Distractions | 30 Seconds Focus Soundscape | Always Evolving
@@ -320,6 +360,26 @@
 - **Uploaded:** 2026-02-01
 - **Seed:** `None`
 - **Catalog ID:** `video_0006_20260201_050158_6288626f`
+
+#### Study Without Distractions | 1 Hour Focus Soundscape | Always Evolving [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=Rc83pOuY43s](https://youtube.com/watch?v=Rc83pOuY43s)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-18
+- **Seed:** `None`
+- **Catalog ID:** `video_0037_20260218_041637_da150035`
+
+#### Study Without Distractions | 1 Hour Focus Soundscape | Always Evolving [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=pVB0PPHJ4ME](https://youtube.com/watch?v=pVB0PPHJ4ME)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-18
+- **Seed:** `None`
+- **Catalog ID:** `video_0038_20260218_041650_01510eab`
 
 ### Trance
 
