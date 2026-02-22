@@ -2,7 +2,7 @@
 # Generates ambient videos and publishes to YouTube on schedule
 # Spec: docs/spec/workflows.md#content-factoryyml
 
-name: Content Factory
+name: Content Factory (Personal)
 
 on:
   # DISABLED: Schedule paused while personal channel strategy TBD
