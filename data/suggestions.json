@@ -1,282 +1,298 @@
 {
-  "generated_at": "2026-02-17T17:56:46.894040Z",
-  "overall_avg_retention": 14.34,
-  "videos_analyzed": 97,
-  "videos_with_views": 72,
+  "generated_at": "2026-02-22T14:58:38.741871Z",
+  "overall_avg_retention": 13.77,
+  "videos_analyzed": 128,
+  "videos_with_views": 98,
   "suggestions": [
     {
       "action": "increase",
       "type": "mood",
-      "name": "energize",
-      "reason": "+21.6% vs avg (n=3)",
-      "confidence": "medium",
-      "sample_size": 3
-    },
-    {
-      "action": "increase",
-      "type": "mood",
       "name": "chill",
-      "reason": "+20.3% vs avg (n=3)",
+      "reason": "+20.9% vs avg (n=3)",
       "confidence": "medium",
       "sample_size": 3
-    },
-    {
-      "action": "increase",
-      "type": "mood",
-      "name": "ceremony",
-      "reason": "+19.6% vs avg (n=2, need 3+)",
-      "confidence": "low",
-      "sample_size": 2
-    },
-    {
-      "action": "increase",
-      "type": "mood",
-      "name": "forest_morning",
-      "reason": "+17.7% vs avg (n=4)",
-      "confidence": "medium",
-      "sample_size": 4
     },
     {
       "action": "increase",
       "type": "mood",
       "name": "sleep",
-      "reason": "+16.9% vs avg (n=2, need 3+)",
+      "reason": "+14.1% vs avg (n=3)",
+      "confidence": "medium",
+      "sample_size": 3
+    },
+    {
+      "action": "increase",
+      "type": "mood",
+      "name": "forest_morning",
+      "reason": "+12.7% vs avg (n=5)",
+      "confidence": "medium",
+      "sample_size": 5
+    },
+    {
+      "action": "increase",
+      "type": "mood",
+      "name": "ceremony",
+      "reason": "+9.8% vs avg (n=3)",
+      "confidence": "medium",
+      "sample_size": 3
+    },
+    {
+      "action": "increase",
+      "type": "mood",
+      "name": "energize",
+      "reason": "+8.2% vs avg (n=4)",
+      "confidence": "medium",
+      "sample_size": 4
+    },
+    {
+      "action": "reduce",
+      "type": "music_style",
+      "name": "candomble",
+      "reason": "-9.8% vs avg (n=4)",
+      "confidence": "medium",
+      "sample_size": 4
+    },
+    {
+      "action": "reduce",
+      "type": "art_period",
+      "name": "renaissance",
+      "reason": "-10.0% vs avg (n=2, need 3+)",
       "confidence": "low",
       "sample_size": 2
     },
     {
       "action": "reduce",
       "type": "music_style",
-      "name": "taiko",
-      "reason": "-10.5% vs avg (n=3)",
+      "name": "burundi",
+      "reason": "-10.1% vs avg (n=4)",
       "confidence": "medium",
-      "sample_size": 3
-    },
-    {
-      "action": "reduce",
-      "type": "music_style",
-      "name": "heartbeat",
-      "reason": "-10.6% vs avg (n=3)",
-      "confidence": "medium",
-      "sample_size": 3
-    },
-    {
-      "action": "reduce",
-      "type": "music_style",
-      "name": "bamboula",
-      "reason": "-12.2% vs avg (n=3)",
-      "confidence": "medium",
-      "sample_size": 3
+      "sample_size": 4
     }
   ],
   "all_stats": [
     {
       "type": "mood",
-      "name": "energize",
-      "avg": 35.96666666666667,
-      "delta": 21.631527777777784,
-      "count": 3,
-      "std_dev": 52.711682133406946
-    },
-    {
-      "type": "mood",
       "name": "chill",
       "avg": 34.623333333333335,
-      "delta": 20.28819444444445,
+      "delta": 20.851802721088436,
       "count": 3,
       "std_dev": 53.882021429539314
     },
     {
       "type": "mood",
-      "name": "ceremony",
-      "avg": 33.894999999999996,
-      "delta": 19.55986111111111,
-      "count": 2,
-      "std_dev": 44.25781343446601
+      "name": "sleep",
+      "avg": 27.823333333333334,
+      "delta": 14.051802721088436,
+      "count": 3,
+      "std_dev": 25.957242406182775
     },
     {
       "type": "mood",
       "name": "forest_morning",
-      "avg": 32.0775,
-      "delta": 17.742361111111116,
-      "count": 4,
-      "std_dev": 33.60121661983884
+      "avg": 26.476,
+      "delta": 12.7044693877551,
+      "count": 5,
+      "std_dev": 30.089207865944225
     },
     {
       "type": "mood",
-      "name": "sleep",
-      "avg": 31.220000000000002,
-      "delta": 16.884861111111114,
-      "count": 2,
-      "std_dev": 37.2362430972836
+      "name": "ceremony",
+      "avg": 23.526666666666667,
+      "delta": 9.755136054421769,
+      "count": 3,
+      "std_dev": 36.088788194303966
+    },
+    {
+      "type": "mood",
+      "name": "energize",
+      "avg": 21.965,
+      "delta": 8.193469387755101,
+      "count": 4,
+      "std_dev": 35.77142761106039
     },
     {
       "type": "mood",
       "name": "rain_sleep",
-      "avg": 24.12,
-      "delta": 9.784861111111114,
+      "avg": 21.593333333333334,
+      "delta": 7.821802721088435,
       "count": 3,
-      "std_dev": 19.728028284651256
-    },
-    {
-      "type": "mood",
-      "name": "ocean_waves",
-      "avg": 21.400000000000002,
-      "delta": 7.0648611111111155,
-      "count": 3,
-      "std_dev": 25.194816927296777
-    },
-    {
-      "type": "mood",
-      "name": "deep_focus",
-      "avg": 17.972857142857144,
-      "delta": 3.6377182539682575,
-      "count": 7,
-      "std_dev": 27.493029852604284
-    },
-    {
-      "type": "mood",
-      "name": "lofi_study",
-      "avg": 16.525,
-      "delta": 2.189861111111112,
-      "count": 2,
-      "std_dev": 21.545543622754103
-    },
-    {
-      "type": "mood",
-      "name": "fireplace",
-      "avg": 13.62,
-      "delta": -0.7151388888888874,
-      "count": 2,
-      "std_dev": 12.64306924761547
+      "std_dev": 16.6747423768205
     },
     {
       "type": "mood",
       "name": "warrior",
-      "avg": 12.179999999999998,
-      "delta": -2.1551388888888887,
-      "count": 3,
-      "std_dev": 15.15641448364355
+      "avg": 18.75,
+      "delta": 4.978469387755101,
+      "count": 4,
+      "std_dev": 16.397804731121784
+    },
+    {
+      "type": "mood",
+      "name": "deep_focus",
+      "avg": 18.705555555555556,
+      "delta": 4.934024943310657,
+      "count": 9,
+      "std_dev": 24.40468557014775
+    },
+    {
+      "type": "mood",
+      "name": "ocean_waves",
+      "avg": 18.477500000000003,
+      "delta": 4.705969387755104,
+      "count": 4,
+      "std_dev": 21.385740381540845
     },
     {
       "type": "mood",
       "name": "piano_relax",
-      "avg": 11.99,
-      "delta": -2.3451388888888864,
-      "count": 2,
-      "std_dev": 11.115718600252528
+      "avg": 16.290000000000003,
+      "delta": 2.518469387755104,
+      "count": 3,
+      "std_dev": 10.569640485844351
     },
     {
       "type": "music_style",
       "name": "none",
-      "avg": 11.395,
-      "delta": -2.940138888888887,
-      "count": 4,
-      "std_dev": 10.746166758430654
-    },
-    {
-      "type": "music_style",
-      "name": "gamelan",
-      "avg": 8.716666666666667,
-      "delta": -5.61847222222222,
-      "count": 3,
-      "std_dev": 3.363187971751405
-    },
-    {
-      "type": "art_period",
-      "name": "future",
-      "avg": 7.524444444444446,
-      "delta": -6.810694444444441,
-      "count": 9,
-      "std_dev": 7.669952918876215
-    },
-    {
-      "type": "music_style",
-      "name": "gnawa",
-      "avg": 7.31,
-      "delta": -7.025138888888887,
-      "count": 2,
-      "std_dev": 2.064751801064719
-    },
-    {
-      "type": "art_period",
-      "name": "ancient",
-      "avg": 5.890000000000001,
-      "delta": -8.445138888888886,
+      "avg": 12.901666666666666,
+      "delta": -0.8698639455782331,
       "count": 6,
-      "std_dev": 3.206119149376704
+      "std_dev": 13.619966837942986
     },
     {
       "type": "mood",
-      "name": "trance",
-      "avg": 5.200000000000001,
-      "delta": -9.135138888888886,
+      "name": "lofi_study",
+      "avg": 12.423333333333332,
+      "delta": -1.3481972789115666,
       "count": 3,
-      "std_dev": 6.510537612209918
-    },
-    {
-      "type": "music_style",
-      "name": "candomble",
-      "avg": 4.673333333333333,
-      "delta": -9.661805555555553,
-      "count": 3,
-      "std_dev": 2.116041902546671
-    },
-    {
-      "type": "art_period",
-      "name": "cave_art",
-      "avg": 4.552222222222222,
-      "delta": -9.782916666666665,
-      "count": 9,
-      "std_dev": 2.872915669567146
-    },
-    {
-      "type": "music_style",
-      "name": "kuku",
-      "avg": 4.526666666666666,
-      "delta": -9.808472222222221,
-      "count": 3,
-      "std_dev": 2.331401581309692
-    },
-    {
-      "type": "music_style",
-      "name": "burundi",
-      "avg": 4.1674999999999995,
-      "delta": -10.167638888888888,
-      "count": 4,
-      "std_dev": 1.4597117295320108
-    },
-    {
-      "type": "art_period",
-      "name": "contemporary",
-      "avg": 3.885,
-      "delta": -10.450138888888887,
-      "count": 4,
-      "std_dev": 1.1578860047517634
-    },
-    {
-      "type": "music_style",
-      "name": "taiko",
-      "avg": 3.856666666666667,
-      "delta": -10.47847222222222,
-      "count": 3,
-      "std_dev": 1.8188549511528769
+      "std_dev": 16.81000396589285
     },
     {
       "type": "music_style",
       "name": "heartbeat",
-      "avg": 3.6999999999999997,
-      "delta": -10.635138888888887,
+      "avg": 11.48,
+      "delta": -2.291530612244898,
+      "count": 5,
+      "std_dev": 8.390980276463532
+    },
+    {
+      "type": "mood",
+      "name": "fireplace",
+      "avg": 11.413333333333332,
+      "delta": -2.3581972789115664,
       "count": 3,
-      "std_dev": 0.338673884437522
+      "std_dev": 9.722743097157988
+    },
+    {
+      "type": "art_period",
+      "name": "medieval",
+      "avg": 11.2975,
+      "delta": -2.474030612244899,
+      "count": 8,
+      "std_dev": 12.62892343562416
+    },
+    {
+      "type": "art_period",
+      "name": "future",
+      "avg": 9.357777777777777,
+      "delta": -4.413752834467122,
+      "count": 9,
+      "std_dev": 9.084090182535864
+    },
+    {
+      "type": "music_style",
+      "name": "gnawa",
+      "avg": 8.853333333333333,
+      "delta": -4.918197278911565,
+      "count": 3,
+      "std_dev": 3.8917905048105212
+    },
+    {
+      "type": "music_style",
+      "name": "taiko",
+      "avg": 8.620000000000001,
+      "delta": -5.151530612244898,
+      "count": 5,
+      "std_dev": 8.538714774484507
+    },
+    {
+      "type": "art_period",
+      "name": "ancient",
+      "avg": 8.0,
+      "delta": -5.771530612244899,
+      "count": 9,
+      "std_dev": 6.2415943476006195
     },
     {
       "type": "music_style",
       "name": "bamboula",
-      "avg": 2.0933333333333333,
-      "delta": -12.241805555555553,
-      "count": 3,
-      "std_dev": 0.6200268811376918
+      "avg": 7.698,
+      "delta": -6.073530612244898,
+      "count": 5,
+      "std_dev": 12.161589945397765
+    },
+    {
+      "type": "music_style",
+      "name": "gamelan",
+      "avg": 7.43,
+      "delta": -6.341530612244899,
+      "count": 5,
+      "std_dev": 3.045332494162173
+    },
+    {
+      "type": "art_period",
+      "name": "cave_art",
+      "avg": 7.366666666666668,
+      "delta": -6.404863945578231,
+      "count": 9,
+      "std_dev": 6.896526299522102
+    },
+    {
+      "type": "music_style",
+      "name": "kuku",
+      "avg": 6.508,
+      "delta": -7.263530612244899,
+      "count": 5,
+      "std_dev": 6.519399512225033
+    },
+    {
+      "type": "mood",
+      "name": "trance",
+      "avg": 5.5275,
+      "delta": -8.244030612244899,
+      "count": 4,
+      "std_dev": 5.2992601684889316
+    },
+    {
+      "type": "art_period",
+      "name": "contemporary",
+      "avg": 4.618,
+      "delta": -9.153530612244898,
+      "count": 5,
+      "std_dev": 2.2836199333514324
+    },
+    {
+      "type": "music_style",
+      "name": "candomble",
+      "avg": 3.9825,
+      "delta": -9.789030612244899,
+      "count": 4,
+      "std_dev": 1.6666408331331217
+    },
+    {
+      "type": "art_period",
+      "name": "renaissance",
+      "avg": 3.7299999999999995,
+      "delta": -10.041530612244898,
+      "count": 2,
+      "std_dev": 3.6486709909225845
+    },
+    {
+      "type": "music_style",
+      "name": "burundi",
+      "avg": 3.7175,
+      "delta": -10.0540306122449,
+      "count": 4,
+      "std_dev": 1.3761389222507057
     }
   ]
 }
