@@ -1,19 +1,19 @@
 # Content Library
 
-*Last updated: 2026-02-18T04:16:50.621866*
+*Last updated: 2026-02-22T01:52:06.520900*
 
 ## Statistics
 
-- **Total Videos:** 38
-- **Total Duration:** 20.15 hours
-- **Average Duration:** 31.82 minutes
+- **Total Videos:** 44
+- **Total Duration:** 38.15 hours
+- **Average Duration:** 52.02 minutes
 
 ### Videos by Mood
 
 - **Ceremony:** 3 videos
 - **Chill:** 3 videos
 - **Deep Focus:** 5 videos
-- **Energize:** 3 videos
+- **Energize:** 5 videos
 - **Fireplace:** 1 videos
 - **Forest Morning:** 2 videos
 - **Lofi Study:** 2 videos
@@ -22,8 +22,8 @@
 - **Rain Sleep:** 3 videos
 - **Sleep:** 3 videos
 - **Study:** 3 videos
-- **Trance:** 2 videos
-- **Warrior:** 3 videos
+- **Trance:** 4 videos
+- **Warrior:** 5 videos
 
 ## Videos
 
@@ -174,6 +174,26 @@
 - **Uploaded:** 2026-02-16
 - **Seed:** `None`
 - **Catalog ID:** `video_0028_20260216_124828_83490df1`
+
+#### Get Moving | 3 Hours Energizing Ambient Beats | Non-Repeating Flow [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=zv2enqzD8sU](https://youtube.com/watch?v=zv2enqzD8sU)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-22
+- **Seed:** `None`
+- **Catalog ID:** `video_0043_20260222_015051_4da369eb`
+
+#### Get Moving | 3 Hours Energizing Ambient Beats | Non-Repeating Flow [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=OCsJDyzQ6Ec](https://youtube.com/watch?v=OCsJDyzQ6Ec)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-22
+- **Seed:** `None`
+- **Catalog ID:** `video_0044_20260222_015206_016da762`
 
 ### Fireplace
 
@@ -403,6 +423,26 @@
 - **Seed:** `None`
 - **Catalog ID:** `video_0026_20260214_164758_cec03251`
 
+#### Journey Inward | 3 Hours Hypnotic Trance | Never-Repeating Soundscape [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=rh5QY_A8Icg](https://youtube.com/watch?v=rh5QY_A8Icg)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-22
+- **Seed:** `None`
+- **Catalog ID:** `video_0039_20260222_014715_d1c4b7cd`
+
+#### Journey Inward | 3 Hours Hypnotic Trance | Never-Repeating Soundscape [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=VifrpkjzHEc](https://youtube.com/watch?v=VifrpkjzHEc)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-22
+- **Seed:** `None`
+- **Catalog ID:** `video_0040_20260222_014832_e57ff85b`
+
 ### Warrior
 
 #### Find Your Strength | 30 Seconds Power Drums | Builds & Evolves
@@ -434,3 +474,23 @@
 - **Uploaded:** 2026-02-14
 - **Seed:** `None`
 - **Catalog ID:** `video_0022_20260214_164611_45b0002b`
+
+#### Find Your Strength | 3 Hours Power Drums | Builds & Evolves [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=T6c1ZJkgyyc](https://youtube.com/watch?v=T6c1ZJkgyyc)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-22
+- **Seed:** `None`
+- **Catalog ID:** `video_0041_20260222_014904_2eefc417`
+
+#### Find Your Strength | 3 Hours Power Drums | Builds & Evolves [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=qM0HV2u_axU](https://youtube.com/watch?v=qM0HV2u_axU)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-22
+- **Seed:** `None`
+- **Catalog ID:** `video_0042_20260222_014940_28090d16`
