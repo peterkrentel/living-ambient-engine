@@ -199,21 +199,26 @@ def generate_suggestions(by_mood, by_art_period, by_music_style, by_category, ov
     return suggestions, all_stats
 
 
+def get_metric(video, key, default=0):
+    """Safely get a metric value, handling empty metrics dicts."""
+    return video.get("metrics", {}).get(key, default)
+
+
 def main():
     data = load_analytics()
     if not data:
         return
-    
+
     videos = data["videos"]
-    with_views = [v for v in videos if v["metrics"]["views"] > 0]
-    
+    with_views = [v for v in videos if get_metric(v, "views") > 0]
+
     if len(with_views) < 5:
         print("⚠️ Not enough data yet (need 5+ videos with views)")
         print(f"   Currently have: {len(with_views)} videos with views")
         return
-    
+
     # Calculate overall average
-    overall_avg = sum(v["metrics"]["average_view_percentage"] for v in with_views) / len(with_views)
+    overall_avg = sum(get_metric(v, "average_view_percentage") for v in with_views) / len(with_views)
     
     # Get correlations
     by_mood, by_art_period, by_music_style, by_category = calculate_correlations(videos)
