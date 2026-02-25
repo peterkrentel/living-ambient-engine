@@ -22,8 +22,10 @@ import math
 ANALYTICS_PATH = "data/analytics.json"
 SUGGESTIONS_PATH = "data/suggestions.json"
 
-# Statistical thresholds
-MIN_SAMPLE_SIZE = 3  # Ignore groups with fewer videos (reduces noise)
+# Statistical thresholds (per AGENT.md spec)
+MIN_SAMPLE_SIZE = 5  # Actionable requires n >= 5
+MIN_GROUP_VIEWS = 200  # Actionable requires group_views >= 200
+MIN_VIEWS_FOR_RETENTION = 20  # Exclude videos with < 20 views from retention analysis
 MIN_DELTA_THRESHOLD = 2.0  # Minimum % difference to suggest action
 
 
@@ -95,12 +97,18 @@ def calculate_correlations(videos):
 
 
 def calc_stats(videos, metric="retention"):
-    """Calculate average and std dev of a metric for videos with views."""
-    with_views = [v for v in videos if v["views"] > 0]
-    if not with_views:
-        return 0, 0, 0  # avg, std_dev, count
+    """Calculate average and std dev of a metric for videos with sufficient views.
 
-    values = [v[metric] for v in with_views]
+    Per AGENT.md spec: exclude views < 20 from retention analysis.
+    Returns: (avg, std_dev, eligible_count, group_views)
+    """
+    # Filter to videos with >= MIN_VIEWS_FOR_RETENTION views (spec: exclude views < 20)
+    eligible = [v for v in videos if v["views"] >= MIN_VIEWS_FOR_RETENTION]
+    if not eligible:
+        return 0, 0, 0, 0  # avg, std_dev, count, group_views
+
+    values = [v[metric] for v in eligible]
+    group_views = sum(v["views"] for v in eligible)
     avg = sum(values) / len(values)
 
     # Calculate standard deviation
@@ -110,7 +118,7 @@ def calc_stats(videos, metric="retention"):
     else:
         std_dev = 0
 
-    return avg, std_dev, len(values)
+    return avg, std_dev, len(values), group_views
 
 
 def generate_coverage_report(by_mood, by_art_period, by_music_style):
@@ -149,7 +157,7 @@ def generate_coverage_report(by_mood, by_art_period, by_music_style):
         with_views = len([v for v in by_music_style.get(style, []) if v["views"] > 0])
         coverage["music_styles"][style] = {"total": total, "with_views": with_views}
 
-    # Track art×music combinations (the 81 factorial combos)
+    # Track art×music combinations (81 combinations = 9×9)
     for period in ALL_ART_PERIODS:
         for style in ALL_MUSIC_STYLES:
             combo_key = f"{period}+{style}"
@@ -171,56 +179,68 @@ def generate_coverage_report(by_mood, by_art_period, by_music_style):
 
 
 def generate_suggestions(by_mood, by_art_period, by_music_style, by_category, overall_avg):
-    """Generate actionable suggestions based on correlations."""
+    """Generate actionable suggestions based on correlations.
+
+    Actionability gates (per AGENT.md spec):
+    - Actionable: n >= 5 AND group_views >= 200
+    - Exploratory: n >= 3 (but fails actionable)
+    - Ignore: n < 3 (too noisy)
+    """
     suggestions = []
 
-    # Analyze moods - include ALL videos, show total count alongside with_views count
+    # Analyze moods - include ALL videos, show total count alongside eligible count
     all_stats = []
     for mood, videos in by_mood.items():
-        avg, std_dev, count_with_views = calc_stats(videos)
+        avg, std_dev, eligible_count, group_views = calc_stats(videos)
         total_count = len(videos)  # Total including 0 views
-        delta = avg - overall_avg if count_with_views > 0 else 0
+        delta = avg - overall_avg if eligible_count > 0 else 0
         all_stats.append({
             "type": "mood", "name": mood, "avg": avg,
-            "delta": delta, "count": count_with_views, "total": total_count, "std_dev": std_dev
+            "delta": delta, "count": eligible_count, "total": total_count,
+            "group_views": group_views, "std_dev": std_dev
         })
 
     # Analyze art periods - include ALL videos
     for period, videos in by_art_period.items():
-        avg, std_dev, count_with_views = calc_stats(videos)
+        avg, std_dev, eligible_count, group_views = calc_stats(videos)
         total_count = len(videos)
-        delta = avg - overall_avg if count_with_views > 0 else 0
+        delta = avg - overall_avg if eligible_count > 0 else 0
         all_stats.append({
             "type": "art_period", "name": period, "avg": avg,
-            "delta": delta, "count": count_with_views, "total": total_count, "std_dev": std_dev
+            "delta": delta, "count": eligible_count, "total": total_count,
+            "group_views": group_views, "std_dev": std_dev
         })
 
     # Analyze music styles - include ALL videos
     for style, videos in by_music_style.items():
-        avg, std_dev, count_with_views = calc_stats(videos)
+        avg, std_dev, eligible_count, group_views = calc_stats(videos)
         total_count = len(videos)
-        delta = avg - overall_avg if count_with_views > 0 else 0
+        delta = avg - overall_avg if eligible_count > 0 else 0
         all_stats.append({
             "type": "music_style", "name": style, "avg": avg,
-            "delta": delta, "count": count_with_views, "total": total_count, "std_dev": std_dev
+            "delta": delta, "count": eligible_count, "total": total_count,
+            "group_views": group_views, "std_dev": std_dev
         })
 
     # Sort by delta (best performers first)
     all_stats.sort(key=lambda x: x["delta"], reverse=True)
 
-    # Generate suggestions (only for groups meeting minimum sample size)
+    # Generate suggestions with proper actionability gates
     for stat in all_stats[:5]:  # Top 5
         if stat["delta"] > MIN_DELTA_THRESHOLD:
-            # Determine confidence based on sample size
-            if stat["count"] < MIN_SAMPLE_SIZE:
+            # Apply actionability gates per AGENT.md spec
+            is_actionable = stat["count"] >= MIN_SAMPLE_SIZE and stat["group_views"] >= MIN_GROUP_VIEWS
+            is_exploratory = stat["count"] >= 3 and not is_actionable
+
+            if stat["count"] < 3:
+                continue  # Ignore: too noisy, don't report
+
+            if is_actionable:
+                confidence = "high" if stat["count"] >= 10 else "medium"
+                note = f"(n={stat['count']}, views={stat['group_views']})"
+            else:  # exploratory
                 confidence = "low"
-                note = f"(n={stat['count']}, need {MIN_SAMPLE_SIZE}+)"
-            elif stat["count"] < 10:
-                confidence = "medium"
-                note = f"(n={stat['count']})"
-            else:
-                confidence = "high"
-                note = f"(n={stat['count']})"
+                note = f"(n={stat['count']}, views={stat['group_views']}, exploratory)"
 
             suggestions.append({
                 "action": "increase",
@@ -228,21 +248,26 @@ def generate_suggestions(by_mood, by_art_period, by_music_style, by_category, ov
                 "name": stat["name"],
                 "reason": f"+{stat['delta']:.1f}% vs avg {note}",
                 "confidence": confidence,
-                "sample_size": stat["count"]
+                "actionable": is_actionable,
+                "sample_size": stat["count"],
+                "group_views": stat["group_views"]
             })
-    
+
     for stat in all_stats[-3:]:  # Bottom 3
         if stat["delta"] < -MIN_DELTA_THRESHOLD:
-            # Determine confidence based on sample size
-            if stat["count"] < MIN_SAMPLE_SIZE:
+            # Apply actionability gates per AGENT.md spec
+            is_actionable = stat["count"] >= MIN_SAMPLE_SIZE and stat["group_views"] >= MIN_GROUP_VIEWS
+            is_exploratory = stat["count"] >= 3 and not is_actionable
+
+            if stat["count"] < 3:
+                continue  # Ignore: too noisy, don't report
+
+            if is_actionable:
+                confidence = "high" if stat["count"] >= 10 else "medium"
+                note = f"(n={stat['count']}, views={stat['group_views']})"
+            else:  # exploratory
                 confidence = "low"
-                note = f"(n={stat['count']}, need {MIN_SAMPLE_SIZE}+)"
-            elif stat["count"] < 10:
-                confidence = "medium"
-                note = f"(n={stat['count']})"
-            else:
-                confidence = "high"
-                note = f"(n={stat['count']})"
+                note = f"(n={stat['count']}, views={stat['group_views']}, exploratory)"
 
             suggestions.append({
                 "action": "reduce",
@@ -250,7 +275,9 @@ def generate_suggestions(by_mood, by_art_period, by_music_style, by_category, ov
                 "name": stat["name"],
                 "reason": f"{stat['delta']:.1f}% vs avg {note}",
                 "confidence": confidence,
-                "sample_size": stat["count"]
+                "actionable": is_actionable,
+                "sample_size": stat["count"],
+                "group_views": stat["group_views"]
             })
 
     return suggestions, all_stats
@@ -360,30 +387,44 @@ def main():
     print("\n" + "=" * 60)
     print("💡 SUGGESTIONS")
     print("=" * 60)
+    print(f"   (Actionable: n>={MIN_SAMPLE_SIZE} AND views>={MIN_GROUP_VIEWS})")
+    print(f"   (Retention analysis requires >={MIN_VIEWS_FOR_RETENTION} views per video)")
+
+    actionable = [s for s in suggestions if s.get("actionable", False)]
+    exploratory = [s for s in suggestions if not s.get("actionable", False)]
 
     if not suggestions:
         print("\n⚠️ No strong patterns yet - need more data")
     else:
-        for s in suggestions:
-            icon = "⬆️" if s["action"] == "increase" else "⬇️"
-            conf = f"[{s['confidence']}]"
-            print(f"\n{icon} {s['action'].upper()}: {s['name']} ({s['type']})")
-            print(f"   Reason: {s['reason']} {conf}")
+        if actionable:
+            print("\n🎯 ACTIONABLE:")
+            for s in actionable:
+                icon = "⬆️" if s["action"] == "increase" else "⬇️"
+                print(f"   {icon} {s['action'].upper()}: {s['name']} ({s['type']})")
+                print(f"      {s['reason']}")
+
+        if exploratory:
+            print("\n🔍 EXPLORATORY (need more data):")
+            for s in exploratory:
+                icon = "⬆️" if s["action"] == "increase" else "⬇️"
+                print(f"   {icon} {s['action'].upper()}: {s['name']} ({s['type']})")
+                print(f"      {s['reason']}")
 
     # === PERFORMANCE STATS ===
     print("\n" + "=" * 60)
-    print("📋 ALL STATS (by retention %) - includes total produced")
+    print("📋 ALL STATS (by retention %, videos with 20+ views only)")
     print("=" * 60)
-    print(f"\n{'Type':<12} {'Name':<20} {'Avg%':>6} {'Delta':>7} {'Views':>5} {'Total':>5}")
-    print("-" * 62)
+    print(f"\n{'Type':<12} {'Name':<18} {'Avg%':>6} {'Delta':>7} {'n':>4} {'GrpViews':>8} {'Total':>5}")
+    print("-" * 70)
     for s in all_stats[:15]:  # Top 15
         total = s.get('total', s['count'])
-        print(f"{s['type']:<12} {s['name']:<20} {s['avg']:>5.1f}% {s['delta']:>+6.1f}% {s['count']:>5} {total:>5}")
+        grp_views = s.get('group_views', 0)
+        print(f"{s['type']:<12} {s['name']:<18} {s['avg']:>5.1f}% {s['delta']:>+6.1f}% {s['count']:>4} {grp_views:>8} {total:>5}")
 
     # Add warning about sample sizes
     low_sample = [s for s in all_stats if s['count'] < MIN_SAMPLE_SIZE]
     if low_sample:
-        print(f"\n⚠️  {len(low_sample)} groups have n<{MIN_SAMPLE_SIZE} with views (low confidence)")
+        print(f"\n⚠️  {len(low_sample)} groups have n<{MIN_SAMPLE_SIZE} eligible videos (need more data)")
 
     print(f"\n✅ Suggestions saved to {SUGGESTIONS_PATH}")
 
