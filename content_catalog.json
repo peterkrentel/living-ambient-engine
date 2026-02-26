@@ -1,8 +1,8 @@
 {
   "catalog_version": "1.0",
   "created_at": "2026-01-30T01:38:24.843138",
-  "last_updated": "2026-02-26T03:52:58.909835",
-  "total_videos": 46,
+  "last_updated": "2026-02-26T23:36:28.179832",
+  "total_videos": 48,
   "videos": [
     {
       "catalog_id": "video_0001_20260130_013826_32197db7",
@@ -1789,6 +1789,82 @@
           "transcendental music",
           "visionary music",
           "ASMR"
+        ]
+      }
+    },
+    {
+      "catalog_id": "video_0047_20260226_233525_7a5e96b5",
+      "youtube_id": "P9HSVcIGJpo",
+      "youtube_url": "https://youtube.com/watch?v=P9HSVcIGJpo",
+      "title": "Find Your Strength | 4 Hours Power Drums | Builds & Evolves [Pure Ambience]",
+      "mood": "warrior",
+      "duration": 14400,
+      "duration_str": "",
+      "seed": null,
+      "version": "standard",
+      "rhythm": "ambient",
+      "rhythm_name": "",
+      "uploaded_at": "2026-02-26T23:35:25.224700",
+      "generated_at": "2026-02-26T23:35:25.224700",
+      "metadata": {
+        "video_title": "Find Your Strength | 4 Hours Power Drums | Builds & Evolves [Pure Ambience]",
+        "mood": "warrior",
+        "duration": 14400,
+        "description": "Power and strength - Burundi rhythm",
+        "tags": [
+          "warrior music",
+          "power music",
+          "strength music",
+          "motivation music",
+          "tribal drums",
+          "burundi drums",
+          "african drums",
+          "intense music",
+          "training music",
+          "workout drums",
+          "beta waves",
+          "741 hz",
+          "empowering music",
+          "fierce music",
+          "battle music"
+        ]
+      }
+    },
+    {
+      "catalog_id": "video_0048_20260226_233628_8bebc9ce",
+      "youtube_id": "xsOCBibfvJ0",
+      "youtube_url": "https://youtube.com/watch?v=xsOCBibfvJ0",
+      "title": "Find Your Strength | 4 Hours Power Drums | Builds & Evolves [With Music]",
+      "mood": "warrior",
+      "duration": 14400,
+      "duration_str": "",
+      "seed": null,
+      "version": "standard",
+      "rhythm": "ambient",
+      "rhythm_name": "",
+      "uploaded_at": "2026-02-26T23:36:28.179773",
+      "generated_at": "2026-02-26T23:36:28.179773",
+      "metadata": {
+        "video_title": "Find Your Strength | 4 Hours Power Drums | Builds & Evolves [With Music]",
+        "mood": "warrior",
+        "duration": 14400,
+        "description": "Power and strength - Burundi rhythm",
+        "tags": [
+          "warrior music",
+          "power music",
+          "strength music",
+          "motivation music",
+          "tribal drums",
+          "burundi drums",
+          "african drums",
+          "intense music",
+          "training music",
+          "workout drums",
+          "beta waves",
+          "741 hz",
+          "empowering music",
+          "fierce music",
+          "battle music"
         ]
       }
     }
