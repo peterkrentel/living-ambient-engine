@@ -1,12 +1,12 @@
 # Content Library
 
-*Last updated: 2026-02-22T01:52:06.520900*
+*Last updated: 2026-02-26T03:52:58.909835*
 
 ## Statistics
 
-- **Total Videos:** 44
-- **Total Duration:** 38.15 hours
-- **Average Duration:** 52.02 minutes
+- **Total Videos:** 46
+- **Total Duration:** 46.15 hours
+- **Average Duration:** 60.2 minutes
 
 ### Videos by Mood
 
@@ -22,7 +22,7 @@
 - **Rain Sleep:** 3 videos
 - **Sleep:** 3 videos
 - **Study:** 3 videos
-- **Trance:** 4 videos
+- **Trance:** 6 videos
 - **Warrior:** 5 videos
 
 ## Videos
@@ -442,6 +442,26 @@
 - **Uploaded:** 2026-02-22
 - **Seed:** `None`
 - **Catalog ID:** `video_0040_20260222_014832_e57ff85b`
+
+#### Journey Inward | 4 Hours Hypnotic Trance | Never-Repeating Soundscape [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=n2cUBUJUWYw](https://youtube.com/watch?v=n2cUBUJUWYw)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-26
+- **Seed:** `None`
+- **Catalog ID:** `video_0045_20260226_035007_2ce358c7`
+
+#### Journey Inward | 4 Hours Hypnotic Trance | Never-Repeating Soundscape [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=Pt0dt5j4xe0](https://youtube.com/watch?v=Pt0dt5j4xe0)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-02-26
+- **Seed:** `None`
+- **Catalog ID:** `video_0046_20260226_035258_055b0ed7`
 
 ### Warrior
 
