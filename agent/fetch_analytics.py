@@ -189,11 +189,17 @@ class AnalyticsFetcher:
                 snippet = item.get("snippet", {})
                 resource_id = snippet.get("resourceId", {})
                 video_id = resource_id.get("videoId")
+                title = snippet.get("title", "")
+
+                # Skip deleted/private videos (YouTube returns these placeholders)
+                if title in ("Deleted video", "Private video", ""):
+                    print(f"⏭️ Skipping {title or 'empty title'}: {video_id}")
+                    continue
 
                 if video_id:
                     videos.append({
                         "video_id": video_id,
-                        "title": snippet.get("title", ""),
+                        "title": title,
                         "description": snippet.get("description", ""),
                         "published_at": snippet.get("publishedAt", ""),
                     })
