@@ -1,7 +1,7 @@
 # Art Creator Batch - Scheduled Matrix Generation
 # Runs daily, rotates through ALL parameter combinations
-# Generates 6x 5min videos/day, uploads to brand channel
-# Full coverage: 81 unique art_period×music_style combos in 14 days
+# Generates 3x 5min videos/day, uploads to brand channel
+# Full coverage: 81 unique art_period×music_style combos in 27 days
 # Also rotates: visual_pattern, color_palette, journey, solfeggio
 # Spec: docs/spec/workflows.md#art-creator-batchyml
 
@@ -64,27 +64,6 @@ jobs:
       color_palette_3: ${{ steps.pick.outputs.color_palette_3 }}
       journey_3: ${{ steps.pick.outputs.journey_3 }}
       solfeggio_3: ${{ steps.pick.outputs.solfeggio_3 }}
-      # Video 4
-      art_period_4: ${{ steps.pick.outputs.art_period_4 }}
-      music_style_4: ${{ steps.pick.outputs.music_style_4 }}
-      visual_pattern_4: ${{ steps.pick.outputs.visual_pattern_4 }}
-      color_palette_4: ${{ steps.pick.outputs.color_palette_4 }}
-      journey_4: ${{ steps.pick.outputs.journey_4 }}
-      solfeggio_4: ${{ steps.pick.outputs.solfeggio_4 }}
-      # Video 5
-      art_period_5: ${{ steps.pick.outputs.art_period_5 }}
-      music_style_5: ${{ steps.pick.outputs.music_style_5 }}
-      visual_pattern_5: ${{ steps.pick.outputs.visual_pattern_5 }}
-      color_palette_5: ${{ steps.pick.outputs.color_palette_5 }}
-      journey_5: ${{ steps.pick.outputs.journey_5 }}
-      solfeggio_5: ${{ steps.pick.outputs.solfeggio_5 }}
-      # Video 6
-      art_period_6: ${{ steps.pick.outputs.art_period_6 }}
-      music_style_6: ${{ steps.pick.outputs.music_style_6 }}
-      visual_pattern_6: ${{ steps.pick.outputs.visual_pattern_6 }}
-      color_palette_6: ${{ steps.pick.outputs.color_palette_6 }}
-      journey_6: ${{ steps.pick.outputs.journey_6 }}
-      solfeggio_6: ${{ steps.pick.outputs.solfeggio_6 }}
 
     steps:
       - name: Pick today's combinations
@@ -110,18 +89,18 @@ jobs:
           SOLFEGGIOS=("174" "285" "396" "417" "528" "639" "741" "852" "963")
 
           # === UNIQUE ART×MUSIC COMBOS ===
-          # 6 videos per day, 81 total combos (9×9), so 14 days for full coverage
-          # Video N on day D uses combo index: D*6 + N
-          for i in 0 1 2 3 4 5; do
-            COMBO_IDX=$(( (DAY * 6 + i) % 81 ))
+          # 3 videos per day, 81 total combos (9×9), so 27 days for full coverage
+          # Video N on day D uses combo index: D*3 + N
+          for i in 0 1 2; do
+            COMBO_IDX=$(( (DAY * 3 + i) % 81 ))
             ART_IDX=$((COMBO_IDX / 9))
             MUSIC_IDX=$((COMBO_IDX % 9))
 
             # Other params rotate independently (no duplicates needed)
-            PATTERN_IDX=$(( (DAY * 6 + i) % 14 ))
-            COLOR_IDX=$(( (DAY * 6 + i) % 10 ))
-            JOURNEY_IDX=$(( (DAY * 6 + i) % 7 ))
-            SOLFEGGIO_IDX=$(( (DAY * 6 + i) % 9 ))
+            PATTERN_IDX=$(( (DAY * 3 + i) % 14 ))
+            COLOR_IDX=$(( (DAY * 3 + i) % 10 ))
+            JOURNEY_IDX=$(( (DAY * 3 + i) % 7 ))
+            SOLFEGGIO_IDX=$(( (DAY * 3 + i) % 9 ))
 
             V=$((i + 1))
             echo "art_period_${V}=${ART_PERIODS[$ART_IDX]}" >> $GITHUB_OUTPUT
@@ -135,7 +114,7 @@ jobs:
           done
 
           echo ""
-          echo "📅 Day $DAY of 14 ($(( (DAY * 6) + 6 )) of 84 total videos for full coverage)"
+          echo "📅 Day $DAY of 27 ($(( (DAY * 3) + 3 )) of 81 total videos for full coverage)"
 
   # Job 2-4: Generate 3 videos in parallel using art-creator
   # Each job gets unique test_id to avoid concurrency conflicts
@@ -202,72 +181,9 @@ jobs:
       test_id: 'batch-3'
     secrets: inherit
 
-  generate-4:
-    needs: schedule
-    uses: ./.github/workflows/art-creator.yml
-    with:
-      art_period: ${{ needs.schedule.outputs.art_period_4 }}
-      music_style: ${{ needs.schedule.outputs.music_style_4 }}
-      duration: '5min'
-      upload_to_brand: ${{ github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true' }}
-      visual_pattern: ${{ needs.schedule.outputs.visual_pattern_4 }}
-      visual_speed: 'auto'
-      visual_complexity: 'auto'
-      color_palette: ${{ needs.schedule.outputs.color_palette_4 }}
-      tempo: '60'
-      brainwave_frequency: '10'
-      solfeggio_frequency: ${{ needs.schedule.outputs.solfeggio_4 }}
-      rhythm_volume: '0.5'
-      journey: ${{ needs.schedule.outputs.journey_4 }}
-      journey_intensity: 'moderate'
-      test_id: 'batch-4'
-    secrets: inherit
-
-  generate-5:
-    needs: schedule
-    uses: ./.github/workflows/art-creator.yml
-    with:
-      art_period: ${{ needs.schedule.outputs.art_period_5 }}
-      music_style: ${{ needs.schedule.outputs.music_style_5 }}
-      duration: '5min'
-      upload_to_brand: ${{ github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true' }}
-      visual_pattern: ${{ needs.schedule.outputs.visual_pattern_5 }}
-      visual_speed: 'auto'
-      visual_complexity: 'auto'
-      color_palette: ${{ needs.schedule.outputs.color_palette_5 }}
-      tempo: '60'
-      brainwave_frequency: '10'
-      solfeggio_frequency: ${{ needs.schedule.outputs.solfeggio_5 }}
-      rhythm_volume: '0.5'
-      journey: ${{ needs.schedule.outputs.journey_5 }}
-      journey_intensity: 'moderate'
-      test_id: 'batch-5'
-    secrets: inherit
-
-  generate-6:
-    needs: schedule
-    uses: ./.github/workflows/art-creator.yml
-    with:
-      art_period: ${{ needs.schedule.outputs.art_period_6 }}
-      music_style: ${{ needs.schedule.outputs.music_style_6 }}
-      duration: '5min'
-      upload_to_brand: ${{ github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true' }}
-      visual_pattern: ${{ needs.schedule.outputs.visual_pattern_6 }}
-      visual_speed: 'auto'
-      visual_complexity: 'auto'
-      color_palette: ${{ needs.schedule.outputs.color_palette_6 }}
-      tempo: '60'
-      brainwave_frequency: '10'
-      solfeggio_frequency: ${{ needs.schedule.outputs.solfeggio_6 }}
-      rhythm_volume: '0.5'
-      journey: ${{ needs.schedule.outputs.journey_6 }}
-      journey_intensity: 'moderate'
-      test_id: 'batch-6'
-    secrets: inherit
-
-  # Job 8: Summary
+  # Job 5: Summary
   summary:
-    needs: [schedule, generate-1, generate-2, generate-3, generate-4, generate-5, generate-6]
+    needs: [schedule, generate-1, generate-2, generate-3]
     runs-on: ubuntu-latest
     if: always()
     steps:
@@ -275,14 +191,11 @@ jobs:
         run: |
           echo "## 📊 Art Creator Batch Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Day:** ${{ needs.schedule.outputs.day_num }} of 14 (6 videos/day)" >> $GITHUB_STEP_SUMMARY
+          echo "**Day:** ${{ needs.schedule.outputs.day_num }} of 27 (3 videos/day)" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| # | Art Period | Music Style | Pattern | Colors | Journey | Solfeggio | Status |" >> $GITHUB_STEP_SUMMARY
           echo "|---|------------|-------------|---------|--------|---------|-----------|--------|" >> $GITHUB_STEP_SUMMARY
           echo "| 1 | ${{ needs.schedule.outputs.art_period_1 }} | ${{ needs.schedule.outputs.music_style_1 }} | ${{ needs.schedule.outputs.visual_pattern_1 }} | ${{ needs.schedule.outputs.color_palette_1 }} | ${{ needs.schedule.outputs.journey_1 }} | ${{ needs.schedule.outputs.solfeggio_1 }}Hz | ${{ needs.generate-1.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| 2 | ${{ needs.schedule.outputs.art_period_2 }} | ${{ needs.schedule.outputs.music_style_2 }} | ${{ needs.schedule.outputs.visual_pattern_2 }} | ${{ needs.schedule.outputs.color_palette_2 }} | ${{ needs.schedule.outputs.journey_2 }} | ${{ needs.schedule.outputs.solfeggio_2 }}Hz | ${{ needs.generate-2.result }} |" >> $GITHUB_STEP_SUMMARY
           echo "| 3 | ${{ needs.schedule.outputs.art_period_3 }} | ${{ needs.schedule.outputs.music_style_3 }} | ${{ needs.schedule.outputs.visual_pattern_3 }} | ${{ needs.schedule.outputs.color_palette_3 }} | ${{ needs.schedule.outputs.journey_3 }} | ${{ needs.schedule.outputs.solfeggio_3 }}Hz | ${{ needs.generate-3.result }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| 4 | ${{ needs.schedule.outputs.art_period_4 }} | ${{ needs.schedule.outputs.music_style_4 }} | ${{ needs.schedule.outputs.visual_pattern_4 }} | ${{ needs.schedule.outputs.color_palette_4 }} | ${{ needs.schedule.outputs.journey_4 }} | ${{ needs.schedule.outputs.solfeggio_4 }}Hz | ${{ needs.generate-4.result }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| 5 | ${{ needs.schedule.outputs.art_period_5 }} | ${{ needs.schedule.outputs.music_style_5 }} | ${{ needs.schedule.outputs.visual_pattern_5 }} | ${{ needs.schedule.outputs.color_palette_5 }} | ${{ needs.schedule.outputs.journey_5 }} | ${{ needs.schedule.outputs.solfeggio_5 }}Hz | ${{ needs.generate-5.result }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| 6 | ${{ needs.schedule.outputs.art_period_6 }} | ${{ needs.schedule.outputs.music_style_6 }} | ${{ needs.schedule.outputs.visual_pattern_6 }} | ${{ needs.schedule.outputs.color_palette_6 }} | ${{ needs.schedule.outputs.journey_6 }} | ${{ needs.schedule.outputs.solfeggio_6 }}Hz | ${{ needs.generate-6.result }} |" >> $GITHUB_STEP_SUMMARY
 
