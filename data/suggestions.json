@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-03-01T15:54:32.722319Z",
-  "overall_avg_retention": 9.89,
-  "videos_analyzed": 175,
-  "videos_with_views": 116,
+  "generated_at": "2026-03-01T15:58:54.161852Z",
+  "overall_avg_retention": 9.87,
+  "videos_analyzed": 174,
+  "videos_with_views": 115,
   "coverage": {
     "moods": {
       "deep_focus": {
@@ -471,7 +471,7 @@
       "type": "art_period",
       "name": "future",
       "avg": 36.36,
-      "delta": 26.46956896551724,
+      "delta": 26.48765217391304,
       "count": 1,
       "total": 12,
       "group_views": 58,
@@ -481,7 +481,7 @@
       "type": "music_style",
       "name": "none",
       "avg": 36.36,
-      "delta": 26.46956896551724,
+      "delta": 26.48765217391304,
       "count": 1,
       "total": 12,
       "group_views": 58,
