@@ -95,6 +95,11 @@ def correlate_data() -> List[Dict[str, Any]]:
         if not vid:
             continue
 
+        # Skip deleted/private videos (shouldn't be in data, but filter just in case)
+        title = video.get("title", "")
+        if title in ("Deleted video", "Private video", ""):
+            continue
+
         # If we have generation data, use it
         gen = gen_by_id.get(vid, {})
 
