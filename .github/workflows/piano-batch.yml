@@ -1,6 +1,6 @@
 # Piano Batch - Generate Multiple Piano Videos
 # One-time batch generation of piano videos in multiple durations
-# Generates: 1h, 3h, 4h piano videos (dual mode = 6 total videos)
+# Generates: 1h, 2h, 3h, 4h piano videos (dual mode = 8 total videos)
 # Spec: docs/spec/workflows.md
 
 name: Piano Batch Generator
@@ -57,7 +57,7 @@ jobs:
           echo "🎹 Generating piano videos in multiple durations..."
           python batch_generate.py \
             --moods piano_relax \
-            --durations 1h,3h,4h \
+            --durations 1h,2h,3h,4h \
             --dual \
             --output ./generated
 
