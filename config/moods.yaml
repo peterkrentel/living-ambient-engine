@@ -1058,9 +1058,12 @@ forest_morning:
         beat: 10
         amplitude: 0.05
 
-# Custom Piano Variants for Specific Titles
+# "Let Go of Stress" Piano Series - 5 Unique Videos
+# Each video: different audio + simple calming visual scene
+# Series concept: stress-relief piano ambient cluster for YouTube
+
 piano_ambient:
-  description: "Soft piano ambient for stress relief"
+  description: "Soft piano ambient - Lavender clouds drifting"
   title_template: "Let Go of Stress | {duration_str} Soft Piano Ambient"
   description_template: |
     🎹 Created to help you release tension and find inner peace.
@@ -1094,37 +1097,42 @@ piano_ambient:
     - "piano background"
   rhythm_origin: "Classical inspired - no percussion"
   visual:
-    type: "starfield"
+    type: "particle_flow"        # Slow drifting clouds
     colors:
-      primary: [15, 20, 40]
-      secondary: [25, 30, 60]
-      accent: [100, 120, 180]
-    pattern: "starfield"
-    speed: 0.2
-    complexity: 0.6
-    symmetry: 1
-    pulse_frequency: 0.1
+      primary: [180, 160, 200]   # Soft lavender
+      secondary: [200, 180, 220] # Lighter lavender
+      accent: [220, 200, 240]    # Very light lavender
+    pattern: "particle_flow"
+    speed: 0.05                  # Very slow drift
+    complexity: 0.3              # Simple, minimal
+    symmetry: 1                  # No symmetry (natural clouds)
+    pulse_frequency: 0.02        # Barely perceptible breathing
   audio:
     rhythm: null
     rhythm_volume: 0
-    base_frequency: 6
-    binaural_beat: 6
+    base_frequency: 8            # Alpha waves (relaxed awareness)
+    binaural_beat: 8
     layers:
       - type: "melody"
-        scale: "lydian"
-        root: 262
-        tempo: 50
-        amplitude: 0.25
+        scale: "major"           # Bright, uplifting
+        root: 392                # G4 - higher register
+        tempo: 52
+        amplitude: 0.26
+      - type: "arpeggio"
+        chord: "major7"
+        root: 196                # G3
+        tempo: 104               # Gentle arpeggios
+        amplitude: 0.14
       - type: "pad"
-        frequency: 131
-        amplitude: 0.15
+        frequency: 196
+        amplitude: 0.12
       - type: "binaural"
-        carrier: 136.1
-        beat: 6
-        amplitude: 0.07
+        carrier: 432             # A=432Hz tuning
+        beat: 8
+        amplitude: 0.06
 
 piano_evening:
-  description: "Calm evening piano ambient"
+  description: "Calm evening piano - Sunset ocean horizon visual"
   title_template: "Let Go of Stress | Calm Evening Piano Ambient"
   description_template: |
     🎹 Created to help you unwind after a long day.
@@ -1154,37 +1162,40 @@ piano_evening:
     - "theta waves"
   rhythm_origin: "Classical inspired - no percussion"
   visual:
-    type: "starfield"
+    type: "particle_flow"        # Horizontal sunset horizon
     colors:
-      primary: [15, 20, 40]
-      secondary: [25, 30, 60]
-      accent: [100, 120, 180]
-    pattern: "starfield"
-    speed: 0.2
-    complexity: 0.6
-    symmetry: 1
-    pulse_frequency: 0.1
+      primary: [200, 100, 40]    # Warm sunset orange
+      secondary: [220, 140, 60]  # Golden orange
+      accent: [240, 180, 100]    # Bright golden highlights
+    pattern: "particle_flow"
+    speed: 0.04                  # Very slow horizontal drift
+    complexity: 0.25             # Simple, clean horizon
+    symmetry: 1                  # Natural, no symmetry
+    pulse_frequency: 0.03        # Gentle breathing like ocean waves
   audio:
     rhythm: null
     rhythm_volume: 0
-    base_frequency: 6
-    binaural_beat: 6
+    base_frequency: 4            # Theta waves (deep relaxation)
+    binaural_beat: 4
     layers:
       - type: "melody"
-        scale: "lydian"
-        root: 262
-        tempo: 50
-        amplitude: 0.25
+        scale: "dorian"          # Warm, contemplative
+        root: 220                # A3 - mid-low register
+        tempo: 45                # Slower, evening pace
+        amplitude: 0.24
       - type: "pad"
-        frequency: 131
-        amplitude: 0.15
+        frequency: 110           # A2 - warm bass pad
+        amplitude: 0.18
+      - type: "sine"
+        frequency: 528           # Solfeggio (love frequency)
+        amplitude: 0.08
       - type: "binaural"
-        carrier: 136.1
-        beat: 6
-        amplitude: 0.07
+        carrier: 220
+        beat: 4
+        amplitude: 0.05
 
 piano_gentle:
-  description: "Gentle piano for relaxation"
+  description: "Gentle piano - Teal floating particles visual"
   title_template: "Let Go of Stress | Gentle Piano for Relaxation | {duration_str}"
   description_template: |
     🎹 Created to help you find peace and tranquility.
@@ -1215,37 +1226,40 @@ piano_gentle:
     - "theta waves"
   rhythm_origin: "Classical inspired - no percussion"
   visual:
-    type: "starfield"
+    type: "particle_flow"        # Soft floating particles
     colors:
-      primary: [15, 20, 40]
-      secondary: [25, 30, 60]
-      accent: [100, 120, 180]
-    pattern: "starfield"
-    speed: 0.2
-    complexity: 0.6
-    symmetry: 1
-    pulse_frequency: 0.1
+      primary: [80, 140, 130]    # Soft teal
+      secondary: [100, 160, 150] # Lighter teal
+      accent: [140, 200, 190]    # Bright teal highlights
+    pattern: "particle_flow"
+    speed: 0.06                  # Gentle floating
+    complexity: 0.35             # Simple, peaceful
+    symmetry: 1                  # Natural, no symmetry
+    pulse_frequency: 0.04        # Soft breathing
   audio:
     rhythm: null
     rhythm_volume: 0
-    base_frequency: 6
-    binaural_beat: 6
+    base_frequency: 7            # Theta-Alpha border (calm focus)
+    binaural_beat: 7
     layers:
       - type: "melody"
-        scale: "lydian"
-        root: 262
-        tempo: 50
-        amplitude: 0.25
+        scale: "pentatonic_major" # Simple, gentle scale
+        root: 294                # D4 - gentle mid-range
+        tempo: 48                # Very slow
+        amplitude: 0.24
       - type: "pad"
-        frequency: 131
-        amplitude: 0.15
-      - type: "binaural"
-        carrier: 136.1
-        beat: 6
+        frequency: 147           # D3 pad
+        amplitude: 0.16
+      - type: "sine"
+        frequency: 639           # Solfeggio (connection/harmony)
         amplitude: 0.07
+      - type: "binaural"
+        carrier: 294
+        beat: 7
+        amplitude: 0.05
 
 piano_deep_calm:
-  description: "Deep calm piano atmosphere"
+  description: "Deep calm piano - Dark blue night starfield visual"
   title_template: "Let Go of Stress | Deep Calm Piano Atmosphere"
   description_template: |
     🎹 Created to help you sink into deep relaxation.
@@ -1274,37 +1288,40 @@ piano_deep_calm:
     - "theta waves"
   rhythm_origin: "Classical inspired - no percussion"
   visual:
-    type: "starfield"
+    type: "starfield"            # Night sky with stars
     colors:
-      primary: [15, 20, 40]
-      secondary: [25, 30, 60]
-      accent: [100, 120, 180]
+      primary: [15, 20, 40]      # Deep night blue
+      secondary: [25, 35, 60]    # Slightly lighter blue
+      accent: [100, 120, 160]    # Soft starlight
     pattern: "starfield"
-    speed: 0.2
-    complexity: 0.6
-    symmetry: 1
-    pulse_frequency: 0.1
+    speed: 0.03                  # Very slow star drift
+    complexity: 0.25             # Minimal, peaceful
+    symmetry: 1                  # Natural, no symmetry
+    pulse_frequency: 0.02        # Barely perceptible breathing
   audio:
     rhythm: null
     rhythm_volume: 0
-    base_frequency: 6
-    binaural_beat: 6
+    base_frequency: 3            # Deep theta (sleep preparation)
+    binaural_beat: 3
     layers:
       - type: "melody"
-        scale: "lydian"
-        root: 262
-        tempo: 50
-        amplitude: 0.25
+        scale: "aeolian"         # Natural minor (contemplative)
+        root: 165                # E3 - low register
+        tempo: 40                # Very slow, spacious
+        amplitude: 0.20          # Quieter
       - type: "pad"
-        frequency: 131
-        amplitude: 0.15
+        frequency: 82.5          # E2 - deep bass pad
+        amplitude: 0.20
+      - type: "sine"
+        frequency: 174           # Solfeggio (pain relief/grounding)
+        amplitude: 0.06
       - type: "binaural"
-        carrier: 136.1
-        beat: 6
-        amplitude: 0.07
+        carrier: 165
+        beat: 3
+        amplitude: 0.04
 
 rain_piano:
-  description: "Rain sounds with soft piano"
+  description: "Rain sounds with soft piano - Rain on window visual"
   title_template: "Let Go of Stress | Rain + Soft Piano | {duration_str}"
   description_template: |
     🌧️🎹 Created to help you relax with the perfect blend of rain and piano.
@@ -1335,33 +1352,33 @@ rain_piano:
     - "theta waves"
   rhythm_origin: "Nature rain with classical piano"
   visual:
-    type: "particle_flow"
+    type: "particle_flow"        # Rain droplets on window
     colors:
-      primary: [20, 30, 50]
-      secondary: [30, 45, 70]
-      accent: [80, 100, 140]
+      primary: [60, 80, 100]     # Cool gray-blue (window glass)
+      secondary: [80, 100, 120]  # Lighter gray-blue
+      accent: [120, 140, 160]    # Soft highlights (water droplets)
     pattern: "particle_flow"
-    speed: 0.3
-    complexity: 0.5
-    symmetry: 1
-    pulse_frequency: 0.08
+    speed: 0.08                  # Slow rain drips
+    complexity: 0.4              # Simple rain pattern
+    symmetry: 1                  # Natural, no symmetry
+    pulse_frequency: 0.04        # Gentle rhythm like rain
   audio:
     rhythm: null
     rhythm_volume: 0
-    base_frequency: 6
+    base_frequency: 6            # Theta waves (relaxation)
     binaural_beat: 6
     layers:
       - type: "rain"
         intensity: 0.5
-        amplitude: 0.4
+        amplitude: 0.35          # Prominent rain sounds
       - type: "melody"
-        scale: "lydian"
-        root: 262
-        tempo: 50
-        amplitude: 0.2
+        scale: "lydian"          # Dreamy, ethereal
+        root: 262                # C4 - mid register
+        tempo: 48
+        amplitude: 0.22          # Softer to blend with rain
       - type: "pad"
-        frequency: 131
-        amplitude: 0.12
+        frequency: 131           # C3 pad
+        amplitude: 0.14
       - type: "binaural"
         carrier: 136.1
         beat: 6
