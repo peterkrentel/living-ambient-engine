@@ -1,12 +1,12 @@
 # Content Library
 
-*Last updated: 2026-02-26T23:36:28.179832*
+*Last updated: 2026-03-08T23:03:27.564571*
 
 ## Statistics
 
-- **Total Videos:** 48
-- **Total Duration:** 54.15 hours
-- **Average Duration:** 67.69 minutes
+- **Total Videos:** 50
+- **Total Duration:** 56.15 hours
+- **Average Duration:** 67.38 minutes
 
 ### Videos by Mood
 
@@ -18,6 +18,7 @@
 - **Forest Morning:** 2 videos
 - **Lofi Study:** 2 videos
 - **Ocean Waves:** 3 videos
+- **Piano Deep Calm:** 2 videos
 - **Piano Relax:** 2 videos
 - **Rain Sleep:** 3 videos
 - **Sleep:** 3 videos
@@ -282,6 +283,28 @@
 - **Uploaded:** 2026-02-12
 - **Seed:** `None`
 - **Catalog ID:** `video_0020_20260212_210836_c417fa10`
+
+### Piano Deep Calm
+
+#### Let Go of Stress | Deep Calm Piano Atmosphere [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=dZzB2SaBgmg](https://youtube.com/watch?v=dZzB2SaBgmg)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-03-08
+- **Seed:** `None`
+- **Catalog ID:** `video_0049_20260308_230306_2511d02f`
+
+#### Let Go of Stress | Deep Calm Piano Atmosphere [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=-0Hr5DkxG2M](https://youtube.com/watch?v=-0Hr5DkxG2M)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-03-08
+- **Seed:** `None`
+- **Catalog ID:** `video_0050_20260308_230327_f6badcb6`
 
 ### Piano Relax
 
