@@ -1,6 +1,6 @@
 # Piano Batch - Generate Multiple Piano Videos
-# One-time batch generation of piano videos in multiple durations
-# Generates: 1h, 2h, 3h, 4h piano videos (dual mode = 8 total videos)
+# One-time batch generation of piano videos with custom titles
+# Generates: 5 unique piano moods (10 total videos with dual mode)
 # Spec: docs/spec/workflows.md
 
 name: Piano Batch Generator
@@ -54,12 +54,22 @@ jobs:
 
       - name: Generate piano videos
         run: |
-          echo "🎹 Generating piano videos in multiple durations..."
-          python batch_generate.py \
-            --moods piano_relax \
-            --durations 1h,2h,3h,4h \
-            --dual \
-            --output ./generated
+          echo "🎹 Generating piano videos with custom titles..."
+
+          # Video 1: "Let Go of Stress | 2 Hours Soft Piano Ambient"
+          python batch_generate.py --moods piano_ambient --durations 2h --dual --output ./generated
+
+          # Video 2: "Let Go of Stress | Rain + Soft Piano | 2 Hours"
+          python batch_generate.py --moods rain_piano --durations 2h --dual --output ./generated
+
+          # Video 3: "Let Go of Stress | Calm Evening Piano Ambient"
+          python batch_generate.py --moods piano_evening --durations 1h --dual --output ./generated
+
+          # Video 4: "Let Go of Stress | Gentle Piano for Relaxation | 1 Hour"
+          python batch_generate.py --moods piano_gentle --durations 1h --dual --output ./generated
+
+          # Video 5: "Let Go of Stress | Deep Calm Piano Atmosphere"
+          python batch_generate.py --moods piano_deep_calm --durations 1h --dual --output ./generated
 
       - name: Validate generated files
         run: |

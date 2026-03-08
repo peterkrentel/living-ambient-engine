@@ -1058,3 +1058,312 @@ forest_morning:
         beat: 10
         amplitude: 0.05
 
+# Custom Piano Variants for Specific Titles
+piano_ambient:
+  description: "Soft piano ambient for stress relief"
+  title_template: "Let Go of Stress | {duration_str} Soft Piano Ambient"
+  description_template: |
+    🎹 Created to help you release tension and find inner peace.
+    ✨ This soundscape gently evolves and never loops.
+    Best for: stress relief, unwinding, quiet reflection.
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    ⏱️ Duration: {duration_str}
+
+    🔔 Subscribe for weekly long-form ambient
+    👍 Like if this soothes you
+
+    #PianoMusic #RelaxingPiano #StressRelief #PeacefulMusic #CalmPiano #Meditation
+  tags:
+    - "ASMR"
+    - "piano music"
+    - "relaxing piano"
+    - "peaceful piano"
+    - "stress relief music"
+    - "calm piano"
+    - "soft piano"
+    - "piano for sleep"
+    - "meditation piano"
+    - "piano ambient"
+    - "gentle piano"
+    - "piano relaxation"
+    - "soothing piano"
+    - "theta waves"
+    - "piano lullaby"
+    - "piano background"
+  rhythm_origin: "Classical inspired - no percussion"
+  visual:
+    type: "starfield"
+    colors:
+      primary: [15, 20, 40]
+      secondary: [25, 30, 60]
+      accent: [100, 120, 180]
+    pattern: "starfield"
+    speed: 0.2
+    complexity: 0.6
+    symmetry: 1
+    pulse_frequency: 0.1
+  audio:
+    rhythm: null
+    rhythm_volume: 0
+    base_frequency: 6
+    binaural_beat: 6
+    layers:
+      - type: "melody"
+        scale: "lydian"
+        root: 262
+        tempo: 50
+        amplitude: 0.25
+      - type: "pad"
+        frequency: 131
+        amplitude: 0.15
+      - type: "binaural"
+        carrier: 136.1
+        beat: 6
+        amplitude: 0.07
+
+piano_evening:
+  description: "Calm evening piano ambient"
+  title_template: "Let Go of Stress | Calm Evening Piano Ambient"
+  description_template: |
+    🎹 Created to help you unwind after a long day.
+    ✨ This soundscape gently evolves and never loops.
+    Best for: evening relaxation, stress relief, peaceful reflection.
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    🔔 Subscribe for weekly long-form ambient
+    👍 Like if this soothes you
+
+    #PianoMusic #RelaxingPiano #StressRelief #EveningMusic #CalmPiano #Meditation
+  tags:
+    - "ASMR"
+    - "piano music"
+    - "relaxing piano"
+    - "evening music"
+    - "stress relief music"
+    - "calm piano"
+    - "soft piano"
+    - "piano for sleep"
+    - "meditation piano"
+    - "piano ambient"
+    - "gentle piano"
+    - "piano relaxation"
+    - "soothing piano"
+    - "theta waves"
+  rhythm_origin: "Classical inspired - no percussion"
+  visual:
+    type: "starfield"
+    colors:
+      primary: [15, 20, 40]
+      secondary: [25, 30, 60]
+      accent: [100, 120, 180]
+    pattern: "starfield"
+    speed: 0.2
+    complexity: 0.6
+    symmetry: 1
+    pulse_frequency: 0.1
+  audio:
+    rhythm: null
+    rhythm_volume: 0
+    base_frequency: 6
+    binaural_beat: 6
+    layers:
+      - type: "melody"
+        scale: "lydian"
+        root: 262
+        tempo: 50
+        amplitude: 0.25
+      - type: "pad"
+        frequency: 131
+        amplitude: 0.15
+      - type: "binaural"
+        carrier: 136.1
+        beat: 6
+        amplitude: 0.07
+
+piano_gentle:
+  description: "Gentle piano for relaxation"
+  title_template: "Let Go of Stress | Gentle Piano for Relaxation | {duration_str}"
+  description_template: |
+    🎹 Created to help you find peace and tranquility.
+    ✨ This soundscape gently evolves and never loops.
+    Best for: relaxation, stress relief, meditation, unwinding.
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    ⏱️ Duration: {duration_str}
+
+    🔔 Subscribe for weekly long-form ambient
+    👍 Like if this soothes you
+
+    #PianoMusic #RelaxingPiano #StressRelief #GentlePiano #CalmPiano #Meditation
+  tags:
+    - "ASMR"
+    - "piano music"
+    - "relaxing piano"
+    - "gentle piano"
+    - "stress relief music"
+    - "calm piano"
+    - "soft piano"
+    - "piano for sleep"
+    - "meditation piano"
+    - "piano ambient"
+    - "piano relaxation"
+    - "soothing piano"
+    - "theta waves"
+  rhythm_origin: "Classical inspired - no percussion"
+  visual:
+    type: "starfield"
+    colors:
+      primary: [15, 20, 40]
+      secondary: [25, 30, 60]
+      accent: [100, 120, 180]
+    pattern: "starfield"
+    speed: 0.2
+    complexity: 0.6
+    symmetry: 1
+    pulse_frequency: 0.1
+  audio:
+    rhythm: null
+    rhythm_volume: 0
+    base_frequency: 6
+    binaural_beat: 6
+    layers:
+      - type: "melody"
+        scale: "lydian"
+        root: 262
+        tempo: 50
+        amplitude: 0.25
+      - type: "pad"
+        frequency: 131
+        amplitude: 0.15
+      - type: "binaural"
+        carrier: 136.1
+        beat: 6
+        amplitude: 0.07
+
+piano_deep_calm:
+  description: "Deep calm piano atmosphere"
+  title_template: "Let Go of Stress | Deep Calm Piano Atmosphere"
+  description_template: |
+    🎹 Created to help you sink into deep relaxation.
+    ✨ This soundscape gently evolves and never loops.
+    Best for: deep relaxation, stress relief, meditation, sleep preparation.
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    🔔 Subscribe for weekly long-form ambient
+    👍 Like if this soothes you
+
+    #PianoMusic #RelaxingPiano #StressRelief #DeepCalm #CalmPiano #Meditation
+  tags:
+    - "ASMR"
+    - "piano music"
+    - "relaxing piano"
+    - "deep calm"
+    - "stress relief music"
+    - "calm piano"
+    - "soft piano"
+    - "piano for sleep"
+    - "meditation piano"
+    - "piano ambient"
+    - "piano atmosphere"
+    - "soothing piano"
+    - "theta waves"
+  rhythm_origin: "Classical inspired - no percussion"
+  visual:
+    type: "starfield"
+    colors:
+      primary: [15, 20, 40]
+      secondary: [25, 30, 60]
+      accent: [100, 120, 180]
+    pattern: "starfield"
+    speed: 0.2
+    complexity: 0.6
+    symmetry: 1
+    pulse_frequency: 0.1
+  audio:
+    rhythm: null
+    rhythm_volume: 0
+    base_frequency: 6
+    binaural_beat: 6
+    layers:
+      - type: "melody"
+        scale: "lydian"
+        root: 262
+        tempo: 50
+        amplitude: 0.25
+      - type: "pad"
+        frequency: 131
+        amplitude: 0.15
+      - type: "binaural"
+        carrier: 136.1
+        beat: 6
+        amplitude: 0.07
+
+rain_piano:
+  description: "Rain sounds with soft piano"
+  title_template: "Let Go of Stress | Rain + Soft Piano | {duration_str}"
+  description_template: |
+    🌧️🎹 Created to help you relax with the perfect blend of rain and piano.
+    ✨ This soundscape gently evolves and never loops.
+    Best for: stress relief, sleep, meditation, deep relaxation.
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    ⏱️ Duration: {duration_str}
+
+    🔔 Subscribe for weekly long-form ambient
+    👍 Like if this soothes you
+
+    #RainSounds #PianoMusic #RelaxingPiano #StressRelief #RainAndPiano #Meditation
+  tags:
+    - "ASMR"
+    - "rain sounds"
+    - "piano music"
+    - "rain and piano"
+    - "relaxing piano"
+    - "stress relief music"
+    - "rain for sleep"
+    - "piano for sleep"
+    - "meditation music"
+    - "piano ambient"
+    - "rain ambient"
+    - "soothing piano"
+    - "theta waves"
+  rhythm_origin: "Nature rain with classical piano"
+  visual:
+    type: "particle_flow"
+    colors:
+      primary: [20, 30, 50]
+      secondary: [30, 45, 70]
+      accent: [80, 100, 140]
+    pattern: "particle_flow"
+    speed: 0.3
+    complexity: 0.5
+    symmetry: 1
+    pulse_frequency: 0.08
+  audio:
+    rhythm: null
+    rhythm_volume: 0
+    base_frequency: 6
+    binaural_beat: 6
+    layers:
+      - type: "rain"
+        intensity: 0.5
+        amplitude: 0.4
+      - type: "melody"
+        scale: "lydian"
+        root: 262
+        tempo: 50
+        amplitude: 0.2
+      - type: "pad"
+        frequency: 131
+        amplitude: 0.12
+      - type: "binaural"
+        carrier: 136.1
+        beat: 6
+        amplitude: 0.05
+
