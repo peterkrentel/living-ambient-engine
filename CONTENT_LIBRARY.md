@@ -1,12 +1,12 @@
 # Content Library
 
-*Last updated: 2026-03-08T23:03:27.564571*
+*Last updated: 2026-03-15T15:27:27.316510*
 
 ## Statistics
 
-- **Total Videos:** 50
-- **Total Duration:** 56.15 hours
-- **Average Duration:** 67.38 minutes
+- **Total Videos:** 60
+- **Total Duration:** 70.15 hours
+- **Average Duration:** 70.15 minutes
 
 ### Videos by Mood
 
@@ -18,8 +18,12 @@
 - **Forest Morning:** 2 videos
 - **Lofi Study:** 2 videos
 - **Ocean Waves:** 3 videos
-- **Piano Deep Calm:** 2 videos
+- **Piano Ambient:** 2 videos
+- **Piano Deep Calm:** 4 videos
+- **Piano Evening:** 2 videos
+- **Piano Gentle:** 2 videos
 - **Piano Relax:** 2 videos
+- **Rain Piano:** 2 videos
 - **Rain Sleep:** 3 videos
 - **Sleep:** 3 videos
 - **Study:** 3 videos
@@ -284,6 +288,28 @@
 - **Seed:** `None`
 - **Catalog ID:** `video_0020_20260212_210836_c417fa10`
 
+### Piano Ambient
+
+#### Let Go of Stress | 2 Hours Soft Piano Ambient [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=c9w1FTfHqCI](https://youtube.com/watch?v=c9w1FTfHqCI)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-03-15
+- **Seed:** `None`
+- **Catalog ID:** `video_0051_20260315_152446_60e0f217`
+
+#### Let Go of Stress | 2 Hours Soft Piano Ambient [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=HsCrE2__iUs](https://youtube.com/watch?v=HsCrE2__iUs)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-03-15
+- **Seed:** `None`
+- **Catalog ID:** `video_0052_20260315_152511_87bab748`
+
 ### Piano Deep Calm
 
 #### Let Go of Stress | Deep Calm Piano Atmosphere [Pure Ambience]
@@ -306,6 +332,70 @@
 - **Seed:** `None`
 - **Catalog ID:** `video_0050_20260308_230327_f6badcb6`
 
+#### Let Go of Stress | Deep Calm Piano Atmosphere [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=yZ7Mh6sVTUQ](https://youtube.com/watch?v=yZ7Mh6sVTUQ)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-03-15
+- **Seed:** `None`
+- **Catalog ID:** `video_0059_20260315_152708_d17822bd`
+
+#### Let Go of Stress | Deep Calm Piano Atmosphere [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=q98Xd_yGoSw](https://youtube.com/watch?v=q98Xd_yGoSw)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-03-15
+- **Seed:** `None`
+- **Catalog ID:** `video_0060_20260315_152727_bb34bd02`
+
+### Piano Evening
+
+#### Let Go of Stress | Calm Evening Piano Ambient [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=Odsu10z5QXQ](https://youtube.com/watch?v=Odsu10z5QXQ)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-03-15
+- **Seed:** `None`
+- **Catalog ID:** `video_0055_20260315_152612_8707d5fd`
+
+#### Let Go of Stress | Calm Evening Piano Ambient [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=vO8Pb1zgPOM](https://youtube.com/watch?v=vO8Pb1zgPOM)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-03-15
+- **Seed:** `None`
+- **Catalog ID:** `video_0056_20260315_152625_44b84632`
+
+### Piano Gentle
+
+#### Let Go of Stress | Gentle Piano for Relaxation | 1 Hour [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=Y2h91t9Rjt4](https://youtube.com/watch?v=Y2h91t9Rjt4)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-03-15
+- **Seed:** `None`
+- **Catalog ID:** `video_0057_20260315_152638_adc9310d`
+
+#### Let Go of Stress | Gentle Piano for Relaxation | 1 Hour [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=LiB9FR1P4fs](https://youtube.com/watch?v=LiB9FR1P4fs)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-03-15
+- **Seed:** `None`
+- **Catalog ID:** `video_0058_20260315_152651_42ded16a`
+
 ### Piano Relax
 
 #### Let Go of Stress | 1 Hour Soft Piano | Gently Evolving Melodies [Pure Ambience]
@@ -327,6 +417,28 @@
 - **Uploaded:** 2026-02-16
 - **Seed:** `None`
 - **Catalog ID:** `video_0032_20260216_124925_d96402fe`
+
+### Rain Piano
+
+#### Let Go of Stress | Rain + Soft Piano | 2 Hours [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=n0fGreOZnvc](https://youtube.com/watch?v=n0fGreOZnvc)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-03-15
+- **Seed:** `None`
+- **Catalog ID:** `video_0053_20260315_152536_6c85b2bd`
+
+#### Let Go of Stress | Rain + Soft Piano | 2 Hours [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=xZXFZ_Rdja0](https://youtube.com/watch?v=xZXFZ_Rdja0)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-03-15
+- **Seed:** `None`
+- **Catalog ID:** `video_0054_20260315_152600_ac19193d`
 
 ### Rain Sleep
 
