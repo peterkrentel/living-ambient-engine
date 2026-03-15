@@ -55,21 +55,30 @@ jobs:
       - name: Generate piano videos
         run: |
           echo "🎹 Generating piano videos with custom titles..."
+          echo "  - piano_ambient @ 2h (DUAL)"
+          echo "  - rain_piano @ 2h (DUAL)"
+          echo "  - piano_evening @ 1h (DUAL)"
+          echo "  - piano_gentle @ 1h (DUAL)"
+          echo "  - piano_deep_calm @ 1h (DUAL)"
+          echo ""
 
-          # Video 1: "Let Go of Stress | 2 Hours Soft Piano Ambient"
-          python batch_generate.py --moods piano_ambient --durations 2h --dual --output ./generated
+          # Batch 1: 2-hour videos (creates initial manifest)
+          echo "📹 Batch 1/2: Generating 2-hour videos..."
+          python batch_generate.py \
+            --moods piano_ambient,rain_piano \
+            --durations 2h \
+            --dual \
+            --output ./generated
 
-          # Video 2: "Let Go of Stress | Rain + Soft Piano | 2 Hours"
-          python batch_generate.py --moods rain_piano --durations 2h --dual --output ./generated
-
-          # Video 3: "Let Go of Stress | Calm Evening Piano Ambient"
-          python batch_generate.py --moods piano_evening --durations 1h --dual --output ./generated
-
-          # Video 4: "Let Go of Stress | Gentle Piano for Relaxation | 1 Hour"
-          python batch_generate.py --moods piano_gentle --durations 1h --dual --output ./generated
-
-          # Video 5: "Let Go of Stress | Deep Calm Piano Atmosphere"
-          python batch_generate.py --moods piano_deep_calm --durations 1h --dual --output ./generated
+          # Batch 2: 1-hour videos (appends to manifest)
+          echo ""
+          echo "📹 Batch 2/2: Generating 1-hour videos..."
+          python batch_generate.py \
+            --moods piano_evening,piano_gentle,piano_deep_calm \
+            --durations 1h \
+            --dual \
+            --output ./generated \
+            --append-manifest
 
       - name: Validate generated files
         run: |

@@ -81,7 +81,8 @@ def generate_single(mood: str, duration: int, output_dir: str, seed: int = None,
 @click.option('--dual', is_flag=True, help='Generate BOTH ambience-only and melody versions for each video')
 @click.option('--dry-run', is_flag=True, help='Show what would be generated without generating')
 @click.option('--list-moods', '-l', is_flag=True, help='List available moods')
-def main(moods: str, durations: str, output: str, dual: bool, dry_run: bool, list_moods: bool):
+@click.option('--append-manifest', is_flag=True, help='Append to existing manifest.json instead of overwriting')
+def main(moods: str, durations: str, output: str, dual: bool, dry_run: bool, list_moods: bool, append_manifest: bool):
     """
     Batch Video Generator - Generative Ambient Art Engine
 
@@ -218,6 +219,22 @@ def main(moods: str, durations: str, output: str, dual: bool, dry_run: bool, lis
                     r["result"], r["mood"], r["duration"], r["seed"], "full"
                 ))
 
+    # Load existing manifest if appending
+    manifest_path = Path(output) / "manifest.json"
+    if append_manifest and manifest_path.exists():
+        click.echo(f"📄 Loading existing manifest to append...")
+        with open(manifest_path, 'r') as f:
+            existing_manifest = json.load(f)
+
+        # Merge videos
+        existing_videos = existing_manifest.get("videos", [])
+        manifest_videos = existing_videos + manifest_videos
+
+        # Update totals
+        total_jobs += existing_manifest.get("total_jobs", 0)
+        success += existing_manifest.get("successful_jobs", 0)
+        click.echo(f"  ✅ Appended {len(manifest_videos) - len(existing_videos)} new videos to existing {len(existing_videos)} videos")
+
     manifest = {
         "generated_at": datetime.now().isoformat(),
         "total_jobs": total_jobs,
@@ -227,10 +244,9 @@ def main(moods: str, durations: str, output: str, dual: bool, dry_run: bool, lis
         "total_videos": len(manifest_videos),
         "videos": manifest_videos
     }
-    manifest_path = Path(output) / "manifest.json"
     with open(manifest_path, 'w') as f:
         json.dump(manifest, f, indent=2, default=str)
-    click.echo(f"📄 Manifest saved: {manifest_path}")
+    click.echo(f"📄 Manifest saved: {manifest_path} ({len(manifest_videos)} total videos)")
 
 
 if __name__ == "__main__":
