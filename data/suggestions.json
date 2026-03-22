@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-03-15T02:10:15.626092Z",
-  "overall_avg_retention": 12.11,
-  "videos_analyzed": 213,
-  "videos_with_views": 143,
+  "generated_at": "2026-03-22T02:04:12.268908Z",
+  "overall_avg_retention": 10.66,
+  "videos_analyzed": 234,
+  "videos_with_views": 150,
   "coverage": {
     "moods": {
       "deep_focus": {
         "total": 13,
-        "with_views": 7
+        "with_views": 5
       },
       "sleep": {
         "total": 4,
@@ -23,27 +23,27 @@
       },
       "energize": {
         "total": 6,
-        "with_views": 3
+        "with_views": 2
       },
       "trance": {
         "total": 6,
-        "with_views": 5
+        "with_views": 4
       },
       "ceremony": {
         "total": 4,
-        "with_views": 3
+        "with_views": 2
       },
       "warrior": {
         "total": 5,
-        "with_views": 4
+        "with_views": 3
       },
       "rain_sleep": {
         "total": 5,
-        "with_views": 4
+        "with_views": 3
       },
       "fireplace": {
         "total": 4,
-        "with_views": 2
+        "with_views": 1
       },
       "ocean_waves": {
         "total": 5,
@@ -51,11 +51,11 @@
       },
       "lofi_study": {
         "total": 4,
-        "with_views": 3
+        "with_views": 2
       },
       "piano_relax": {
         "total": 4,
-        "with_views": 4
+        "with_views": 3
       },
       "forest_morning": {
         "total": 6,
@@ -65,23 +65,23 @@
     "art_periods": {
       "cave_art": {
         "total": 27,
-        "with_views": 18
+        "with_views": 19
       },
       "ancient": {
         "total": 27,
-        "with_views": 17
+        "with_views": 24
       },
       "medieval": {
-        "total": 18,
-        "with_views": 13
+        "total": 27,
+        "with_views": 22
       },
       "renaissance": {
-        "total": 17,
-        "with_views": 12
+        "total": 26,
+        "with_views": 16
       },
       "baroque": {
-        "total": 6,
-        "with_views": 5
+        "total": 9,
+        "with_views": 6
       },
       "impressionist": {
         "total": 0,
@@ -93,55 +93,55 @@
       },
       "contemporary": {
         "total": 18,
-        "with_views": 11
+        "with_views": 10
       },
       "future": {
         "total": 21,
-        "with_views": 16
+        "with_views": 12
       }
     },
     "music_styles": {
       "gnawa": {
-        "total": 14,
-        "with_views": 10
+        "total": 17,
+        "with_views": 12
       },
       "taiko": {
-        "total": 15,
-        "with_views": 12
+        "total": 18,
+        "with_views": 15
       },
       "gamelan": {
-        "total": 15,
-        "with_views": 12
+        "total": 18,
+        "with_views": 15
       },
       "burundi": {
-        "total": 15,
-        "with_views": 9
+        "total": 17,
+        "with_views": 12
       },
       "kuku": {
-        "total": 14,
+        "total": 16,
         "with_views": 8
       },
       "candomble": {
-        "total": 15,
-        "with_views": 9
+        "total": 17,
+        "with_views": 11
       },
       "bamboula": {
-        "total": 16,
-        "with_views": 9
+        "total": 18,
+        "with_views": 10
       },
       "heartbeat": {
-        "total": 16,
-        "with_views": 13
+        "total": 18,
+        "with_views": 15
       },
       "none": {
-        "total": 17,
-        "with_views": 13
+        "total": 19,
+        "with_views": 14
       }
     },
     "art_music_combos": {
       "cave_art+gnawa": {
         "total": 3,
-        "with_views": 2
+        "with_views": 1
       },
       "cave_art+taiko": {
         "total": 3,
@@ -149,7 +149,7 @@
       },
       "cave_art+gamelan": {
         "total": 3,
-        "with_views": 2
+        "with_views": 3
       },
       "cave_art+burundi": {
         "total": 3,
@@ -161,7 +161,7 @@
       },
       "cave_art+candomble": {
         "total": 3,
-        "with_views": 1
+        "with_views": 2
       },
       "cave_art+bamboula": {
         "total": 3,
@@ -177,7 +177,7 @@
       },
       "ancient+gnawa": {
         "total": 3,
-        "with_views": 1
+        "with_views": 2
       },
       "ancient+taiko": {
         "total": 3,
@@ -185,19 +185,19 @@
       },
       "ancient+gamelan": {
         "total": 3,
-        "with_views": 2
+        "with_views": 3
       },
       "ancient+burundi": {
         "total": 3,
-        "with_views": 2
+        "with_views": 3
       },
       "ancient+kuku": {
         "total": 3,
-        "with_views": 2
+        "with_views": 3
       },
       "ancient+candomble": {
         "total": 3,
-        "with_views": 2
+        "with_views": 3
       },
       "ancient+bamboula": {
         "total": 3,
@@ -205,94 +205,94 @@
       },
       "ancient+heartbeat": {
         "total": 3,
-        "with_views": 2
+        "with_views": 3
       },
       "ancient+none": {
         "total": 3,
-        "with_views": 2
+        "with_views": 3
       },
       "medieval+gnawa": {
-        "total": 2,
-        "with_views": 2
+        "total": 3,
+        "with_views": 3
       },
       "medieval+taiko": {
-        "total": 2,
-        "with_views": 2
+        "total": 3,
+        "with_views": 3
       },
       "medieval+gamelan": {
-        "total": 2,
-        "with_views": 2
+        "total": 3,
+        "with_views": 3
       },
       "medieval+burundi": {
-        "total": 2,
-        "with_views": 1
-      },
-      "medieval+kuku": {
-        "total": 2,
-        "with_views": 1
-      },
-      "medieval+candomble": {
-        "total": 2,
-        "with_views": 1
-      },
-      "medieval+bamboula": {
-        "total": 2,
-        "with_views": 1
-      },
-      "medieval+heartbeat": {
-        "total": 2,
-        "with_views": 1
-      },
-      "medieval+none": {
-        "total": 2,
+        "total": 3,
         "with_views": 2
       },
+      "medieval+kuku": {
+        "total": 3,
+        "with_views": 2
+      },
+      "medieval+candomble": {
+        "total": 3,
+        "with_views": 2
+      },
+      "medieval+bamboula": {
+        "total": 3,
+        "with_views": 2
+      },
+      "medieval+heartbeat": {
+        "total": 3,
+        "with_views": 2
+      },
+      "medieval+none": {
+        "total": 3,
+        "with_views": 3
+      },
       "renaissance+gnawa": {
-        "total": 2,
-        "with_views": 1
+        "total": 3,
+        "with_views": 2
       },
       "renaissance+taiko": {
-        "total": 2,
-        "with_views": 1
+        "total": 3,
+        "with_views": 2
       },
       "renaissance+gamelan": {
-        "total": 2,
-        "with_views": 1
+        "total": 3,
+        "with_views": 2
       },
       "renaissance+burundi": {
-        "total": 2,
-        "with_views": 1
+        "total": 3,
+        "with_views": 2
       },
       "renaissance+kuku": {
-        "total": 1,
-        "with_views": 1
+        "total": 2,
+        "with_views": 0
       },
       "renaissance+candomble": {
-        "total": 2,
+        "total": 3,
         "with_views": 2
       },
       "renaissance+bamboula": {
-        "total": 2,
-        "with_views": 1
+        "total": 3,
+        "with_views": 2
       },
       "renaissance+heartbeat": {
-        "total": 2,
+        "total": 3,
         "with_views": 2
       },
       "renaissance+none": {
-        "total": 2,
+        "total": 3,
         "with_views": 2
       },
       "baroque+gnawa": {
-        "total": 2,
+        "total": 3,
         "with_views": 2
       },
       "baroque+taiko": {
-        "total": 2,
-        "with_views": 1
+        "total": 3,
+        "with_views": 2
       },
       "baroque+gamelan": {
-        "total": 2,
+        "total": 3,
         "with_views": 2
       },
       "baroque+burundi": {
@@ -409,7 +409,7 @@
       },
       "contemporary+kuku": {
         "total": 3,
-        "with_views": 2
+        "with_views": 1
       },
       "contemporary+candomble": {
         "total": 3,
@@ -437,7 +437,7 @@
       },
       "future+gamelan": {
         "total": 2,
-        "with_views": 2
+        "with_views": 1
       },
       "future+burundi": {
         "total": 2,
@@ -449,11 +449,11 @@
       },
       "future+candomble": {
         "total": 2,
-        "with_views": 2
+        "with_views": 1
       },
       "future+bamboula": {
         "total": 3,
-        "with_views": 2
+        "with_views": 1
       },
       "future+heartbeat": {
         "total": 3,
@@ -461,40 +461,60 @@
       },
       "future+none": {
         "total": 4,
-        "with_views": 3
+        "with_views": 2
       }
     }
   },
   "suggestions": [],
   "all_stats": [
     {
-      "type": "art_period",
-      "name": "future",
-      "avg": 37.99,
-      "delta": 25.883776223776223,
+      "type": "music_style",
+      "name": "heartbeat",
+      "avg": 32.06,
+      "delta": 21.399866666666668,
       "count": 1,
-      "total": 21,
-      "group_views": 49,
+      "total": 18,
+      "group_views": 74,
+      "std_dev": 0
+    },
+    {
+      "type": "art_period",
+      "name": "contemporary",
+      "avg": 19.53,
+      "delta": 8.869866666666669,
+      "count": 2,
+      "total": 18,
+      "group_views": 99,
+      "std_dev": 17.720095936534882
+    },
+    {
+      "type": "art_period",
+      "name": "cave_art",
+      "avg": 14.12,
+      "delta": 3.4598666666666666,
+      "count": 1,
+      "total": 27,
+      "group_views": 20,
       "std_dev": 0
     },
     {
       "type": "music_style",
-      "name": "none",
-      "avg": 26.19,
-      "delta": 14.083776223776221,
-      "count": 2,
+      "name": "burundi",
+      "avg": 14.12,
+      "delta": 3.4598666666666666,
+      "count": 1,
       "total": 17,
-      "group_views": 75,
-      "std_dev": 16.68772003600252
+      "group_views": 20,
+      "std_dev": 0
     },
     {
       "type": "art_period",
       "name": "ancient",
-      "avg": 14.39,
-      "delta": 2.2837762237762202,
+      "avg": 12.75,
+      "delta": 2.0898666666666674,
       "count": 1,
       "total": 27,
-      "group_views": 26,
+      "group_views": 24,
       "std_dev": 0
     },
     {
@@ -629,21 +649,11 @@
     },
     {
       "type": "art_period",
-      "name": "cave_art",
+      "name": "future",
       "avg": 0,
       "delta": 0,
       "count": 0,
-      "total": 27,
-      "group_views": 0,
-      "std_dev": 0
-    },
-    {
-      "type": "art_period",
-      "name": "contemporary",
-      "avg": 0,
-      "delta": 0,
-      "count": 0,
-      "total": 18,
+      "total": 21,
       "group_views": 0,
       "std_dev": 0
     },
@@ -653,7 +663,7 @@
       "avg": 0,
       "delta": 0,
       "count": 0,
-      "total": 18,
+      "total": 27,
       "group_views": 0,
       "std_dev": 0
     },
@@ -663,7 +673,7 @@
       "avg": 0,
       "delta": 0,
       "count": 0,
-      "total": 6,
+      "total": 9,
       "group_views": 0,
       "std_dev": 0
     },
@@ -673,7 +683,7 @@
       "avg": 0,
       "delta": 0,
       "count": 0,
-      "total": 17,
+      "total": 26,
       "group_views": 0,
       "std_dev": 0
     },
@@ -693,17 +703,7 @@
       "avg": 0,
       "delta": 0,
       "count": 0,
-      "total": 16,
-      "group_views": 0,
-      "std_dev": 0
-    },
-    {
-      "type": "music_style",
-      "name": "heartbeat",
-      "avg": 0,
-      "delta": 0,
-      "count": 0,
-      "total": 16,
+      "total": 18,
       "group_views": 0,
       "std_dev": 0
     },
@@ -713,17 +713,7 @@
       "avg": 0,
       "delta": 0,
       "count": 0,
-      "total": 14,
-      "group_views": 0,
-      "std_dev": 0
-    },
-    {
-      "type": "music_style",
-      "name": "burundi",
-      "avg": 0,
-      "delta": 0,
-      "count": 0,
-      "total": 15,
+      "total": 16,
       "group_views": 0,
       "std_dev": 0
     },
@@ -733,7 +723,7 @@
       "avg": 0,
       "delta": 0,
       "count": 0,
-      "total": 15,
+      "total": 17,
       "group_views": 0,
       "std_dev": 0
     },
@@ -743,7 +733,7 @@
       "avg": 0,
       "delta": 0,
       "count": 0,
-      "total": 15,
+      "total": 18,
       "group_views": 0,
       "std_dev": 0
     },
@@ -753,7 +743,7 @@
       "avg": 0,
       "delta": 0,
       "count": 0,
-      "total": 15,
+      "total": 18,
       "group_views": 0,
       "std_dev": 0
     },
@@ -763,9 +753,19 @@
       "avg": 0,
       "delta": 0,
       "count": 0,
-      "total": 14,
+      "total": 17,
       "group_views": 0,
       "std_dev": 0
+    },
+    {
+      "type": "music_style",
+      "name": "none",
+      "avg": 9.875,
+      "delta": -0.7851333333333326,
+      "count": 2,
+      "total": 19,
+      "group_views": 49,
+      "std_dev": 4.065863991822647
     }
   ]
 }
