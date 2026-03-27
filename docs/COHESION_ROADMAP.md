@@ -1,0 +1,199 @@
+# Cohesion Roadmap
+
+> **Purpose:** Unify the narrative (art → production → data), clarify **where truth lives**, and sequence technical work without breaking active automation.  
+> **Companion docs:** [Master Plan](master-plan.md) (milestones), [Analytics Agent spec](spec/AGENT.md) (data loop phases), [Architecture](architecture.md) (diagrams).
+
+## One-line summary
+
+Unify story and systems: **three ledgers** (YouTube / `data/` / catalog), then close **video_id ↔ generation metadata**, then catalog policy, honest **stats vs ML** naming, portfolio wording, and later **human-in-the-loop** recommendations before any auto-queue.
+
+---
+
+## Principles
+
+1. **Do not destabilize CI mid-flight** — Finish the current **Content Factory Brand Batch** rotation before changing `content-factory-brand-batch.yml`, unless changes are strictly **post-success** and **additive**.
+2. **One spine, many modes** — Same engine: **art exploration**, **batch production**, **measurement**, (future) **recommendations**. Not one slogan; one **through-line**.
+3. **Truth over hype** — Today = ingestion, reports, **statistical** correlation with gates. Reserve “ML” for trained models when they exist; “LLM planner” only after human-in-the-loop works.
+4. **Metadata is the gold** — Each render produces a sidecar JSON with **seed** and **visual/audio configs** ([orchestrator](../orchestrator/orchestrator.py)). The cohesive win is **joining `video_id` ↔ that record**, not relying only on title parsing.
+
+**Framing:** Crossing from **content automation** → **data system** is where many projects stall; the **join** is the unlock for honest correlation and any future ML—not more commentary alone.
+
+---
+
+## The three ledgers
+
+| Ledger | What it is | Typical update path |
+|--------|------------|---------------------|
+| **YouTube** | Canonical public inventory + real-time stats | Upload workflows |
+| **`data/*`** | Performance snapshots in git (`analytics.json`, `reports/`, `suggestions.json`) | [Analytics Agent](../.github/workflows/analytics-agent.yml) weekly / manual |
+| **`content_catalog.json`** (+ optional `CONTENT_LIBRARY.md`) | Repo-side publishing catalog | Some upload workflows commit; **brand batch** historically did not — **policy choice** (see Phase 3) |
+
+---
+
+## Phase 0 — Now: land brand batch
+
+- Let **Content Factory Brand Batch** complete its mood rotation.
+- Avoid editing that workflow until done (or accept re-runs).
+- Optional: personal note of day index / moods / failures so “done” is explicit.
+
+**Versioning (optional):** Git tag e.g. `pre-cohesion-2026` on `main` as a snapshot before ledger work.
+
+---
+
+## Phase 1 — Narrative cohesion (docs only)
+
+**Goal:** Readable in ~5 minutes: **origins → today → next**.
+
+| Deliverable | Notes |
+|-------------|--------|
+| This file + links | Single place for integration sequencing |
+| Short **“Origins → Evolution → Roadmap”** blurb | Can live in [SYSTEM.md](spec/SYSTEM.md) intro or README if you want it more visible |
+| **Three ledgers** (table above) | Stops “which source of truth?” confusion |
+
+**Risk:** None (documentation). Can run **in parallel** with Phase 2; do **not** let narrative work **delay** the join for long—otherwise you accumulate analytics you can’t fully attribute.
+
+---
+
+## Phase 2 — Technical: params ↔ YouTube (the core dataset)
+
+**Goal:** Correlation and future models use **real inputs**, not only parsed titles. **This phase is the main technical priority** after Phase 0 (batch) is stable.
+
+| Step | Action |
+|------|--------|
+| 2a | Persist each run with **`generation_id`** + **generation params** (sidecar: seed, mood, configs, workflow, `GITHUB_SHA`); set / update **`video_id`** after successful upload (see **Data contract rules** below). **`data/generations.json`** per [AGENT.md](spec/AGENT.md). |
+| 2b | **Pick one code path:** either **`python -m agent.log_generation`** from workflows **or** append inside [`youtube_upload.py`](../youtube_upload.py) only — avoid splitting logic across both. Same commit as [AGENT.md](spec/AGENT.md) updates so spec matches code. |
+| 2c | Evolve **`scripts/correlate.py`**: join analytics rows by **`video_id`** to **`generations.json`** and use **params**; **else** fallback to title parsing (backward compatibility). |
+
+**Schema risk:** `generations.json` becomes the **central join table**—lock fields and **`schema_version`** early; bump version when fields change. Use a stable **internal** id distinct from YouTube’s id: **`generation_id`** (UUID) = one generation/upload *event*; **`video_id`** = external join after publish (may be missing until upload succeeds; retries re-link the same `generation_id`).
+
+#### Data contract rules (`generations.json`)
+
+1. **Identity:** **`generation_id`** is mandatory and stable for the lifecycle of that render/upload attempt. **`video_id`** is the **external** join key to YouTube and analytics; optional until upload succeeds.
+2. **Updates vs append:** **Append** a new record when a **new** generation run starts. **Update in place** the same **`generation_id`** when upload **retries** succeed (set `video_id`, timestamps)—avoid duplicate rows for the same logical generation. (If you ever need an audit log of every attempt, use a separate `attempts[]` sub-array or a second file; don’t blur “one row per generation” without documenting it.)
+3. **Fallback precedence for analysis:** **`generations.json` params** (by `video_id`) → **title parsing** → `"unknown"` / skip. Document this in [AGENT.md](spec/AGENT.md) when implemented.
+4. **Schema bumps:** Increment **`schema_version`** when required fields or semantics change; migrations or one-time scripts for old rows if needed.
+
+Example **minimum** shape (extend per [AGENT.md](spec/AGENT.md)):
+
+```json
+{
+  "schema_version": 1,
+  "videos": [
+    {
+      "generation_id": "uuid-v4",
+      "video_id": "string-or-null-until-upload",
+      "uploaded_at": "ISO8601-or-null",
+      "workflow": "content-factory-brand.yml",
+      "commit_sha": "optional",
+      "mood": "string",
+      "seed": 0,
+      "params": {
+        "visual_config": {},
+        "audio_config": {}
+      }
+    }
+  ]
+}
+```
+
+**Rule once join exists:** Prefer **joined params** for mood/art_period/music_style; do **not** treat title parsing as primary for new analysis.
+
+**Rollout:** Test on **one** workflow first (e.g. manual brand upload), not brand batch, until JSON is correct.
+
+**Risk:** Low if gated on upload success and tested on one workflow first.
+
+### Cleanup debt (while you’re in Phase 2 / analytics code)
+
+These **reconciliation bugs** can quietly distort trust in the analysis layer—fix when touching `correlate` / `analyze_data`:
+
+- **`correlate`** reports mood **`study`** “missing” while weekly report tables show **study** videos — title-classification vs report column mismatch.
+- **`analyze_data.py`** “best retention” summary line vs **by-type table** (e.g. lofi_study) — reconcile definitions or remove the misleading line.
+
+---
+
+## Phase 3 — Catalog / library parity (strategic)
+
+**Goal:** Decide what the **repo catalog** is for—then align workflows.
+
+**Two valid models:**
+
+| Model | Idea | Tradeoff |
+|-------|------|----------|
+| **A — Repo + catalog as audit trail** | Every upload path commits `content_catalog.json` / `CONTENT_LIBRARY.md` | Reproducibility ↑, friction ↑ |
+| **B — YouTube as canonical inventory** | Channel = ground truth; repo = **generation + analysis** (`data/*`, code); catalog **optional or derived** | Faster, fewer merge commits; less “browse in git without API” |
+
+**Recommendation:** **Default to B** for this codebase (production engine + analytics loop, not a CMS). **Revisit A** only if **audit / compliance** or “must browse inventory without YouTube API” becomes a hard requirement, or **after** `generations.json` + analytics join is stable and you still want git-mirrored publishing history. Hybrid remains valid (e.g. catalog commits on manual brand only).
+
+| Step | Action |
+|------|--------|
+| 3a | **Choose A, B, or hybrid** — if undecided, **start with B** and document; add catalog commits later if needed. |
+| 3b | If **A**: add the **same commit block** as manual [Content Factory (Brand)](../.github/workflows/content-factory-brand.yml) to **brand batch** after upload (post batch completion). If **B**: document that catalog commits are **optional** and how to regenerate if needed. |
+| 3c | Declare **one canonical** human doc for library workflow (root vs `docs/` duplicates). |
+
+---
+
+## Phase 4 — Naming & honest ML line
+
+| Step | Action |
+|------|--------|
+| 4a | Workflow step names / `correlate.py` header: **“statistical correlation”** vs **“ML”** where accurate. |
+| 4b | Align **AGENT.md** phase thresholds (e.g. 100 vs 500 videos) with code comments. |
+| 4c | Optional: dedupe **`parse_video_type`** / `parse_type` into one shared helper. |
+
+---
+
+## Phase 5 — Career / portfolio wording
+
+| Step | Action |
+|------|--------|
+| 5a | README (or personal site): one paragraph — **data flywheel**, guardrails, phased automation, **human approval** before auto-queue. |
+| 5b | Resume: **ingestion, structured metrics, correlation + gates, spec-driven CI** — accurate today. |
+
+**Distinction:** [Master Plan](master-plan.md) **Milestone 8** = generative **melody** AI. Analytics **Phase 3–4** in [AGENT.md](spec/AGENT.md) = **predictive / optimization** — separate bullets in outward-facing text.
+
+---
+
+## Phase 6 — Future: “agent decides next step”
+
+**Order (non-negotiable for safety):**
+
+1. Workflow or script emits a **recommendation artifact** (markdown/JSON) from `data/*` — **no** auto-generation.
+2. **`workflow_dispatch`** with suggested inputs — **human** runs.
+3. Only later: optional auto-trigger with **caps**, **guardrails**, and **spec updates**.
+
+**Explainability:** Recommendations must cite **evidence** (e.g. “top retention cluster: `mood=X`, `tempo` band Y, *n*=…”) — not vague “make more calm stuff.” Otherwise you won’t trust the loop.
+
+---
+
+## Versioning this project
+
+| Layer | Suggestion |
+|-------|------------|
+| **Git** | Tags on `main`: e.g. `v2026.1.0` at milestones (“post–brand-batch cohesion”, “generations wired”). |
+| **Changelog** | `CHANGELOG.md` — short **Added / Changed / Fixed** per tag. |
+| **Data** | Bump **`schema_version`** in `generations.json` / related files when fields change ([AGENT.md](spec/AGENT.md)). |
+| **Story** | Optional narrative “Engine v1 = batch + publish; v2 = joined analytics; v3 = recommendations” separate from semver. |
+
+---
+
+## Suggested order of next moves
+
+1. **Phase 0:** Finish brand batch; don’t touch batch workflow until stable.  
+2. **Immediately after:** Phase **2a–2b** — implement **`video_id` ↔ metadata** (`generations.json` + one logging path). This is the **first** code priority; Phase 1 narrative can run in parallel but must not block 2 for long.  
+3. **Phase 2c** + lock **AGENT.md** schema (“data constitution”).  
+4. **Phase 3** — confirm **B** (or A/hybrid) per section above.  
+5. **Polish:** Phases **4–5**; Phase **6** when joins feel trustworthy.
+
+**Stripped execution (first code sprint):** (1) minimal `generations.json` + `schema_version` + **`generation_id`** per run, (2) upload path **creates** row then **updates** `video_id` on success / retry, (3) test on **manual** brand workflow, (4) correlate: join by `video_id` → title fallback.
+
+---
+
+## Related paths
+
+- Workflows: [.github/workflows/](../.github/workflows/)
+- Analytics code: [`agent/`](../agent/), [`scripts/analyze_data.py`](../scripts/analyze_data.py), [`scripts/correlate.py`](../scripts/correlate.py)
+- Generation spine: [`orchestrator/orchestrator.py`](../orchestrator/orchestrator.py), [`batch_generate.py`](../batch_generate.py)
+
+---
+
+*Last updated: 2026-03-27 — living document; adjust phases as the channel and codebase evolve.*
