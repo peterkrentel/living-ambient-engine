@@ -133,6 +133,7 @@ See [docs/youtube-auth.md](docs/youtube-auth.md) for detailed instructions.
 - 🏗️ **[Architecture](docs/architecture.md)** - System design and diagrams
 - 📺 **[YouTube Setup](docs/youtube-auth.md)** - Authentication guide
 - 🗺️ **[Master Plan](docs/master-plan.md)** - Roadmap and milestones
+- 🔗 **[Cohesion Roadmap](docs/COHESION_ROADMAP.md)** - Integration plan: ledgers, data loop, catalog, versioning
 - 🤝 **[Contributing](CONTRIBUTING.md)** - How to contribute
 - 🤖 **[AI Agent Instructions](.github/AGENT_INSTRUCTIONS.md)** - For AI coding assistants
 
