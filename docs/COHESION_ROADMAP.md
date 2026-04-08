@@ -211,6 +211,7 @@ Videos published **before** `generations.json` exists have **no** joined params 
 
 ## Related paths
 
+- Personal channel (separate analytics plan): [`PERSONAL_ANALYTICS.md`](PERSONAL_ANALYTICS.md)
 - Workflows: [.github/workflows/](../.github/workflows/)
 - Analytics code: [`agent/`](../agent/), [`scripts/analyze_data.py`](../scripts/analyze_data.py), [`scripts/correlate.py`](../scripts/correlate.py)
 - Generation spine: [`orchestrator/orchestrator.py`](../orchestrator/orchestrator.py), [`batch_generate.py`](../batch_generate.py)
