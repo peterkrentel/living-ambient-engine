@@ -28,6 +28,8 @@ Unify story and systems: **three ledgers** (YouTube / `data/` / catalog), then c
 | **`data/*`** | Performance snapshots in git (`analytics.json`, `reports/`, `suggestions.json`) | [Analytics Agent](../.github/workflows/analytics-agent.yml) weekly / manual |
 | **`content_catalog.json`** (+ optional `CONTENT_LIBRARY.md`) | Repo-side publishing catalog | Some upload workflows commit; **brand batch** historically did not — **policy choice** (see Phase 3) |
 
+**Ephemeral (not a ledger):** [Content Factory Brand Batch](../.github/workflows/content-factory-brand-batch.yml) stores `./generated/` as a **GitHub Actions artifact** with **short retention** (~7 days). You cannot recover historical **generation params** from CI after that. YouTube keeps the video; **Phase 2** is what makes params durable in git.
+
 ---
 
 ## Phase 0 — Now: land brand batch
@@ -35,6 +37,12 @@ Unify story and systems: **three ledgers** (YouTube / `data/` / catalog), then c
 - Let **Content Factory Brand Batch** complete its mood rotation.
 - Avoid editing that workflow until done (or accept re-runs).
 - Optional: personal note of day index / moods / failures so “done” is explicit.
+
+**Phase 0 complete (checklist — use what matches your intent):**
+
+- [ ] Each of the **14** moods in the workflow list has appeared at least once from **scheduled** runs (rotation), **or** you explicitly accept stopping early / gaps from `day_override` / missed days.
+- [ ] No undocumented **P0** generation or upload failures for that workflow (or failures are written down).
+- [ ] Optional: snapshot **day index** / mood triples / quota stops so “done” is auditable later.
 
 **Versioning (optional):** Git tag e.g. `pre-cohesion-2026` on `main` as a snapshot before ledger work.
 
@@ -72,6 +80,7 @@ Unify story and systems: **three ledgers** (YouTube / `data/` / catalog), then c
 2. **Updates vs append:** **Append** a new record when a **new** generation run starts. **Update in place** the same **`generation_id`** when upload **retries** succeed (set `video_id`, timestamps)—avoid duplicate rows for the same logical generation. (If you ever need an audit log of every attempt, use a separate `attempts[]` sub-array or a second file; don’t blur “one row per generation” without documenting it.)
 3. **Fallback precedence for analysis:** **`generations.json` params** (by `video_id`) → **title parsing** → `"unknown"` / skip. Document this in [AGENT.md](spec/AGENT.md) when implemented.
 4. **Schema bumps:** Increment **`schema_version`** when required fields or semantics change; migrations or one-time scripts for old rows if needed.
+5. **One row per uploaded asset:** Each record that reaches YouTube should map to **one** **`video_id`**. If batch tooling uses **`--dual`** (ambience + melody), expect **two rows** (two **`generation_id`**s, two **`video_id`**s) for one render job. Optionally link them with a shared **`batch_run_id`** or **`parent_generation_id`**—pick one approach and document it in [AGENT.md](spec/AGENT.md).
 
 Example **minimum** shape (extend per [AGENT.md](spec/AGENT.md)):
 
@@ -108,6 +117,18 @@ These **reconciliation bugs** can quietly distort trust in the analysis layer—
 
 - **`correlate`** reports mood **`study`** “missing” while weekly report tables show **study** videos — title-classification vs report column mismatch.
 - **`analyze_data.py`** “best retention” summary line vs **by-type table** (e.g. lofi_study) — reconcile definitions or remove the misleading line.
+
+### Historic videos and backfill
+
+Videos published **before** `generations.json` exists have **no** joined params in the repo. For them, analysis continues to use **title parsing** (and description) unless you later:
+
+- Accept **partial attribution** for the long tail, or
+- Run an **optional one-time backfill** (e.g. align `video_id` with catalog exports, recovered sidecars, or a curated sheet). **Do not** block Phase 2 on backfill design—define schema and forward logging first; script the past when the format is stable.
+
+### Phase 2 implementation notes (detail in the Phase 2 PR)
+
+- **Concurrent writers:** Multiple CI jobs or local runs appending one shared JSON file invite **git merge conflicts**. Prefer a **single writer** (e.g. only the upload step on `main`), or **sharded files** / NDJSON merged in a dedicated step—decide when implementing **2b**.
+- **Tests:** When implementing **2c**, add a minimal check: fixture **`analytics` + `generations`** → correlate uses **joined params** for a known **`video_id`** (harness shape left to that PR).
 
 ---
 
@@ -196,4 +217,4 @@ These **reconciliation bugs** can quietly distort trust in the analysis layer—
 
 ---
 
-*Last updated: 2026-03-27 — living document; adjust phases as the channel and codebase evolve.*
+*Last updated: 2026-03-29 — living document; adjust phases as the channel and codebase evolve.*
