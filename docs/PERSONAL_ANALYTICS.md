@@ -1,8 +1,17 @@
 # Personal channel analytics
 
-> **Purpose:** Record how to add **automated** YouTube analytics for the **personal** channel without mixing it with the **brand** pipeline. The personal line is a different product (long-form, different audience, [`content-factory.yml`](../.github/workflows/content-factory.yml)); treat data the same way.
+> **Purpose:** Use **YouTube performance data** on the **personal** channel to decide **what to do next**—not to drive a “fill the matrix” production machine. The personal library is **largely already shipped**; the win is **ongoing measurement** (retention, discovery, **CTR** where available, comparative performance) so strategy (titles, thumbnails, length, topics, what to double down on) is grounded in metrics instead of screenshots + ad hoc GPT.
 
-**Companion:** [Cohesion Roadmap](COHESION_ROADMAP.md) (brand spine + `generations.json`). Personal analytics is **parallel**, not a merge into brand reports.
+**Companion:** [Cohesion Roadmap](COHESION_ROADMAP.md) (brand spine + `generations.json`). Brand = **coverage + join** for automated output; personal = **optimize and steer** an existing catalog.
+
+---
+
+## Strategic focus (why this doc exists)
+
+- **Not primary:** “Did we produce every combo?” (personal back catalog is treated as **done** for now.)
+- **Primary:** From metrics, answer **what deserves more investment**, e.g. high **CTR** but weak retention vs the opposite, which lengths/topics cluster with watch time, where **impressions** stall, and which videos to **remix, repackage, or leave**.
+
+**Metrics note:** [`agent/fetch_analytics.py`](../agent/fetch_analytics.py) today pulls a **core set** (views, watch time, retention %, engagement counts). **CTR**, **impressions**, and browse/search breakdowns may require **additional YouTube Analytics API** dimensions/metrics or **YouTube Studio** exports where the API is thin—plan to **extend the personal fetcher** over time; keep Studio as fallback for gaps.
 
 ---
 
@@ -10,17 +19,17 @@
 
 | Piece | Brand | Personal |
 |--------|--------|----------|
-| Upload workflow | `content-factory-brand.yml`, batch workflows, `art-creator.yml` (brand) | [`content-factory.yml`](../.github/workflows/content-factory.yml) (`YOUTUBE_TOKEN_PICKLE`) |
+| Upload workflow | `content-factory-brand.yml`, batch workflows, `art-creator.yml` (brand) | [`content-factory.yml`](../.github/workflows/content-factory.yml) (`YOUTUBE_TOKEN_PICKLE`) — catalog mostly produced |
 | Scheduled analytics | [`analytics-agent.yml`](../.github/workflows/analytics-agent.yml) → `data/analytics.json` | **None** in repo |
-| Manual / ad hoc | — | Studio screenshots, exports, external tools |
+| Manual / ad hoc | — | Studio screenshots, exports, external tools (current “what’s next” loop) |
 
 ---
 
 ## Goals (v1)
 
-1. Pull the **same class of metrics** as [`agent/fetch_analytics.py`](../agent/fetch_analytics.py) (uploads list + per-video analytics window).
+1. Pull a **regular snapshot** of personal-channel performance into git (start from the same **family** of metrics as the brand fetcher; **add** CTR/impressions when the pipeline supports them).
 2. Store them in **separate files** so brand `data/analytics.json` is **never overwritten**.
-3. Keep **reports / correlation** personal-only until you explicitly design a cross-channel comparison.
+3. Keep **reports / correlation** personal-only and orient them toward **“what next”** (rankings, outliers, week-over-week), not brand-style experiment coverage.
 
 ---
 
@@ -64,7 +73,7 @@ Pick one; avoid two workflows writing the same path.
 ## Relation to `generations.json`
 
 - Cohesion Phase 2 targets **brand** join first (`video_id` ↔ params).
-- For personal: plan **`channel: "personal"`** rows in a shared file **or** `data/generations_personal.json`—same contract, separate namespace.
+- For personal: optional later—useful if you want **seed/params ↔ performance** for long-form; not required to get value from **CTR/retention-driven “what next.”** If added: **`channel: "personal"`** or `data/generations_personal.json`.
 
 ---
 
@@ -72,6 +81,7 @@ Pick one; avoid two workflows writing the same path.
 
 - One unified “global” correlate across brand + personal.
 - Replacing every manual Studio / screenshot workflow in one pass.
+- Treating personal as another **full combinatorial production grid** (back catalog is the baseline; metrics inform **next** moves).
 
 ---
 
