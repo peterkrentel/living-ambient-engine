@@ -134,6 +134,7 @@ See [docs/youtube-auth.md](docs/youtube-auth.md) for detailed instructions.
 - 📺 **[YouTube Setup](docs/youtube-auth.md)** - Authentication guide
 - 🗺️ **[Master Plan](docs/master-plan.md)** - Roadmap and milestones
 - 🔗 **[Cohesion Roadmap](docs/COHESION_ROADMAP.md)** - Integration plan: ledgers, data loop, catalog, versioning
+- ⚙️ **[Execution policy](docs/EXECUTION.md)** - GitHub Actions + project venv only (no ad-hoc system Python)
 - 🤝 **[Contributing](CONTRIBUTING.md)** - How to contribute
 - 🤖 **[AI Agent Instructions](.github/AGENT_INSTRUCTIONS.md)** - For AI coding assistants
 

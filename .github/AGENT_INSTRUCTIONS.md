@@ -7,20 +7,21 @@ This project uses **spec-driven development**. Specifications are the source of 
 
 ## Before Coding
 
-1. **Read the guardrails**: `docs/spec/GUARDRAILS.md` - **ALWAYS CHECK THIS FIRST**
+1. **Execution policy**: `docs/EXECUTION.md` — project commands via **activated venv** or **GitHub Actions**, not ad-hoc system Python
+2. **Read the guardrails**: `docs/spec/GUARDRAILS.md` - **ALWAYS CHECK THIS FIRST**
    - Parameter limits (min/max/default)
    - Forbidden states
    - Enforcement levels
-2. **Read the system spec**: `docs/spec/SYSTEM.md`
-3. **Read component specs**: Check `*/SPEC.md` for any component you'll modify
+3. **Read the system spec**: `docs/spec/SYSTEM.md`
+4. **Read component specs**: Check `*/SPEC.md` for any component you'll modify
    - `audio/SPEC.md` - Audio generation
    - `visuals/SPEC.md` - Visual generation
    - `orchestrator/SPEC.md` - Pipeline coordination
    - `youtube/SPEC.md` - YouTube uploads
    - `config/SPEC.md` - Configuration system
    - `render/SPEC.md` - FFmpeg rendering
-4. **Check contracts**: `docs/spec/contracts/` for cross-component interfaces
-5. **Check workflow specs**: `docs/spec/workflows.md` for CI/CD changes
+5. **Check contracts**: `docs/spec/contracts/` for cross-component interfaces
+6. **Check workflow specs**: `docs/spec/workflows.md` for CI/CD changes
 
 ## While Coding
 
@@ -33,7 +34,7 @@ This project uses **spec-driven development**. Specifications are the source of 
 1. **Update specs**: Any behavior change requires a spec update in the same commit
 2. **Update contracts**: Interface changes require contract updates
 3. **Update docs**: User-facing changes need doc updates
-4. **Test**: Run `python run_job.py --mood trance --duration 30` to verify
+4. **Test**: Prefer **GitHub Actions** (`workflow_dispatch`) for full integration; for local smoke tests use an **activated venv** (`source venv/bin/activate`) then e.g. `python run_job.py --mood trance --duration 30` — see `docs/EXECUTION.md`
 
 ## Quick Reference
 

@@ -15,6 +15,7 @@ Unify story and systems: **three ledgers** (YouTube / `data/` / catalog), then c
 2. **One spine, many modes** — Same engine: **art exploration**, **batch production**, **measurement**, (future) **recommendations**. Not one slogan; one **through-line**.
 3. **Truth over hype** — Today = ingestion, reports, **statistical** correlation with gates. Reserve “ML” for trained models when they exist; “LLM planner” only after human-in-the-loop works.
 4. **Metadata is the gold** — Each render produces a sidecar JSON with **seed** and **visual/audio configs** ([orchestrator](../orchestrator/orchestrator.py)). The cohesive win is **joining `video_id` ↔ that record**, not relying only on title parsing.
+5. **Run via venv or CI** — Do not depend on ad-hoc system Python for project commands. Local work uses an **activated project virtualenv**; production and scheduled jobs run in **GitHub Actions**. See [EXECUTION.md](EXECUTION.md).
 
 **Framing:** Crossing from **content automation** → **data system** is where many projects stall; the **join** is the unlock for honest correlation and any future ML—not more commentary alone.
 
@@ -211,6 +212,7 @@ Videos published **before** `generations.json` exists have **no** joined params 
 
 ## Related paths
 
+- Execution policy (venv + CI): [`EXECUTION.md`](EXECUTION.md)
 - Personal channel (separate analytics plan): [`PERSONAL_ANALYTICS.md`](PERSONAL_ANALYTICS.md)
 - Workflows: [.github/workflows/](../.github/workflows/)
 - Analytics code: [`agent/`](../agent/), [`scripts/analyze_data.py`](../scripts/analyze_data.py), [`scripts/correlate.py`](../scripts/correlate.py)
