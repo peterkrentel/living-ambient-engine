@@ -104,6 +104,8 @@ analytics-agent.yml
 
 ### generations.json
 
+**Implemented:** `agent/log_generation.py` writes **schema_version 1** rows on successful upload via `youtube_upload.py` (batch + single). Increment **`schema_version`** when adding required fields.
+
 ```json
 {
   "schema_version": 2,

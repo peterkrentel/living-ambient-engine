@@ -14,6 +14,31 @@ from pathlib import Path
 from youtube.uploader import YouTubeUploader, GOOGLE_API_AVAILABLE, QuotaExceededError
 from library import ContentLibrary
 
+from agent.log_generation import record_generation_upload
+
+
+def _duration_label_to_seconds(label) -> int:
+    """Parse batch manifest duration labels (e.g. 5min, 1h) to seconds."""
+    if label is None:
+        return 300
+    if isinstance(label, (int, float)):
+        return max(1, int(label))
+    s = str(label).lower().strip()
+    try:
+        if s.endswith("min"):
+            return int(float(s.replace("min", "").strip()) * 60)
+        if s.endswith("h"):
+            return int(float(s.replace("h", "").strip()) * 3600)
+        if s.endswith("s"):
+            return int(float(s.replace("s", "").strip()))
+    except ValueError:
+        pass
+    return 300
+
+
+def _workflow_name() -> str:
+    return os.environ.get("GITHUB_WORKFLOW") or "youtube-upload-cli"
+
 
 def generate_description(metadata: dict) -> str:
     """Generate YouTube description with 3-line format: Intent, Guarantee, Use case.
@@ -320,6 +345,32 @@ def main(video: str, metadata: str, privacy: str, auth: bool, batch: str, update
                     )
                     uploaded_count += 1
 
+                if upload_result:
+                    try:
+                        record_generation_upload(
+                            video_id=upload_result['video_id'],
+                            workflow=_workflow_name(),
+                            generation_id=v.get('generation_id'),
+                            mood=meta.get('mood') or v.get('mood'),
+                            duration_seconds=_duration_label_to_seconds(
+                                meta.get('duration') or v.get('duration')
+                            ),
+                            seed=v.get('seed'),
+                            variant=v.get('variant'),
+                            params={
+                                k: v.get(k)
+                                for k in ('seed', 'variant')
+                                if v.get(k) is not None
+                            },
+                            metadata={
+                                'title': upload_result.get('title'),
+                                **{k: meta[k] for k in ('video_title', 'description', 'tags') if k in meta},
+                            },
+                            generated_at=v.get('created_at'),
+                        )
+                    except Exception as e:
+                        click.echo(f"  ⚠️  Could not write generations.json: {e}", err=True)
+
             except QuotaExceededError as e:
                 click.echo(f"\n⚠️  {e}", err=True)
                 click.echo("   Saving progress and exiting. Re-run after quota resets.", err=True)
@@ -376,6 +427,32 @@ def main(video: str, metadata: str, privacy: str, auth: bool, batch: str, update
             meta = json.load(f)
     
     upload_result = upload_single(uploader, video, meta, privacy)
+
+    if upload_result:
+        try:
+            slim_meta = {
+                k: meta[k]
+                for k in meta
+                if k
+                not in (
+                    'description',
+                    'description_template',
+                )
+            }
+            record_generation_upload(
+                video_id=upload_result['video_id'],
+                workflow=_workflow_name(),
+                generation_id=None,
+                mood=meta.get('mood'),
+                duration_seconds=_duration_label_to_seconds(meta.get('duration')),
+                params={k: slim_meta[k] for k in slim_meta if k not in ('video_title', 'mood', 'tags')},
+                metadata={
+                    'title': upload_result.get('title'),
+                    **{k: meta[k] for k in ('video_title', 'description', 'tags') if k in meta},
+                },
+            )
+        except Exception as e:
+            click.echo(f"⚠️  Could not write generations.json: {e}", err=True)
 
     # Save upload result to file (for workflow integration)
     if upload_result:

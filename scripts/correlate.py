@@ -14,13 +14,22 @@ Output:
 """
 import json
 import os
+import sys
 from collections import defaultdict
 from datetime import datetime
 import math
 
+# Allow importing agent when run as script from repo root
+_REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _REPO_ROOT not in sys.path:
+    sys.path.insert(0, _REPO_ROOT)
+
+from agent.log_generation import video_id_index
+
 # Paths
 ANALYTICS_PATH = "data/analytics.json"
 SUGGESTIONS_PATH = "data/suggestions.json"
+GENERATIONS_PATH = "data/generations.json"
 
 # Statistical thresholds (per AGENT.md spec)
 MIN_SAMPLE_SIZE = 5  # Actionable requires n >= 5
@@ -38,34 +47,59 @@ def load_analytics():
         return json.load(f)
 
 
-def parse_video_type(title):
-    """Extract type/mood from video title."""
+def parse_video_type_from_title(title):
+    """Extract type/mood from video title only (fallback)."""
     t = title.lower()
-    
+
     # Art-creator videos
     if title.startswith("Ambient "):
-        # Extract art_period and music_style
         parts = title.split("|")
         if len(parts) >= 3:
             art_period = parts[0].replace("Ambient ", "").strip()
             music_style = parts[2].replace("Evolving", "").replace("Soundscape", "").strip()
             return {"category": "art-creator", "art_period": art_period, "music_style": music_style}
         return {"category": "art-creator", "art_period": "unknown", "music_style": "unknown"}
-    
-    # Mood-based videos
+
+    # Mood-based videos — 'study' before 'focus' so titles with both map to study
     mood_keywords = [
         ('lofi', 'lofi_study'), ('piano', 'piano_relax'), ('ocean', 'ocean_waves'),
         ('rain', 'rain_sleep'), ('fire', 'fireplace'), ('forest', 'forest_morning'),
-        ('focus', 'deep_focus'), ('sleep', 'sleep'), ('chill', 'chill'),
-        ('study', 'study'), ('energiz', 'energize'), ('trance', 'trance'),
-        ('strength', 'warrior'), ('warrior', 'warrior'), ('ceremon', 'ceremony')
+        ('sleep', 'sleep'), ('chill', 'chill'),
+        ('study', 'study'),
+        ('focus', 'deep_focus'),
+        ('energiz', 'energize'), ('trance', 'trance'),
+        ('strength', 'warrior'), ('warrior', 'warrior'), ('ceremon', 'ceremony'),
     ]
-    
+
     for kw, mood in mood_keywords:
         if kw in t:
             return {"category": "mood", "mood": mood}
-    
+
     return {"category": "other", "mood": "unknown"}
+
+
+def classify_from_ledger_row(row: dict, title: str) -> dict:
+    """Prefer params + mood from data/generations.json join."""
+    params = row.get("params") or {}
+    ap = params.get("art_period")
+    ms = params.get("music_style")
+    if ap or ms:
+        return {
+            "category": "art-creator",
+            "art_period": ap or "unknown",
+            "music_style": ms or "unknown",
+        }
+    mood = row.get("mood")
+    if mood:
+        return {"category": "mood", "mood": mood}
+    return parse_video_type_from_title(title)
+
+
+def parse_video_type(title, video_id=None, gen_by_video_id=None):
+    """Resolve category using generations.json when video_id matches, else title parse."""
+    if video_id and gen_by_video_id and video_id in gen_by_video_id:
+        return classify_from_ledger_row(gen_by_video_id[video_id], title)
+    return parse_video_type_from_title(title)
 
 
 def calculate_correlations(videos):
@@ -75,13 +109,24 @@ def calculate_correlations(videos):
     by_art_period = defaultdict(list)
     by_music_style = defaultdict(list)
     by_category = defaultdict(list)
-    
+
+    gen_by_video_id = {}
+    if os.path.exists(GENERATIONS_PATH):
+        try:
+            gen_by_video_id = video_id_index()
+        except (json.JSONDecodeError, OSError):
+            gen_by_video_id = {}
+
     for v in videos:
         metrics = v["metrics"]
         retention = metrics.get("average_view_percentage", 0)
         views = metrics.get("views", 0)
-        
-        video_type = parse_video_type(v["title"])
+
+        video_type = parse_video_type(
+            v["title"],
+            video_id=v.get("video_id"),
+            gen_by_video_id=gen_by_video_id,
+        )
         category = video_type["category"]
         
         data = {"retention": retention, "views": views, "title": v["title"]}
