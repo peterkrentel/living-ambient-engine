@@ -10,7 +10,7 @@
 │                    LAYER 3: AGENT BIAS                      │
 │         "Bias agents toward reading specs first"            │
 ├─────────────────────────────────────────────────────────────┤
-│  .augment/rules/spec-enforcement.md  → Augment agents      │
+│  .github/AGENT_INSTRUCTIONS.md        → Cursor / any agent  │
 │  .ai/agent-rules.md                  → Any AI agent        │
 │  .ai/kickoff-prompt.md               → Manual paste        │
 │  README.md notice                    → First thing seen    │
@@ -82,7 +82,8 @@ Nudges AI agents to read specs before coding:
 
 | File | Tool | Injection |
 |------|------|-----------|
-| `.augment/rules/spec-enforcement.md` | Augment | Automatic |
+| `.github/AGENT_INSTRUCTIONS.md` | Cursor / Copilot / etc. | Read first (README links it) |
+| `.cursor/rules/*.md` | Cursor | Optional project rules (if present) |
 | `.ai/agent-rules.md` | Any AI | Reference |
 | `.ai/kickoff-prompt.md` | Any AI | Manual paste |
 | `README.md` notice | Any AI | First thing seen |
@@ -104,7 +105,7 @@ Nudges AI agents to read specs before coding:
 1. **Stateless agents, stateful intent** - Agents don't need memory; specs are in git
 2. **Defense in depth** - Multiple layers catch different failure modes
 3. **Fail safe** - Invalid values are corrected, not rejected
-4. **Portable** - Works with any AI tool, not just Augment
+4. **Portable** - Works with any AI tool or editor
 5. **Versioned** - All rules are in git, not tool settings
 
 ## Adding New Enforcement

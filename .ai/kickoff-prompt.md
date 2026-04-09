@@ -44,10 +44,8 @@ Invalid parameters are auto-clamped. CI validates specs on every PR.
 
 ## Why This Exists
 
-This prompt ensures any AI agent (ChatGPT, Claude, Gemini, Copilot, etc.)
-follows the same rules as Augment agents who get `.augment/rules/` injected.
+This prompt aligns any AI agent (ChatGPT, Claude, Gemini, Copilot, Cursor, etc.)
+with the same spec-first workflow as `.github/AGENT_INSTRUCTIONS.md`.
 
-For Augment users: this is already automatic via `.augment/rules/spec-enforcement.md`
-
-For other tools: paste this prompt to achieve the same effect.
+Paste this at session start for tools that do not auto-load repo instructions; Cursor users should also rely on **AGENT_INSTRUCTIONS.md** (linked from the README).
 
