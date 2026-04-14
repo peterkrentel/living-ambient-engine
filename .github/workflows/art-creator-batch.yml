@@ -4,13 +4,18 @@
 # Full coverage: 81 unique art_period×music_style combos in 27 days
 # Also rotates: visual_pattern, color_palette, journey, solfeggio
 # Spec: docs/spec/workflows.md#art-creator-batchyml
+#
+# SCHEDULE PAUSED: 81 art×music matrix coverage verified; use this time to audit
+# analytics / generations.json and decide what to produce next. Re-enable cron
+# when you want daily art-creator output again.
 
 name: Art Creator Batch
 
 on:
-  # Run daily at 6 AM UTC
-  schedule:
-    - cron: '0 6 * * *'
+  # DISABLED: Schedule paused during post-matrix audit / strategy window
+  # Re-enable when ready to resume daily uploads to brand channel
+  # schedule:
+  #   - cron: '0 6 * * *'
 
   # Manual trigger with day override
   workflow_dispatch:

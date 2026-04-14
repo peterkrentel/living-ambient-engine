@@ -3,13 +3,16 @@
 # Generates 3x 5min videos/day, uploads to brand channel
 # Full coverage: 14 moods in ~5 days
 # Spec: docs/spec/workflows.md#content-factory-brand-batchyml
+#
+# SCHEDULE PAUSED: Post–rotation audit / strategy window (same intent as art-creator-batch).
+# Re-enable cron when you want daily mood uploads again.
 
 name: Content Factory Brand Batch
 
 on:
-  # Run daily at 8 AM UTC (2 hours after art-creator-batch)
-  schedule:
-    - cron: '0 8 * * *'
+  # DISABLED: Schedule paused — use workflow_dispatch for one-off runs
+  # schedule:
+  #   - cron: '0 8 * * *'  # Daily at 8 AM UTC (was 2h after art-creator-batch)
 
   # Manual trigger with day override
   workflow_dispatch:

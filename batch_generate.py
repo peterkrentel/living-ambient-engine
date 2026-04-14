@@ -4,6 +4,8 @@ Batch Video Generator - Content Factory
 Generates multiple videos across moods and durations for YouTube automation.
 """
 
+import uuid
+
 import click
 import os
 import sys
@@ -188,6 +190,7 @@ def main(moods: str, durations: str, output: str, dual: bool, dry_run: bool, lis
         """Extract only upload-relevant fields from generation result."""
         metadata = result_obj.get("metadata", {})
         return {
+            "generation_id": str(uuid.uuid4()),
             "mood": mood,
             "duration": duration,
             "seed": seed,

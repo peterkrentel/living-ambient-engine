@@ -20,9 +20,9 @@ Four workflows automate video generation, YouTube deployment, and testing.
 |----|----------|---------|---------|---------|
 | WF-CF | `content-factory.yml` | Schedule + Manual | Batch generation + upload | Personal |
 | WF-CFB | `content-factory-brand.yml` | Manual only | Batch generation + upload | Brand |
-| WF-CFBATCH | `content-factory-brand-batch.yml` | Schedule + Manual | Daily mood rotation (SEO) | Brand |
+| WF-CFBATCH | `content-factory-brand-batch.yml` | Manual (+ optional schedule) | Mood rotation (SEO; cron may be off) | Brand |
 | WF-ART | `art-creator.yml` | Manual / workflow_call | Single custom video | Brand (optional) |
-| WF-BATCH | `art-creator-batch.yml` | Schedule + Manual | Daily matrix generation | Brand |
+| WF-BATCH | `art-creator-batch.yml` | Manual (+ optional schedule) | Matrix generation (cron may be off) | Brand |
 | WF-TEST | `test-art-creator.yml` | Manual + PR (path filter) | Test all input combinations | None (test only) |
 | WF-AGENT | `analytics-agent.yml` | Schedule (weekly) + Manual | Fetch YouTube stats, generate reports | N/A |
 
@@ -157,9 +157,10 @@ content-factory-batch uses **SEO-optimized metadata from moods.yaml** for human 
 ### Trigger
 
 ```yaml
+# schedule may be commented out in the workflow file during audit / strategy pauses
 schedule:
-  - cron: '0 8 * * *'  # Daily at 8 AM UTC (2 hours after art-creator-batch)
-workflow_dispatch:      # Manual with day override
+  - cron: '0 8 * * *'  # Daily at 8 AM UTC (when enabled)
+workflow_dispatch:      # Manual with day override (always available)
 ```
 
 ### Concurrency
@@ -311,9 +312,10 @@ for algorithm discovery, not optimizing individual titles for human search.
 ### Trigger
 
 ```yaml
+# schedule may be commented out in the workflow file during audit / strategy pauses
 schedule:
-  - cron: '0 6 * * *'  # Daily at 6 AM UTC
-workflow_dispatch:      # Manual with day override
+  - cron: '0 6 * * *'  # Daily at 6 AM UTC (when enabled)
+workflow_dispatch:      # Manual with day override (always available)
 ```
 
 ### Concurrency
