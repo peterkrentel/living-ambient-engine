@@ -487,7 +487,10 @@ on:
 3. Install dependencies (`pip install -r requirements.txt`)
 4. Fetch YouTube Analytics (`python -m agent.fetch_analytics`)
 5. Generate weekly report (`python -m agent.report`)
-6. Commit and push data files
+6. Run performance analysis (`scripts/analyze_data.py`)
+7. Run ML correlation (`scripts/correlate.py`)
+8. Run channel coverage audit (`scripts/audit_channel.py`) — read-only markdown from committed analytics; summarizes 14-mood and 9×9 art×music grid coverage plus generations ledger join stats (no API calls)
+9. Commit and push data files
 
 ### Outputs
 
@@ -495,6 +498,7 @@ on:
 |--------|----------|-------------|
 | Analytics data | `data/analytics.json` | YouTube performance metrics |
 | Weekly report | `data/reports/YYYY-WW.md` | Human-readable summary |
+| Channel audit | `data/reports/audit-YYYY-WW.md` | Coverage vs target grids + ledger join share (CI-generated) |
 
 ### Secrets Required
 

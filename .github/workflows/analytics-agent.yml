@@ -81,6 +81,11 @@ jobs:
           echo "🤖 Running ML correlation analysis..."
           python scripts/correlate.py
 
+      - name: Channel coverage audit
+        run: |
+          echo "📋 Writing channel coverage audit (read-only)..."
+          python scripts/audit_channel.py
+
       - name: Commit Data
         run: |
           git config user.name "Analytics Agent"
