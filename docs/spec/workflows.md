@@ -488,7 +488,7 @@ on:
 4. Fetch YouTube Analytics (`python -m agent.fetch_analytics`)
 5. Generate weekly report (`python -m agent.report`)
 6. Run performance analysis (`scripts/analyze_data.py`)
-7. Run ML correlation (`scripts/correlate.py`)
+7. Run ML correlation (`scripts/correlate.py`) — suggests bucket-level **increase/reduce** using **retention %** and **watch minutes per video** (in the fetch window); see [AGENT.md](./AGENT.md) Phase 2
 8. Run channel coverage audit (`scripts/audit_channel.py`) — read-only markdown from committed analytics; summarizes 14-mood and 9×9 art×music grid coverage plus generations ledger join stats (no API calls)
 9. Commit and push data files
 
@@ -498,6 +498,7 @@ on:
 |--------|----------|-------------|
 | Analytics data | `data/analytics.json` | YouTube performance metrics |
 | Weekly report | `data/reports/YYYY-WW.md` | Human-readable summary |
+| ML suggestions | `data/suggestions.json` | Bucket suggestions tagged by `metric` (`average_view_percentage` and/or `watch_time_minutes`); Step Summary lists both |
 | Channel audit | `data/reports/audit-YYYY-WW.md` | Coverage vs target grids + ledger join share (CI-generated) |
 
 ### Secrets Required

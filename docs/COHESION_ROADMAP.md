@@ -71,7 +71,7 @@ Unify story and systems: **three ledgers** (YouTube / `data/` / catalog), then c
 |------|--------|
 | 2a | Persist each run with **`generation_id`** + **generation params** (sidecar: seed, mood, configs, workflow, `GITHUB_SHA`); set / update **`video_id`** after successful upload (see **Data contract rules** below). **`data/generations.json`** per [AGENT.md](spec/AGENT.md). |
 | 2b | **Pick one code path:** either **`python -m agent.log_generation`** from workflows **or** append inside [`youtube_upload.py`](../youtube_upload.py) only — avoid splitting logic across both. Same commit as [AGENT.md](spec/AGENT.md) updates so spec matches code. |
-| 2c | Evolve **`scripts/correlate.py`**: join analytics rows by **`video_id`** to **`generations.json`** and use **params**; **else** fallback to title parsing (backward compatibility). |
+| 2c | Evolve **`scripts/correlate.py`**: join analytics rows by **`video_id`** to **`generations.json`** and use **params**; **else** fallback to title parsing (backward compatibility). **Dual engagement metrics:** correlate on **`average_view_percentage`** (hold) and **`watch_time_minutes`** (minutes in fetch window per video — growth signal); see [AGENT.md](spec/AGENT.md) Phase 2. |
 
 **Schema risk:** `generations.json` becomes the **central join table**—lock fields and **`schema_version`** early; bump version when fields change. Use a stable **internal** id distinct from YouTube’s id: **`generation_id`** (UUID) = one generation/upload *event*; **`video_id`** = external join after publish (may be missing until upload succeeds; retries re-link the same `generation_id`).
 

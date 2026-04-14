@@ -35,7 +35,9 @@ GENERATIONS_PATH = "data/generations.json"
 MIN_SAMPLE_SIZE = 5  # Actionable requires n >= 5
 MIN_GROUP_VIEWS = 200  # Actionable requires group_views >= 200
 MIN_VIEWS_FOR_RETENTION = 20  # Exclude videos with < 20 views from retention analysis
-MIN_DELTA_THRESHOLD = 2.0  # Minimum % difference to suggest action
+MIN_DELTA_THRESHOLD = 2.0  # Minimum % points (retention) to suggest action
+# Mean watch minutes per video (eligible: views>=MIN_VIEWS_FOR_RETENTION) vs channel mean
+MIN_DELTA_WATCH_MINUTES = 1.0
 
 
 def load_analytics():
@@ -121,6 +123,7 @@ def calculate_correlations(videos):
         metrics = v["metrics"]
         retention = metrics.get("average_view_percentage", 0)
         views = metrics.get("views", 0)
+        watch_minutes = float(metrics.get("watch_time_minutes") or 0)
 
         video_type = parse_video_type(
             v["title"],
@@ -129,7 +132,12 @@ def calculate_correlations(videos):
         )
         category = video_type["category"]
         
-        data = {"retention": retention, "views": views, "title": v["title"]}
+        data = {
+            "retention": retention,
+            "watch_minutes": watch_minutes,
+            "views": views,
+            "title": v["title"],
+        }
         by_category[category].append(data)
         
         if category == "mood":
@@ -141,10 +149,11 @@ def calculate_correlations(videos):
     return by_mood, by_art_period, by_music_style, by_category
 
 
-def calc_stats(videos, metric="retention"):
+def calc_stats(videos, value_key="retention"):
     """Calculate average and std dev of a metric for videos with sufficient views.
 
-    Per AGENT.md spec: exclude views < 20 from retention analysis.
+    Per AGENT.md spec: exclude views < 20 from analysis.
+    value_key: "retention" (avg % viewed) or "watch_minutes" (total minutes in window).
     Returns: (avg, std_dev, eligible_count, group_views)
     """
     # Filter to videos with >= MIN_VIEWS_FOR_RETENTION views (spec: exclude views < 20)
@@ -152,7 +161,7 @@ def calc_stats(videos, metric="retention"):
     if not eligible:
         return 0, 0, 0, 0  # avg, std_dev, count, group_views
 
-    values = [v[metric] for v in eligible]
+    values = [v[value_key] for v in eligible]
     group_views = sum(v["views"] for v in eligible)
     avg = sum(values) / len(values)
 
@@ -223,48 +232,92 @@ def generate_coverage_report(by_mood, by_art_period, by_music_style):
     return coverage
 
 
-def generate_suggestions(by_mood, by_art_period, by_music_style, by_category, overall_avg):
+def generate_suggestions(
+    by_mood,
+    by_art_period,
+    by_music_style,
+    by_category,
+    overall_avg,
+    *,
+    metric_kind="retention",
+):
     """Generate actionable suggestions based on correlations.
+
+    metric_kind:
+      - "retention": average_view_percentage among videos with views>=20 (quality per play)
+      - "watch_minutes": watch_time_minutes per video, same eligibility (growth / minutes)
 
     Actionability gates (per AGENT.md spec):
     - Actionable: n >= 5 AND group_views >= 200
     - Exploratory: n >= 3 (but fails actionable)
     - Ignore: n < 3 (too noisy)
     """
+    if metric_kind == "retention":
+        value_key = "retention"
+        metric_id = "average_view_percentage"
+        min_delta = MIN_DELTA_THRESHOLD
+    else:
+        value_key = "watch_minutes"
+        metric_id = "watch_time_minutes"
+        min_delta = MIN_DELTA_WATCH_MINUTES
+
+    def _fmt_delta(delta: float) -> str:
+        if metric_kind == "retention":
+            return f"{delta:+.1f}%"
+        return f"{delta:+.1f} min"
+
     suggestions = []
 
     # Analyze moods - include ALL videos, show total count alongside eligible count
     all_stats = []
     for mood, videos in by_mood.items():
-        avg, std_dev, eligible_count, group_views = calc_stats(videos)
+        avg, std_dev, eligible_count, group_views = calc_stats(videos, value_key=value_key)
         total_count = len(videos)  # Total including 0 views
         delta = avg - overall_avg if eligible_count > 0 else 0
         all_stats.append({
-            "type": "mood", "name": mood, "avg": avg,
-            "delta": delta, "count": eligible_count, "total": total_count,
-            "group_views": group_views, "std_dev": std_dev
+            "type": "mood",
+            "name": mood,
+            "avg": avg,
+            "delta": delta,
+            "count": eligible_count,
+            "total": total_count,
+            "group_views": group_views,
+            "std_dev": std_dev,
+            "metric": metric_id,
         })
 
     # Analyze art periods - include ALL videos
     for period, videos in by_art_period.items():
-        avg, std_dev, eligible_count, group_views = calc_stats(videos)
+        avg, std_dev, eligible_count, group_views = calc_stats(videos, value_key=value_key)
         total_count = len(videos)
         delta = avg - overall_avg if eligible_count > 0 else 0
         all_stats.append({
-            "type": "art_period", "name": period, "avg": avg,
-            "delta": delta, "count": eligible_count, "total": total_count,
-            "group_views": group_views, "std_dev": std_dev
+            "type": "art_period",
+            "name": period,
+            "avg": avg,
+            "delta": delta,
+            "count": eligible_count,
+            "total": total_count,
+            "group_views": group_views,
+            "std_dev": std_dev,
+            "metric": metric_id,
         })
 
     # Analyze music styles - include ALL videos
     for style, videos in by_music_style.items():
-        avg, std_dev, eligible_count, group_views = calc_stats(videos)
+        avg, std_dev, eligible_count, group_views = calc_stats(videos, value_key=value_key)
         total_count = len(videos)
         delta = avg - overall_avg if eligible_count > 0 else 0
         all_stats.append({
-            "type": "music_style", "name": style, "avg": avg,
-            "delta": delta, "count": eligible_count, "total": total_count,
-            "group_views": group_views, "std_dev": std_dev
+            "type": "music_style",
+            "name": style,
+            "avg": avg,
+            "delta": delta,
+            "count": eligible_count,
+            "total": total_count,
+            "group_views": group_views,
+            "std_dev": std_dev,
+            "metric": metric_id,
         })
 
     # Sort by delta (best performers first)
@@ -272,7 +325,7 @@ def generate_suggestions(by_mood, by_art_period, by_music_style, by_category, ov
 
     # Generate suggestions with proper actionability gates
     for stat in all_stats[:5]:  # Top 5
-        if stat["delta"] > MIN_DELTA_THRESHOLD:
+        if stat["delta"] > min_delta:
             # Apply actionability gates per AGENT.md spec
             is_actionable = stat["count"] >= MIN_SAMPLE_SIZE and stat["group_views"] >= MIN_GROUP_VIEWS
             is_exploratory = stat["count"] >= 3 and not is_actionable
@@ -291,15 +344,16 @@ def generate_suggestions(by_mood, by_art_period, by_music_style, by_category, ov
                 "action": "increase",
                 "type": stat["type"],
                 "name": stat["name"],
-                "reason": f"+{stat['delta']:.1f}% vs avg {note}",
+                "reason": f"{_fmt_delta(stat['delta'])} vs channel avg {note}",
                 "confidence": confidence,
                 "actionable": is_actionable,
                 "sample_size": stat["count"],
-                "group_views": stat["group_views"]
+                "group_views": stat["group_views"],
+                "metric": metric_id,
             })
 
     for stat in all_stats[-3:]:  # Bottom 3
-        if stat["delta"] < -MIN_DELTA_THRESHOLD:
+        if stat["delta"] < -min_delta:
             # Apply actionability gates per AGENT.md spec
             is_actionable = stat["count"] >= MIN_SAMPLE_SIZE and stat["group_views"] >= MIN_GROUP_VIEWS
             is_exploratory = stat["count"] >= 3 and not is_actionable
@@ -318,11 +372,12 @@ def generate_suggestions(by_mood, by_art_period, by_music_style, by_category, ov
                 "action": "reduce",
                 "type": stat["type"],
                 "name": stat["name"],
-                "reason": f"{stat['delta']:.1f}% vs avg {note}",
+                "reason": f"{_fmt_delta(stat['delta'])} vs channel avg {note}",
                 "confidence": confidence,
                 "actionable": is_actionable,
                 "sample_size": stat["count"],
-                "group_views": stat["group_views"]
+                "group_views": stat["group_views"],
+                "metric": metric_id,
             })
 
     return suggestions, all_stats
@@ -347,26 +402,48 @@ def main():
     # Generate coverage report (what's produced vs what's remaining)
     coverage = generate_coverage_report(by_mood, by_art_period, by_music_style)
 
-    # Calculate overall average (only from videos with views)
+    # Channel averages (videos with any views in window — same pool for both metrics)
     if len(with_views) >= 1:
-        overall_avg = sum(get_metric(v, "average_view_percentage") for v in with_views) / len(with_views)
+        overall_avg = sum(get_metric(v, "average_view_percentage") for v in with_views) / len(
+            with_views
+        )
+        overall_avg_watch = sum(
+            float(get_metric(v, "watch_time_minutes") or 0) for v in with_views
+        ) / len(with_views)
     else:
-        overall_avg = 0
+        overall_avg = 0.0
+        overall_avg_watch = 0.0
 
-    # Generate suggestions (performance analysis)
-    suggestions, all_stats = generate_suggestions(
-        by_mood, by_art_period, by_music_style, by_category, overall_avg
+    # Retention (% viewed) — quality per play; watch minutes — growth / total attention in window
+    suggestions_r, all_stats = generate_suggestions(
+        by_mood,
+        by_art_period,
+        by_music_style,
+        by_category,
+        overall_avg,
+        metric_kind="retention",
     )
+    suggestions_w, all_stats_watch = generate_suggestions(
+        by_mood,
+        by_art_period,
+        by_music_style,
+        by_category,
+        overall_avg_watch,
+        metric_kind="watch_minutes",
+    )
+    suggestions = suggestions_r + suggestions_w
 
     # Save to JSON (includes coverage data)
     output = {
         "generated_at": datetime.utcnow().isoformat() + "Z",
         "overall_avg_retention": round(overall_avg, 2),
+        "overall_avg_watch_minutes_per_video": round(overall_avg_watch, 3),
         "videos_analyzed": len(videos),
         "videos_with_views": len(with_views),
         "coverage": coverage,
         "suggestions": suggestions,
-        "all_stats": all_stats
+        "all_stats": all_stats,
+        "all_stats_watch_time": all_stats_watch,
     }
 
     os.makedirs(os.path.dirname(SUGGESTIONS_PATH), exist_ok=True)
@@ -378,7 +455,10 @@ def main():
     print("🤖 ML CORRELATION ANALYSIS")
     print("=" * 60)
     print(f"\n📊 Data: {len(videos)} videos, {len(with_views)} with views")
-    print(f"📈 Overall avg retention: {overall_avg:.1f}%")
+    print(f"📈 Overall avg retention: {overall_avg:.1f}% (avg % of video watched)")
+    print(
+        f"⏱️  Overall avg watch minutes (per video, in date window): {overall_avg_watch:.2f}"
+    )
 
     # === COVERAGE REPORT ===
     print("\n" + "=" * 60)
@@ -430,46 +510,69 @@ def main():
 
     # === SUGGESTIONS ===
     print("\n" + "=" * 60)
-    print("💡 SUGGESTIONS")
+    print("💡 SUGGESTIONS (by metric)")
     print("=" * 60)
     print(f"   (Actionable: n>={MIN_SAMPLE_SIZE} AND views>={MIN_GROUP_VIEWS})")
-    print(f"   (Retention analysis requires >={MIN_VIEWS_FOR_RETENTION} views per video)")
+    print(
+        f"   (Eligible videos: >={MIN_VIEWS_FOR_RETENTION} views; retention in %, watch in min)"
+    )
 
-    actionable = [s for s in suggestions if s.get("actionable", False)]
-    exploratory = [s for s in suggestions if not s.get("actionable", False)]
-
-    if not suggestions:
-        print("\n⚠️ No strong patterns yet - need more data")
-    else:
-        if actionable:
-            print("\n🎯 ACTIONABLE:")
-            for s in actionable:
+    def _print_bucket(title, subset):
+        actionable_b = [s for s in subset if s.get("actionable", False)]
+        exploratory_b = [s for s in subset if not s.get("actionable", False)]
+        print(f"\n--- {title} ---")
+        if not subset:
+            print("   ⚠️ No strong patterns for this metric")
+            return
+        if actionable_b:
+            print("   🎯 ACTIONABLE:")
+            for s in actionable_b:
+                icon = "⬆️" if s["action"] == "increase" else "⬇️"
+                print(f"   {icon} {s['action'].upper()}: {s['name']} ({s['type']})")
+                print(f"      {s['reason']}")
+        if exploratory_b:
+            print("   🔍 EXPLORATORY:")
+            for s in exploratory_b:
                 icon = "⬆️" if s["action"] == "increase" else "⬇️"
                 print(f"   {icon} {s['action'].upper()}: {s['name']} ({s['type']})")
                 print(f"      {s['reason']}")
 
-        if exploratory:
-            print("\n🔍 EXPLORATORY (need more data):")
-            for s in exploratory:
-                icon = "⬆️" if s["action"] == "increase" else "⬇️"
-                print(f"   {icon} {s['action'].upper()}: {s['name']} ({s['type']})")
-                print(f"      {s['reason']}")
+    _print_bucket("Average % viewed (retention)", suggestions_r)
+    _print_bucket("Watch minutes in window (growth signal)", suggestions_w)
 
     # === PERFORMANCE STATS ===
     print("\n" + "=" * 60)
-    print("📋 ALL STATS (by retention %, videos with 20+ views only)")
+    print("📋 TOP GROUPS — retention % (videos with 20+ views only)")
     print("=" * 60)
     print(f"\n{'Type':<12} {'Name':<18} {'Avg%':>6} {'Delta':>7} {'n':>4} {'GrpViews':>8} {'Total':>5}")
     print("-" * 70)
     for s in all_stats[:15]:  # Top 15
-        total = s.get('total', s['count'])
-        grp_views = s.get('group_views', 0)
-        print(f"{s['type']:<12} {s['name']:<18} {s['avg']:>5.1f}% {s['delta']:>+6.1f}% {s['count']:>4} {grp_views:>8} {total:>5}")
+        total = s.get("total", s["count"])
+        grp_views = s.get("group_views", 0)
+        print(
+            f"{s['type']:<12} {s['name']:<18} {s['avg']:>5.1f}% {s['delta']:>+6.1f}% "
+            f"{s['count']:>4} {grp_views:>8} {total:>5}"
+        )
+
+    print("\n" + "=" * 60)
+    print("📋 TOP GROUPS — watch minutes per video (same eligibility)")
+    print("=" * 60)
+    print(f"\n{'Type':<12} {'Name':<18} {'AvgMin':>7} {'Delta':>8} {'n':>4} {'GrpViews':>8} {'Total':>5}")
+    print("-" * 70)
+    for s in all_stats_watch[:15]:
+        total = s.get("total", s["count"])
+        grp_views = s.get("group_views", 0)
+        print(
+            f"{s['type']:<12} {s['name']:<18} {s['avg']:>7.2f} {s['delta']:>+7.2f}m "
+            f"{s['count']:>4} {grp_views:>8} {total:>5}"
+        )
 
     # Add warning about sample sizes
-    low_sample = [s for s in all_stats if s['count'] < MIN_SAMPLE_SIZE]
+    low_sample = [s for s in all_stats if s["count"] < MIN_SAMPLE_SIZE]
     if low_sample:
-        print(f"\n⚠️  {len(low_sample)} groups have n<{MIN_SAMPLE_SIZE} eligible videos (need more data)")
+        print(
+            f"\n⚠️  {len(low_sample)} groups have n<{MIN_SAMPLE_SIZE} eligible videos (need more data)"
+        )
 
     print(f"\n✅ Suggestions saved to {SUGGESTIONS_PATH}")
 

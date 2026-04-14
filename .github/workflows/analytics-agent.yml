@@ -127,25 +127,40 @@ jobs:
               data = json.load(f)
 
           print(f"**Overall avg retention:** {data['overall_avg_retention']}%")
+          ow = data.get('overall_avg_watch_minutes_per_video')
+          if ow is not None:
+              print(f"**Overall avg watch min / video (in window):** {ow:.2f}")
           print(f"**Videos analyzed:** {data['videos_with_views']} with views / {data['videos_analyzed']} total")
           print("")
 
           if not data['suggestions']:
               print("⚠️ No strong patterns yet - need more data")
           else:
-              print("| Action | Type | Name | Reason | Confidence |")
-              print("|--------|------|------|--------|------------|")
+              print("| Metric | Action | Type | Name | Reason | Conf |")
+              print("|--------|--------|------|------|--------|------|")
               for s in data['suggestions']:
                   icon = "⬆️" if s['action'] == 'increase' else "⬇️"
-                  print(f"| {icon} {s['action']} | {s['type']} | {s['name']} | {s['reason']} | {s['confidence']} |")
+                  m = s.get('metric', 'average_view_percentage')
+                  mshort = 'retention %' if 'percentage' in m else 'watch min'
+                  print(f"| {mshort} | {icon} {s['action']} | {s['type']} | {s['name']} | {s['reason']} | {s['confidence']} |")
 
           print("")
-          print("### Top Performers")
+          print("### Top groups (retention %)")
           print("")
           print("| Type | Name | Avg Retention | vs Average |")
           print("|------|------|---------------|------------|")
           for s in data['all_stats'][:10]:
               print(f"| {s['type']} | {s['name']} | {s['avg']:.1f}% | {s['delta']:+.1f}% |")
+
+          aw = data.get('all_stats_watch_time') or []
+          if aw:
+              print("")
+              print("### Top groups (watch minutes / video in window)")
+              print("")
+              print("| Type | Name | Avg min | vs avg |")
+              print("|------|------|---------|--------|")
+              for s in aw[:10]:
+                  print(f"| {s['type']} | {s['name']} | {s['avg']:.2f} | {s['delta']:+.2f} |")
           EOF
           fi
 

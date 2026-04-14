@@ -311,7 +311,7 @@ Your phased approach to learning MLOps:
 |-------|----------------|-----------|--------|
 | **1** | Data pipelines, API integration | `fetch_analytics.py`, `report.py` | ✅ Done |
 | **1.5** | Aggregation, feature extraction | `analyze_data.py` | ✅ Done |
-| **2** | Correlation, statistical rigor | `correlate.py`, `suggestions.json` | 🔄 Current |
+| **2** | Correlation (retention % + watch min), suggestions | `correlate.py`, `suggestions.json` | 🔄 Current |
 | **2.5** | Confidence intervals, z-scores | `correlate.py` enhancements | ⏳ Next |
 | **3** | Predictive modeling (100+ videos) | sklearn models | ⏳ Future |
 | **4** | Optimization, recommendations | Bayesian/RL | ⏳ Future |
@@ -375,44 +375,60 @@ Your phased approach to learning MLOps:
 | `data/suggestions.json` | Machine-readable suggestions |
 | GitHub Step Summary | Human-readable suggestions |
 
+**Engagement signals (Phase 2):** Correlation runs on **two** metrics already stored in `analytics.json`:
+- **`average_view_percentage`** — quality per play (how much of the video people watch, on average, among videos with enough views).
+- **`watch_time_minutes`** (YouTube `estimatedMinutesWatched` per video in the fetch window) — **growth / attention**: mean minutes per video in a bucket vs channel mean. High values often reflect reach × hold, not “better art” alone.
+
+Use retention for “stickiness”; use watch minutes for “this bucket fed the channel in this period.” **Impressions / CTR** remain Studio-first until added to `fetch_analytics` (future).
+
 **What it outputs (suggestions.json):**
 ```json
 {
+  "overall_avg_retention": 12.0,
+  "overall_avg_watch_minutes_per_video": 5.31,
   "suggestions": [
     {
       "action": "increase",
-      "type": "mood",
-      "name": "lofi_study",
-      "n": 5,
-      "delta": 15.2,
-      "std_dev": 3.1,
-      "ci_low": 12.1,
-      "ci_high": 18.3,
+      "type": "music_style",
+      "name": "none",
+      "reason": "+3.3% vs channel avg (n=6, views=303)",
       "confidence": "medium",
+      "actionable": true,
+      "sample_size": 6,
+      "group_views": 303,
       "metric": "average_view_percentage"
+    },
+    {
+      "action": "increase",
+      "type": "art_period",
+      "name": "ancient",
+      "reason": "+12.5 min vs channel avg (n=5, views=400)",
+      "metric": "watch_time_minutes"
     }
-  ]
+  ],
+  "all_stats": [],
+  "all_stats_watch_time": []
 }
 ```
 
 **Required fields per suggestion:**
 | Field | Purpose |
 |-------|---------|
-| `n` | Sample size |
-| `delta` | Difference from overall avg |
-| `std_dev` | Spread within group |
-| `ci_low`, `ci_high` | Confidence interval (optional until Phase 2.5) |
+| `action`, `type`, `name` | What to lean toward |
+| `reason` | Human-readable delta vs channel average |
+| `metric` | `average_view_percentage` or `watch_time_minutes` |
 | `confidence` | low/medium/high based on n |
-| `metric` | Which metric this suggestion optimizes |
+| `actionable` | Passes n ≥ 5 and group_views ≥ 200 |
+| `ci_low`, `ci_high` | Confidence interval (optional until Phase 2.5) |
 
 **How correlation works (simple stats, no neural nets):**
 1. Group videos by type (mood, art_period, music_style)
-2. Calculate average retention % per group (exclude views < 20)
-3. Calculate std dev per group
-4. Compare to overall average
-5. Rank by performance delta
-6. Apply actionability gates (n ≥ 5 AND group_views ≥ 200 = actionable)
-7. Output suggestions with uncertainty
+2. For **each metric**, among videos with **views ≥ 20**, compute group mean (`average_view_percentage` or `watch_time_minutes` per video)
+3. Calculate std dev per group (retention path)
+4. Compare each group mean to the **channel mean** for that metric (all videos with any views in the window)
+5. Rank by delta; suggest increase/decrease when |delta| clears a threshold (2 percentage points retention, 1 minute watch time)
+6. Apply actionability gates (n ≥ 5 AND group_views ≥ 200 = actionable; n ≥ 3 exploratory)
+7. Merge both metric families into `suggestions` (each item tagged with `metric`); keep `all_stats` (retention) and `all_stats_watch_time` separate for tables
 
 **MLOps concepts learned:**
 | Concept | Implementation |
