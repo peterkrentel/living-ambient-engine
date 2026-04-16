@@ -30,7 +30,7 @@ Land upload workflows that **commit and push `data/generations.json`** so analyt
 
 ## Next actions
 
-1. `git push -u origin fix/ci-commit-generations-ledger` and open PR to `main`.
+1. `git push origin fix/ci-commit-generations-ledger` (branch includes ledger CI + **START_HERE / ADR / spec cross-links**) and open PR to `main`.
 2. Run one manual upload workflow; confirm `main` includes an update to `data/generations.json`.
 3. After merge, optional: `feat/analytics-dual-metrics` PR if still not on `main`.
 
