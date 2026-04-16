@@ -1,63 +1,64 @@
 # Personal channel — Analytics Report (2026-W16)
 
-Generated: 2026-04-16T23:14:29.389734+00:00
+Generated: 2026-04-16T23:23:44.169237+00:00
 
 > **Channel scope:** Personal YouTube only. Data file: `data/analytics_personal.json`. Brand metrics live in `data/analytics.json` (main Analytics Agent workflow).
 
 ## Summary
 
+- **Analytics window:** `2026-03-19` → `2026-04-15` (YouTube Analytics API range for metrics below. In Studio, pick the **same** custom dates when comparing totals — not e.g. “Last 28 days” unless `fetch_analytics` used `--days 28`.)
 - **Total videos tracked:** 76
 - **Videos with analytics:** 76
 
 ## Totals
 
-- **Total views:** 1,040
-- **Total watch time:** 3,429 minutes
-- **Subscribers gained:** 9
+- **Total views:** 40
+- **Total watch time:** 490 minutes
+- **Subscribers gained:** 0
 
 ## Top 5 by Retention
 
 | Video | Mood | Retention % | Views |
 |-------|------|-------------|-------|
-| ocean_waves_60s_seed1213571077_20260129_ | None | 98.4% | 1 |
-| study_30s_seed375653712_20260125_162152 | study | 97.1% | 1 |
-| study_10s_20260124_160211 | study | 86.8% | 10 |
-| energize_5s_20260124_154627 | energize | 84.6% | 52 |
-| warrior_5s_20260124_154649 | warrior | 83.7% | 1 |
+| Let Go of Stress | 2 Hours Soft Piano Am | piano_ambient | 99.2% | 1 |
+| Sounds for an Overactive Mind | 30 Secon | deep_focus | 74.8% | 1 |
+| warrior_10s_20260124_160306 | warrior | 54.0% | 8 |
+| Let Go of Stress | Deep Calm Piano Atmos | piano_deep_calm | 43.1% | 13 |
+| Let Go of Stress | 1 Hour Soft Piano | G | piano_relax | 9.4% | 2 |
 
 ## Top 5 by Views
 
 | Video | Mood | Views | Watch Time (min) |
 |-------|------|-------|------------------|
-| trance_30s_20260124_055344 | trance | 118 | 36 |
-| warrior_10s_20260124_160306 | warrior | 78 | 10 |
-| Sacred Space | 1 Hour Ceremonial Sounds  | ceremony | 63 | 330 |
-| Sounds for an Overactive Mind | 30 Secon | deep_focus | 59 | 6 |
-| energize_5s_20260124_154627 | energize | 52 | 4 |
+| Let Go of Stress | Deep Calm Piano Atmos | piano_deep_calm | 13 | 336 |
+| Let Go of Stress | Deep Calm Piano Atmos | piano_deep_calm | 8 | 24 |
+| warrior_10s_20260124_160306 | warrior | 8 | 0 |
+| Journey Inward | 4 Hours Hypnotic Trance | trance | 2 | 0 |
+| Let Go of Stress | 1 Hour Soft Piano | G | piano_relax | 2 | 11 |
 
 ## Performance by Mood
 
 | Mood | Videos | Total Views | Avg Retention |
 |------|--------|-------------|---------------|
-| trance | 8 | 167 | 15.7% |
-| warrior | 9 | 159 | 26.1% |
-| energize | 6 | 126 | 29.1% |
-| ceremony | 5 | 98 | 42.5% |
-| unknown | 6 | 97 | 37.7% |
-| sleep | 9 | 94 | 28.7% |
-| piano_relax | 2 | 94 | 26.3% |
-| deep_focus | 2 | 66 | 37.4% |
-| piano_deep_calm | 4 | 48 | 11.4% |
-| study | 4 | 24 | 47.3% |
-| chill | 4 | 14 | 26.1% |
-| fireplace | 3 | 13 | 37.1% |
-| piano_ambient | 2 | 12 | 5.7% |
-| lofi_study | 2 | 8 | 1.7% |
-| rain_sleep | 2 | 7 | 44.9% |
-| piano_evening | 2 | 5 | 0.5% |
-| piano_gentle | 2 | 3 | 22.7% |
-| ocean_waves | 2 | 3 | 33.2% |
-| rain_piano | 2 | 2 | 0.1% |
+| piano_deep_calm | 4 | 21 | 24.1% |
+| warrior | 9 | 8 | 54.0% |
+| trance | 8 | 3 | 0.1% |
+| piano_ambient | 2 | 2 | 49.8% |
+| piano_relax | 2 | 2 | 9.4% |
+| unknown | 6 | 2 | 6.5% |
+| ceremony | 5 | 1 | 0.2% |
+| deep_focus | 2 | 1 | 74.8% |
+| piano_evening | 2 | 0 | 0.0% |
+| rain_piano | 2 | 0 | 0.0% |
+| piano_gentle | 2 | 0 | 0.0% |
+| energize | 6 | 0 | 0.0% |
+| study | 4 | 0 | 0.0% |
+| chill | 4 | 0 | 0.0% |
+| sleep | 9 | 0 | 0.0% |
+| lofi_study | 2 | 0 | 0.0% |
+| ocean_waves | 2 | 0 | 0.0% |
+| rain_sleep | 2 | 0 | 0.0% |
+| fireplace | 3 | 0 | 0.0% |
 
 ## Next steps (personal)
 
