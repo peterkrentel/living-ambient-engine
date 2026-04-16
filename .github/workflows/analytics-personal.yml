@@ -89,6 +89,7 @@ jobs:
           else
             WEEK=$(date +%Y-W%V)
             git commit -m "📊 Personal analytics ${WEEK} [skip ci]"
+            git pull --rebase origin main
             git push
             echo "✅ Personal analytics committed and pushed"
           fi

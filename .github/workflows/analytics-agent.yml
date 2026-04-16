@@ -100,6 +100,8 @@ jobs:
           else
             WEEK=$(date +%Y-W%V)
             git commit -m "📊 Analytics update ${WEEK} [skip ci]"
+            # main may advance during this job (e.g. analytics-personal.yml); rebase then push
+            git pull --rebase origin main
             git push
             echo "✅ Data committed and pushed"
           fi
