@@ -37,7 +37,6 @@
 |------|--------|
 | `data/reports/*.md` | Analytics Agent weekly reports + audits — **committed by CI** |
 | **`CONTENT_LIBRARY.md`** (repo root) | **Library export** — path fixed in `library/` and workflows |
-| `CONTENT_LIBRARY_local.md` (root) | Optional local notes copy — **trim or gitignore** if you do not want it in git |
 
 ## Archived playbooks
 
