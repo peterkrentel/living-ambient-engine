@@ -302,7 +302,7 @@ Your phased approach to learning MLOps:
 │  Data          Aggregation    Correlation    Statistical    Predictive    Optimize   │
 │  Pipeline                                    Rigor          Modeling                 │
 │                                                                                       │
-│  ✅ DONE       ✅ DONE        🔄 CURRENT     ⏳ NEXT        ⏳ 100+ vids  ⏳ 500+    │
+│  ✅ DONE       ✅ DONE        ✅ CORE        ⏳ NEXT        ⏳ 100+ vids  ⏳ 500+    │
 │                                                                                       │
 │  • Cron        • Group by     • Find         • Confidence   • Linear      • Bayesian │
 │  • Fetch API     category       patterns       intervals      regression  • Multi-obj│
@@ -316,7 +316,7 @@ Your phased approach to learning MLOps:
 |-------|----------------|-----------|--------|
 | **1** | Data pipelines, API integration | `fetch_analytics.py`, `report.py` | ✅ Done |
 | **1.5** | Aggregation, feature extraction | `analyze_data.py` | ✅ Done |
-| **2** | Correlation (retention % + watch min), suggestions | `correlate.py`, `suggestions.json` | 🔄 Current |
+| **2** | Correlation (retention % + watch min), suggestions | `correlate.py`, `suggestions.json` | ✅ Shipped on `main` (still noisy for moods → **2.5**) |
 | **2.5** | Confidence intervals, z-scores | `correlate.py` enhancements | ⏳ Next |
 | **3** | Predictive modeling (100+ videos) | sklearn models | ⏳ Future |
 | **4** | Optimization, recommendations | Bayesian/RL | ⏳ Future |

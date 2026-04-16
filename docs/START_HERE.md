@@ -79,15 +79,21 @@ Answer these in **`HANDOFF.md`** (or an **ADR** if the choice is hard to reverse
 4. **Catalog model:** Heading toward **Cohesion B** (YouTube canonical, repo = generation + analysis) or **A/hybrid** — does the next run need **catalog commits** every time?
 5. **Art Creator:** Is it **R&D only** (occasional uploads) or a **first-class production door** — does investment go to **inputs/UX/metadata** here vs batch YAML only?
 
-## Once you pick a step in the plan (tackle in order)
+## Plan checklist (living — as of 2026-04)
 
-Use this as a **checklist**, not a new doc layer. Skip items that do not apply.
+Use this as a **checklist**, not a new doc layer. **Done** items stay for history; skip or replace when obsolete.
 
-1. **Ledger on `main`:** merge the PR that makes upload jobs **commit `data/generations.json`**; smoke one upload; confirm audit join **>0** for new `video_id`s.
-2. **Doc drift:** fix any workflow doc that disagrees with YAML (e.g. [`WORKFLOW_ARCHITECTURE.md`](WORKFLOW_ARCHITECTURE.md) vs current Art Creator upload behavior).
-3. **Turn production back on:** `workflow_dispatch` first, then **un-pause cron** only for the lane you chose in question (1)–(2).
-4. **Evolve Art Creator (optional):** parameters, titles, upload path — **after** (1) so experiments **show up** in `generations.json` on `main`.
-5. **Dual-metrics / correlate:** merged on `main` (`feat/analytics-dual-metrics`); next **Analytics Agent** run refreshes **`suggestions.json`** with retention + watch-time signals per [`spec/AGENT.md`](spec/AGENT.md) Phase 2.
+| Status | Item |
+|--------|------|
+| Done | **Ledger on `main`:** upload workflows commit **`data/generations.json`**; smoke + **Analytics Agent** re-run. |
+| Done | **Catalog → ledger backfill:** [`scripts/backfill_generations_from_catalog.py`](../scripts/backfill_generations_from_catalog.py) + optional **`uploaded_at`** on historic rows ([`AGENT.md`](spec/AGENT.md) § ledger). |
+| Done | **Dual-metrics correlate** on `main` (retention + watch minutes → **`suggestions.json`**). |
+| Done | **Two-channel doc** + **brand-only analytics vs mixed catalog** gap named ([§ Two channels](#two-channels-two-probes)). |
+| Open | **Catalog / channel model:** split file or **`channel`** field so audit join and production intent stay aligned. |
+| Open | **Gated production helper (optional):** read `suggestions.json` + gates → **plan JSON** or **BLOCKED** report — no blind auto-render ([`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6 ordering). |
+| Open | **Personal analytics** per [`PERSONAL_ANALYTICS.md`](PERSONAL_ANALYTICS.md). |
+| Open | **Cron / lanes:** post-audit questions above — which workflow leads, when to un-pause schedules. |
+| Open | **Art Creator ↔ catalog:** if you want full join, relax **`--no-update-catalog`** or add a parallel ledger path. |
 
 ## After this file
 

@@ -9,27 +9,30 @@
 ## Branch / PR
 
 - **Branch:** `main`
-- **Open PR:** _(none — add when you open the next one)_
+- **Open PR:** _(none)_
 
 ## Anchor
 
-- **Commit:** `9df537a` — merge **`feat/analytics-dual-metrics`** (correlate: retention + watch minutes)
+- **Commit:** `f9e9401` — latest **Analytics Agent** data push (`data/analytics.json`, reports, audit, `suggestions.json`)
 
-## Goal (current)
+## Goal (this phase — done)
 
-Prove **ledger join** and **analytics loop** on **brand** after factory uploads; **`correlate.py`** now emits **dual engagement** suggestions on **`main`**.
+- **Ledger on `main`** + **CI commits** + **catalog backfill** (`scripts/backfill_generations_from_catalog.py`) → **`data/generations.json`** now **68** rows.
+- **Dual-metrics correlate** on `main` (retention + watch minutes) + **Analytics Agent** re-run so outputs match.
+- **Docs:** two-channel / two-probe (`START_HERE`), brand-only analytics vs mixed catalog gap, **`fetch_analytics.py`** scope note.
 
 ## Facts
 
-- **Brand smoke done:** `data/generations.json` has **8** new rows (4 moods × dual, **600s**), committed with catalog (`dbeaa46` area); see `git log --oneline -- data/generations.json`.
-- Weekly report / audit on disk may still be **pre-smoke** until **Analytics Agent** runs again: `data/reports/2026-W16.md`, `audit-2026-W16.md`.
-- Two-lane strategy (personal vs brand; analytics = brand today): **`docs/START_HERE.md`** § **Two channels, two probes**.
+- **Audit join (brand):** **`audit-*.md`** reports **~22 / 314** — ledger rows that **also** appear in **brand** `analytics.json` (personal-only ledger rows do not count here). See **`START_HERE`** § *Two channels* + *Gap*.
+- **Human-in-the-loop:** still the operating mode; no auto-production from suggestions yet.
 
-## Next actions (in order)
+## Next actions (pick one thread when ready)
 
-1. **Run Analytics Agent** (`workflow_dispatch` is enough) so **`data/analytics.json`**, **`data/reports/`**, **`audit-*.md`**, and **`suggestions.json`** include the new **`video_id`s** — then open the latest **audit** and confirm **generations join** moved off **0%** for those rows (historic 306 may still be 0 without backfill).
-2. **Overwrite this file** when (1) finishes with the new report week + one-line “join looks like X”.
+1. **Product / data model:** split or **`channel`**-tag **`content_catalog.json`** (or separate files) so brand join and personal uploads do not share one ambiguous bucket — **ADR** if the choice is hard to reverse.
+2. **Optional automation (safe):** a **gated planner** job that reads `suggestions.json` + thresholds and outputs **either** a proposed `workflow_dispatch` payload **or** a **“BLOCKED — insufficient signal”** report (no renders until you promote it).
+3. **Personal analytics:** implement path in **`docs/PERSONAL_ANALYTICS.md`** when you want parity with brand (`analytics_personal.json`, etc.).
+4. **Spec phases:** **`docs/spec/AGENT.md`** Phase **2.5** (rigor) → **3** when volume justifies; **`COHESION_ROADMAP.md`** Phase **6** only after joins/trust feel right.
 
 ## Risks / open questions
 
-- Old channel videos **without** ledger rows will keep audit denominator high until you accept that or backfill.
+- **Art Creator** uploads still skip **`content_catalog.json`** (`--no-update-catalog`); ledger gaps for those unless you add logging or catalog there.

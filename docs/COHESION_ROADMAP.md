@@ -210,6 +210,8 @@ Videos published **before** `generations.json` exists have **no** joined params 
 
 **Stripped execution (first code sprint):** (1) minimal `generations.json` + `schema_version` + **`generation_id`** per run; (2) upload path **creates** row then **updates** `video_id` on success / retry; (3) workflows **commit** `data/generations.json` to `main`; (4) test on **manual** brand workflow; (5) correlate: join by `video_id` → title fallback.
 
+**Status on `main` (2026-04):** (1)–(4) **landed** (see [ADR 0001](decisions/0001-persist-generations-json-on-ci.md)); (5) **evolving** — `correlate.py` uses **dual engagement** metrics (retention + watch minutes); **catalog backfill** added ledger rows for historic **`content_catalog.json`** uploads; **brand-only** `analytics.json` vs **mixed** catalog is documented in [`START_HERE.md`](START_HERE.md). Remaining: **channel tagging / split**, optional **gated production plan** before Phase 6 auto-trigger, **personal** analytics file.
+
 ---
 
 ## Related paths
@@ -223,4 +225,4 @@ Videos published **before** `generations.json` exists have **no** joined params 
 
 ---
 
-*Last updated: 2026-03-29 — living document; adjust phases as the channel and codebase evolve.*
+*Last updated: 2026-04-16 — living document; adjust phases as the channel and codebase evolve.*
