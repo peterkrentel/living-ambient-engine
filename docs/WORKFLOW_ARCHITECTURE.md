@@ -9,7 +9,11 @@ Should the Art Creator be an independent workflow or should it extend the existi
 
 This document explains why this architectural decision is correct and beneficial.
 
+*Last reviewed: 2026-04-16 — scope note + catalog/ledger clarifications above.*
+
 **Scope:** Written for the **Content Factory vs Art Creator** split. For **all** workflows (batches, analytics, piano, etc.), see [`docs/spec/workflows.md`](spec/workflows.md).
+
+**Reality (2026-04):** There are **eight** workflow YAML files, not three — this document is only the **factory vs Art Creator** design rationale. **Two YouTube channels** (personal vs brand) and **brand-only** automated analytics are spelled out in [`START_HERE.md`](START_HERE.md) § *Two channels, two probes*. Upload paths that commit **`data/generations.json`** are listed in [`workflows.md`](spec/workflows.md) § *Generations ledger*.
 
 ---
 
@@ -51,6 +55,7 @@ This document explains why this architectural decision is correct and beneficial
 - Custom RGB color palettes
 - Seed-based reproducibility
 - **YouTube (optional):** when **`upload_to_brand`** is true, uploads to the **brand** channel via `youtube_upload.py`
+- **Catalog:** that upload path uses **`--no-update-catalog`**, so **`content_catalog.json`** is **not** updated from Art Creator — only **`data/generations.json`** (ledger) is meant to capture params for analytics join when logging runs.
 - Individual creation focus
 - Public access (anyone can run)
 
@@ -188,7 +193,7 @@ These philosophies are **orthogonal**. Combining them would dilute both.
 - Calls `batch_generate.py` for multiple videos
 - Uses preset moods from `config/moods.yaml`
 - Uploads to YouTube via API
-- Commits catalog updates
+- Commits **`content_catalog.json`** / **`CONTENT_LIBRARY.md`** and (on **brand** / **piano** / **personal** factory paths that use batch upload with catalog on) **`data/generations.json`** when the workflow’s commit step runs — see [`workflows.md`](spec/workflows.md) § *Generations ledger*.
 
 **Art Creator:**
 - Generates custom YAML config dynamically

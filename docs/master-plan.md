@@ -1,5 +1,7 @@
 # Master Plan
 
+> **Reality check (2026-04):** Ledger + CI + **dual-metrics** correlate + **catalog backfill** are on **`main`**. **Brand** analytics (`data/analytics.json`) vs **mixed** `content_catalog.json` is documented in [`START_HERE.md`](START_HERE.md). Next product forks: **channel-tagged / split catalog**, optional **gated production planner**, **personal** analytics — see [`HANDOFF.md`](HANDOFF.md).
+
 ## Status Overview
 
 | Milestone | Status | Notes |
@@ -9,6 +11,7 @@
 | 3. Go Live | ✅ DONE | Pipeline tested, uploads work |
 | 4. Production Channel | ✅ DONE | Brand account configured |
 | 5. Spec-Driven Development | ✅ DONE | Specs, guardrails, contracts, enforcement |
+| 5b. Brand data loop (ledger + analytics) | 🔄 In progress | `generations.json` on `main`, CI commits, `correlate.py` retention + watch min, backfill from catalog; audit join = **brand overlap** until catalog split / personal fetch |
 | 6. SEO & Scheduling | ⬜ TODO | Optimize titles/moods for search, smarter schedule |
 | 7. Content Quality | ⬜ TODO | Better audio/visuals, smaller files |
 | 8. AI Melody Agent | ⬜ TODO | AI-generated ambient melodies |
@@ -100,7 +103,7 @@ Hard rule: Secrets never enter git history.
 | GitHub Actions | Repository Secrets |
 | Codespaces | Environment Secrets |
 
-Required secret: YOUTUBE_TOKEN_B64 (Base64-encoded OAuth token)
+Required secrets (see repo Settings → Secrets): **`YOUTUBE_CLIENT_SECRETS`**, **`YOUTUBE_TOKEN_PICKLE`** (personal), **`YOUTUBE_TOKEN_PICKLE_BRAND`** (brand). Tokens are stored **base64-encoded** in GitHub — not a single `YOUTUBE_TOKEN_B64` name unless you named one that way locally.
 
 ---
 
@@ -111,6 +114,18 @@ Using GitHub Actions (free tier):
 - Unlimited for public repos
 - 6-hour job limit (enough for 2-4 hour videos)
 
-Workflow: .github/workflows/content-factory.yml
-- Cron: Daily 2 AM UTC
-- Manual: workflow_dispatch with mood/duration inputs
+**Workflow map:** [`docs/spec/workflows.md`](spec/workflows.md) (eight files). In short:
+
+| Workflow | Role |
+|----------|------|
+| `content-factory.yml` | Personal channel factory (**cron off** in YAML; manual) |
+| `content-factory-brand.yml` | Brand factory (manual) |
+| `content-factory-brand-batch.yml` | Brand SEO mood batch |
+| `piano-batch.yml` | Piano batch (uses **personal** token today) |
+| `art-creator.yml` / `art-creator-batch.yml` | Custom / matrix art → optional **brand** upload |
+| `analytics-agent.yml` | **Brand** metrics → `data/analytics.json`, reports, correlate, audit |
+| `test-art-creator.yml` | PR + manual CI gate |
+
+---
+
+*Last reviewed: 2026-04-16 — align with `START_HERE`, `HANDOFF`, and `spec/workflows.md`.*
