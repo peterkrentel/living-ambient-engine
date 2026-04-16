@@ -7,21 +7,22 @@ This project uses **spec-driven development**. Specifications are the source of 
 
 ## Before Coding
 
-1. **Execution policy**: `docs/EXECUTION.md` — project commands via **activated venv** or **GitHub Actions**, not ad-hoc system Python
-2. **Read the guardrails**: `docs/spec/GUARDRAILS.md` - **ALWAYS CHECK THIS FIRST**
+1. **Documentation map**: `docs/START_HERE.md` — what belongs in which file (handoff, specs, ADRs); read **`docs/HANDOFF.md`** when continuing multi-session work
+2. **Execution policy**: `docs/EXECUTION.md` — project commands via **activated venv** or **GitHub Actions**, not ad-hoc system Python
+3. **Read the guardrails**: `docs/spec/GUARDRAILS.md` - **ALWAYS CHECK THIS FIRST**
    - Parameter limits (min/max/default)
    - Forbidden states
    - Enforcement levels
-3. **Read the system spec**: `docs/spec/SYSTEM.md`
-4. **Read component specs**: Check `*/SPEC.md` for any component you'll modify
+4. **Read the system spec**: `docs/spec/SYSTEM.md`
+5. **Read component specs**: Check `*/SPEC.md` for any component you'll modify
    - `audio/SPEC.md` - Audio generation
    - `visuals/SPEC.md` - Visual generation
    - `orchestrator/SPEC.md` - Pipeline coordination
    - `youtube/SPEC.md` - YouTube uploads
    - `config/SPEC.md` - Configuration system
    - `render/SPEC.md` - FFmpeg rendering
-5. **Check contracts**: `docs/spec/contracts/` for cross-component interfaces
-6. **Check workflow specs**: `docs/spec/workflows.md` for CI/CD changes
+6. **Check contracts**: `docs/spec/contracts/` for cross-component interfaces
+7. **Check workflow specs**: `docs/spec/workflows.md` for CI/CD changes
 
 ## While Coding
 

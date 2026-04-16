@@ -112,6 +112,8 @@
 | `render/` | FFmpeg Renderer | `render/SPEC.md` |
 | `.github/workflows/` | CI/CD | `docs/spec/workflows.md` |
 | `docs/HANDOFF.md` | Active work snapshot (human-maintained) | This section § Session continuity |
+| `docs/START_HERE.md` | Documentation map (humans + agents) | This section § Session continuity |
+| `docs/decisions/` | ADRs (why X not Y) | `docs/decisions/README.md` |
 
 ## Branch Strategy
 
@@ -147,8 +149,12 @@ IDE and assistant **chat context is finite** and does not survive as project mem
 
 **Practice:** At the end of a substantive session (or before context gets unwieldy), update **`docs/HANDOFF.md`**. At the start of the next session, attach it (`@docs/HANDOFF.md`) or instruct the assistant to read it first so work continues from **Next actions** without re-deriving the plan from chat.
 
+**Index:** Full map of “what goes where” (spec vs handoff vs ADR vs chat): **[`docs/START_HERE.md`](../START_HERE.md)**.
+
 ## Related Specs
 
+- [Documentation map / START_HERE](../START_HERE.md)
+- [Architecture Decision Records](../decisions/README.md)
 - [Audio Generator Spec](../../audio/SPEC.md)
 - [Visual Generator Spec](../../visuals/SPEC.md)
 - [Orchestrator Spec](../../orchestrator/SPEC.md)

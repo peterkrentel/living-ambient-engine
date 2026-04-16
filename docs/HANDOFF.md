@@ -1,5 +1,6 @@
 # Handoff (active work snapshot)
 
+> **Read first:** [`docs/START_HERE.md`](START_HERE.md) — where every kind of documentation lives (so you do not re-explain the system each chat).  
 > **Spec:** [`docs/spec/SYSTEM.md`](spec/SYSTEM.md) § Session continuity.  
 > **Rule:** Keep this file **short**; **overwrite** when state changes. Do not accumulate a long diary here.
 
@@ -25,7 +26,7 @@ Land upload workflows that **commit and push `data/generations.json`** so analyt
 
 - Latest weekly report: `data/reports/2026-W16.md`
 - Latest channel audit: `data/reports/audit-2026-W16.md` _(join was 0/306 until ledger is persisted from CI)_
-- Spec: `docs/spec/SYSTEM.md` § Session continuity; `docs/spec/workflows.md` § Generations ledger
+- Spec: `docs/START_HERE.md`; `docs/spec/SYSTEM.md` § Session continuity; `docs/spec/workflows.md` § Generations ledger; ADR `docs/decisions/0001-persist-generations-json-on-ci.md`
 
 ## Next actions
 
