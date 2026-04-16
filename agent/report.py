@@ -156,7 +156,20 @@ def generate_report(data: List[Dict[str, Any]], week: Optional[str] = None) -> s
     if week is None:
         now = datetime.now(timezone.utc)
         week = f"{now.year}-W{now.isocalendar()[1]:02d}"
-    
+
+    raw = load_analytics()
+    dr = raw.get("date_range") or {}
+    w_start, w_end = dr.get("start"), dr.get("end")
+    if w_start and w_end:
+        window_bullet = (
+            f"- **Analytics window:** `{w_start}` → `{w_end}` "
+            f"(YouTube Analytics API range for metrics below. "
+            f"In Studio, pick the **same** custom dates when comparing totals — "
+            f"not e.g. “Last 28 days” unless `fetch_analytics` used `--days 28`.)"
+        )
+    else:
+        window_bullet = "- **Analytics window:** _(missing — re-run `fetch_analytics`)_"
+
     if is_personal_report_scope():
         title = f"# Personal channel — Analytics Report ({week})"
         scope_lines = [
@@ -179,6 +192,7 @@ def generate_report(data: List[Dict[str, Any]], week: Optional[str] = None) -> s
         [
             "## Summary",
             "",
+            window_bullet,
             f"- **Total videos tracked:** {len(data)}",
             f"- **Videos with analytics:** {sum(1 for d in data if d.get('metrics'))}",
             "",
