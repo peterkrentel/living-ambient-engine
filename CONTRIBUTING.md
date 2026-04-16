@@ -2,6 +2,17 @@
 
 Thank you for your interest in contributing! This project thrives on community input.
 
+## Git workflow: branch + pull request (mandatory)
+
+All **code and documentation** reach **`main`** only through a **pull request** from a **feature branch** (not by pushing commits straight to `main`). That applies to maintainers, contributors, and AI agents working in this repo.
+
+1. `git checkout main && git pull origin main`
+2. `git checkout -b feat/short-topic` (or `fix/…`, `docs/…`)
+3. Make commits on that branch; `git push -u origin feat/short-topic`
+4. Open a PR on GitHub, wait for checks / review, **merge via the PR** (squash or merge commit per repo preference).
+
+**Exception — automated data only:** scheduled GitHub Actions workflows (for example [Analytics Agent](.github/workflows/analytics-agent.yml)) may commit updates under `data/` on `main` using `GITHUB_TOKEN`. That automation does **not** waive the branch + PR rule for product code, specs, or workflows you edit by hand.
+
 ## How Can You Contribute?
 
 ### 🐛 Report Bugs
@@ -81,18 +92,19 @@ python batch_generate.py --moods sleep,study --durations 30s
 python -m pytest  # If tests exist
 ```
 
-### 6. Commit and Push
+### 6. Commit and push your branch (not `main`)
 ```bash
 git add .
 git commit -m "feat: add amazing feature"
-git push origin feature/your-feature-name
+git push -u origin feature/your-feature-name
 ```
 
-### 7. Open Pull Request
-- Go to GitHub
-- Click "New Pull Request"
-- Describe your changes
-- Reference related issues
+Never `git push origin main` to land your work—use a PR.
+
+### 7. Open pull request and merge via GitHub
+- Open **Compare & pull request** for your branch (or **New Pull Request**).
+- Describe your changes and reference related issues.
+- Merge only after review / CI as appropriate for this repo.
 
 ## Coding Guidelines
 

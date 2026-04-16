@@ -121,8 +121,10 @@
 
 | Branch | Purpose | Deploys To |
 |--------|---------|------------|
-| `main` | Production-ready code | YouTube (via workflows) |
-| `feature/*` | Feature development | None (PR required) |
+| `main` | Production-ready code (merge **via PR only** for human/agent changes) | YouTube (via workflows) |
+| `feature/*`, `fix/*`, `docs/*`, … | All product work | None until merged (**PR required** — no direct push to `main`) |
+
+**Delivery rule:** Changes to code, specs, contracts, and workflow YAML use **branch → PR → merge**. Automated commits under `data/` from scheduled Actions are the intentional exception; see [`CONTRIBUTING.md`](../../CONTRIBUTING.md) § *Git workflow*.
 
 ## Change Management
 

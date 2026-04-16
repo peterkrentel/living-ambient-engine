@@ -5,6 +5,10 @@
 
 This project uses **spec-driven development**. Specifications are the source of truth for behavior.
 
+## Git: always branch + PR
+
+Do **not** push completed work directly to `main`. Create a **feature branch** from up-to-date `main`, push it, and open a **pull request**. See [`CONTRIBUTING.md`](../CONTRIBUTING.md) § *Git workflow: branch + pull request*. The only routine direct commits on `main` are **automated `data/`** updates from Actions (analytics, etc.)—that exception does not apply to code, specs, or workflow YAML you edit.
+
 ## Before Coding
 
 1. **`docs/START_HERE.md`** — what belongs where (do not duplicate that map elsewhere). If continuing a thread: **`docs/HANDOFF.md`**.
