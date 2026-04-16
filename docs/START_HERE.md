@@ -32,6 +32,12 @@ Use a short opener so nobody re-derives context from scratch:
 | Cursor plan files under `~/.cursor/plans/` | Optional; **cloneable** record = this repo (`HANDOFF`, ADRs, specs). |
 | PR intent only in your head | **PR description** + optional `CHANGELOG.md` on merge. |
 
+## Root-level `*.md` (caution)
+
+Files next to `README.md` (e.g. [`TESTING_PLAN.md`](../TESTING_PLAN.md), `IMPLEMENTATION_SUMMARY.md`, `INTEGRATION_STATUS.md`) are often **time- and branch-specific** playbooks. Treat them as **optional smoke notes**, not current status: check **named branch**, **date**, **paths** (GitHub Actions uses `/home/runner/...`; locally use your **repo root**), and **line numbers** into large YAML — those go stale.
+
+**Merge / contract truth:** [`spec/workflows.md`](spec/workflows.md) and the workflows it references (including PR gate [`test-art-creator.yml`](../.github/workflows/test-art-creator.yml)).
+
 ## Implementation vs narrative
 
 - **Changing behavior** (workflows, upload, correlate): **code + `docs/spec/workflows.md`** (and `AGENT.md` / contracts if data shape changes). Same PR per [`SYSTEM.md`](spec/SYSTEM.md).  
