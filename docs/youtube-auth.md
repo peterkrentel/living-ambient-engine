@@ -12,6 +12,7 @@ Getting YouTube uploads working is a pain. Here's what actually works.
 1. Go to https://console.cloud.google.com
 2. Create a new project (e.g., "living-ambient-engine")
 3. Enable **YouTube Data API v3**: https://console.cloud.google.com/apis/library/youtube.googleapis.com
+4. Enable **YouTube Analytics API** (needed for [`analytics-personal.yml`](../.github/workflows/analytics-personal.yml) / `fetch_analytics`, not only uploads): https://console.cloud.google.com/apis/library/youtubeanalytics.googleapis.com
 
 ## Step 2: OAuth Consent Screen (THE TRICKY PART)
 
@@ -73,10 +74,32 @@ Add both at: `https://github.com/YOUR_USER/YOUR_REPO/settings/secrets/actions`
 | Error | Fix |
 |-------|-----|
 | `403: access_denied` | Add yourself as test user in OAuth consent screen |
+| `403` / `insufficient authentication scopes` on `channels?mine=true` (CI / `fetch_analytics`) | Your pickle was minted **without** read + analytics scopes (e.g. old upload-only token). **Re-auth** with current app scopes (next section), then update `YOUTUBE_TOKEN_PICKLE`. Also confirm **YouTube Analytics API** is enabled in Google Cloud (step 1 above). |
 | `Address already in use` | Kill port 8080: `lsof -ti:8080 \| xargs kill -9` |
 | Token not saving | Don't close browser until redirect completes |
 | "Google hasn't verified" | Click Advanced → Go to app (unsafe) |
 | Wrong Google account | Use Chrome with correct profile, or incognito + login |
+
+### Re-create the token with the right scopes (upload + read + analytics)
+
+The repo requests these in [`youtube/uploader.py`](../youtube/uploader.py) (`SCOPES`): **`youtube.upload`**, **`youtube.readonly`**, **`yt-analytics.readonly`**. Uploads can still work if an older token only had `youtube.upload`; **personal analytics needs read + analytics** to list your channel and pull metrics.
+
+1. Delete local `youtube_token.pickle` (or move it aside).
+2. `source venv/bin/activate` and `python youtube_upload.py --auth`.
+3. In the consent screen, **allow all** requested permissions (read + Analytics, not upload-only).
+4. Encode and replace the GitHub secret:
+   ```bash
+   base64 -i youtube_token.pickle | tr -d '\n'
+   ```
+   → paste into **`YOUTUBE_TOKEN_PICKLE`** (Actions → Secrets).
+
+Optional: before pushing to GitHub, print scopes locally:
+
+```bash
+python -c "import pickle; c=pickle.load(open('youtube_token.pickle','rb')); print(c.scopes)"
+```
+
+You should see URLs containing `youtube.readonly` and `yt-analytics.readonly` (and usually `youtube.upload`).
 
 ## Token Refresh
 
