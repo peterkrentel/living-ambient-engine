@@ -1,23 +1,23 @@
 # Content Library
 
-*Last updated: 2026-03-15T15:27:27.316510*
+*Last updated: 2026-04-16T17:35:33.949357*
 
 ## Statistics
 
-- **Total Videos:** 60
-- **Total Duration:** 70.15 hours
-- **Average Duration:** 70.15 minutes
+- **Total Videos:** 68
+- **Total Duration:** 71.48 hours
+- **Average Duration:** 63.07 minutes
 
 ### Videos by Mood
 
 - **Ceremony:** 3 videos
-- **Chill:** 3 videos
+- **Chill:** 5 videos
 - **Deep Focus:** 5 videos
 - **Energize:** 5 videos
 - **Fireplace:** 1 videos
 - **Forest Morning:** 2 videos
 - **Lofi Study:** 2 videos
-- **Ocean Waves:** 3 videos
+- **Ocean Waves:** 5 videos
 - **Piano Ambient:** 2 videos
 - **Piano Deep Calm:** 4 videos
 - **Piano Evening:** 2 videos
@@ -25,8 +25,8 @@
 - **Piano Relax:** 2 videos
 - **Rain Piano:** 2 videos
 - **Rain Sleep:** 3 videos
-- **Sleep:** 3 videos
-- **Study:** 3 videos
+- **Sleep:** 5 videos
+- **Study:** 5 videos
 - **Trance:** 6 videos
 - **Warrior:** 7 videos
 
@@ -95,6 +95,26 @@
 - **Uploaded:** 2026-02-18
 - **Seed:** `None`
 - **Catalog ID:** `video_0036_20260218_041625_023a0e90`
+
+#### Unwind After a Long Day | 10 Mins Chill Ambient | Continuously Evolving [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=UBixagsUt7k](https://youtube.com/watch?v=UBixagsUt7k)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-04-16
+- **Seed:** `None`
+- **Catalog ID:** `video_0067_20260416_173526_c81c0a21`
+
+#### Unwind After a Long Day | 10 Mins Chill Ambient | Continuously Evolving [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=CnxEYPMRiUM](https://youtube.com/watch?v=CnxEYPMRiUM)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-04-16
+- **Seed:** `None`
+- **Catalog ID:** `video_0068_20260416_173533_de9c4f48`
 
 ### Deep Focus
 
@@ -287,6 +307,26 @@
 - **Uploaded:** 2026-02-12
 - **Seed:** `None`
 - **Catalog ID:** `video_0020_20260212_210836_c417fa10`
+
+#### Drift Off to Ocean Waves | 10 Mins | Endless Tides, Never Repeats [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=LIfNvNG1q4c](https://youtube.com/watch?v=LIfNvNG1q4c)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-04-16
+- **Seed:** `None`
+- **Catalog ID:** `video_0065_20260416_173510_fe482dd2`
+
+#### Drift Off to Ocean Waves | 10 Mins | Endless Tides, Never Repeats [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=4CSYyngZoSM](https://youtube.com/watch?v=4CSYyngZoSM)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-04-16
+- **Seed:** `None`
+- **Catalog ID:** `video_0066_20260416_173519_664a2b61`
 
 ### Piano Ambient
 
@@ -504,6 +544,26 @@
 - **Seed:** `None`
 - **Catalog ID:** `video_0034_20260218_041558_92dd7107`
 
+#### Can't Sleep? | 10 Mins Gentle Drift | Evolving Sounds That Never Repeat [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=ETZAnso6-sQ](https://youtube.com/watch?v=ETZAnso6-sQ)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-04-16
+- **Seed:** `None`
+- **Catalog ID:** `video_0061_20260416_173431_dc3c6413`
+
+#### Can't Sleep? | 10 Mins Gentle Drift | Evolving Sounds That Never Repeat [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=KP8Ro4JirkU](https://youtube.com/watch?v=KP8Ro4JirkU)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-04-16
+- **Seed:** `None`
+- **Catalog ID:** `video_0062_20260416_173445_32da7d82`
+
 ### Study
 
 #### Study Without Distractions | 30 Seconds Focus Soundscape | Always Evolving
@@ -535,6 +595,26 @@
 - **Uploaded:** 2026-02-18
 - **Seed:** `None`
 - **Catalog ID:** `video_0038_20260218_041650_01510eab`
+
+#### Study Without Distractions | 10 Mins Focus Soundscape | Always Evolving [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=arvS28UAEEE](https://youtube.com/watch?v=arvS28UAEEE)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-04-16
+- **Seed:** `None`
+- **Catalog ID:** `video_0063_20260416_173453_99d599e7`
+
+#### Study Without Distractions | 10 Mins Focus Soundscape | Always Evolving [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=4QEP1yICr1I](https://youtube.com/watch?v=4QEP1yICr1I)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-04-16
+- **Seed:** `None`
+- **Catalog ID:** `video_0064_20260416_173502_194cce9f`
 
 ### Trance
 
