@@ -24,7 +24,7 @@ Land upload workflows that **commit and push `data/generations.json`** so analyt
 
 - Latest weekly report: `data/reports/2026-W16.md`
 - Latest channel audit: `data/reports/audit-2026-W16.md` _(join was 0/306 until ledger is persisted from CI)_
-- Spec / ADR pointers: **`docs/START_HERE.md`** (map); this work: `docs/spec/workflows.md` § Generations ledger; `docs/decisions/0001-persist-generations-json-on-ci.md`
+- Spec / ADR pointers: **`docs/START_HERE.md`** (map + **post-audit questions** + production checklist); this work: `docs/spec/workflows.md` § Generations ledger; `docs/decisions/0001-persist-generations-json-on-ci.md`
 
 ## Next actions
 

@@ -38,6 +38,35 @@ Use a short opener so nobody re-derives context from scratch:
 - **Changing direction** (milestones, phases): **`COHESION_ROADMAP.md`** / **`master-plan.md`**.  
 - **Recording a one-off decision** (branch strategy, tradeoff): **`docs/decisions/`** ADR.
 
+## Workflows: how they got here (reality)
+
+`.github/workflows/` did **not** start as one grand design. They **accreted**: Content Factory (personal → brand) → Art Creator (separate palette, then optional brand upload + many YAML fixes) → scheduled **batches** (SEO mood rotation vs art×music discovery) → **Analytics Agent** → **Piano batch** → **audit-window pauses** → **ledger on `main`**. That is normal for a working channel + CI setup.
+
+- **Design intent (one slice):** [`WORKFLOW_ARCHITECTURE.md`](WORKFLOW_ARCHITECTURE.md) — Art Creator vs Content Factory; may be **stale** on details (check [`spec/workflows.md`](spec/workflows.md) + YAML).
+- **Evidence of evolution:** `git log --oneline -- .github/workflows/`
+
+You usually **do not need a new workflow** unless there is a **new job-to-be-done**; prefer **editing existing YAML** and **moving logic into Python/orchestrator** so workflows stay thin triggers.
+
+## Post-audit: questions that force the next answer
+
+Answer these in **`HANDOFF.md`** (or an **ADR** if the choice is hard to reverse). Until they are answered, “next production run” stays ambiguous.
+
+1. **Primary production lane for the next stretch:** SEO mood batch (`content-factory-brand-batch`), algorithm batch (`art-creator-batch`), manual brand factory (`content-factory-brand`), and/or hand runs (`art-creator`) — **which one leads**, and which stay **off** or **occasional**?
+2. **Schedules:** Re-enable **cron** on which workflows, and when — or stay **manual-only** until another milestone?
+3. **Personal channel:** Still **paused** (`content-factory.yml`); is **TBD** still correct, or **retire / repurpose**?
+4. **Catalog model:** Heading toward **Cohesion B** (YouTube canonical, repo = generation + analysis) or **A/hybrid** — does the next run need **catalog commits** every time?
+5. **Art Creator:** Is it **R&D only** (occasional uploads) or a **first-class production door** — does investment go to **inputs/UX/metadata** here vs batch YAML only?
+
+## Once you pick a step in the plan (tackle in order)
+
+Use this as a **checklist**, not a new doc layer. Skip items that do not apply.
+
+1. **Ledger on `main`:** merge the PR that makes upload jobs **commit `data/generations.json`**; smoke one upload; confirm audit join **>0** for new `video_id`s.
+2. **Doc drift:** fix any workflow doc that disagrees with YAML (e.g. [`WORKFLOW_ARCHITECTURE.md`](WORKFLOW_ARCHITECTURE.md) vs current Art Creator upload behavior).
+3. **Turn production back on:** `workflow_dispatch` first, then **un-pause cron** only for the lane you chose in question (1)–(2).
+4. **Evolve Art Creator (optional):** parameters, titles, upload path — **after** (1) so experiments **show up** in `generations.json` on `main`.
+5. **Dual-metrics / correlate:** if `feat/analytics-dual-metrics` is not on `main`, merge when ready so CI matches [`spec/AGENT.md`](spec/AGENT.md) Phase 2.
+
 ## After this file
 
 [`.github/AGENT_INSTRUCTIONS.md`](../.github/AGENT_INSTRUCTIONS.md) — ordered checklist (includes GUARDRAILS before generation changes). **Continuing work?** Open [`HANDOFF.md`](HANDOFF.md) first.
