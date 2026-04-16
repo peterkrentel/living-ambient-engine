@@ -6,7 +6,7 @@
 
 ## Overview
 
-Four workflows automate video generation, YouTube deployment, and testing.
+Eight workflow files automate video generation, YouTube deployment, analytics, and testing. Use the **Workflow Index** below as the map; YAML is the source of truth when this table drifts.
 
 **Each workflow YAML file MUST include a spec reference comment:**
 
@@ -23,8 +23,9 @@ Four workflows automate video generation, YouTube deployment, and testing.
 | WF-CFBATCH | `content-factory-brand-batch.yml` | Manual (+ optional schedule) | Mood rotation (SEO; cron may be off) | Brand |
 | WF-ART | `art-creator.yml` | Manual / workflow_call | Single custom video | Brand (optional) |
 | WF-BATCH | `art-creator-batch.yml` | Manual (+ optional schedule) | Matrix generation (cron may be off) | Brand |
-| WF-TEST | `test-art-creator.yml` | Manual + PR (path filter: workflows/**, core dirs, specs, contracts) | Test all input combinations | None (test only) |
-| WF-AGENT | `analytics-agent.yml` | Schedule (weekly) + Manual | Fetch YouTube stats, generate reports | N/A |
+| WF-PIANO | `piano-batch.yml` | Manual only | Batch piano videos + upload | Brand |
+| WF-TEST | `test-art-creator.yml` | Manual + PR (path filter) | CI: spec validation + contract tests + 7× `art-creator` matrix (no production upload) | None |
+| WF-AGENT | `analytics-agent.yml` | Schedule (weekly) + Manual | Fetch YouTube stats, reports, correlate, channel audit | N/A |
 
 ## Gating Rules
 
