@@ -15,7 +15,7 @@
 
 ## Anchor
 
-- **Commit:** `47fe214` — fix(ci): commit generations ledger from upload workflows
+- **Commit:** `6620bcf` — tip of branch (includes `47fe214` ledger CI + workflows spec + SYSTEM handoff rules)
 
 ## Goal
 
