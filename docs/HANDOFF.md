@@ -1,8 +1,6 @@
 # Handoff (active work snapshot)
 
-> **Read first:** [`docs/START_HERE.md`](START_HERE.md) — where every kind of documentation lives (so you do not re-explain the system each chat).  
-> **Spec:** [`docs/spec/SYSTEM.md`](spec/SYSTEM.md) § Session continuity.  
-> **Rule:** Keep this file **short**; **overwrite** when state changes. Do not accumulate a long diary here.
+> **[Doc map →](START_HERE.md)** · keep this file **short**; **overwrite** when state moves (no diary here).
 
 ## Updated
 
@@ -26,11 +24,11 @@ Land upload workflows that **commit and push `data/generations.json`** so analyt
 
 - Latest weekly report: `data/reports/2026-W16.md`
 - Latest channel audit: `data/reports/audit-2026-W16.md` _(join was 0/306 until ledger is persisted from CI)_
-- Spec: `docs/START_HERE.md`; `docs/spec/SYSTEM.md` § Session continuity; `docs/spec/workflows.md` § Generations ledger; ADR `docs/decisions/0001-persist-generations-json-on-ci.md`
+- Spec / ADR pointers: **`docs/START_HERE.md`** (map); this work: `docs/spec/workflows.md` § Generations ledger; `docs/decisions/0001-persist-generations-json-on-ci.md`
 
 ## Next actions
 
-1. `git push origin fix/ci-commit-generations-ledger` (branch includes ledger CI + **START_HERE / ADR / spec cross-links**) and open PR to `main`.
+1. `git push origin fix/ci-commit-generations-ledger` → open PR to `main`.
 2. Run one manual upload workflow; confirm `main` includes an update to `data/generations.json`.
 3. After merge, optional: `feat/analytics-dual-metrics` PR if still not on `main`.
 

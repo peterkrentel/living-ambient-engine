@@ -38,12 +38,9 @@ Use a short opener so nobody re-derives context from scratch:
 - **Changing direction** (milestones, phases): **`COHESION_ROADMAP.md`** / **`master-plan.md`**.  
 - **Recording a one-off decision** (branch strategy, tradeoff): **`docs/decisions/`** ADR.
 
-## AI assistants
+## After this file
 
-1. [`.github/AGENT_INSTRUCTIONS.md`](../.github/AGENT_INSTRUCTIONS.md)  
-2. This file (**you are here**)  
-3. [`HANDOFF.md`](HANDOFF.md) if doing substantive continuation work  
-4. [`spec/GUARDRAILS.md`](spec/GUARDRAILS.md) before touching generation parameters  
+[`.github/AGENT_INSTRUCTIONS.md`](../.github/AGENT_INSTRUCTIONS.md) — ordered checklist (includes GUARDRAILS before generation changes). **Continuing work?** Open [`HANDOFF.md`](HANDOFF.md) first.
 
 ## Humans
 

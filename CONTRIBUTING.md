@@ -184,7 +184,7 @@ If adding tests:
 
 ## Spec-Driven Development
 
-This project uses **spec-driven development** to keep AI agents and humans aligned.
+This project uses **spec-driven development** to keep AI agents and humans aligned. **Orientation:** [`docs/START_HERE.md`](docs/START_HERE.md) — do not duplicate that map in PRs or new docs.
 
 ### Spec Structure
 

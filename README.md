@@ -2,7 +2,7 @@
 
 *Procedural ambient audiovisual generator producing long-form, continuously evolving, non-repeating pieces.*
 
-> **🤖 AI Agents:** Read [`docs/START_HERE.md`](docs/START_HERE.md) (documentation map), then [`.github/AGENT_INSTRUCTIONS.md`](.github/AGENT_INSTRUCTIONS.md) and [`docs/spec/GUARDRAILS.md`](docs/spec/GUARDRAILS.md) **BEFORE** making any changes.
+> **🤖 AI Agents:** [`docs/START_HERE.md`](docs/START_HERE.md) → [`.github/AGENT_INSTRUCTIONS.md`](.github/AGENT_INSTRUCTIONS.md) (includes [`GUARDRAILS`](docs/spec/GUARDRAILS.md) before changing generation).
 
 > **New User?** Start here: [📚 Getting Started Guide](docs/GETTING_STARTED.md) | [⚡ Quick Reference](docs/QUICK_REFERENCE.md) | [🎨 Art Creator](docs/ART_CREATOR.md) | [❓ FAQ](docs/FAQ.md)
 
@@ -133,7 +133,6 @@ See [docs/youtube-auth.md](docs/youtube-auth.md) for detailed instructions.
 - 🏗️ **[Architecture](docs/architecture.md)** - System design and diagrams
 - 📺 **[YouTube Setup](docs/youtube-auth.md)** - Authentication guide
 - 🗺️ **[Master Plan](docs/master-plan.md)** - Roadmap and milestones
-- 🧭 **[Start here / doc map](docs/START_HERE.md)** - Where truth lives (handoff, specs, ADRs, vs chat)
 - 🔗 **[Cohesion Roadmap](docs/COHESION_ROADMAP.md)** - Integration plan: ledgers, data loop, catalog, versioning
 - ⚙️ **[Execution policy](docs/EXECUTION.md)** - GitHub Actions + project venv only (no ad-hoc system Python)
 - 🤝 **[Contributing](CONTRIBUTING.md)** - How to contribute
