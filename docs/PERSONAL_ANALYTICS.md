@@ -4,6 +4,8 @@
 
 **Companion:** [Cohesion Roadmap](COHESION_ROADMAP.md) (brand spine + `generations.json`). Brand = **coverage + join** for automated output; personal = **optimize and steer** an existing catalog.
 
+**Two-lane strategy (personal vs brand, and where ML runs):** [`START_HERE.md` — *Two channels, two probes*](START_HERE.md#two-channels-two-probes) — same content so assistants read the map file first.
+
 ---
 
 ## Strategic focus (why this doc exists)

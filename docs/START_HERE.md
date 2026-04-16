@@ -56,6 +56,17 @@ Other root markdown is often **time-specific**. Historical playbooks now live in
 
 You usually **do not need a new workflow** unless there is a **new job-to-be-done**; prefer **editing existing YAML** and **moving logic into Python/orchestrator** so workflows stay thin triggers.
 
+## Two channels, two probes
+
+This is the **intentional** split so neither you nor an assistant “merges” the two stories by accident.
+
+| Lane | Channel (OAuth) | What you are probing | Typical shape in practice |
+|------|------------------|----------------------|---------------------------|
+| **Personal** | `YOUTUBE_TOKEN_PICKLE` — [`content-factory.yml`](../.github/workflows/content-factory.yml) (and [`piano-batch.yml`](../.github/workflows/piano-batch.yml), same secret) | Longer **ambient / mood** exploration; how YouTube treats **depth / length** and calmer catalog | Multi-hour or long-form runs; not the “fill every grid cell” game |
+| **Brand** | `YOUTUBE_TOKEN_PICKLE_BRAND` — brand factory, brand batch, Art Creator **brand** upload | Shorter clips, **preset + matrix** output; how YouTube treats **high variety / SEO + art×music** surface | Often **~5 min** and many distinct titles (factory + Art Creator rows in analytics) |
+
+**Repo analytics today (`analytics-agent.yml`):** fetch, weekly **`.md`**, **`suggestions.json`**, **`audit-*.md`**, and **`data/analytics.json`** are **brand only** (workflow sets the brand token). Personal performance is still **Studio / ad hoc** until the plan in [`PERSONAL_ANALYTICS.md`](PERSONAL_ANALYTICS.md) lands (separate JSON + reports). That is not a bug — it is **scope**: one automated measurement spine on brand first.
+
 ## Post-audit: questions that force the next answer
 
 Answer these in **`HANDOFF.md`** (or an **ADR** if the choice is hard to reverse). Until they are answered, “next production run” stays ambiguous.

@@ -8,7 +8,7 @@
 | Path | Role |
 |------|------|
 | [`README.md`](../README.md) | Project overview, links into `docs/` |
-| [`docs/START_HERE.md`](START_HERE.md) | Doc map, handoff, workflow reality, post-audit questions |
+| [`docs/START_HERE.md`](START_HERE.md) | Doc map, handoff, workflow reality, **two-channel / two-probe strategy**, post-audit questions |
 | [`docs/HANDOFF.md`](HANDOFF.md) | Current branch / next actions (overwrite often) |
 | [`.github/AGENT_INSTRUCTIONS.md`](../.github/AGENT_INSTRUCTIONS.md) | AI / contributor checklist |
 
