@@ -13,11 +13,11 @@
 
 ## Anchor
 
-- **Commit:** `a2a5023` — two-channel / two-probe doc (`START_HERE` + links)
+- **Commit:** `9df537a` — merge **`feat/analytics-dual-metrics`** (correlate: retention + watch minutes)
 
 ## Goal (current)
 
-Prove **ledger join** and **analytics loop** on **brand** after factory uploads; keep optional **dual-metrics** branch in sight.
+Prove **ledger join** and **analytics loop** on **brand** after factory uploads; **`correlate.py`** now emits **dual engagement** suggestions on **`main`**.
 
 ## Facts
 
@@ -28,8 +28,7 @@ Prove **ledger join** and **analytics loop** on **brand** after factory uploads;
 ## Next actions (in order)
 
 1. **Run Analytics Agent** (`workflow_dispatch` is enough) so **`data/analytics.json`**, **`data/reports/`**, **`audit-*.md`**, and **`suggestions.json`** include the new **`video_id`s** — then open the latest **audit** and confirm **generations join** moved off **0%** for those rows (historic 306 may still be 0 without backfill).
-2. **Optional but valuable:** open / merge **`feat/analytics-dual-metrics`** → `main` if you still want correlate aligned with **retention + watch time** (branch is **not** merged yet).
-3. **Overwrite this file** when (1) finishes with the new report week + one-line “join looks like X”.
+2. **Overwrite this file** when (1) finishes with the new report week + one-line “join looks like X”.
 
 ## Risks / open questions
 

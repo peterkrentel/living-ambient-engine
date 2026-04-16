@@ -85,7 +85,7 @@ Use this as a **checklist**, not a new doc layer. Skip items that do not apply.
 2. **Doc drift:** fix any workflow doc that disagrees with YAML (e.g. [`WORKFLOW_ARCHITECTURE.md`](WORKFLOW_ARCHITECTURE.md) vs current Art Creator upload behavior).
 3. **Turn production back on:** `workflow_dispatch` first, then **un-pause cron** only for the lane you chose in question (1)–(2).
 4. **Evolve Art Creator (optional):** parameters, titles, upload path — **after** (1) so experiments **show up** in `generations.json` on `main`.
-5. **Dual-metrics / correlate:** if `feat/analytics-dual-metrics` is not on `main`, merge when ready so CI matches [`spec/AGENT.md`](spec/AGENT.md) Phase 2.
+5. **Dual-metrics / correlate:** merged on `main` (`feat/analytics-dual-metrics`); next **Analytics Agent** run refreshes **`suggestions.json`** with retention + watch-time signals per [`spec/AGENT.md`](spec/AGENT.md) Phase 2.
 
 ## After this file
 
