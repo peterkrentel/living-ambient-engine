@@ -16,7 +16,7 @@
 
 ## Anchor
 
-- **Commit:** `6620bcf` — tip of branch (includes `47fe214` ledger CI + workflows spec + SYSTEM handoff rules)
+- **Commit:** `5256fcd` — tip: ledger CI + START_HERE / ADR / cross-links (`git log -1 --oneline`)
 
 ## Goal
 
