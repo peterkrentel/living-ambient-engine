@@ -111,6 +111,7 @@
 | `config/` | Configuration | `config/SPEC.md` |
 | `render/` | FFmpeg Renderer | `render/SPEC.md` |
 | `.github/workflows/` | CI/CD | `docs/spec/workflows.md` |
+| `docs/HANDOFF.md` | Active work snapshot (human-maintained) | This section § Session continuity |
 
 ## Branch Strategy
 
@@ -132,6 +133,19 @@ Examples requiring spec updates:
 
 ### PR Checklist
 See `CONTRIBUTING.md` for the required checklist including spec verification.
+
+### Session continuity (humans and agents)
+
+IDE and assistant **chat context is finite** and does not survive as project memory. **Specs, git history, and committed data** are the durable source of truth; a short **handoff** bridges multi-session work.
+
+| Artifact | Purpose |
+|----------|---------|
+| **Specs** (`docs/spec/`, cohesion docs) | What the system must do and how workflows behave. |
+| **Git** (commits, branches, `data/reports/`, `data/*`) | What actually shipped and what was measured. |
+| **[`docs/HANDOFF.md`](../HANDOFF.md)** | Where you left off: branch, anchor commit, goal, 2–5 bullets from the latest audit/report paths, **next 1–3 verifiable actions**. Overwrite in place each time; do not grow a diary inside it. |
+| **Cursor plans** (optional) | Scoped execution order for a single effort; not a substitute for spec or git. |
+
+**Practice:** At the end of a substantive session (or before context gets unwieldy), update **`docs/HANDOFF.md`**. At the start of the next session, attach it (`@docs/HANDOFF.md`) or instruct the assistant to read it first so work continues from **Next actions** without re-deriving the plan from chat.
 
 ## Related Specs
 

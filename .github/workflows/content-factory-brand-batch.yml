@@ -188,6 +188,21 @@ jobs:
         run: |
           rm -f youtube_token.pickle client_secrets.json
 
+      - name: Commit generations ledger
+        run: |
+          git config user.name "Content Factory Bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -f data/generations.json ]; then
+            git add data/generations.json
+          fi
+          if git diff --staged --quiet; then
+            echo "No generations ledger changes to commit"
+          else
+            git commit -m "🧾 Update generations ledger (brand batch) [automated]"
+            git push
+            echo "✅ generations.json committed and pushed"
+          fi
+
       - name: Upload summary
         run: |
           echo "## ✅ YouTube Upload Complete" >> $GITHUB_STEP_SUMMARY

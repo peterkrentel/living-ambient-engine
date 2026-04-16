@@ -193,12 +193,15 @@ jobs:
           if [ -f CONTENT_LIBRARY.md ]; then
             git add CONTENT_LIBRARY.md
           fi
+          if [ -f data/generations.json ]; then
+            git add data/generations.json
+          fi
 
           # Commit if there are changes
           if git diff --staged --quiet; then
-            echo "No catalog changes to commit"
+            echo "No catalog or generations ledger changes to commit"
           else
-            git commit -m "📚 Update content library catalog [automated]"
+            git commit -m "📚 Update content library and generations ledger [automated]"
             git push
             echo "✅ Catalog updated and pushed to repository"
           fi

@@ -1,0 +1,38 @@
+# Handoff (active work snapshot)
+
+> **Spec:** [`docs/spec/SYSTEM.md`](spec/SYSTEM.md) § Session continuity.  
+> **Rule:** Keep this file **short**; **overwrite** when state changes. Do not accumulate a long diary here.
+
+## Updated
+
+2026-04-15
+
+## Branch / PR
+
+- **Branch:** `fix/ci-commit-generations-ledger` _(replace when you switch)_
+- **Tracking / pushed:** _(fill after `git push -u`)_
+- **Open PR:** _(link or “none”)_
+
+## Anchor
+
+- **Commit:** `fa18aca` — fix(ci): commit generations ledger from upload workflows
+
+## Goal
+
+Land upload workflows that **commit and push `data/generations.json`** so analytics audits show a non-zero **generations join** for new uploads; keep `docs/spec/workflows.md` aligned.
+
+## Facts (point to paths, do not paste essays)
+
+- Latest weekly report: `data/reports/2026-W16.md`
+- Latest channel audit: `data/reports/audit-2026-W16.md` _(join was 0/306 until ledger is persisted from CI)_
+- Spec: `docs/spec/SYSTEM.md` § Session continuity; `docs/spec/workflows.md` § Generations ledger
+
+## Next actions
+
+1. `git push -u origin fix/ci-commit-generations-ledger` and open PR to `main`.
+2. Run one manual upload workflow; confirm `main` includes an update to `data/generations.json`.
+3. After merge, optional: `feat/analytics-dual-metrics` PR if still not on `main`.
+
+## Risks / open questions
+
+- _(Short list, optional)_

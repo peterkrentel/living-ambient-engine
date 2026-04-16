@@ -70,10 +70,22 @@ This spec is enforced at multiple levels:
 
 | Workflow | `contents` | `actions` | Why |
 |----------|------------|-----------|-----|
-| `content-factory.yml` | write | - | Catalog commit |
-| `content-factory-brand.yml` | write | - | Catalog commit |
-| `art-creator.yml` | write | - | Catalog commit |
+| `content-factory.yml` | write | - | Catalog + generations ledger commit |
+| `content-factory-brand.yml` | write | - | Catalog + generations ledger commit |
+| `content-factory-brand-batch.yml` | write | read | Generations ledger commit after upload |
+| `piano-batch.yml` | write | - | Catalog + generations ledger commit |
+| `art-creator.yml` | read (default); **upload** job sets `write` | read | Upload job pushes `data/generations.json` only |
 | `test-art-creator.yml` | read | read | Read-only tests |
+
+### Generations ledger (`data/generations.json`)
+
+[`youtube_upload.py`](../../youtube_upload.py) calls `record_generation_upload` after a successful upload. On GitHub Actions that update must be **committed and pushed** or the ledger stays empty on `main` and analytics audits show **0% join** to `analytics.json`.
+
+| Workflow | When `data/generations.json` is committed |
+|----------|-------------------------------------------|
+| `content-factory.yml`, `content-factory-brand.yml`, `piano-batch.yml` | Same step as catalog: `git add` includes `data/generations.json` when present |
+| `content-factory-brand-batch.yml` | Dedicated **Commit generations ledger** step after upload |
+| `art-creator.yml` | **upload** job: `permissions.contents: write`, commit `data/generations.json` after upload (`--no-update-catalog` unchanged) |
 
 ## content-factory.yml
 
@@ -120,6 +132,7 @@ permissions:
 - Video artifacts in `./generated/` (7-day retention)
 - `manifest.json` with generation metadata
 - Upload results in job summary
+- `data/generations.json` updates committed with the catalog when uploads succeed (see **Generations ledger** above)
 
 ## content-factory-brand.yml
 
@@ -275,10 +288,15 @@ See: `tests/contracts/` for enforcement via `spec-validation` job.
 
 ### Permissions
 
+Workflow default (tight):
+
 ```yaml
 permissions:
-  contents: write  # Required for catalog commit
+  contents: read
+  actions: read
 ```
+
+The **`upload`** job (when `upload_to_brand` is true) sets `permissions: contents: write` so it can push **`data/generations.json`** after `youtube_upload.py` runs with `--no-update-catalog` (no catalog commit from this workflow).
 
 ## art-creator-batch.yml
 
