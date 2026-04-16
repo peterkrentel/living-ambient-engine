@@ -75,7 +75,7 @@ This spec is enforced at multiple levels:
 | `content-factory-brand-batch.yml` | write | read | Generations ledger commit after upload |
 | `piano-batch.yml` | write | - | Catalog + generations ledger commit |
 | `art-creator.yml` | read (default); **upload** job sets `write` | read | Upload job pushes `data/generations.json` only |
-| `test-art-creator.yml` | read | read | Read-only tests |
+| `test-art-creator.yml` | **write** | read | Must allow `art-creator.yml`’s **upload** job `contents: write` (GitHub validates reusable-workflow permissions at parse time; test matrix skips upload via inputs) |
 
 ### Generations ledger (`data/generations.json`)
 

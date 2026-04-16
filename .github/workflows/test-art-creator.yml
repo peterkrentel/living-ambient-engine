@@ -27,8 +27,10 @@ on:
       - 'tests/contracts/**'
       - 'docs/spec/**'
 
+# workflow_call into art-creator.yml must allow that workflow's job permissions.
+# art-creator "upload" uses contents:write; GitHub validates this even when upload is skipped (e.g. tests).
 permissions:
-  contents: read
+  contents: write
   actions: read
 
 jobs:
