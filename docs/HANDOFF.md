@@ -4,34 +4,33 @@
 
 ## Updated
 
-2026-04-15
+2026-04-16
 
 ## Branch / PR
 
-- **Branch:** `main` (ledger + doc sync landed)
-- **Last merge:** PR #48 — `fix/ci-commit-generations-ledger` → `main`
-- **Open PR:** _(none for this track — add when you open the next one)_
+- **Branch:** `main`
+- **Open PR:** _(none — add when you open the next one)_
 
 ## Anchor
 
-- **Commit:** `9936cff` — Merge pull request #48 (generations ledger CI, `test-art-creator` path + permissions fixes, doc map / archive)
+- **Commit:** `a2a5023` — two-channel / two-probe doc (`START_HERE` + links)
 
-## Goal (done for this PR)
+## Goal (current)
 
-Upload workflows **commit and push `data/generations.json`** on successful uploads; **`test-art-creator.yml`** valid for `workflow_call` into `art-creator.yml`.
+Prove **ledger join** and **analytics loop** on **brand** after factory uploads; keep optional **dual-metrics** branch in sight.
 
-## Facts (point to paths, do not paste essays)
+## Facts
 
-- Latest weekly report: `data/reports/2026-W16.md`
-- Latest channel audit: `data/reports/audit-2026-W16.md` _(re-run audit after a production upload to confirm join > 0 for new `video_id`s)_
-- Spec / ADR: **`docs/START_HERE.md`** · **`docs/MARKDOWN_INDEX.md`** · **`docs/spec/workflows.md`** § Generations ledger · **`docs/decisions/0001-persist-generations-json-on-ci.md`**
+- **Brand smoke done:** `data/generations.json` has **8** new rows (4 moods × dual, **600s**), committed with catalog (`dbeaa46` area); see `git log --oneline -- data/generations.json`.
+- Weekly report / audit on disk may still be **pre-smoke** until **Analytics Agent** runs again: `data/reports/2026-W16.md`, `audit-2026-W16.md`.
+- Two-lane strategy (personal vs brand; analytics = brand today): **`docs/START_HERE.md`** § **Two channels, two probes**.
 
-## Next actions
+## Next actions (in order)
 
-1. **Smoke:** Run one real upload path you use (e.g. `workflow_dispatch` on brand factory or piano batch); confirm **`main`** picks up **`data/generations.json`** (and catalog if that path commits it).
-2. Optional: PR **`feat/analytics-dual-metrics`** if it is still not on `main` (see `docs/START_HERE.md` checklist).
-3. Next analytics weekly run: spot-check **`data/reports/audit-*.md`** join line after (1).
+1. **Run Analytics Agent** (`workflow_dispatch` is enough) so **`data/analytics.json`**, **`data/reports/`**, **`audit-*.md`**, and **`suggestions.json`** include the new **`video_id`s** — then open the latest **audit** and confirm **generations join** moved off **0%** for those rows (historic 306 may still be 0 without backfill).
+2. **Optional but valuable:** open / merge **`feat/analytics-dual-metrics`** → `main` if you still want correlate aligned with **retention + watch time** (branch is **not** merged yet).
+3. **Overwrite this file** when (1) finishes with the new report week + one-line “join looks like X”.
 
 ## Risks / open questions
 
-- Fork PRs: `contents: write` on `test-art-creator` is required for YAML validity; token may still be limited on fork runs (same-repo PRs unaffected).
+- Old channel videos **without** ledger rows will keep audit denominator high until you accept that or backfill.
