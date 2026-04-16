@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
 """Fetch YouTube Analytics data.
 
-Pulls performance metrics from YouTube Analytics API and stores
-them in data/analytics.json for correlation with generation parameters.
+Pulls performance metrics from the YouTube Analytics API and stores them in
+``data/analytics.json`` for correlation with generation parameters.
+
+**Channel scope (today):** In CI, ``YOUTUBE_TOKEN_PICKLE_BRAND`` is set first, so
+this module ingests the **brand** channel. Personal is a **separate** channel
+and OAuth secret; it is **not** mixed into ``analytics.json`` until a personal
+fetch path exists (see ``docs/PERSONAL_ANALYTICS.md``).
 
 Spec: docs/spec/AGENT.md
 Contract: docs/spec/contracts/agent-youtube.md

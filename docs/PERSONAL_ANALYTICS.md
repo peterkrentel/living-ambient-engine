@@ -25,6 +25,8 @@
 | Scheduled analytics | [`analytics-agent.yml`](../.github/workflows/analytics-agent.yml) → `data/analytics.json` | **None** in repo |
 | Manual / ad hoc | — | Studio screenshots, exports, external tools (current “what’s next” loop) |
 
+**Catalog vs analytics:** [`content_catalog.json`](../content_catalog.json) is **one** file and may list uploads from **both** channels. **`data/analytics.json`** is **brand-channel only**. Audit “join %” is therefore **brand-overlap**, not “every catalog row.” See [`START_HERE.md`](START_HERE.md#two-channels-two-probes).
+
 ---
 
 ## Goals (v1)

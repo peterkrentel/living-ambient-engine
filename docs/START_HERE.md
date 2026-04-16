@@ -67,6 +67,8 @@ This is the **intentional** split so neither you nor an assistant “merges” t
 
 **Repo analytics today (`analytics-agent.yml`):** fetch, weekly **`.md`**, **`suggestions.json`**, **`audit-*.md`**, and **`data/analytics.json`** are **brand only** (workflow sets the brand token). Personal performance is still **Studio / ad hoc** until the plan in [`PERSONAL_ANALYTICS.md`](PERSONAL_ANALYTICS.md) lands (separate JSON + reports). That is not a bug — it is **scope**: one automated measurement spine on brand first.
 
+**Gap to name explicitly:** **`content_catalog.json`** is a **single** repo file today and can include rows from **both** lanes (personal + brand uploads that update the catalog). **`data/analytics.json`** is **only the brand channel’s** video list and metrics. So **`audit-*.md` “generations join”** counts ledger `video_id`s that appear **in brand analytics** — personal-only catalog rows will **not** move that percentage until personal analytics exists or catalogs are split / tagged by channel.
+
 ## Post-audit: questions that force the next answer
 
 Answer these in **`HANDOFF.md`** (or an **ADR** if the choice is hard to reverse). Until they are answered, “next production run” stays ambiguous.
