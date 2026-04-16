@@ -8,30 +8,30 @@
 
 ## Branch / PR
 
-- **Branch:** `fix/ci-commit-generations-ledger` _(replace when you switch)_
-- **Tracking / pushed:** _(fill after `git push -u`)_
-- **Open PR:** _(link or “none”)_
+- **Branch:** `main` (ledger + doc sync landed)
+- **Last merge:** PR #48 — `fix/ci-commit-generations-ledger` → `main`
+- **Open PR:** _(none for this track — add when you open the next one)_
 
 ## Anchor
 
-- **Commit:** _(paste output of `git log -1 --oneline` on your branch)_
+- **Commit:** `9936cff` — Merge pull request #48 (generations ledger CI, `test-art-creator` path + permissions fixes, doc map / archive)
 
-## Goal
+## Goal (done for this PR)
 
-Land upload workflows that **commit and push `data/generations.json`** so analytics audits show a non-zero **generations join** for new uploads; keep `docs/spec/workflows.md` aligned.
+Upload workflows **commit and push `data/generations.json`** on successful uploads; **`test-art-creator.yml`** valid for `workflow_call` into `art-creator.yml`.
 
 ## Facts (point to paths, do not paste essays)
 
 - Latest weekly report: `data/reports/2026-W16.md`
-- Latest channel audit: `data/reports/audit-2026-W16.md` _(join was 0/306 until ledger is persisted from CI)_
-- Spec / ADR pointers: **`docs/START_HERE.md`** (map + **post-audit questions** + production checklist); **`docs/MARKDOWN_INDEX.md`** (all `.md`); **`docs/archive/`** (old root playbooks); this work: `docs/spec/workflows.md` § Generations ledger; `docs/decisions/0001-persist-generations-json-on-ci.md`
+- Latest channel audit: `data/reports/audit-2026-W16.md` _(re-run audit after a production upload to confirm join > 0 for new `video_id`s)_
+- Spec / ADR: **`docs/START_HERE.md`** · **`docs/MARKDOWN_INDEX.md`** · **`docs/spec/workflows.md`** § Generations ledger · **`docs/decisions/0001-persist-generations-json-on-ci.md`**
 
 ## Next actions
 
-1. `git push origin fix/ci-commit-generations-ledger` → open PR to `main`.
-2. Run one manual upload workflow; confirm `main` includes an update to `data/generations.json`.
-3. After merge, optional: `feat/analytics-dual-metrics` PR if still not on `main`.
+1. **Smoke:** Run one real upload path you use (e.g. `workflow_dispatch` on brand factory or piano batch); confirm **`main`** picks up **`data/generations.json`** (and catalog if that path commits it).
+2. Optional: PR **`feat/analytics-dual-metrics`** if it is still not on `main` (see `docs/START_HERE.md` checklist).
+3. Next analytics weekly run: spot-check **`data/reports/audit-*.md`** join line after (1).
 
 ## Risks / open questions
 
-- _(Short list, optional)_
+- Fork PRs: `contents: write` on `test-art-creator` is required for YAML validity; token may still be limited on fork runs (same-repo PRs unaffected).
