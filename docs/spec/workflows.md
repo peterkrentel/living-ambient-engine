@@ -465,7 +465,7 @@ All 7 jobs use:
 **MANDATORY:** All workflows that upload to YouTube MUST:
 
 1. Generate `metadata.json` via orchestrator (or compatible generator)
-2. Call `python youtube_upload.py --batch <directory>`
+2. Call `python youtube_upload.py --batch <directory>` — CI factory workflows pass **`--catalog-channel personal`** or **`--catalog-channel brand`** so new `content_catalog.json` rows are tagged ([ADR 0002](../decisions/0002-content-catalog-channel-field.md))
 3. NOT generate title/description/tags inline in workflow YAML
 
 **Rationale:** Single source of truth for SEO optimization. Tags and descriptions are defined in `moods.yaml` and flow through the pipeline:

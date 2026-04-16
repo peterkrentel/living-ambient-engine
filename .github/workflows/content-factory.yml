@@ -174,7 +174,7 @@ jobs:
 
       - name: Upload to YouTube
         run: |
-          python youtube_upload.py --batch ./generated
+          python youtube_upload.py --batch ./generated --catalog-channel personal
 
       - name: Cleanup credentials
         if: always()
