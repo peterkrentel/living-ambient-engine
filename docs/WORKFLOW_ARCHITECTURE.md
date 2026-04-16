@@ -9,6 +9,8 @@ Should the Art Creator be an independent workflow or should it extend the existi
 
 This document explains why this architectural decision is correct and beneficial.
 
+**Scope:** Written for the **Content Factory vs Art Creator** split. For **all** workflows (batches, analytics, piano, etc.), see [`docs/spec/workflows.md`](spec/workflows.md).
+
 ---
 
 ## The Three Workflows
@@ -17,14 +19,14 @@ This document explains why this architectural decision is correct and beneficial
 **Purpose**: Automated YouTube content production for monetization
 
 **Characteristics:**
-- Scheduled execution (daily at 2 AM UTC)
+- **Schedule:** Cron for daily 2 AM UTC exists in the workflow file but is **commented out** while personal-channel strategy is TBD — **manual `workflow_dispatch` only** until re-enabled (see `.github/workflows/content-factory.yml`).
 - 4 simple parameters (moods, durations, dual, upload)
 - Uses preset mood list
 - Automatically uploads to YouTube
 - Batch generation focus
 - Owner/production-oriented
 
-**Use Case**: "Generate 3-hour rain_sleep and ocean_waves videos daily for my YouTube channel"
+**Use Case**: "Generate 3-hour rain_sleep and ocean_waves videos for my personal channel (on a schedule when enabled, or on demand via Actions)"
 
 ### 2. Content Factory - Brand (`content-factory-brand.yml`)
 **Purpose**: Same as Content Factory but for brand channel
@@ -41,18 +43,18 @@ This document explains why this architectural decision is correct and beneficial
 **Purpose**: Creative experimentation and artistic exploration
 
 **Characteristics:**
-- Manual trigger only (workflow_dispatch)
+- Manual trigger (`workflow_dispatch`) and **`workflow_call`** (e.g. tests, batch wrappers)
 - 20+ detailed parameters
 - Art historical periods (cave_art → future)
 - Visual customization (patterns, speed, complexity, colors)
 - Audio customization (rhythms, tempo, frequencies)
 - Custom RGB color palettes
 - Seed-based reproducibility
-- No YouTube upload
+- **YouTube (optional):** when **`upload_to_brand`** is true, uploads to the **brand** channel via `youtube_upload.py`
 - Individual creation focus
 - Public access (anyone can run)
 
-**Use Case**: "I want to create a unique meditation video with impressionist visuals, sunset colors, and theta brainwaves that I can recreate with a seed"
+**Use Case**: "I want to create a unique piece with impressionist visuals, sunset colors, and theta brainwaves — reproducible with a seed — and optionally publish to the brand channel"
 
 ---
 
@@ -65,11 +67,11 @@ This document explains why this architectural decision is correct and beneficial
 | **Customization** | Low (preset moods) | High (millions of combos) |
 | **Output** | Batch videos | Single artwork |
 | **Audience** | Repository owner | Anyone (public) |
-| **Trigger** | Scheduled + manual | Manual only |
+| **Trigger** | Manual today (personal cron **paused** in YAML); schedule can return | Manual / `workflow_call` |
 | **Philosophy** | Automation/efficiency | Experimentation/joy |
 | **Reproducibility** | Not emphasized | Core feature (seeds) |
-| **YouTube Upload** | Yes (primary goal) | No |
-| **Use Frequency** | Daily automated | Occasional manual |
+| **YouTube Upload** | Yes (primary goal, personal) | Optional → **brand** when `upload_to_brand` |
+| **Use Frequency** | On-demand until cron re-enabled | Occasional manual |
 | **Learning Curve** | Simple (4 choices) | Exploratory (20+ options) |
 | **Evolution Focus** | Production features | Creative features |
 
@@ -192,7 +194,7 @@ These philosophies are **orthogonal**. Combining them would dilute both.
 - Generates custom YAML config dynamically
 - Merges with moods.yaml at runtime
 - Creates single unique video
-- No YouTube integration
+- **Optional** YouTube upload to brand channel (`upload_to_brand`)
 - Artifacts for download
 
 **Implementation differences make separation natural.**

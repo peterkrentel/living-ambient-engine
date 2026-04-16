@@ -74,6 +74,8 @@ python library_cli.py export
 
 ## 8 Mood Presets
 
+Featured examples below — **`config/moods.yaml`** and workflows support **additional** presets (e.g. full brand SEO rotation). See [`docs/spec/workflows.md`](docs/spec/workflows.md).
+
 | Mood | Brainwave | Frequency | Rhythm |
 |------|-----------|-----------|--------|
 | `deep_focus` | 40Hz Gamma | 432Hz | Taiko |
@@ -88,7 +90,7 @@ python library_cli.py export
 ## Optional: Automated Publishing
 
 If you want to publish to YouTube, the project includes CI/CD automation:
-1. **Scheduled generation** - GitHub Actions workflow
+1. **GitHub Actions** - manual and (where enabled) scheduled workflows
 2. **Batch processing** - Multiple moods x durations
 3. **Auto-upload** - Direct to YouTube with metadata
 4. **Content Library** - Catalog with links and metadata

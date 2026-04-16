@@ -18,7 +18,7 @@ Four workflows automate video generation, YouTube deployment, and testing.
 
 | ID | Workflow | Trigger | Purpose | Channel |
 |----|----------|---------|---------|---------|
-| WF-CF | `content-factory.yml` | Schedule + Manual | Batch generation + upload | Personal |
+| WF-CF | `content-factory.yml` | Manual (cron **commented out** in YAML; strategy TBD) | Batch generation + upload | Personal |
 | WF-CFB | `content-factory-brand.yml` | Manual only | Batch generation + upload | Brand |
 | WF-CFBATCH | `content-factory-brand-batch.yml` | Manual (+ optional schedule) | Mood rotation (SEO; cron may be off) | Brand |
 | WF-ART | `art-creator.yml` | Manual / workflow_call | Single custom video | Brand (optional) |
@@ -91,10 +91,14 @@ This spec is enforced at multiple levels:
 
 ### Trigger
 
+**As in repo today:** `schedule` is **commented out** (personal channel on hold). Only **`workflow_dispatch`** runs until cron is re-enabled in `.github/workflows/content-factory.yml`.
+
+**When schedule is enabled**, the intended cron is:
+
 ```yaml
-schedule:
-  - cron: '0 2 * * *'  # Daily 2AM UTC
-workflow_dispatch:      # Manual trigger
+# schedule:
+#   - cron: '0 2 * * *'  # Daily 2AM UTC
+workflow_dispatch:      # Manual trigger (always)
 ```
 
 ### Concurrency
@@ -140,7 +144,7 @@ Same as `content-factory.yml` except:
 
 | Difference | content-factory | content-factory-brand |
 |------------|-----------------|----------------------|
-| Trigger | Schedule + Manual | **Manual only** |
+| Trigger | **Manual** (personal cron **off** in YAML until re-enabled) | **Manual only** |
 | Secret | `YOUTUBE_TOKEN_PICKLE` | `YOUTUBE_TOKEN_PICKLE_BRAND` |
 | Channel | Personal | Brand |
 | Concurrency group | `content-factory` | `content-factory-brand` |

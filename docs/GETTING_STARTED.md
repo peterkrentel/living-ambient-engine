@@ -14,14 +14,13 @@ Generate high-quality videos combining:
 ### 💰 **Monetize on YouTube**
 - Create content for popular niches: meditation, focus music, sleep sounds
 - Automate video production with CI/CD
-- Generate hours of content daily
+- Generate hours of content per run (batch + Actions)
 - SEO-optimized titles and descriptions
 
 ### 🤖 **Automate Everything**
 - Batch generate multiple videos at once
-- Schedule automatic uploads to YouTube
-- Run on GitHub Actions (free!)
-- Set and forget content pipeline
+- Run on GitHub Actions (free!) — manual or scheduled (personal `content-factory` cron is off in YAML until you enable it)
+- Optional daily schedule when you uncomment cron in `.github/workflows/content-factory.yml`
 
 ---
 
@@ -309,7 +308,7 @@ Run the content factory automatically on GitHub's infrastructure (free!):
 3. Enable GitHub Actions
 
 ### Scheduled Generation
-Videos are automatically generated daily at 2 AM UTC and uploaded to YouTube.
+The personal **Content Factory** workflow can run on a **daily 2 AM UTC** cron, but in the **current repo** that cron is **commented out** (manual runs only until you re-enable it). See `.github/workflows/content-factory.yml`. Brand and other workflows may use their own triggers — see [`docs/spec/workflows.md`](spec/workflows.md).
 
 ### Manual Trigger
 1. Go to "Actions" tab
@@ -323,8 +322,8 @@ Videos are automatically generated daily at 2 AM UTC and uploaded to YouTube.
 
 ### 🎯 **For YouTube Success**
 - Start with 1-hour videos (most popular length)
-- Use all 8 moods for variety
-- Upload consistently (daily schedule)
+- Use varied moods (see `config/moods.yaml`; README highlights eight examples)
+- Upload consistently (**schedule** when cron is on, or **manual** Actions runs)
 - Let videos run ads after 8 minutes
 
 ### 🚀 **Optimization**

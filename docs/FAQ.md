@@ -144,8 +144,9 @@ Use GitHub Actions to automate daily uploads.
 
 ### What is GitHub Actions?
 GitHub's free CI/CD platform. For public repos, you get unlimited minutes to run automated jobs. Perfect for:
-- Scheduled video generation (daily at 2 AM)
-- Automatic YouTube uploads
+- **On-demand** video generation via Actions (`workflow_dispatch`)
+- Optional **scheduled** runs when cron is enabled in the workflow YAML (personal factory schedule is **currently commented out** — see `content-factory.yml`)
+- Automatic YouTube uploads from workflows that upload
 - Batch processing
 
 ### How do I set up automation?
@@ -157,11 +158,14 @@ GitHub's free CI/CD platform. For public repos, you get unlimited minutes to run
 See `.github/workflows/content-factory.yml` for configuration.
 
 ### Can I run this on a schedule?
-Yes! The included GitHub Actions workflow runs daily at 2 AM UTC. You can change the schedule by editing the cron expression:
+**Yes — when you enable it.** `content-factory.yml` is set up for a **daily 2 AM UTC** cron, but the **`schedule` block is commented out** in the repo today (personal channel strategy TBD). Uncomment and adjust the cron in `.github/workflows/content-factory.yml` when you want automatic runs:
+
 ```yaml
 schedule:
   - cron: '0 2 * * *'  # Daily at 2 AM UTC
 ```
+
+Until then, use **Actions → Content Factory → Run workflow** for manual runs.
 
 ### What if GitHub Actions limits change?
 Unlikely for public repos (currently unlimited). If needed, you can:
