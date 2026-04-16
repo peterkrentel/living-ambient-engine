@@ -82,6 +82,8 @@ The agent is a **standalone service** that does NOT modify existing working code
 Workflow → Upload to YouTube → record_generation_upload → data/generations.json → git commit (CI) → main
 ```
 
+**Backfill (catalog rows only):** Videos that reached **`content_catalog.json`** before the ledger existed can be appended once with [`scripts/backfill_generations_from_catalog.py`](../../scripts/backfill_generations_from_catalog.py) (run from repo root; `--dry-run` first). That restores **`uploaded_at`** from the catalog. It does **not** add rows for uploads that never hit the catalog (e.g. Art Creator with `--no-update-catalog`).
+
 ### 2. Weekly Analytics Fetch
 
 ```

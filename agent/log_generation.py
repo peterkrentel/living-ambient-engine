@@ -71,6 +71,7 @@ def record_generation_upload(
     params: Optional[Dict[str, Any]] = None,
     metadata: Optional[Dict[str, Any]] = None,
     generated_at: Optional[str] = None,
+    uploaded_at: Optional[str] = None,
 ) -> str:
     """Upsert a ledger row after a successful upload.
 
@@ -107,6 +108,7 @@ def record_generation_upload(
 
     new_id = generation_id or str(uuid.uuid4())
 
+    upload_ts = uploaded_at or now
     entry: Dict[str, Any] = {
         "generation_id": new_id,
         "video_id": video_id,
@@ -116,7 +118,7 @@ def record_generation_upload(
         "params": params_out,
         "metadata": metadata or {},
         "generated_at": generated_at or now,
-        "uploaded_at": now,
+        "uploaded_at": upload_ts,
         "updated_at": now,
     }
     if commit_sha:

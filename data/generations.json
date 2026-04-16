@@ -304,6 +304,1148 @@
       "uploaded_at": "2026-04-16T17:35:33.951495+00:00",
       "updated_at": "2026-04-16T17:35:33.951495+00:00",
       "commit_sha": "a37ff79b33b2450d700ecab6d6bc8b9f1f677c8f"
+    },
+    {
+      "generation_id": "edc0c4a4-8676-45a2-b59d-e5c1022a007e",
+      "video_id": "wlrtWLKZU6c",
+      "workflow": "catalog_backfill",
+      "mood": "forest_morning",
+      "duration_seconds": 30,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0001_20260130_013826_32197db7",
+        "seed": 734327657,
+        "variant": "ambience"
+      },
+      "metadata": {
+        "title": "Wake Up in the Forest | 30 Seconds | Birds, Wind, Ever-Changing [Pure Ambience]",
+        "video_title": "Wake Up in the Forest | 30 Seconds | Birds, Wind, Ever-Changing [Pure Ambience]"
+      },
+      "generated_at": "2026-01-30T01:38:26.221941",
+      "uploaded_at": "2026-01-30T01:38:26.221941",
+      "updated_at": "2026-04-16T19:34:49.330676+00:00"
+    },
+    {
+      "generation_id": "777a4065-a3dc-4e77-8ff8-a553a59665b4",
+      "video_id": "_37R-G6m7-s",
+      "workflow": "catalog_backfill",
+      "mood": "forest_morning",
+      "duration_seconds": 30,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0002_20260130_013828_32b0d507",
+        "seed": 734327657,
+        "variant": "melody"
+      },
+      "metadata": {
+        "title": "Wake Up in the Forest | 30 Seconds | Birds, Wind, Ever-Changing [With Music]",
+        "video_title": "Wake Up in the Forest | 30 Seconds | Birds, Wind, Ever-Changing [With Music]"
+      },
+      "generated_at": "2026-01-30T01:38:28.026601",
+      "uploaded_at": "2026-01-30T01:38:28.026601",
+      "updated_at": "2026-04-16T19:34:49.332515+00:00"
+    },
+    {
+      "generation_id": "56610b2c-ac04-4517-a8c1-ac4e3a9fee09",
+      "video_id": "uq0Na-GZ38I",
+      "workflow": "catalog_backfill",
+      "mood": "deep_focus",
+      "duration_seconds": 30,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0003_20260201_050152_bd076b22",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Sounds for an Overactive Mind | 30 Seconds Evolving Focus Music | No Loops",
+        "video_title": "Sounds for an Overactive Mind | 30 Seconds Evolving Focus Music | No Loops"
+      },
+      "generated_at": "2026-02-01T05:01:52.737339",
+      "uploaded_at": "2026-02-01T05:01:52.737339",
+      "updated_at": "2026-04-16T19:34:49.333048+00:00"
+    },
+    {
+      "generation_id": "74ecaa0c-7179-456a-b85d-30e90fb4ee49",
+      "video_id": "_6HcwPMisEA",
+      "workflow": "catalog_backfill",
+      "mood": "sleep",
+      "duration_seconds": 30,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0004_20260201_050155_74962989",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Can't Sleep? | 30 Seconds Gentle Drift | Evolving Sounds That Never Repeat",
+        "video_title": "Can't Sleep? | 30 Seconds Gentle Drift | Evolving Sounds That Never Repeat"
+      },
+      "generated_at": "2026-02-01T05:01:55.298413",
+      "uploaded_at": "2026-02-01T05:01:55.298413",
+      "updated_at": "2026-04-16T19:34:49.333426+00:00"
+    },
+    {
+      "generation_id": "69b1d4aa-0bf3-4999-8862-7a75eb86a21a",
+      "video_id": "oEpxFE0Q2IM",
+      "workflow": "catalog_backfill",
+      "mood": "chill",
+      "duration_seconds": 30,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0005_20260201_050156_aba3a0bb",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Unwind After a Long Day | 30 Seconds Chill Ambient | Continuously Evolving",
+        "video_title": "Unwind After a Long Day | 30 Seconds Chill Ambient | Continuously Evolving"
+      },
+      "generated_at": "2026-02-01T05:01:56.766693",
+      "uploaded_at": "2026-02-01T05:01:56.766693",
+      "updated_at": "2026-04-16T19:34:49.333933+00:00"
+    },
+    {
+      "generation_id": "68658205-a5f9-4e46-be33-7624b332873b",
+      "video_id": "MhsVea1aU-I",
+      "workflow": "catalog_backfill",
+      "mood": "study",
+      "duration_seconds": 30,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0006_20260201_050158_6288626f",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Study Without Distractions | 30 Seconds Focus Soundscape | Always Evolving",
+        "video_title": "Study Without Distractions | 30 Seconds Focus Soundscape | Always Evolving"
+      },
+      "generated_at": "2026-02-01T05:01:58.755698",
+      "uploaded_at": "2026-02-01T05:01:58.755698",
+      "updated_at": "2026-04-16T19:34:49.334300+00:00"
+    },
+    {
+      "generation_id": "139dbb88-8749-425c-9a38-701b765e5e83",
+      "video_id": "gOrWDi3DQjs",
+      "workflow": "catalog_backfill",
+      "mood": "energize",
+      "duration_seconds": 30,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0007_20260201_050200_d41e280c",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Get Moving | 30 Seconds Energizing Ambient Beats | Non-Repeating Flow",
+        "video_title": "Get Moving | 30 Seconds Energizing Ambient Beats | Non-Repeating Flow"
+      },
+      "generated_at": "2026-02-01T05:02:00.579454",
+      "uploaded_at": "2026-02-01T05:02:00.579454",
+      "updated_at": "2026-04-16T19:34:49.334688+00:00"
+    },
+    {
+      "generation_id": "f16300d2-7401-4fc2-b138-98c7b837c4a4",
+      "video_id": "kkzz-0eXIoM",
+      "workflow": "catalog_backfill",
+      "mood": "ceremony",
+      "duration_seconds": 30,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0008_20260201_050202_e91ecf29",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Sacred Space | 30 Seconds Ceremonial Sounds | Evolving Ritual Ambient",
+        "video_title": "Sacred Space | 30 Seconds Ceremonial Sounds | Evolving Ritual Ambient"
+      },
+      "generated_at": "2026-02-01T05:02:02.313406",
+      "uploaded_at": "2026-02-01T05:02:02.313406",
+      "updated_at": "2026-04-16T19:34:49.335089+00:00"
+    },
+    {
+      "generation_id": "8c2a5ddb-ee78-4db4-8225-4f7e7b62f35c",
+      "video_id": "TNzRlR3aDao",
+      "workflow": "catalog_backfill",
+      "mood": "warrior",
+      "duration_seconds": 30,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0009_20260201_050204_eb9f915e",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Find Your Strength | 30 Seconds Power Drums | Builds & Evolves",
+        "video_title": "Find Your Strength | 30 Seconds Power Drums | Builds & Evolves"
+      },
+      "generated_at": "2026-02-01T05:02:04.310910",
+      "uploaded_at": "2026-02-01T05:02:04.310910",
+      "updated_at": "2026-04-16T19:34:49.335508+00:00"
+    },
+    {
+      "generation_id": "585cd9ae-e932-4c1c-88dd-9c70797b706f",
+      "video_id": "P7mT-d6rLyg",
+      "workflow": "catalog_backfill",
+      "mood": "rain_sleep",
+      "duration_seconds": 30,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0010_20260201_050206_156c61a0",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Fall Asleep to Gentle Rain | 30 Seconds | Evolving Storm, Never Loops",
+        "video_title": "Fall Asleep to Gentle Rain | 30 Seconds | Evolving Storm, Never Loops"
+      },
+      "generated_at": "2026-02-01T05:02:06.031779",
+      "uploaded_at": "2026-02-01T05:02:06.031779",
+      "updated_at": "2026-04-16T19:34:49.335950+00:00"
+    },
+    {
+      "generation_id": "68987abc-2da1-4745-8b31-c8b0b6383510",
+      "video_id": "bTTOLj_krA0",
+      "workflow": "catalog_backfill",
+      "mood": "fireplace",
+      "duration_seconds": 30,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0011_20260201_050207_8ec1b321",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Cozy Night by the Fire | 30 Seconds | Crackling That Shifts & Breathes",
+        "video_title": "Cozy Night by the Fire | 30 Seconds | Crackling That Shifts & Breathes"
+      },
+      "generated_at": "2026-02-01T05:02:07.788243",
+      "uploaded_at": "2026-02-01T05:02:07.788243",
+      "updated_at": "2026-04-16T19:34:49.336377+00:00"
+    },
+    {
+      "generation_id": "051b6427-d32a-4890-aa7b-c5319086d4c5",
+      "video_id": "dWoppwh6RIk",
+      "workflow": "catalog_backfill",
+      "mood": "ocean_waves",
+      "duration_seconds": 30,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0012_20260201_050209_a4c18440",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Drift Off to Ocean Waves | 30 Seconds | Endless Tides, Never Repeats",
+        "video_title": "Drift Off to Ocean Waves | 30 Seconds | Endless Tides, Never Repeats"
+      },
+      "generated_at": "2026-02-01T05:02:09.550189",
+      "uploaded_at": "2026-02-01T05:02:09.550189",
+      "updated_at": "2026-04-16T19:34:49.336884+00:00"
+    },
+    {
+      "generation_id": "7fb35929-4c41-4faa-8c28-0e3561281b27",
+      "video_id": "SPtwcoH_lpM",
+      "workflow": "catalog_backfill",
+      "mood": "deep_focus",
+      "duration_seconds": 3600,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0013_20260203_041501_6b01e8d8",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Sounds for an Overactive Mind | 1 Hour Evolving Focus Music | No Loops [Pure Ambience]",
+        "video_title": "Sounds for an Overactive Mind | 1 Hour Evolving Focus Music | No Loops [Pure Ambience]"
+      },
+      "generated_at": "2026-02-03T04:15:01.164448",
+      "uploaded_at": "2026-02-03T04:15:01.164448",
+      "updated_at": "2026-04-16T19:34:49.337380+00:00"
+    },
+    {
+      "generation_id": "a0ed25cc-5cee-4eaa-9110-59d5b14af871",
+      "video_id": "7WqhdCLqCj4",
+      "workflow": "catalog_backfill",
+      "mood": "deep_focus",
+      "duration_seconds": 3600,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0014_20260203_041529_9cbaada8",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Sounds for an Overactive Mind | 1 Hour Evolving Focus Music | No Loops [With Music]",
+        "video_title": "Sounds for an Overactive Mind | 1 Hour Evolving Focus Music | No Loops [With Music]"
+      },
+      "generated_at": "2026-02-03T04:15:29.506953",
+      "uploaded_at": "2026-02-03T04:15:29.506953",
+      "updated_at": "2026-04-16T19:34:49.338052+00:00"
+    },
+    {
+      "generation_id": "0d42d170-49ac-4645-bdd5-0816e62ba9d2",
+      "video_id": "5Ipggwas5Hk",
+      "workflow": "catalog_backfill",
+      "mood": "rain_sleep",
+      "duration_seconds": 30,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0015_20260212_210829_830cda70",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Fall Asleep to Gentle Rain | 30 Seconds | Evolving Storm, Never Loops [Pure Ambience]",
+        "video_title": "Fall Asleep to Gentle Rain | 30 Seconds | Evolving Storm, Never Loops [Pure Ambience]"
+      },
+      "generated_at": "2026-02-12T21:08:29.566588",
+      "uploaded_at": "2026-02-12T21:08:29.566588",
+      "updated_at": "2026-04-16T19:34:49.338872+00:00"
+    },
+    {
+      "generation_id": "2a5efba8-36ea-4f49-8766-67621ea15812",
+      "video_id": "IIiabn_Fc8A",
+      "workflow": "catalog_backfill",
+      "mood": "rain_sleep",
+      "duration_seconds": 30,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0016_20260212_210830_d6d14878",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Fall Asleep to Gentle Rain | 30 Seconds | Evolving Storm, Never Loops [With Music]",
+        "video_title": "Fall Asleep to Gentle Rain | 30 Seconds | Evolving Storm, Never Loops [With Music]"
+      },
+      "generated_at": "2026-02-12T21:08:30.886215",
+      "uploaded_at": "2026-02-12T21:08:30.886215",
+      "updated_at": "2026-04-16T19:34:49.339456+00:00"
+    },
+    {
+      "generation_id": "d4ee8b84-1fb4-4a75-b220-1e9d5e435427",
+      "video_id": "UpuS1tSTY18",
+      "workflow": "catalog_backfill",
+      "mood": "deep_focus",
+      "duration_seconds": 30,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0017_20260212_210832_9f0faba7",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Sounds for an Overactive Mind | 30 Seconds Evolving Focus Music | No Loops [Pure Ambience]",
+        "video_title": "Sounds for an Overactive Mind | 30 Seconds Evolving Focus Music | No Loops [Pure Ambience]"
+      },
+      "generated_at": "2026-02-12T21:08:32.464198",
+      "uploaded_at": "2026-02-12T21:08:32.464198",
+      "updated_at": "2026-04-16T19:34:49.340153+00:00"
+    },
+    {
+      "generation_id": "c177e2dc-e581-433c-bbb9-5662983d3572",
+      "video_id": "VW0cNXG6rk8",
+      "workflow": "catalog_backfill",
+      "mood": "deep_focus",
+      "duration_seconds": 30,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0018_20260212_210833_039cd6ff",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Sounds for an Overactive Mind | 30 Seconds Evolving Focus Music | No Loops [With Music]",
+        "video_title": "Sounds for an Overactive Mind | 30 Seconds Evolving Focus Music | No Loops [With Music]"
+      },
+      "generated_at": "2026-02-12T21:08:33.962582",
+      "uploaded_at": "2026-02-12T21:08:33.962582",
+      "updated_at": "2026-04-16T19:34:49.340679+00:00"
+    },
+    {
+      "generation_id": "36b056c3-77f5-4411-b5fc-92cc8abdd68c",
+      "video_id": "N3dQfqDNgNM",
+      "workflow": "catalog_backfill",
+      "mood": "ocean_waves",
+      "duration_seconds": 30,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0019_20260212_210835_f38100df",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Drift Off to Ocean Waves | 30 Seconds | Endless Tides, Never Repeats [Pure Ambience]",
+        "video_title": "Drift Off to Ocean Waves | 30 Seconds | Endless Tides, Never Repeats [Pure Ambience]"
+      },
+      "generated_at": "2026-02-12T21:08:35.195181",
+      "uploaded_at": "2026-02-12T21:08:35.195181",
+      "updated_at": "2026-04-16T19:34:49.341218+00:00"
+    },
+    {
+      "generation_id": "f1df305b-5532-4e65-882a-fc8e4e3bad08",
+      "video_id": "35JBP3XJTqE",
+      "workflow": "catalog_backfill",
+      "mood": "ocean_waves",
+      "duration_seconds": 30,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0020_20260212_210836_c417fa10",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Drift Off to Ocean Waves | 30 Seconds | Endless Tides, Never Repeats [With Music]",
+        "video_title": "Drift Off to Ocean Waves | 30 Seconds | Endless Tides, Never Repeats [With Music]"
+      },
+      "generated_at": "2026-02-12T21:08:36.366958",
+      "uploaded_at": "2026-02-12T21:08:36.366958",
+      "updated_at": "2026-04-16T19:34:49.342433+00:00"
+    },
+    {
+      "generation_id": "b28ea551-f34e-4876-83d8-748240914549",
+      "video_id": "kJnhD0AJSxA",
+      "workflow": "catalog_backfill",
+      "mood": "warrior",
+      "duration_seconds": 3600,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0021_20260214_164553_839813db",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Find Your Strength | 1 Hour Power Drums | Builds & Evolves [Pure Ambience]",
+        "video_title": "Find Your Strength | 1 Hour Power Drums | Builds & Evolves [Pure Ambience]"
+      },
+      "generated_at": "2026-02-14T16:45:53.588453",
+      "uploaded_at": "2026-02-14T16:45:53.588453",
+      "updated_at": "2026-04-16T19:34:49.343079+00:00"
+    },
+    {
+      "generation_id": "75033a92-8e6a-4c01-b48c-96de54347466",
+      "video_id": "V6Ulo4dR6NQ",
+      "workflow": "catalog_backfill",
+      "mood": "warrior",
+      "duration_seconds": 3600,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0022_20260214_164611_45b0002b",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Find Your Strength | 1 Hour Power Drums | Builds & Evolves [With Music]",
+        "video_title": "Find Your Strength | 1 Hour Power Drums | Builds & Evolves [With Music]"
+      },
+      "generated_at": "2026-02-14T16:46:11.468237",
+      "uploaded_at": "2026-02-14T16:46:11.468237",
+      "updated_at": "2026-04-16T19:34:49.343674+00:00"
+    },
+    {
+      "generation_id": "90217ce5-2daa-41af-87de-dabf0eb2399f",
+      "video_id": "e5todrYr9HQ",
+      "workflow": "catalog_backfill",
+      "mood": "ceremony",
+      "duration_seconds": 3600,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0023_20260214_164634_3956269c",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Sacred Space | 1 Hour Ceremonial Sounds | Evolving Ritual Ambient [Pure Ambience]",
+        "video_title": "Sacred Space | 1 Hour Ceremonial Sounds | Evolving Ritual Ambient [Pure Ambience]"
+      },
+      "generated_at": "2026-02-14T16:46:34.580830",
+      "uploaded_at": "2026-02-14T16:46:34.580830",
+      "updated_at": "2026-04-16T19:34:49.344262+00:00"
+    },
+    {
+      "generation_id": "1b89d531-a771-4443-a620-cc4edf77e509",
+      "video_id": "x1MErO_qpoQ",
+      "workflow": "catalog_backfill",
+      "mood": "ceremony",
+      "duration_seconds": 3600,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0024_20260214_164657_c95310b2",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Sacred Space | 1 Hour Ceremonial Sounds | Evolving Ritual Ambient [With Music]",
+        "video_title": "Sacred Space | 1 Hour Ceremonial Sounds | Evolving Ritual Ambient [With Music]"
+      },
+      "generated_at": "2026-02-14T16:46:57.860605",
+      "uploaded_at": "2026-02-14T16:46:57.860605",
+      "updated_at": "2026-04-16T19:34:49.344865+00:00"
+    },
+    {
+      "generation_id": "22fd7a91-5e7b-461d-b64a-2cef518cfa8a",
+      "video_id": "2MaWFBmkWtw",
+      "workflow": "catalog_backfill",
+      "mood": "trance",
+      "duration_seconds": 3600,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0025_20260214_164727_a4c306b6",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Journey Inward | 1 Hour Hypnotic Trance | Never-Repeating Soundscape [Pure Ambience]",
+        "video_title": "Journey Inward | 1 Hour Hypnotic Trance | Never-Repeating Soundscape [Pure Ambience]"
+      },
+      "generated_at": "2026-02-14T16:47:27.481312",
+      "uploaded_at": "2026-02-14T16:47:27.481312",
+      "updated_at": "2026-04-16T19:34:49.345585+00:00"
+    },
+    {
+      "generation_id": "fb17a797-624b-499a-be59-28eeac7f00cc",
+      "video_id": "nm_ZNZYULD8",
+      "workflow": "catalog_backfill",
+      "mood": "trance",
+      "duration_seconds": 3600,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0026_20260214_164758_cec03251",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Journey Inward | 1 Hour Hypnotic Trance | Never-Repeating Soundscape [With Music]",
+        "video_title": "Journey Inward | 1 Hour Hypnotic Trance | Never-Repeating Soundscape [With Music]"
+      },
+      "generated_at": "2026-02-14T16:47:58.430262",
+      "uploaded_at": "2026-02-14T16:47:58.430262",
+      "updated_at": "2026-04-16T19:34:49.346225+00:00"
+    },
+    {
+      "generation_id": "b06878d5-17a6-4e5d-995d-26876ca49bd5",
+      "video_id": "HEBy-uDZU-M",
+      "workflow": "catalog_backfill",
+      "mood": "energize",
+      "duration_seconds": 3600,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0027_20260216_124800_2bb8edea",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Get Moving | 1 Hour Energizing Ambient Beats | Non-Repeating Flow [Pure Ambience]",
+        "video_title": "Get Moving | 1 Hour Energizing Ambient Beats | Non-Repeating Flow [Pure Ambience]"
+      },
+      "generated_at": "2026-02-16T12:48:00.375459",
+      "uploaded_at": "2026-02-16T12:48:00.375459",
+      "updated_at": "2026-04-16T19:34:49.346867+00:00"
+    },
+    {
+      "generation_id": "5ac1d6b1-0f9e-4357-8d1e-cc15e821baa1",
+      "video_id": "MANwiLGfcBQ",
+      "workflow": "catalog_backfill",
+      "mood": "energize",
+      "duration_seconds": 3600,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0028_20260216_124828_83490df1",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Get Moving | 1 Hour Energizing Ambient Beats | Non-Repeating Flow [With Music]",
+        "video_title": "Get Moving | 1 Hour Energizing Ambient Beats | Non-Repeating Flow [With Music]"
+      },
+      "generated_at": "2026-02-16T12:48:28.321775",
+      "uploaded_at": "2026-02-16T12:48:28.321775",
+      "updated_at": "2026-04-16T19:34:49.347528+00:00"
+    },
+    {
+      "generation_id": "a7ba5669-1dae-4053-b5c6-8c1226393a88",
+      "video_id": "-cbMpX14mnc",
+      "workflow": "catalog_backfill",
+      "mood": "lofi_study",
+      "duration_seconds": 3600,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0029_20260216_124841_27d3b5bd",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Study to Chill Beats | 1 Hour Lofi | Drifts & Evolves Endlessly [Pure Ambience]",
+        "video_title": "Study to Chill Beats | 1 Hour Lofi | Drifts & Evolves Endlessly [Pure Ambience]"
+      },
+      "generated_at": "2026-02-16T12:48:41.570726",
+      "uploaded_at": "2026-02-16T12:48:41.570726",
+      "updated_at": "2026-04-16T19:34:49.348223+00:00"
+    },
+    {
+      "generation_id": "74a38314-aebb-458e-840a-c848f54eb13f",
+      "video_id": "75vKKkvfuL0",
+      "workflow": "catalog_backfill",
+      "mood": "lofi_study",
+      "duration_seconds": 3600,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0030_20260216_124855_db1114c4",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Study to Chill Beats | 1 Hour Lofi | Drifts & Evolves Endlessly [With Music]",
+        "video_title": "Study to Chill Beats | 1 Hour Lofi | Drifts & Evolves Endlessly [With Music]"
+      },
+      "generated_at": "2026-02-16T12:48:55.304010",
+      "uploaded_at": "2026-02-16T12:48:55.304010",
+      "updated_at": "2026-04-16T19:34:49.348950+00:00"
+    },
+    {
+      "generation_id": "20745574-6e01-4249-afa7-2e866b426577",
+      "video_id": "RyyvhPbgsT8",
+      "workflow": "catalog_backfill",
+      "mood": "piano_relax",
+      "duration_seconds": 3600,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0031_20260216_124908_2e860e59",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Let Go of Stress | 1 Hour Soft Piano | Gently Evolving Melodies [Pure Ambience]",
+        "video_title": "Let Go of Stress | 1 Hour Soft Piano | Gently Evolving Melodies [Pure Ambience]"
+      },
+      "generated_at": "2026-02-16T12:49:08.897565",
+      "uploaded_at": "2026-02-16T12:49:08.897565",
+      "updated_at": "2026-04-16T19:34:49.349651+00:00"
+    },
+    {
+      "generation_id": "b9472c58-eae8-4a49-95b6-5449559be14a",
+      "video_id": "GLlGe_X4Vec",
+      "workflow": "catalog_backfill",
+      "mood": "piano_relax",
+      "duration_seconds": 3600,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0032_20260216_124925_d96402fe",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Let Go of Stress | 1 Hour Soft Piano | Gently Evolving Melodies [With Music]",
+        "video_title": "Let Go of Stress | 1 Hour Soft Piano | Gently Evolving Melodies [With Music]"
+      },
+      "generated_at": "2026-02-16T12:49:25.873271",
+      "uploaded_at": "2026-02-16T12:49:25.873271",
+      "updated_at": "2026-04-16T19:34:49.350396+00:00"
+    },
+    {
+      "generation_id": "c94ae656-77f3-41c1-8586-b2c9661478d9",
+      "video_id": "RtHjapv4Sk0",
+      "workflow": "catalog_backfill",
+      "mood": "sleep",
+      "duration_seconds": 3600,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0033_20260218_041533_61331dcd",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Can't Sleep? | 1 Hour Gentle Drift | Evolving Sounds That Never Repeat [Pure Ambience]",
+        "video_title": "Can't Sleep? | 1 Hour Gentle Drift | Evolving Sounds That Never Repeat [Pure Ambience]"
+      },
+      "generated_at": "2026-02-18T04:15:33.955799",
+      "uploaded_at": "2026-02-18T04:15:33.955799",
+      "updated_at": "2026-04-16T19:34:49.351143+00:00"
+    },
+    {
+      "generation_id": "5d324507-b0a3-4acc-adf0-ba5e1cceafc7",
+      "video_id": "wOg35ac8Bn4",
+      "workflow": "catalog_backfill",
+      "mood": "sleep",
+      "duration_seconds": 3600,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0034_20260218_041558_92dd7107",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Can't Sleep? | 1 Hour Gentle Drift | Evolving Sounds That Never Repeat [With Music]",
+        "video_title": "Can't Sleep? | 1 Hour Gentle Drift | Evolving Sounds That Never Repeat [With Music]"
+      },
+      "generated_at": "2026-02-18T04:15:58.369096",
+      "uploaded_at": "2026-02-18T04:15:58.369096",
+      "updated_at": "2026-04-16T19:34:49.352039+00:00"
+    },
+    {
+      "generation_id": "b7757efd-b96b-4dc1-968d-a95f4f8b76a5",
+      "video_id": "vzquqNRucVw",
+      "workflow": "catalog_backfill",
+      "mood": "chill",
+      "duration_seconds": 3600,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0035_20260218_041611_6d359f62",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Unwind After a Long Day | 1 Hour Chill Ambient | Continuously Evolving [Pure Ambience]",
+        "video_title": "Unwind After a Long Day | 1 Hour Chill Ambient | Continuously Evolving [Pure Ambience]"
+      },
+      "generated_at": "2026-02-18T04:16:11.717681",
+      "uploaded_at": "2026-02-18T04:16:11.717681",
+      "updated_at": "2026-04-16T19:34:49.352789+00:00"
+    },
+    {
+      "generation_id": "463e3c79-f91a-40b2-9fdb-8276eecff441",
+      "video_id": "T4v81dX3aKc",
+      "workflow": "catalog_backfill",
+      "mood": "chill",
+      "duration_seconds": 3600,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0036_20260218_041625_023a0e90",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Unwind After a Long Day | 1 Hour Chill Ambient | Continuously Evolving [With Music]",
+        "video_title": "Unwind After a Long Day | 1 Hour Chill Ambient | Continuously Evolving [With Music]"
+      },
+      "generated_at": "2026-02-18T04:16:25.667064",
+      "uploaded_at": "2026-02-18T04:16:25.667064",
+      "updated_at": "2026-04-16T19:34:49.353566+00:00"
+    },
+    {
+      "generation_id": "59421039-2669-43f9-91ba-cd52c8637758",
+      "video_id": "Rc83pOuY43s",
+      "workflow": "catalog_backfill",
+      "mood": "study",
+      "duration_seconds": 3600,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0037_20260218_041637_da150035",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Study Without Distractions | 1 Hour Focus Soundscape | Always Evolving [Pure Ambience]",
+        "video_title": "Study Without Distractions | 1 Hour Focus Soundscape | Always Evolving [Pure Ambience]"
+      },
+      "generated_at": "2026-02-18T04:16:37.315844",
+      "uploaded_at": "2026-02-18T04:16:37.315844",
+      "updated_at": "2026-04-16T19:34:49.354332+00:00"
+    },
+    {
+      "generation_id": "80103df7-aaa1-46ce-a826-b9b70b4a1e24",
+      "video_id": "pVB0PPHJ4ME",
+      "workflow": "catalog_backfill",
+      "mood": "study",
+      "duration_seconds": 3600,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0038_20260218_041650_01510eab",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Study Without Distractions | 1 Hour Focus Soundscape | Always Evolving [With Music]",
+        "video_title": "Study Without Distractions | 1 Hour Focus Soundscape | Always Evolving [With Music]"
+      },
+      "generated_at": "2026-02-18T04:16:50.621803",
+      "uploaded_at": "2026-02-18T04:16:50.621803",
+      "updated_at": "2026-04-16T19:34:49.355331+00:00"
+    },
+    {
+      "generation_id": "a3e1b9a1-d215-4195-876a-b45cf197148d",
+      "video_id": "rh5QY_A8Icg",
+      "workflow": "catalog_backfill",
+      "mood": "trance",
+      "duration_seconds": 10800,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0039_20260222_014715_d1c4b7cd",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Journey Inward | 3 Hours Hypnotic Trance | Never-Repeating Soundscape [Pure Ambience]",
+        "video_title": "Journey Inward | 3 Hours Hypnotic Trance | Never-Repeating Soundscape [Pure Ambience]"
+      },
+      "generated_at": "2026-02-22T01:47:15.677414",
+      "uploaded_at": "2026-02-22T01:47:15.677414",
+      "updated_at": "2026-04-16T19:34:49.356162+00:00"
+    },
+    {
+      "generation_id": "c5786ac2-d519-45b2-8539-a0732c04bcf5",
+      "video_id": "VifrpkjzHEc",
+      "workflow": "catalog_backfill",
+      "mood": "trance",
+      "duration_seconds": 10800,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0040_20260222_014832_e57ff85b",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Journey Inward | 3 Hours Hypnotic Trance | Never-Repeating Soundscape [With Music]",
+        "video_title": "Journey Inward | 3 Hours Hypnotic Trance | Never-Repeating Soundscape [With Music]"
+      },
+      "generated_at": "2026-02-22T01:48:32.147287",
+      "uploaded_at": "2026-02-22T01:48:32.147287",
+      "updated_at": "2026-04-16T19:34:49.356965+00:00"
+    },
+    {
+      "generation_id": "fdf7bdc2-baf9-40c0-9b60-f188f9e340d9",
+      "video_id": "T6c1ZJkgyyc",
+      "workflow": "catalog_backfill",
+      "mood": "warrior",
+      "duration_seconds": 10800,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0041_20260222_014904_2eefc417",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Find Your Strength | 3 Hours Power Drums | Builds & Evolves [Pure Ambience]",
+        "video_title": "Find Your Strength | 3 Hours Power Drums | Builds & Evolves [Pure Ambience]"
+      },
+      "generated_at": "2026-02-22T01:49:04.130501",
+      "uploaded_at": "2026-02-22T01:49:04.130501",
+      "updated_at": "2026-04-16T19:34:49.357800+00:00"
+    },
+    {
+      "generation_id": "02936338-6392-4add-98d3-e3e1468f5350",
+      "video_id": "qM0HV2u_axU",
+      "workflow": "catalog_backfill",
+      "mood": "warrior",
+      "duration_seconds": 10800,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0042_20260222_014940_28090d16",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Find Your Strength | 3 Hours Power Drums | Builds & Evolves [With Music]",
+        "video_title": "Find Your Strength | 3 Hours Power Drums | Builds & Evolves [With Music]"
+      },
+      "generated_at": "2026-02-22T01:49:40.452322",
+      "uploaded_at": "2026-02-22T01:49:40.452322",
+      "updated_at": "2026-04-16T19:34:49.359110+00:00"
+    },
+    {
+      "generation_id": "bef391d6-d908-4781-8cea-be3e01f92374",
+      "video_id": "zv2enqzD8sU",
+      "workflow": "catalog_backfill",
+      "mood": "energize",
+      "duration_seconds": 10800,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0043_20260222_015051_4da369eb",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Get Moving | 3 Hours Energizing Ambient Beats | Non-Repeating Flow [Pure Ambience]",
+        "video_title": "Get Moving | 3 Hours Energizing Ambient Beats | Non-Repeating Flow [Pure Ambience]"
+      },
+      "generated_at": "2026-02-22T01:50:51.167121",
+      "uploaded_at": "2026-02-22T01:50:51.167121",
+      "updated_at": "2026-04-16T19:34:49.359965+00:00"
+    },
+    {
+      "generation_id": "0d8e1b53-d26a-4f8d-8a30-cd90c5277b26",
+      "video_id": "OCsJDyzQ6Ec",
+      "workflow": "catalog_backfill",
+      "mood": "energize",
+      "duration_seconds": 10800,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0044_20260222_015206_016da762",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Get Moving | 3 Hours Energizing Ambient Beats | Non-Repeating Flow [With Music]",
+        "video_title": "Get Moving | 3 Hours Energizing Ambient Beats | Non-Repeating Flow [With Music]"
+      },
+      "generated_at": "2026-02-22T01:52:06.520820",
+      "uploaded_at": "2026-02-22T01:52:06.520820",
+      "updated_at": "2026-04-16T19:34:49.360830+00:00"
+    },
+    {
+      "generation_id": "42050130-1cd4-432d-8d8a-35e4ea708edc",
+      "video_id": "n2cUBUJUWYw",
+      "workflow": "catalog_backfill",
+      "mood": "trance",
+      "duration_seconds": 14400,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0045_20260226_035007_2ce358c7",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Journey Inward | 4 Hours Hypnotic Trance | Never-Repeating Soundscape [Pure Ambience]",
+        "video_title": "Journey Inward | 4 Hours Hypnotic Trance | Never-Repeating Soundscape [Pure Ambience]"
+      },
+      "generated_at": "2026-02-26T03:50:07.756947",
+      "uploaded_at": "2026-02-26T03:50:07.756947",
+      "updated_at": "2026-04-16T19:34:49.361744+00:00"
+    },
+    {
+      "generation_id": "3ad70308-aea4-47f3-bb23-03a393fbb48f",
+      "video_id": "Pt0dt5j4xe0",
+      "workflow": "catalog_backfill",
+      "mood": "trance",
+      "duration_seconds": 14400,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0046_20260226_035258_055b0ed7",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Journey Inward | 4 Hours Hypnotic Trance | Never-Repeating Soundscape [With Music]",
+        "video_title": "Journey Inward | 4 Hours Hypnotic Trance | Never-Repeating Soundscape [With Music]"
+      },
+      "generated_at": "2026-02-26T03:52:58.909763",
+      "uploaded_at": "2026-02-26T03:52:58.909763",
+      "updated_at": "2026-04-16T19:34:49.362627+00:00"
+    },
+    {
+      "generation_id": "531254b1-bd2e-4f42-9d8e-e396db71c0e8",
+      "video_id": "P9HSVcIGJpo",
+      "workflow": "catalog_backfill",
+      "mood": "warrior",
+      "duration_seconds": 14400,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0047_20260226_233525_7a5e96b5",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Find Your Strength | 4 Hours Power Drums | Builds & Evolves [Pure Ambience]",
+        "video_title": "Find Your Strength | 4 Hours Power Drums | Builds & Evolves [Pure Ambience]"
+      },
+      "generated_at": "2026-02-26T23:35:25.224700",
+      "uploaded_at": "2026-02-26T23:35:25.224700",
+      "updated_at": "2026-04-16T19:34:49.363529+00:00"
+    },
+    {
+      "generation_id": "1f1dee14-ff64-440a-b744-1a16fbe54a24",
+      "video_id": "xsOCBibfvJ0",
+      "workflow": "catalog_backfill",
+      "mood": "warrior",
+      "duration_seconds": 14400,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0048_20260226_233628_8bebc9ce",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Find Your Strength | 4 Hours Power Drums | Builds & Evolves [With Music]",
+        "video_title": "Find Your Strength | 4 Hours Power Drums | Builds & Evolves [With Music]"
+      },
+      "generated_at": "2026-02-26T23:36:28.179773",
+      "uploaded_at": "2026-02-26T23:36:28.179773",
+      "updated_at": "2026-04-16T19:34:49.364516+00:00"
+    },
+    {
+      "generation_id": "444f879f-3a59-4da9-9ed9-3ce69dc52a3a",
+      "video_id": "dZzB2SaBgmg",
+      "workflow": "catalog_backfill",
+      "mood": "piano_deep_calm",
+      "duration_seconds": 3600,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0049_20260308_230306_2511d02f",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Let Go of Stress | Deep Calm Piano Atmosphere [Pure Ambience]",
+        "video_title": "Let Go of Stress | Deep Calm Piano Atmosphere [Pure Ambience]"
+      },
+      "generated_at": "2026-03-08T23:03:06.966955",
+      "uploaded_at": "2026-03-08T23:03:06.966955",
+      "updated_at": "2026-04-16T19:34:49.365668+00:00"
+    },
+    {
+      "generation_id": "25b99a1a-6359-4097-9ba5-2643d6e48996",
+      "video_id": "-0Hr5DkxG2M",
+      "workflow": "catalog_backfill",
+      "mood": "piano_deep_calm",
+      "duration_seconds": 3600,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0050_20260308_230327_f6badcb6",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Let Go of Stress | Deep Calm Piano Atmosphere [With Music]",
+        "video_title": "Let Go of Stress | Deep Calm Piano Atmosphere [With Music]"
+      },
+      "generated_at": "2026-03-08T23:03:27.564479",
+      "uploaded_at": "2026-03-08T23:03:27.564479",
+      "updated_at": "2026-04-16T19:34:49.366667+00:00"
+    },
+    {
+      "generation_id": "5cd88782-e3d2-4c05-900a-3ad6aba76409",
+      "video_id": "c9w1FTfHqCI",
+      "workflow": "catalog_backfill",
+      "mood": "piano_ambient",
+      "duration_seconds": 7200,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0051_20260315_152446_60e0f217",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Let Go of Stress | 2 Hours Soft Piano Ambient [Pure Ambience]",
+        "video_title": "Let Go of Stress | 2 Hours Soft Piano Ambient [Pure Ambience]"
+      },
+      "generated_at": "2026-03-15T15:24:46.329572",
+      "uploaded_at": "2026-03-15T15:24:46.329572",
+      "updated_at": "2026-04-16T19:34:49.367668+00:00"
+    },
+    {
+      "generation_id": "1b28e5da-58ad-4b85-bc14-419d4d9b0b14",
+      "video_id": "HsCrE2__iUs",
+      "workflow": "catalog_backfill",
+      "mood": "piano_ambient",
+      "duration_seconds": 7200,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0052_20260315_152511_87bab748",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Let Go of Stress | 2 Hours Soft Piano Ambient [With Music]",
+        "video_title": "Let Go of Stress | 2 Hours Soft Piano Ambient [With Music]"
+      },
+      "generated_at": "2026-03-15T15:25:11.178928",
+      "uploaded_at": "2026-03-15T15:25:11.178928",
+      "updated_at": "2026-04-16T19:34:49.368636+00:00"
+    },
+    {
+      "generation_id": "5f1296ad-5e8f-4e0c-9e7b-5b65e328db14",
+      "video_id": "n0fGreOZnvc",
+      "workflow": "catalog_backfill",
+      "mood": "rain_piano",
+      "duration_seconds": 7200,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0053_20260315_152536_6c85b2bd",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Let Go of Stress | Rain + Soft Piano | 2 Hours [Pure Ambience]",
+        "video_title": "Let Go of Stress | Rain + Soft Piano | 2 Hours [Pure Ambience]"
+      },
+      "generated_at": "2026-03-15T15:25:36.594191",
+      "uploaded_at": "2026-03-15T15:25:36.594191",
+      "updated_at": "2026-04-16T19:34:49.369626+00:00"
+    },
+    {
+      "generation_id": "1034d0d2-eb10-487d-87ca-d183d369bd5b",
+      "video_id": "xZXFZ_Rdja0",
+      "workflow": "catalog_backfill",
+      "mood": "rain_piano",
+      "duration_seconds": 7200,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0054_20260315_152600_ac19193d",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Let Go of Stress | Rain + Soft Piano | 2 Hours [With Music]",
+        "video_title": "Let Go of Stress | Rain + Soft Piano | 2 Hours [With Music]"
+      },
+      "generated_at": "2026-03-15T15:26:00.954708",
+      "uploaded_at": "2026-03-15T15:26:00.954708",
+      "updated_at": "2026-04-16T19:34:49.370700+00:00"
+    },
+    {
+      "generation_id": "11b0b2ac-1d5d-44dc-afe7-9e396deb5230",
+      "video_id": "Odsu10z5QXQ",
+      "workflow": "catalog_backfill",
+      "mood": "piano_evening",
+      "duration_seconds": 3600,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0055_20260315_152612_8707d5fd",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Let Go of Stress | Calm Evening Piano Ambient [Pure Ambience]",
+        "video_title": "Let Go of Stress | Calm Evening Piano Ambient [Pure Ambience]"
+      },
+      "generated_at": "2026-03-15T15:26:12.235141",
+      "uploaded_at": "2026-03-15T15:26:12.235141",
+      "updated_at": "2026-04-16T19:34:49.371908+00:00"
+    },
+    {
+      "generation_id": "06b9a892-8180-4667-8037-0bb806e95124",
+      "video_id": "vO8Pb1zgPOM",
+      "workflow": "catalog_backfill",
+      "mood": "piano_evening",
+      "duration_seconds": 3600,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0056_20260315_152625_44b84632",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Let Go of Stress | Calm Evening Piano Ambient [With Music]",
+        "video_title": "Let Go of Stress | Calm Evening Piano Ambient [With Music]"
+      },
+      "generated_at": "2026-03-15T15:26:25.925543",
+      "uploaded_at": "2026-03-15T15:26:25.925543",
+      "updated_at": "2026-04-16T19:34:49.372959+00:00"
+    },
+    {
+      "generation_id": "3230e278-f95f-435e-889e-9c6f592e8dea",
+      "video_id": "Y2h91t9Rjt4",
+      "workflow": "catalog_backfill",
+      "mood": "piano_gentle",
+      "duration_seconds": 3600,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0057_20260315_152638_adc9310d",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Let Go of Stress | Gentle Piano for Relaxation | 1 Hour [Pure Ambience]",
+        "video_title": "Let Go of Stress | Gentle Piano for Relaxation | 1 Hour [Pure Ambience]"
+      },
+      "generated_at": "2026-03-15T15:26:38.059091",
+      "uploaded_at": "2026-03-15T15:26:38.059091",
+      "updated_at": "2026-04-16T19:34:49.374039+00:00"
+    },
+    {
+      "generation_id": "7c6d5a38-5788-4004-9881-29e173987254",
+      "video_id": "LiB9FR1P4fs",
+      "workflow": "catalog_backfill",
+      "mood": "piano_gentle",
+      "duration_seconds": 3600,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0058_20260315_152651_42ded16a",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Let Go of Stress | Gentle Piano for Relaxation | 1 Hour [With Music]",
+        "video_title": "Let Go of Stress | Gentle Piano for Relaxation | 1 Hour [With Music]"
+      },
+      "generated_at": "2026-03-15T15:26:51.594461",
+      "uploaded_at": "2026-03-15T15:26:51.594461",
+      "updated_at": "2026-04-16T19:34:49.375231+00:00"
+    },
+    {
+      "generation_id": "1596b7f8-9927-410a-bf1b-bb5144a99449",
+      "video_id": "yZ7Mh6sVTUQ",
+      "workflow": "catalog_backfill",
+      "mood": "piano_deep_calm",
+      "duration_seconds": 3600,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0059_20260315_152708_d17822bd",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Let Go of Stress | Deep Calm Piano Atmosphere [Pure Ambience]",
+        "video_title": "Let Go of Stress | Deep Calm Piano Atmosphere [Pure Ambience]"
+      },
+      "generated_at": "2026-03-15T15:27:08.511684",
+      "uploaded_at": "2026-03-15T15:27:08.511684",
+      "updated_at": "2026-04-16T19:34:49.376355+00:00"
+    },
+    {
+      "generation_id": "0d21e632-4c63-4d4a-b333-47f8801b8deb",
+      "video_id": "q98Xd_yGoSw",
+      "workflow": "catalog_backfill",
+      "mood": "piano_deep_calm",
+      "duration_seconds": 3600,
+      "params": {
+        "backfill": true,
+        "catalog_id": "video_0060_20260315_152727_bb34bd02",
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Let Go of Stress | Deep Calm Piano Atmosphere [With Music]",
+        "video_title": "Let Go of Stress | Deep Calm Piano Atmosphere [With Music]"
+      },
+      "generated_at": "2026-03-15T15:27:27.316431",
+      "uploaded_at": "2026-03-15T15:27:27.316431",
+      "updated_at": "2026-04-16T19:34:49.377455+00:00"
     }
   ]
 }
