@@ -15,7 +15,7 @@
 
 ## Anchor
 
-- **Commit:** `fa18aca` — fix(ci): commit generations ledger from upload workflows
+- **Commit:** `47fe214` — fix(ci): commit generations ledger from upload workflows
 
 ## Goal
 
