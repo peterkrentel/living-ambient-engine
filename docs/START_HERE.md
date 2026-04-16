@@ -23,6 +23,7 @@ Use a short opener so nobody re-derives context from scratch:
 | **Decisions (why X not Y)** | [`decisions/`](decisions/) | ADRs — short, dated; link from `HANDOFF` when relevant. |
 | **Execution** | [`EXECUTION.md`](EXECUTION.md) | venv + Actions only; no ad-hoc system Python. |
 | **Guardrails** | [`spec/GUARDRAILS.md`](spec/GUARDRAILS.md) | Parameter limits — **check before changing generation**. |
+| **All `.md` paths** | [`MARKDOWN_INDEX.md`](MARKDOWN_INDEX.md) | Grouped inventory (specs, reports, archive, root exports). |
 
 ## What is *not* a durable source of truth
 
@@ -34,7 +35,9 @@ Use a short opener so nobody re-derives context from scratch:
 
 ## Root-level `*.md` (caution)
 
-Files next to `README.md` (e.g. [`TESTING_PLAN.md`](../TESTING_PLAN.md), `IMPLEMENTATION_SUMMARY.md`, `INTEGRATION_STATUS.md`) are often **time- and branch-specific** playbooks. Treat them as **optional smoke notes**, not current status: check **named branch**, **date**, **paths** (GitHub Actions uses `/home/runner/...`; locally use your **repo root**), and **line numbers** into large YAML — those go stale.
+**Exception:** [`CONTENT_LIBRARY.md`](../CONTENT_LIBRARY.md) at repo root is the **library export** (workflows + `library/` write there) — **do not move or rename**.
+
+Other root markdown is often **time-specific**. Historical playbooks now live in **[`docs/archive/`](archive/)** (see [`archive/README.md`](archive/README.md)). Full inventory: **[`MARKDOWN_INDEX.md`](MARKDOWN_INDEX.md)**.
 
 **Merge / contract truth:** [`spec/workflows.md`](spec/workflows.md) and the workflows it references (including PR gate [`test-art-creator.yml`](../.github/workflows/test-art-creator.yml)).
 

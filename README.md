@@ -126,6 +126,7 @@ See [docs/youtube-auth.md](docs/youtube-auth.md) for detailed instructions.
 
 ## Documentation
 
+- 📑 **[Markdown inventory](docs/MARKDOWN_INDEX.md)** - What every `.md` in the repo is for (includes [`docs/archive/`](docs/archive/) playbooks)
 - 🎨 **[Art Creator Guide](docs/ART_CREATOR.md)** - Your digital artist's palette
 - 📚 **[Getting Started Guide](docs/GETTING_STARTED.md)** - Complete tutorial with examples
 - ⚡ **[Quick Reference](docs/QUICK_REFERENCE.md)** - Command cheat sheet
