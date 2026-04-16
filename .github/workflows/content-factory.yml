@@ -211,9 +211,11 @@ jobs:
           echo "## ✅ YouTube Upload Complete" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
-          # Add catalog stats if available
+          # Catalog stats = rows in repo JSON only (uploads through this engine), not full YouTube channel size.
           if [ -f content_catalog.json ]; then
-            echo "### Content Library:" >> $GITHUB_STEP_SUMMARY
+            echo "### Repo catalog (\`content_catalog.json\`)" >> $GITHUB_STEP_SUMMARY
+            echo "_Pipeline log only — can be far below total videos on the channel._" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
             if python library_cli.py stats > /tmp/catalog_stats.txt 2>&1; then
               tail -n +2 /tmp/catalog_stats.txt >> $GITHUB_STEP_SUMMARY
             else
