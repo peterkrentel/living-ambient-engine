@@ -15,10 +15,8 @@ on:
 
   pull_request:
     paths:
-      - '.github/workflows/art-creator.yml'
-      - '.github/workflows/test-art-creator.yml'
-      - '.github/workflows/content-factory.yml'
-      - '.github/workflows/content-factory-brand.yml'
+      # Any workflow change can affect upload/generation paths — keep PR gate in sync with YAML.
+      - '.github/workflows/**'
       - 'audio/**'
       - 'visuals/**'
       - 'orchestrator/**'

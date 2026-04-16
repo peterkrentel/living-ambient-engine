@@ -23,7 +23,7 @@ Four workflows automate video generation, YouTube deployment, and testing.
 | WF-CFBATCH | `content-factory-brand-batch.yml` | Manual (+ optional schedule) | Mood rotation (SEO; cron may be off) | Brand |
 | WF-ART | `art-creator.yml` | Manual / workflow_call | Single custom video | Brand (optional) |
 | WF-BATCH | `art-creator-batch.yml` | Manual (+ optional schedule) | Matrix generation (cron may be off) | Brand |
-| WF-TEST | `test-art-creator.yml` | Manual + PR (path filter) | Test all input combinations | None (test only) |
+| WF-TEST | `test-art-creator.yml` | Manual + PR (path filter: workflows/**, core dirs, specs, contracts) | Test all input combinations | None (test only) |
 | WF-AGENT | `analytics-agent.yml` | Schedule (weekly) + Manual | Fetch YouTube stats, generate reports | N/A |
 
 ## Gating Rules
@@ -402,13 +402,16 @@ Runs 7 test cases **in parallel** with 5-second videos (minimum per GUARDRAILS.m
 workflow_dispatch:  # Manual trigger
 pull_request:       # Auto-trigger on workflow/core code changes
   paths:
-    - '.github/workflows/art-creator.yml'
-    - '.github/workflows/test-art-creator.yml'
+    - '.github/workflows/**'   # Any workflow edit (not only art-creator / content-factory)
     - 'audio/**'
     - 'visuals/**'
     - 'orchestrator/**'
     - 'config/**'
     - 'render/**'
+    - 'youtube_upload.py'
+    - 'youtube/**'
+    - 'tests/contracts/**'
+    - 'docs/spec/**'
 ```
 
 ### Job Sequence
