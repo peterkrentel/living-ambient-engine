@@ -14,6 +14,7 @@ This repo’s automation and repeatable work should **not** rely on ad-hoc “wh
 
 - When suggesting shell commands for this repo, **assume venv is activated** or show activation in the same block.
 - For integration checks that need secrets (YouTube, etc.), **do not** expect a successful local run without credentials; use **Actions** or document manual steps.
+- **Git:** land changes with **branch + PR** to `main`; do not push product commits straight to `main` ([`CONTRIBUTING.md`](../CONTRIBUTING.md) § *Git workflow*).
 
 ## Relationship to data
 

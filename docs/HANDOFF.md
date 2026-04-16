@@ -8,8 +8,8 @@
 
 ## Branch / PR
 
-- **Branch:** `main`
-- **Open PR:** _(none)_
+- **Policy:** All **code and docs** ship via **feature branch → pull request → merge to `main`**. No direct `git push` to `main` for that work (humans + agents). **Exception:** Actions may commit **`data/`** snapshots on `main` (analytics workflows).
+- **Active branch / PR:** _Update when you start work (branch name + PR link)._
 
 ## Anchor
 
