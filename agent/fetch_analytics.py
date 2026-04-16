@@ -34,7 +34,11 @@ try:
 except ImportError:
     HAS_GOOGLE_API = False
     Credentials = Any  # type: ignore - fallback for type hints
-    HttpError = Exception  # type: ignore
+
+    class _HttpErrorPlaceholder(Exception):
+        """Unused sentinel so ``isinstance(e, HttpError)`` is never true without google-api."""
+
+    HttpError = _HttpErrorPlaceholder  # type: ignore[misc, assignment]
 
 
 DATA_DIR = Path("data")
@@ -44,6 +48,51 @@ GENERATIONS_FILE = DATA_DIR / "generations.json"
 
 CHANNEL_BRAND = "brand"
 CHANNEL_PERSONAL = "personal"
+
+# channels.list(mine) + YouTube Analytics reports (see docs/spec/contracts/agent-youtube.md)
+_SCOPE_YOUTUBE_DATA_READ = frozenset(
+    (
+        "https://www.googleapis.com/auth/youtube.readonly",
+        "https://www.googleapis.com/auth/youtube",
+        "https://www.googleapis.com/auth/youtube.force-ssl",
+    )
+)
+_SCOPE_YT_ANALYTICS = "https://www.googleapis.com/auth/yt-analytics.readonly"
+
+
+def _analytics_scope_help() -> str:
+    return (
+        "Analytics needs OAuth scopes on the same pickle you use in CI:\n"
+        f"  • One of (YouTube Data read): {', '.join(sorted(_SCOPE_YOUTUBE_DATA_READ))}\n"
+        f"  • {_SCOPE_YT_ANALYTICS}\n"
+        "The repo’s upload CLI requests all of these — see `youtube/uploader.py` SCOPES.\n"
+        "Fix: run `python youtube_upload.py --auth` locally (with `client_secrets.json`), "
+        "confirm the consent screen lists read + Analytics, then re-encode the pickle and "
+        "update `YOUTUBE_TOKEN_PICKLE` in GitHub Actions secrets.\n"
+        "Docs: `docs/youtube-auth.md`, `docs/PERSONAL_ANALYTICS.md` § Authentication."
+    )
+
+
+def _verify_oauth_scopes_for_analytics(credentials: Any) -> None:
+    """Fail fast if the token cannot call Data API + Analytics (upload-only tokens cannot)."""
+    scopes = getattr(credentials, "scopes", None)
+    if not scopes:
+        return
+    sset = set(scopes)
+    missing: List[str] = []
+    if not sset.intersection(_SCOPE_YOUTUBE_DATA_READ):
+        missing.append("YouTube Data API read (youtube.readonly or equivalent)")
+    if _SCOPE_YT_ANALYTICS not in sset:
+        missing.append("yt-analytics.readonly")
+    if missing:
+        raise ValueError(
+            "OAuth token is missing scopes required for fetch_analytics:\n"
+            + "\n".join(f"  • {m}" for m in missing)
+            + "\n\nCurrent scopes on this credential:\n  "
+            + "\n  ".join(sorted(sset))
+            + "\n\n"
+            + _analytics_scope_help()
+        )
 
 
 def analytics_json_path() -> Path:
@@ -75,6 +124,7 @@ class AnalyticsFetcher:
 
         self.channel = channel
         self.credentials = self._load_credentials(token_env, channel)
+        _verify_oauth_scopes_for_analytics(self.credentials)
         self.youtube = build("youtube", "v3", credentials=self.credentials)
         self.analytics = build("youtubeAnalytics", "v2", credentials=self.credentials)
 
@@ -433,6 +483,21 @@ def main():
     except ImportError as e:
         print(f"❌ Missing dependencies: {e}")
         print("   Install with: pip install google-api-python-client google-auth")
+    except HttpError as e:
+        if e.resp is not None and e.resp.status == 403:
+            detail = ""
+            try:
+                body = getattr(e, "content", b"") or b""
+                if isinstance(body, bytes):
+                    detail = body.decode("utf-8", errors="replace")
+            except Exception:
+                detail = ""
+            if "insufficient" in detail.lower() or "Insufficient Permission" in detail:
+                print("❌ YouTube returned 403 insufficient scopes / permission.")
+                print("")
+                print(_analytics_scope_help())
+        print(f"❌ Error fetching analytics: {e}")
+        raise
     except Exception as e:
         print(f"❌ Error fetching analytics: {e}")
         raise

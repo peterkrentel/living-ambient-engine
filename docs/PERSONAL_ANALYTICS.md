@@ -56,6 +56,8 @@ Adjust names when implementing if you prefer a single `data/personal/` subtree.
 
 **Implementation:** Use **`python -m agent.fetch_analytics --channel personal`**, which ignores `YOUTUBE_TOKEN_PICKLE_BRAND` and defaults output to `data/analytics_personal.json`. The personal workflow never sets the brand secret.
 
+If CI fails with **`insufficient authentication scopes`** on `channels.list`, the secret pickle was created without read/analytics scopes — see **[`docs/youtube-auth.md`](youtube-auth.md)** (Troubleshooting table + **Re-create the token with the right scopes**). Upload-only tokens are not enough for analytics.
+
 ---
 
 ## Workflow choice (locked in v1)
