@@ -7,21 +7,10 @@ This project uses **spec-driven development**. Specifications are the source of 
 
 ## Before Coding
 
-1. **Execution policy**: `docs/EXECUTION.md` — project commands via **activated venv** or **GitHub Actions**, not ad-hoc system Python
-2. **Read the guardrails**: `docs/spec/GUARDRAILS.md` - **ALWAYS CHECK THIS FIRST**
-   - Parameter limits (min/max/default)
-   - Forbidden states
-   - Enforcement levels
-3. **Read the system spec**: `docs/spec/SYSTEM.md`
-4. **Read component specs**: Check `*/SPEC.md` for any component you'll modify
-   - `audio/SPEC.md` - Audio generation
-   - `visuals/SPEC.md` - Visual generation
-   - `orchestrator/SPEC.md` - Pipeline coordination
-   - `youtube/SPEC.md` - YouTube uploads
-   - `config/SPEC.md` - Configuration system
-   - `render/SPEC.md` - FFmpeg rendering
-5. **Check contracts**: `docs/spec/contracts/` for cross-component interfaces
-6. **Check workflow specs**: `docs/spec/workflows.md` for CI/CD changes
+1. **`docs/START_HERE.md`** — what belongs where (do not duplicate that map elsewhere). If continuing a thread: **`docs/HANDOFF.md`**.
+2. **`docs/spec/GUARDRAILS.md`** — before any generation-parameter or mood work (**mandatory**).
+3. **`docs/EXECUTION.md`** — venv or GitHub Actions only.
+4. **Read only what you will change:** `docs/spec/SYSTEM.md`; relevant `*/SPEC.md`; `docs/spec/contracts/` for interfaces; **`docs/spec/workflows.md`** for any `.github/workflows/` edit.
 
 ## While Coding
 

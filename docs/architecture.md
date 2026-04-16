@@ -59,7 +59,7 @@ flowchart TB
 ```mermaid
 flowchart LR
     subgraph Trigger["🕐 Triggers"]
-        SCHEDULE["Cron Schedule\nDaily 2AM UTC"]
+        SCHEDULE["Cron (personal)\noff in YAML until re-enabled"]
         MANUAL["Manual Dispatch\nOn-demand"]
     end
 
@@ -72,7 +72,7 @@ flowchart LR
     end
 
     subgraph YouTube["📺 YouTube Channels"]
-        PERSONAL["Personal Channel\n(Scheduled uploads)"]
+        PERSONAL["Personal Channel\n(manual today)"]
         BRAND["Living Ambient Engine\n(Manual uploads)"]
     end
 

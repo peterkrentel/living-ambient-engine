@@ -211,13 +211,11 @@ python run_job.py --mood ceremony --duration 2400
 
 **Scale Workflow:**
 ```bash
-# Weekly content generation (GitHub Actions)
-# Schedule: Daily at 2 AM UTC
-# Generates: All moods × Multiple durations
-# Auto-uploads to YouTube
-# Result: 10-15 videos per day
+# High-volume path (GitHub Actions): use Content Factory / brand batch workflows.
+# Personal factory: cron may be off in YAML — check .github/workflows/content-factory.yml
+# Brand/mood batches: see docs/spec/workflows.md — schedules can be paused during audit windows.
 
-# Manual supplemental content
+# Manual / local supplemental
 python batch_generate.py --moods all --durations 4h,6h,8h
 ```
 

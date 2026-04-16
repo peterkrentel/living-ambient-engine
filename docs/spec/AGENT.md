@@ -58,14 +58,18 @@ The agent is a **standalone service** that does NOT modify existing working code
 
 ## Data Flow
 
-### 1. After Video Upload (per-workflow step)
+### 1. After Video Upload (ledger on disk and on `main`)
 
-Workflows call the logger CLI **after** a successful upload:
+**Canonical path today:** [`youtube_upload.py`](../../youtube_upload.py) calls `record_generation_upload` from [`agent/log_generation.py`](../../agent/log_generation.py) after a successful upload (batch and single). That updates **`data/generations.json`** in the working tree.
+
+**On GitHub Actions**, writing the file on the runner is **not** enough: upload workflows **must commit and push** `data/generations.json` to `main` or channel audits will show **0% join** to analytics. Step list and per-workflow behavior: **[`docs/spec/workflows.md`](workflows.md) § Generations ledger**. Decision record: **[`docs/decisions/0001-persist-generations-json-on-ci.md`](../decisions/0001-persist-generations-json-on-ci.md)**.
+
+**Optional alternate** (not mixed with the upload path today): standalone CLI after upload — example only:
 
 ```yaml
-# Example workflow step (added after upload step)
+# Example only — prefer aligning with COHESION Phase 2b (single path)
 - name: Log generation for analytics
-  if: success()  # Only if upload succeeded
+  if: success()
   run: |
     python -m agent.log_generation \
       --video-id "$VIDEO_ID" \
@@ -75,10 +79,7 @@ Workflows call the logger CLI **after** a successful upload:
 ```
 
 ```
-Workflow (art-creator, content-factory)
-    → Upload to YouTube (existing)
-    → python -m agent.log_generation (standalone CLI)
-    → data/generations.json
+Workflow → Upload to YouTube → record_generation_upload → data/generations.json → git commit (CI) → main
 ```
 
 ### 2. Weekly Analytics Fetch
@@ -105,6 +106,8 @@ analytics-agent.yml
 ### generations.json
 
 **Implemented:** `agent/log_generation.py` writes **schema_version 1** rows on successful upload via `youtube_upload.py` (batch + single). Increment **`schema_version`** when adding required fields.
+
+**CI:** Persist updates on `main` per **[`workflows.md`](workflows.md) § Generations ledger** (same PR when changing upload YAML).
 
 ```json
 {

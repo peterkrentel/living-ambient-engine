@@ -18,12 +18,12 @@ Four workflows automate video generation, YouTube deployment, and testing.
 
 | ID | Workflow | Trigger | Purpose | Channel |
 |----|----------|---------|---------|---------|
-| WF-CF | `content-factory.yml` | Schedule + Manual | Batch generation + upload | Personal |
+| WF-CF | `content-factory.yml` | Manual (cron **commented out** in YAML; strategy TBD) | Batch generation + upload | Personal |
 | WF-CFB | `content-factory-brand.yml` | Manual only | Batch generation + upload | Brand |
 | WF-CFBATCH | `content-factory-brand-batch.yml` | Manual (+ optional schedule) | Mood rotation (SEO; cron may be off) | Brand |
 | WF-ART | `art-creator.yml` | Manual / workflow_call | Single custom video | Brand (optional) |
 | WF-BATCH | `art-creator-batch.yml` | Manual (+ optional schedule) | Matrix generation (cron may be off) | Brand |
-| WF-TEST | `test-art-creator.yml` | Manual + PR (path filter) | Test all input combinations | None (test only) |
+| WF-TEST | `test-art-creator.yml` | Manual + PR (path filter: workflows/**, core dirs, specs, contracts) | Test all input combinations | None (test only) |
 | WF-AGENT | `analytics-agent.yml` | Schedule (weekly) + Manual | Fetch YouTube stats, generate reports | N/A |
 
 ## Gating Rules
@@ -70,19 +70,35 @@ This spec is enforced at multiple levels:
 
 | Workflow | `contents` | `actions` | Why |
 |----------|------------|-----------|-----|
-| `content-factory.yml` | write | - | Catalog commit |
-| `content-factory-brand.yml` | write | - | Catalog commit |
-| `art-creator.yml` | write | - | Catalog commit |
-| `test-art-creator.yml` | read | read | Read-only tests |
+| `content-factory.yml` | write | - | Catalog + generations ledger commit |
+| `content-factory-brand.yml` | write | - | Catalog + generations ledger commit |
+| `content-factory-brand-batch.yml` | write | read | Generations ledger commit after upload |
+| `piano-batch.yml` | write | - | Catalog + generations ledger commit |
+| `art-creator.yml` | read (default); **upload** job sets `write` | read | Upload job pushes `data/generations.json` only |
+| `test-art-creator.yml` | **write** | read | Must allow `art-creator.yml`’s **upload** job `contents: write` (GitHub validates reusable-workflow permissions at parse time; test matrix skips upload via inputs) |
+
+### Generations ledger (`data/generations.json`)
+
+[`youtube_upload.py`](../../youtube_upload.py) calls `record_generation_upload` after a successful upload. On GitHub Actions that update must be **committed and pushed** or the ledger stays empty on `main` and analytics audits show **0% join** to `analytics.json`.
+
+| Workflow | When `data/generations.json` is committed |
+|----------|-------------------------------------------|
+| `content-factory.yml`, `content-factory-brand.yml`, `piano-batch.yml` | Same step as catalog: `git add` includes `data/generations.json` when present |
+| `content-factory-brand-batch.yml` | Dedicated **Commit generations ledger** step after upload |
+| `art-creator.yml` | **upload** job: `permissions.contents: write`, commit `data/generations.json` after upload (`--no-update-catalog` unchanged) |
 
 ## content-factory.yml
 
 ### Trigger
 
+**As in repo today:** `schedule` is **commented out** (personal channel on hold). Only **`workflow_dispatch`** runs until cron is re-enabled in `.github/workflows/content-factory.yml`.
+
+**When schedule is enabled**, the intended cron is:
+
 ```yaml
-schedule:
-  - cron: '0 2 * * *'  # Daily 2AM UTC
-workflow_dispatch:      # Manual trigger
+# schedule:
+#   - cron: '0 2 * * *'  # Daily 2AM UTC
+workflow_dispatch:      # Manual trigger (always)
 ```
 
 ### Concurrency
@@ -120,6 +136,7 @@ permissions:
 - Video artifacts in `./generated/` (7-day retention)
 - `manifest.json` with generation metadata
 - Upload results in job summary
+- `data/generations.json` updates committed with the catalog when uploads succeed (see **Generations ledger** above)
 
 ## content-factory-brand.yml
 
@@ -127,7 +144,7 @@ Same as `content-factory.yml` except:
 
 | Difference | content-factory | content-factory-brand |
 |------------|-----------------|----------------------|
-| Trigger | Schedule + Manual | **Manual only** |
+| Trigger | **Manual** (personal cron **off** in YAML until re-enabled) | **Manual only** |
 | Secret | `YOUTUBE_TOKEN_PICKLE` | `YOUTUBE_TOKEN_PICKLE_BRAND` |
 | Channel | Personal | Brand |
 | Concurrency group | `content-factory` | `content-factory-brand` |
@@ -275,10 +292,15 @@ See: `tests/contracts/` for enforcement via `spec-validation` job.
 
 ### Permissions
 
+Workflow default (tight):
+
 ```yaml
 permissions:
-  contents: write  # Required for catalog commit
+  contents: read
+  actions: read
 ```
+
+The **`upload`** job (when `upload_to_brand` is true) sets `permissions: contents: write` so it can push **`data/generations.json`** after `youtube_upload.py` runs with `--no-update-catalog` (no catalog commit from this workflow).
 
 ## art-creator-batch.yml
 
@@ -380,13 +402,16 @@ Runs 7 test cases **in parallel** with 5-second videos (minimum per GUARDRAILS.m
 workflow_dispatch:  # Manual trigger
 pull_request:       # Auto-trigger on workflow/core code changes
   paths:
-    - '.github/workflows/art-creator.yml'
-    - '.github/workflows/test-art-creator.yml'
+    - '.github/workflows/**'   # Any workflow edit (not only art-creator / content-factory)
     - 'audio/**'
     - 'visuals/**'
     - 'orchestrator/**'
     - 'config/**'
     - 'render/**'
+    - 'youtube_upload.py'
+    - 'youtube/**'
+    - 'tests/contracts/**'
+    - 'docs/spec/**'
 ```
 
 ### Job Sequence

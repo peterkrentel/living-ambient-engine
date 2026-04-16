@@ -64,7 +64,7 @@ Optimize for discoverability and consistent publishing.
 
 - [ ] Research high-volume ambient/sleep/focus search terms
 - [ ] Map moods to SEO-optimized titles (e.g., "rain sleep" → "Rain Sounds for Deep Sleep | 3 Hours")
-- [ ] Review schedule timing (2AM UTC - is this optimal for target audience?)
+- [ ] Review schedule timing (2AM UTC when personal `content-factory` cron is re-enabled — is it optimal for target audience?)
 - [ ] Consider upload frequency vs. quality tradeoff
 - [ ] Add tags/keywords based on search data
 

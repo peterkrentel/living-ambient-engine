@@ -2,7 +2,7 @@
 
 *Procedural ambient audiovisual generator producing long-form, continuously evolving, non-repeating pieces.*
 
-> **🤖 AI Agents:** Read [`.github/AGENT_INSTRUCTIONS.md`](.github/AGENT_INSTRUCTIONS.md) and [`docs/spec/GUARDRAILS.md`](docs/spec/GUARDRAILS.md) **BEFORE** making any changes.
+> **🤖 AI Agents:** [`docs/START_HERE.md`](docs/START_HERE.md) → [`.github/AGENT_INSTRUCTIONS.md`](.github/AGENT_INSTRUCTIONS.md) (includes [`GUARDRAILS`](docs/spec/GUARDRAILS.md) before changing generation).
 
 > **New User?** Start here: [📚 Getting Started Guide](docs/GETTING_STARTED.md) | [⚡ Quick Reference](docs/QUICK_REFERENCE.md) | [🎨 Art Creator](docs/ART_CREATOR.md) | [❓ FAQ](docs/FAQ.md)
 
@@ -74,6 +74,8 @@ python library_cli.py export
 
 ## 8 Mood Presets
 
+Featured examples below — **`config/moods.yaml`** and workflows support **additional** presets (e.g. full brand SEO rotation). See [`docs/spec/workflows.md`](docs/spec/workflows.md).
+
 | Mood | Brainwave | Frequency | Rhythm |
 |------|-----------|-----------|--------|
 | `deep_focus` | 40Hz Gamma | 432Hz | Taiko |
@@ -88,7 +90,7 @@ python library_cli.py export
 ## Optional: Automated Publishing
 
 If you want to publish to YouTube, the project includes CI/CD automation:
-1. **Scheduled generation** - GitHub Actions workflow
+1. **GitHub Actions** - manual and (where enabled) scheduled workflows
 2. **Batch processing** - Multiple moods x durations
 3. **Auto-upload** - Direct to YouTube with metadata
 4. **Content Library** - Catalog with links and metadata
@@ -124,6 +126,7 @@ See [docs/youtube-auth.md](docs/youtube-auth.md) for detailed instructions.
 
 ## Documentation
 
+- 📑 **[Markdown inventory](docs/MARKDOWN_INDEX.md)** - What every `.md` in the repo is for (includes [`docs/archive/`](docs/archive/) playbooks)
 - 🎨 **[Art Creator Guide](docs/ART_CREATOR.md)** - Your digital artist's palette
 - 📚 **[Getting Started Guide](docs/GETTING_STARTED.md)** - Complete tutorial with examples
 - ⚡ **[Quick Reference](docs/QUICK_REFERENCE.md)** - Command cheat sheet

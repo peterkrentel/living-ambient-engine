@@ -70,8 +70,9 @@ Unify story and systems: **three ledgers** (YouTube / `data/` / catalog), then c
 | Step | Action |
 |------|--------|
 | 2a | Persist each run with **`generation_id`** + **generation params** (sidecar: seed, mood, configs, workflow, `GITHUB_SHA`); set / update **`video_id`** after successful upload (see **Data contract rules** below). **`data/generations.json`** per [AGENT.md](spec/AGENT.md). |
-| 2b | **Pick one code path:** either **`python -m agent.log_generation`** from workflows **or** append inside [`youtube_upload.py`](../youtube_upload.py) only — avoid splitting logic across both. Same commit as [AGENT.md](spec/AGENT.md) updates so spec matches code. |
-| 2c | Evolve **`scripts/correlate.py`**: join analytics rows by **`video_id`** to **`generations.json`** and use **params**; **else** fallback to title parsing (backward compatibility). |
+| 2b | **Pick one code path:** either **`python -m agent.log_generation`** from workflows **or** append inside [`youtube_upload.py`](../youtube_upload.py) only — avoid splitting logic across both. Same commit as [AGENT.md](spec/AGENT.md) updates so spec matches code. **Implemented path:** `youtube_upload.py` → `record_generation_upload`. |
+| 2c | **CI must persist the ledger on `main`:** every workflow that runs `youtube_upload.py` **commits and pushes** `data/generations.json` when it changes (not only the catalog). Otherwise audits show **0% join** forever. Canonical step list: [workflows.md](spec/workflows.md) § **Generations ledger**. ADR: [decisions/0001](decisions/0001-persist-generations-json-on-ci.md). |
+| 2d | Evolve **`scripts/correlate.py`**: join analytics rows by **`video_id`** to **`generations.json`** and use **params**; **else** fallback to title parsing (backward compatibility). |
 
 **Schema risk:** `generations.json` becomes the **central join table**—lock fields and **`schema_version`** early; bump version when fields change. Use a stable **internal** id distinct from YouTube’s id: **`generation_id`** (UUID) = one generation/upload *event*; **`video_id`** = external join after publish (may be missing until upload succeeds; retries re-link the same `generation_id`).
 
@@ -129,7 +130,7 @@ Videos published **before** `generations.json` exists have **no** joined params 
 ### Phase 2 implementation notes (detail in the Phase 2 PR)
 
 - **Concurrent writers:** Multiple CI jobs or local runs appending one shared JSON file invite **git merge conflicts**. Prefer a **single writer** (e.g. only the upload step on `main`), or **sharded files** / NDJSON merged in a dedicated step—decide when implementing **2b**.
-- **Tests:** When implementing **2c**, add a minimal check: fixture **`analytics` + `generations`** → correlate uses **joined params** for a known **`video_id`** (harness shape left to that PR).
+- **Tests:** When implementing **2d** (correlate), add a minimal check: fixture **`analytics` + `generations`** → correlate uses **joined params** for a known **`video_id`** (harness shape left to that PR).
 
 ---
 
@@ -202,16 +203,18 @@ Videos published **before** `generations.json` exists have **no** joined params 
 
 1. **Phase 0:** Finish brand batch; don’t touch batch workflow until stable.  
 2. **Immediately after:** Phase **2a–2b** — implement **`video_id` ↔ metadata** (`generations.json` + one logging path). This is the **first** code priority; Phase 1 narrative can run in parallel but must not block 2 for long.  
-3. **Phase 2c** + lock **AGENT.md** schema (“data constitution”).  
-4. **Phase 3** — confirm **B** (or A/hybrid) per section above.  
-5. **Polish:** Phases **4–5**; Phase **6** when joins feel trustworthy.
+3. **Phase 2c** — **CI persistence** of `generations.json` on `main` (see [workflows.md](spec/workflows.md) § Generations ledger; [ADR 0001](decisions/0001-persist-generations-json-on-ci.md)).  
+4. **Phase 2d** (correlate) + lock **AGENT.md** schema (“data constitution”).  
+5. **Phase 3** — confirm **B** (or A/hybrid) per section above.  
+6. **Polish:** Phases **4–5**; Phase **6** when joins feel trustworthy.
 
-**Stripped execution (first code sprint):** (1) minimal `generations.json` + `schema_version` + **`generation_id`** per run, (2) upload path **creates** row then **updates** `video_id` on success / retry, (3) test on **manual** brand workflow, (4) correlate: join by `video_id` → title fallback.
+**Stripped execution (first code sprint):** (1) minimal `generations.json` + `schema_version` + **`generation_id`** per run; (2) upload path **creates** row then **updates** `video_id` on success / retry; (3) workflows **commit** `data/generations.json` to `main`; (4) test on **manual** brand workflow; (5) correlate: join by `video_id` → title fallback.
 
 ---
 
 ## Related paths
 
+- **Doc map (start here):** [`START_HERE.md`](START_HERE.md) — where each kind of truth lives; **ADRs:** [`decisions/`](decisions/)
 - Execution policy (venv + CI): [`EXECUTION.md`](EXECUTION.md)
 - Personal channel (separate analytics plan): [`PERSONAL_ANALYTICS.md`](PERSONAL_ANALYTICS.md)
 - Workflows: [.github/workflows/](../.github/workflows/)

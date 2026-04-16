@@ -111,6 +111,11 @@
 | `config/` | Configuration | `config/SPEC.md` |
 | `render/` | FFmpeg Renderer | `render/SPEC.md` |
 | `.github/workflows/` | CI/CD | `docs/spec/workflows.md` |
+| `docs/HANDOFF.md` | Active work snapshot (human-maintained) | This section § Session continuity |
+| `docs/START_HERE.md` | Documentation map (humans + agents) | This section § Session continuity |
+| `docs/decisions/` | ADRs (why X not Y) | `docs/decisions/README.md` |
+| `docs/MARKDOWN_INDEX.md` | Inventory of all `.md` files | This file |
+| `docs/archive/` | Historical playbooks (moved from root) | `docs/archive/README.md` |
 
 ## Branch Strategy
 
@@ -133,8 +138,15 @@ Examples requiring spec updates:
 ### PR Checklist
 See `CONTRIBUTING.md` for the required checklist including spec verification.
 
+### Session continuity
+
+Chat is not durable memory. **[`docs/START_HERE.md`](../START_HERE.md)** is the **only** long orientation map (what lives in which file). **[`docs/HANDOFF.md`](../HANDOFF.md)** is the **only** file meant to change often—current branch, next actions; **overwrite** it; do not grow a diary inside it. New session: `@docs/HANDOFF.md` + mode + goal.
+
 ## Related Specs
 
+- [Markdown inventory](../MARKDOWN_INDEX.md)
+- [Documentation map / START_HERE](../START_HERE.md)
+- [Architecture Decision Records](../decisions/README.md)
 - [Audio Generator Spec](../../audio/SPEC.md)
 - [Visual Generator Spec](../../visuals/SPEC.md)
 - [Orchestrator Spec](../../orchestrator/SPEC.md)

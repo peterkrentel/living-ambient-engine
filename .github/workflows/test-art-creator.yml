@@ -15,10 +15,8 @@ on:
 
   pull_request:
     paths:
-      - '.github/workflows/art-creator.yml'
-      - '.github/workflows/test-art-creator.yml'
-      - '.github/workflows/content-factory.yml'
-      - '.github/workflows/content-factory-brand.yml'
+      # Any workflow change can affect upload/generation paths — keep PR gate in sync with YAML.
+      - '.github/workflows/**'
       - 'audio/**'
       - 'visuals/**'
       - 'orchestrator/**'
@@ -29,8 +27,10 @@ on:
       - 'tests/contracts/**'
       - 'docs/spec/**'
 
+# workflow_call into art-creator.yml must allow that workflow's job permissions.
+# art-creator "upload" uses contents:write; GitHub validates this even when upload is skipped (e.g. tests).
 permissions:
-  contents: read
+  contents: write
   actions: read
 
 jobs:
