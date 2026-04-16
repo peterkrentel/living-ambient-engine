@@ -16,7 +16,7 @@
 
 ## Anchor
 
-- **Commit:** `5256fcd` — tip: ledger CI + START_HERE / ADR / cross-links (`git log -1 --oneline`)
+- **Commit:** _(paste output of `git log -1 --oneline` on your branch)_
 
 ## Goal
 
