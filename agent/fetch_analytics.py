@@ -1,13 +1,18 @@
 #!/usr/bin/env python3
 """Fetch YouTube Analytics data.
 
-Pulls performance metrics from the YouTube Analytics API and stores them in
-``data/analytics.json`` for correlation with generation parameters.
+Pulls performance metrics from the YouTube Analytics API and stores them in a
+JSON file (default ``data/analytics.json``) for correlation with generation
+parameters.
 
-**Channel scope (today):** In CI, ``YOUTUBE_TOKEN_PICKLE_BRAND`` is set first, so
-this module ingests the **brand** channel. Personal is a **separate** channel
-and OAuth secret; it is **not** mixed into ``analytics.json`` until a personal
-fetch path exists (see ``docs/PERSONAL_ANALYTICS.md``).
+**Two channels (two experiments):**
+
+- **Brand (default):** Uses ``YOUTUBE_TOKEN_PICKLE_BRAND`` when set, else falls
+  back to ``YOUTUBE_TOKEN_PICKLE`` / local pickle. Writes
+  ``data/analytics.json`` unless ``ANALYTICS_JSON_PATH`` overrides.
+- **Personal:** ``python -m agent.fetch_analytics --channel personal`` uses
+  **only** ``YOUTUBE_TOKEN_PICKLE`` (never the brand secret). Default output is
+  ``data/analytics_personal.json``. See ``docs/PERSONAL_ANALYTICS.md``.
 
 Spec: docs/spec/AGENT.md
 Contract: docs/spec/contracts/agent-youtube.md
@@ -33,41 +38,73 @@ except ImportError:
 
 
 DATA_DIR = Path("data")
-ANALYTICS_FILE = DATA_DIR / "analytics.json"
+DEFAULT_ANALYTICS_JSON = str(DATA_DIR / "analytics.json")
+DEFAULT_ANALYTICS_JSON_PERSONAL = str(DATA_DIR / "analytics_personal.json")
 GENERATIONS_FILE = DATA_DIR / "generations.json"
+
+CHANNEL_BRAND = "brand"
+CHANNEL_PERSONAL = "personal"
+
+
+def analytics_json_path() -> Path:
+    """Output path for analytics JSON (``ANALYTICS_JSON_PATH`` or default)."""
+    return Path(os.environ.get("ANALYTICS_JSON_PATH", DEFAULT_ANALYTICS_JSON))
 
 
 class AnalyticsFetcher:
     """Fetches YouTube Analytics data for tracked videos."""
-    
-    def __init__(self, token_env: str = "YOUTUBE_TOKEN_PICKLE"):
+
+    def __init__(
+        self,
+        token_env: str = "YOUTUBE_TOKEN_PICKLE",
+        channel: str = CHANNEL_BRAND,
+    ):
         """Initialize with YouTube API credentials.
-        
+
         Args:
-            token_env: Environment variable containing base64-encoded token pickle
+            token_env: Env var for base64-encoded token pickle (personal OAuth).
+            channel: ``brand`` prefers ``YOUTUBE_TOKEN_PICKLE_BRAND`` then
+                ``token_env``. ``personal`` uses **only** ``token_env`` (and
+                local ``youtube_token.pickle``), never the brand secret.
         """
         if not HAS_GOOGLE_API:
             raise ImportError("google-api-python-client not installed")
-        
-        self.credentials = self._load_credentials(token_env)
+
+        if channel not in (CHANNEL_BRAND, CHANNEL_PERSONAL):
+            raise ValueError(f"channel must be {CHANNEL_BRAND!r} or {CHANNEL_PERSONAL!r}, got {channel!r}")
+
+        self.channel = channel
+        self.credentials = self._load_credentials(token_env, channel)
         self.youtube = build("youtube", "v3", credentials=self.credentials)
         self.analytics = build("youtubeAnalytics", "v2", credentials=self.credentials)
-    
-    def _load_credentials(self, token_env: str) -> Credentials:
+
+    def _load_credentials(self, token_env: str, channel: str) -> Credentials:
         """Load OAuth credentials from environment or file."""
-        # Try brand channel token first (analytics uses brand account)
+        if channel == CHANNEL_PERSONAL:
+            token_b64 = os.environ.get(token_env)
+            if token_b64:
+                token_data = base64.b64decode(token_b64)
+                return pickle.loads(token_data)
+            token_file = Path("youtube_token.pickle")
+            if token_file.exists():
+                with open(token_file, "rb") as f:
+                    return pickle.load(f)
+            raise ValueError(
+                f"Personal channel fetch requires {token_env} or youtube_token.pickle "
+                "(YOUTUBE_TOKEN_PICKLE_BRAND is ignored for --channel personal)"
+            )
+
+        # Brand: prefer brand token, then personal env, then local file
         token_b64 = os.environ.get("YOUTUBE_TOKEN_PICKLE_BRAND")
         if token_b64:
             token_data = base64.b64decode(token_b64)
             return pickle.loads(token_data)
 
-        # Try personal token (fallback)
         token_b64 = os.environ.get(token_env)
         if token_b64:
             token_data = base64.b64decode(token_b64)
             return pickle.loads(token_data)
 
-        # Try local file
         token_file = Path("youtube_token.pickle")
         if token_file.exists():
             with open(token_file, "rb") as f:
@@ -302,17 +339,19 @@ class AnalyticsFetcher:
 
 
 def load_analytics() -> Dict[str, Any]:
-    """Load existing analytics data."""
-    if ANALYTICS_FILE.exists():
-        with open(ANALYTICS_FILE, "r") as f:
+    """Load existing analytics data from ``analytics_json_path()``."""
+    path = analytics_json_path()
+    if path.exists():
+        with open(path, "r") as f:
             return json.load(f)
     return {"fetched_at": None, "videos": []}
 
 
 def save_analytics(data: Dict[str, Any]) -> None:
-    """Save analytics data to file."""
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
-    with open(ANALYTICS_FILE, "w") as f:
+    """Save analytics data to ``analytics_json_path()``."""
+    path = analytics_json_path()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w") as f:
         json.dump(data, f, indent=2)
 
 
@@ -337,12 +376,23 @@ def main():
 
     parser = argparse.ArgumentParser(description="Fetch YouTube Analytics")
     parser.add_argument("--days", type=int, default=28, help="Days of data to fetch")
+    parser.add_argument(
+        "--channel",
+        choices=(CHANNEL_BRAND, CHANNEL_PERSONAL),
+        default=CHANNEL_BRAND,
+        help="brand: prefer YOUTUBE_TOKEN_PICKLE_BRAND. personal: only YOUTUBE_TOKEN_PICKLE",
+    )
     args = parser.parse_args()
 
-    print("📊 Fetching analytics from YouTube channel...")
+    if args.channel == CHANNEL_PERSONAL and "ANALYTICS_JSON_PATH" not in os.environ:
+        os.environ["ANALYTICS_JSON_PATH"] = DEFAULT_ANALYTICS_JSON_PERSONAL
+
+    out_path = analytics_json_path()
+    scope = "personal" if args.channel == CHANNEL_PERSONAL else "brand"
+    print(f"📊 Fetching analytics from YouTube channel ({scope}) → {out_path}")
 
     try:
-        fetcher = AnalyticsFetcher()
+        fetcher = AnalyticsFetcher(channel=args.channel)
         start_date = date.today() - timedelta(days=args.days)
         end_date = date.today() - timedelta(days=1)
 
@@ -369,9 +419,15 @@ def main():
 
         existing["fetched_at"] = result["fetched_at"]
         existing["date_range"] = result["date_range"]
+        if args.channel == CHANNEL_PERSONAL:
+            existing["source"] = CHANNEL_PERSONAL
+            try:
+                existing["channel_id"] = fetcher.get_channel_id()
+            except Exception:
+                pass  # optional metadata
 
         save_analytics(existing)
-        print(f"✅ Analytics saved to {ANALYTICS_FILE}")
+        print(f"✅ Analytics saved to {out_path}")
         print(f"   Videos tracked: {len(result['videos'])}")
 
     except ImportError as e:

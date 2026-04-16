@@ -17,7 +17,7 @@ This repo’s automation and repeatable work should **not** rely on ad-hoc “wh
 
 ## Relationship to data
 
-- **`data/*` commits** from [Analytics Agent](../.github/workflows/analytics-agent.yml) are produced **in CI**, not by ad-hoc local runs, unless you intentionally mirror that process inside a venv for debugging.
+- **`data/*` commits** from [Analytics Agent (brand)](../.github/workflows/analytics-agent.yml) and [Analytics Agent (personal)](../.github/workflows/analytics-personal.yml) are produced **in CI**, not by ad-hoc local runs, unless you intentionally mirror that process inside a venv for debugging.
 
 ---
 

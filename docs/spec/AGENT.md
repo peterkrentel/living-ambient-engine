@@ -230,6 +230,8 @@ jobs:
           git push
 ```
 
+**Personal channel (separate experiment):** [`analytics-personal.yml`](../../.github/workflows/analytics-personal.yml) runs `fetch_analytics --channel personal` and `report` with `ANALYTICS_JSON_PATH=data/analytics_personal.json` (see `docs/PERSONAL_ANALYTICS.md`). It does not update `data/analytics.json`, `suggestions.json`, or brand audit files.
+
 ## Success Metrics
 
 | Metric | Target | Purpose |

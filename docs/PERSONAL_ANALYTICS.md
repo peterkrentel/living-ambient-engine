@@ -22,7 +22,7 @@
 | Piece | Brand | Personal |
 |--------|--------|----------|
 | Upload workflow | `content-factory-brand.yml`, batch workflows, `art-creator.yml` (brand) | [`content-factory.yml`](../.github/workflows/content-factory.yml) (`YOUTUBE_TOKEN_PICKLE`) — catalog mostly produced |
-| Scheduled analytics | [`analytics-agent.yml`](../.github/workflows/analytics-agent.yml) → `data/analytics.json` | **None** in repo |
+| Scheduled analytics | [`analytics-agent.yml`](../.github/workflows/analytics-agent.yml) → `data/analytics.json` | [`analytics-personal.yml`](../.github/workflows/analytics-personal.yml) → `data/analytics_personal.json` + `data/reports/*-personal.md` |
 | Manual / ad hoc | — | Studio screenshots, exports, external tools (current “what’s next” loop) |
 
 **Catalog vs analytics:** [`content_catalog.json`](../content_catalog.json) is **one** file and may list uploads from **both** channels. **`data/analytics.json`** is **brand-channel only**. Audit “join %” is therefore **brand-overlap**, not “every catalog row.” See [`START_HERE.md`](START_HERE.md#two-channels-two-probes).
@@ -54,16 +54,13 @@ Adjust names when implementing if you prefer a single `data/personal/` subtree.
 - **Secret:** `YOUTUBE_TOKEN_PICKLE` (already used by Content Factory Personal).
 - **Scopes:** Align with brand: at minimum **`youtube.readonly`** and **`yt-analytics.readonly`** on the token that owns the personal channel (same as [`agent-youtube` contract](spec/contracts/agent-youtube.md) where applicable).
 
-**Implementation note:** Today `AnalyticsFetcher` loads **`YOUTUBE_TOKEN_PICKLE_BRAND` first** when that env var is set ([`fetch_analytics.py`](../agent/fetch_analytics.py)). A personal fetch step must use **only** the personal token—e.g. run in a job step that sets `YOUTUBE_TOKEN_PICKLE` and **does not** set `YOUTUBE_TOKEN_PICKLE_BRAND`, or add an explicit CLI flag / env like `ANALYTICS_TOKEN_ENV` once you extend the script.
+**Implementation:** Use **`python -m agent.fetch_analytics --channel personal`**, which ignores `YOUTUBE_TOKEN_PICKLE_BRAND` and defaults output to `data/analytics_personal.json`. The personal workflow never sets the brand secret.
 
 ---
 
-## Workflow options
+## Workflow choice (locked in v1)
 
-1. **Extra job** in [`analytics-agent.yml`](../.github/workflows/analytics-agent.yml) after the brand fetch: personal-only env, write `analytics_personal.json`, then personal report/suggestions steps (or stub reports until scripts are parameterized).
-2. **Separate workflow** `analytics-personal.yml` — clearer ownership and scheduling (e.g. same weekly cron or different day).
-
-Pick one; avoid two workflows writing the same path.
+**Separate workflow** [`analytics-personal.yml`](../.github/workflows/analytics-personal.yml) — personal-only env, no `YOUTUBE_TOKEN_PICKLE_BRAND`, offset cron vs brand. Alternative (extra job in `analytics-agent.yml`) was not needed once isolation was the priority.
 
 ---
 
@@ -89,4 +86,10 @@ Pick one; avoid two workflows writing the same path.
 
 ---
 
-*Living stub — extend when the first personal analytics PR lands.*
+**v1 shipped:** separate workflow + JSON + suffixed reports.
+
+### Roadmap (order matters)
+
+1. **Operate:** run **`analytics-personal.yml`** on `main` (`workflow_dispatch` first is fine); confirm `data/analytics_personal.json` and `data/reports/*-personal.md` commit cleanly and never touch `data/analytics.json` / `suggestions.json`.
+2. **Parity (optional):** personal **`correlate` / `suggestions_personal.json`**, personal-scoped **audit** (join against personal analytics only), CTR/impressions in fetch when API allows — still **separate files**, no blended correlate rows.
+3. **Generalize (when boring or N≥3 channels):** a **channel profile** template — e.g. reusable GitHub workflow with inputs (`token_secret`, `analytics_json_path`, `report_suffix`, `run_correlate`), or a small registry in Python — so “add a channel” is config + one new secret, not duplicated YAML. Until then, two explicit workflows are intentional ([`HANDOFF.md`](HANDOFF.md) § next actions).

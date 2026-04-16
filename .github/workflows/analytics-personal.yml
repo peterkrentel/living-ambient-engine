@@ -1,0 +1,112 @@
+# Personal-channel analytics (separate experiment from brand)
+# Spec: docs/spec/workflows.md#analytics-personalyml
+# See: docs/PERSONAL_ANALYTICS.md
+
+name: Analytics Agent (Personal)
+
+on:
+  schedule:
+    # Monday 02:00 UTC — offset from brand Sunday run to avoid accidental coupling
+    - cron: '0 2 * * 1'
+
+  workflow_dispatch:
+    inputs:
+      days:
+        description: 'Days of analytics data to fetch'
+        required: false
+        default: '28'
+        type: string
+
+permissions:
+  contents: write
+
+env:
+  PYTHON_VERSION: '3.11'
+  # Never set YOUTUBE_TOKEN_PICKLE_BRAND in this workflow — personal fetch must not see it.
+
+jobs:
+  analyze-personal:
+    name: Fetch Personal Analytics & Report
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install google-api-python-client google-auth google-auth-oauthlib
+          if [ -f requirements.txt ]; then
+            pip install -r requirements.txt
+          fi
+
+      - name: Debug token scopes (personal)
+        env:
+          YOUTUBE_TOKEN_PICKLE: ${{ secrets.YOUTUBE_TOKEN_PICKLE }}
+        run: |
+          echo "🔍 Checking token scopes (personal account)..."
+          python -c "import base64, pickle, os; t=os.environ.get('YOUTUBE_TOKEN_PICKLE'); c=pickle.loads(base64.b64decode(t)) if t else None; print('Scopes:', c.scopes if c else 'No token')"
+
+      - name: Fetch YouTube Analytics (personal)
+        env:
+          YOUTUBE_TOKEN_PICKLE: ${{ secrets.YOUTUBE_TOKEN_PICKLE }}
+        run: |
+          echo "📊 Fetching personal-channel YouTube Analytics..."
+          DAYS="${{ inputs.days }}"
+          DAYS="${DAYS:-28}"
+          python -m agent.fetch_analytics --channel personal --days "$DAYS"
+
+      - name: Generate weekly report (personal)
+        env:
+          ANALYTICS_JSON_PATH: data/analytics_personal.json
+          ANALYTICS_CHANNEL: personal
+          ANALYTICS_REPORT_SUFFIX: '-personal'
+        run: |
+          echo "📈 Generating personal performance report..."
+          python -m agent.report
+
+      - name: Commit personal data
+        run: |
+          git config user.name "Analytics Agent (Personal)"
+          git config user.email "actions@github.com"
+
+          git add data/analytics_personal.json
+          if compgen -G "data/reports/*-personal.md" > /dev/null; then
+            git add data/reports/*-personal.md
+          fi
+
+          if git diff --staged --quiet; then
+            echo "📊 No personal analytics changes to commit"
+          else
+            WEEK=$(date +%Y-W%V)
+            git commit -m "📊 Personal analytics ${WEEK} [skip ci]"
+            git push
+            echo "✅ Personal analytics committed and pushed"
+          fi
+
+      - name: Summary
+        run: |
+          echo "## Personal channel — Analytics" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Experiment:** Personal only. Brand pipeline is unchanged (\`analytics-agent.yml\`)." >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          if [ -f data/analytics_personal.json ]; then
+            VC=$(python -c "import json; d=json.load(open('data/analytics_personal.json')); print(len(d.get('videos', [])))")
+            echo "- **Videos in \`analytics_personal.json\`:** $VC" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          LATEST=$(ls -t data/reports/*-personal.md 2>/dev/null | head -1)
+          if [ -n "$LATEST" ]; then
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            echo "- **Latest personal report:** \`$LATEST\`" >> "$GITHUB_STEP_SUMMARY"
+            echo "" >> "$GITHUB_STEP_SUMMARY"
+            head -25 "$LATEST" >> "$GITHUB_STEP_SUMMARY"
+          fi

@@ -6,7 +6,7 @@
 
 ## Overview
 
-Eight workflow files automate video generation, YouTube deployment, analytics, and testing. Use the **Workflow Index** below as the map; YAML is the source of truth when this table drifts.
+Nine workflow files automate video generation, YouTube deployment, analytics, and testing. Use the **Workflow Index** below as the map; YAML is the source of truth when this table drifts.
 
 **Each workflow YAML file MUST include a spec reference comment:**
 
@@ -25,7 +25,8 @@ Eight workflow files automate video generation, YouTube deployment, analytics, a
 | WF-BATCH | `art-creator-batch.yml` | Manual (+ optional schedule) | Matrix generation (cron may be off) | Brand |
 | WF-PIANO | `piano-batch.yml` | Manual only | Batch piano videos + upload | Brand |
 | WF-TEST | `test-art-creator.yml` | Manual + PR (path filter) | CI: spec validation + contract tests + 7× `art-creator` matrix (no production upload) | None |
-| WF-AGENT | `analytics-agent.yml` | Schedule (weekly) + Manual | Fetch YouTube stats, reports, correlate, channel audit | N/A |
+| WF-AGENT | `analytics-agent.yml` | Schedule (weekly) + Manual | Fetch YouTube stats, reports, correlate, channel audit | Brand |
+| WF-AGENT-P | `analytics-personal.yml` | Schedule (weekly) + Manual | Fetch personal stats + weekly `*-personal.md` report only | Personal |
 
 ## Gating Rules
 
@@ -541,6 +542,44 @@ on:
 - **Writes:** Only to `data/` directory
 
 See: [GUARDRAILS.md](./GUARDRAILS.md) § Analytics Agent Guardrails
+
+---
+
+## analytics-personal.yml
+
+**Purpose:** Same *family* of metrics as the brand fetcher, but as a **separate experiment**: personal OAuth only, `data/analytics_personal.json`, and reports named `data/reports/YYYY-WW-personal.md`. Does **not** run correlate, audit, or `suggestions.json` (those remain brand-scoped until explicitly parameterized).
+
+**Spec:** [PERSONAL_ANALYTICS.md](../PERSONAL_ANALYTICS.md), [AGENT.md](./AGENT.md)
+
+### Trigger
+
+```yaml
+on:
+  schedule:
+    - cron: '0 2 * * 1'   # Monday 02:00 UTC (offset from brand Sunday run)
+  workflow_dispatch: {}
+```
+
+### Jobs
+
+| Job | Purpose |
+|-----|---------|
+| `analyze-personal` | Fetch with `--channel personal`, generate report with `ANALYTICS_CHANNEL=personal` |
+
+### Outputs
+
+| Output | Location |
+|--------|----------|
+| Analytics | `data/analytics_personal.json` |
+| Weekly report | `data/reports/YYYY-WW-personal.md` |
+
+### Secrets
+
+| Secret | Purpose |
+|--------|---------|
+| `YOUTUBE_TOKEN_PICKLE` | Personal channel OAuth (same as Content Factory personal) |
+
+**Guardrail:** This workflow must **not** set `YOUTUBE_TOKEN_PICKLE_BRAND`, so `fetch_analytics` never picks the brand token for personal runs.
 
 ---
 

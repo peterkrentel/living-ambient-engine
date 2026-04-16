@@ -124,6 +124,7 @@ Using GitHub Actions (free tier):
 | `piano-batch.yml` | Piano batch (uses **personal** token today) |
 | `art-creator.yml` / `art-creator-batch.yml` | Custom / matrix art → optional **brand** upload |
 | `analytics-agent.yml` | **Brand** metrics → `data/analytics.json`, reports, correlate, audit |
+| `analytics-personal.yml` | **Personal** metrics → `data/analytics_personal.json`, `*-personal.md` reports only |
 | `test-art-creator.yml` | PR + manual CI gate |
 
 ---

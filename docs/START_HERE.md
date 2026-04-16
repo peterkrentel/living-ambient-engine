@@ -65,9 +65,9 @@ This is the **intentional** split so neither you nor an assistant “merges” t
 | **Personal** | `YOUTUBE_TOKEN_PICKLE` — [`content-factory.yml`](../.github/workflows/content-factory.yml) (and [`piano-batch.yml`](../.github/workflows/piano-batch.yml), same secret) | Longer **ambient / mood** exploration; how YouTube treats **depth / length** and calmer catalog | Multi-hour or long-form runs; not the “fill every grid cell” game |
 | **Brand** | `YOUTUBE_TOKEN_PICKLE_BRAND` — brand factory, brand batch, Art Creator **brand** upload | Shorter clips, **preset + matrix** output; how YouTube treats **high variety / SEO + art×music** surface | Often **~5 min** and many distinct titles (factory + Art Creator rows in analytics) |
 
-**Repo analytics today (`analytics-agent.yml`):** fetch, weekly **`.md`**, **`suggestions.json`**, **`audit-*.md`**, and **`data/analytics.json`** are **brand only** (workflow sets the brand token). Personal performance is still **Studio / ad hoc** until the plan in [`PERSONAL_ANALYTICS.md`](PERSONAL_ANALYTICS.md) lands (separate JSON + reports). That is not a bug — it is **scope**: one automated measurement spine on brand first.
+**Two analytics experiments (cross-read intentionally):** [`analytics-agent.yml`](../.github/workflows/analytics-agent.yml) is **brand**: `data/analytics.json`, weekly `data/reports/YYYY-WW.md`, **`suggestions.json`**, **`audit-*.md`**. [`analytics-personal.yml`](../.github/workflows/analytics-personal.yml) is **personal only**: `data/analytics_personal.json` and `data/reports/YYYY-WW-personal.md` (no correlate/audit/suggestions in v1). See [`PERSONAL_ANALYTICS.md`](PERSONAL_ANALYTICS.md).
 
-**Gap to name explicitly:** **`content_catalog.json`** is a **single** repo file today and can include rows from **both** lanes (personal + brand uploads that update the catalog). **`data/analytics.json`** is **only the brand channel’s** video list and metrics. So **`audit-*.md` “generations join”** counts ledger `video_id`s that appear **in brand analytics** — personal-only catalog rows will **not** move that percentage until personal analytics exists or catalogs are split / tagged by channel.
+**Gap to name explicitly:** **`content_catalog.json`** is a **single** repo file today and can include rows from **both** lanes (personal + brand uploads that update the catalog). **`data/analytics.json`** is **only the brand channel’s** video list and metrics; **`audit-*.md` “generations join”** still counts ledger rows against **brand** analytics. Personal snapshots live in **`analytics_personal.json`**; aligning catalog rows with personal join is a later step (split catalog or `channel` field).
 
 ## Post-audit: questions that force the next answer
 
@@ -91,7 +91,8 @@ Use this as a **checklist**, not a new doc layer. **Done** items stay for histor
 | Done | **Two-channel doc** + **brand-only analytics vs mixed catalog** gap named ([§ Two channels](#two-channels-two-probes)). |
 | Open | **Catalog / channel model:** split file or **`channel`** field so audit join and production intent stay aligned. |
 | Open | **Gated production helper (optional):** read `suggestions.json` + gates → **plan JSON** or **BLOCKED** report — no blind auto-render ([`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6 ordering). |
-| Open | **Personal analytics** per [`PERSONAL_ANALYTICS.md`](PERSONAL_ANALYTICS.md). |
+| Done (v1) | **Personal analytics:** [`analytics-personal.yml`](../.github/workflows/analytics-personal.yml) → `analytics_personal.json` + `*-personal.md`. Correlation / personal audit / `suggestions_personal.json` still open ([`PERSONAL_ANALYTICS.md`](PERSONAL_ANALYTICS.md)). |
+| Open | **Multi-channel analytics template (defer):** after personal CI + cross-read feel stable, collapse duplicate workflow YAML into a **reusable workflow** or **channel profile** config (secret name, JSON path, report suffix, which steps run) so channel *N* is additive—not copy-paste. See [`HANDOFF.md`](HANDOFF.md) next actions #4. |
 | Open | **Cron / lanes:** post-audit questions above — which workflow leads, when to un-pause schedules. |
 | Open | **Art Creator ↔ catalog:** if you want full join, relax **`--no-update-catalog`** or add a parallel ledger path. |
 
