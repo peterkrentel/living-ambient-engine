@@ -91,6 +91,11 @@ jobs:
           echo "📋 Writing channel coverage audit (read-only)..."
           python scripts/audit_channel.py
 
+      - name: Run-next advisory (deterministic v0)
+        run: |
+          echo "🧭 Writing run-next markdown (suggestions + audit)..."
+          python scripts/run_next_report.py
+
       - name: Commit Data
         run: |
           git config user.name "Analytics Agent"

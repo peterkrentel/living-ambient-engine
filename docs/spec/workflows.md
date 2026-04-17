@@ -25,7 +25,7 @@ Ten workflow files automate video generation, YouTube deployment, analytics, and
 | WF-BATCH | `art-creator-batch.yml` | Manual (+ optional schedule) | Matrix generation (cron may be off) | Brand |
 | WF-PIANO | `piano-batch.yml` | Manual only | Batch piano videos + upload | Brand |
 | WF-TEST | `test-art-creator.yml` | Manual + PR (path filter) | CI: spec validation + contract tests + 7× `art-creator` matrix (no production upload) | None |
-| WF-AGENT | `analytics-agent.yml` | Schedule (weekly) + Manual | Fetch YouTube stats, reports, correlate, **plan run intent**, channel audit | Brand |
+| WF-AGENT | `analytics-agent.yml` | Schedule (weekly) + Manual | Fetch YouTube stats, reports, correlate, **plan run intent**, channel audit, **`run-next` v0** (`scripts/run_next_report.py`) | Brand |
 | WF-AGENT-P | `analytics-personal.yml` | Schedule (weekly) + Manual | Fetch personal stats + weekly `*-personal.md` + `audit-*-personal.md` (no correlate / `suggestions.json`) | Personal |
 | WF-RIC | `run-intent-consumer.yml` | Manual only | Validate `data/run_intent.json` → `batch_generate` → optional gated `youtube_upload` (brand or personal per intent) | Brand or personal |
 
@@ -568,9 +568,10 @@ on:
 7. Run ML correlation (`scripts/correlate.py`) — suggests bucket-level **increase/reduce** using **retention %** and **watch minutes per video** (in the fetch window); see [AGENT.md](./AGENT.md) Phase 2
 8. Plan run intent (`scripts/plan_run_intent.py`) — gated v0: writes `data/run_intent.json` when actionable **mood** increases exist, else `data/reports/run-intent-blocked.md`; **`upload` defaults false**; execution is **manual** via [`run-intent-consumer.yml`](../../.github/workflows/run-intent-consumer.yml); see [`contracts/production-run-intent.md`](./contracts/production-run-intent.md)
 9. Run channel coverage audit (`scripts/audit_channel.py`) — read-only markdown from committed analytics; summarizes 14-mood and 9×9 art×music grid coverage plus generations ledger join stats (no API calls)
-10. Commit and push data files — after `git commit`, run `git pull --rebase origin main` then `git push` so a concurrent push on `main` (e.g. the other analytics workflow) does not cause the job to fail
+10. Write **`run-next`** advisory (`scripts/run_next_report.py`) — deterministic markdown from **`suggestions.json`** + **`audit-YYYY-WW.md`** + optional personal-lane pointers (**no** LLM, **no** `batch_generate` / upload); same ISO week label as the brand audit
+11. Commit and push data files — after `git commit`, run `git pull --rebase origin main` then `git push` so a concurrent push on `main` (e.g. the other analytics workflow) does not cause the job to fail
 
-**Planned — advisory `run-next` (see [`COHESION_ROADMAP.md`](../COHESION_ROADMAP.md) § Phase 6 + `run-next` implementation, [`HANDOFF.md`](../HANDOFF.md) #9):** insert a step **after** correlate + audit (exact slot TBD) to emit **`data/reports/run-next-YYYY-WW.md`** from **`suggestions.json`** + **`audit-*.md`** + two-channel pointers — **deterministic v0** first (**no** LLM, **no** `batch_generate`). Then **validators** (cited ids, numeric parity). Then optional **LLM prose** on the fixed bundle (**self-hosted / open-weight** preferred; short-lived **Gemini** prototype allowed). **Automation** (e.g. auto-consumer) only after `run-next` is trusted.
+**Roadmap (same week family, not this workflow yet):** **validators** (cited indices, numeric parity with JSON), optional **LLM prose** on the fixed bundle (**self-hosted / open-weight** preferred; short-lived **Gemini** prototype allowed), **automation** only after outputs are trusted — [`COHESION_ROADMAP.md`](../COHESION_ROADMAP.md) Phase 6 · [`HANDOFF.md`](../HANDOFF.md).
 
 ### Outputs
 
@@ -580,7 +581,7 @@ on:
 | Weekly report | `data/reports/YYYY-WW.md` | Human-readable summary |
 | ML suggestions | `data/suggestions.json` | Bucket suggestions tagged by `metric` (`average_view_percentage` and/or `watch_time_minutes`); Step Summary lists both |
 | Run intent (v0) | `data/run_intent.json` **or** `data/reports/run-intent-blocked.md` | Planner output; committed when present (intent often absent until gates pass) |
-| Run-next (planned) | `data/reports/run-next-YYYY-WW.md` (name TBD) | Advisory “what next”; deterministic v0 → validators → optional LLM; see **Planned** paragraph above |
+| Run-next (v0) | `data/reports/run-next-YYYY-WW.md` | Advisory “what next” from correlate + brand audit + personal pointers; validators / LLM layers tracked in roadmap above |
 | Channel audit | `data/reports/audit-YYYY-WW.md` | Coverage vs target grids + ledger join share (CI-generated) |
 
 ### Secrets Required
