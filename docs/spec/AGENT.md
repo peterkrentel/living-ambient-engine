@@ -383,6 +383,7 @@ Your phased approach to learning MLOps:
 | `scripts/correlate.py` | ML correlation analysis |
 | `data/suggestions.json` | Machine-readable suggestions |
 | `scripts/plan_run_intent.py` | Gated v0: suggestions → `data/run_intent.json` or `data/reports/run-intent-blocked.md` ([`contracts/production-run-intent.md`](contracts/production-run-intent.md)) |
+| `scripts/consume_run_intent.py` | Validates intent v1 + emits GitHub Actions outputs for [`run-intent-consumer.yml`](../../.github/workflows/run-intent-consumer.yml) ([`contracts/production-run-intent.md`](contracts/production-run-intent.md)) |
 | GitHub Step Summary | Human-readable suggestions |
 
 **Engagement signals (Phase 2):** Correlation runs on **two** metrics already stored in `analytics.json`:

@@ -10,7 +10,7 @@
 | [orchestrator-audio](./orchestrator-audio.md) | Orchestrator → Audio | Audio generation interface |
 | [orchestrator-visual](./orchestrator-visual.md) | Orchestrator → Visual | Visual generation interface |
 | [orchestrator-youtube](./orchestrator-youtube.md) | Workflow → YouTube | Upload interface |
-| [production-run-intent](./production-run-intent.md) | Planner / human → CI | Versioned JSON for moods, duration, dual, upload, channel (precision path; workflow consumer TBD) |
+| [production-run-intent](./production-run-intent.md) | Planner / human → CI | Versioned JSON for moods, duration, dual, upload, channel; [`run-intent-consumer.yml`](../../../.github/workflows/run-intent-consumer.yml) validates and maps to `batch_generate` / gated `youtube_upload` |
 
 ## Contract Rules
 
