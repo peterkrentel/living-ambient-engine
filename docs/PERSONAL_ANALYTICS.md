@@ -15,6 +15,8 @@
 
 **Metrics note:** [`agent/fetch_analytics.py`](../agent/fetch_analytics.py) today pulls a **core set** (views, watch time, retention %, engagement counts). **CTR**, **impressions**, and browse/search breakdowns may require **additional YouTube Analytics API** dimensions/metrics or **YouTube Studio** exports where the API is thin—plan to **extend the personal fetcher** over time; keep Studio as fallback for gaps.
 
+**Inference note:** once **CTR** is in-repo, the same **packaging confounders** as the brand lane apply (title, thumbnail, traffic source). Cross-read [`AGENT.md`](spec/AGENT.md) § Phase 2 — *Confounders & packaging*; do not blend personal and brand rows in one correlate run until dimensions are explicit.
+
 ---
 
 ## Current state
