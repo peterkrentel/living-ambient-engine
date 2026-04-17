@@ -17,6 +17,16 @@ on:
         required: false
         type: boolean
         default: false
+      intent_path:
+        description: 'Path to run intent JSON (personal lane: data/run_intent_personal.json)'
+        required: false
+        default: 'data/run_intent.json'
+        type: string
+      blocked_report_path:
+        description: 'Planner BLOCKED markdown (personal: data/reports/run-intent-blocked-personal.md)'
+        required: false
+        default: 'data/reports/run-intent-blocked.md'
+        type: string
 
 concurrency:
   group: run-intent-consumer
@@ -53,11 +63,14 @@ jobs:
 
       - name: Validate and export outputs
         id: intent
+        env:
+          INTENT_PATH: ${{ github.event.inputs.intent_path }}
+          BLOCKED_PATH: ${{ github.event.inputs.blocked_report_path }}
         run: |
           if [ "${{ github.event.inputs.validate_only }}" = "true" ] || [ "${{ github.event.inputs.validate_only }}" = "True" ]; then
-            python scripts/consume_run_intent.py --intent data/run_intent.json --emit-github-output --allow-planner-blocked
+            python scripts/consume_run_intent.py --intent "$INTENT_PATH" --blocked-report "$BLOCKED_PATH" --emit-github-output --allow-planner-blocked
           else
-            python scripts/consume_run_intent.py --intent data/run_intent.json --emit-github-output
+            python scripts/consume_run_intent.py --intent "$INTENT_PATH" --blocked-report "$BLOCKED_PATH" --emit-github-output
           fi
 
   generate:

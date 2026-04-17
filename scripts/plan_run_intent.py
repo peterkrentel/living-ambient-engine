@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 """Gated planner v0: suggestions.json → run intent JSON or BLOCKED report.
 
-Reads ``data/suggestions.json`` (brand correlate output). Emits either:
-  - ``data/run_intent.json`` — matches ``docs/spec/contracts/production-run-intent.md`` v1, or
-  - ``data/reports/run-intent-blocked.md`` — human-readable reasons (no intent file).
+Reads suggestions JSON (default ``data/suggestions.json`` for brand). Emits either:
+  - Intent JSON (default ``data/run_intent.json``) — matches ``docs/spec/contracts/production-run-intent.md`` v1, or
+  - Blocked report (default ``data/reports/run-intent-blocked.md``) — human-readable reasons (no intent file).
+
+**Personal lane:** pass ``--suggestions data/suggestions_personal.json``, ``--channel personal``,
+``--intent-output data/run_intent_personal.json``, ``--blocked-output data/reports/run-intent-blocked-personal.md``.
 
 **Gates (conservative):** only ``action=increase`` rows with ``type=mood`` and ``actionable=true``
 (n≥5, group_views≥200 per correlate). No auto-upload by default: ``upload`` stays ``false`` unless
@@ -30,8 +33,6 @@ except ImportError:  # pragma: no cover
 
 _REPO = Path(__file__).resolve().parents[1]
 SUGGESTIONS_PATH = _REPO / "data" / "suggestions.json"
-INTENT_PATH = _REPO / "data" / "run_intent.json"
-BLOCKED_PATH = _REPO / "data" / "reports" / "run-intent-blocked.md"
 MOODS_YAML = _REPO / "config" / "moods.yaml"
 
 # Mirror scripts/correlate.py / AGENT.md actionability gates
@@ -84,9 +85,15 @@ def moods_from_suggestions(data: dict) -> tuple[list[str], list[str]]:
     return picked, reasons
 
 
-def write_blocked(text: str) -> None:
-    INTENT_PATH.unlink(missing_ok=True)
-    BLOCKED_PATH.parent.mkdir(parents=True, exist_ok=True)
+def _resolve_repo_path(p: Path) -> Path:
+    return p if p.is_absolute() else (_REPO / p)
+
+
+def write_blocked(text: str, *, intent_path: Path, blocked_path: Path) -> None:
+    intent_path = _resolve_repo_path(intent_path)
+    blocked_path = _resolve_repo_path(blocked_path)
+    intent_path.unlink(missing_ok=True)
+    blocked_path.parent.mkdir(parents=True, exist_ok=True)
     body = "\n".join(
         [
             "# Run intent — BLOCKED",
@@ -100,8 +107,8 @@ def write_blocked(text: str) -> None:
             "",
         ]
     )
-    BLOCKED_PATH.write_text(body, encoding="utf-8")
-    print(f"⛔ BLOCKED — wrote {BLOCKED_PATH.relative_to(_REPO)}")
+    blocked_path.write_text(body, encoding="utf-8")
+    print(f"⛔ BLOCKED — wrote {blocked_path.relative_to(_REPO)}")
     print(text)
 
 
@@ -113,8 +120,12 @@ def write_intent(
     dual: bool,
     upload: bool,
     max_videos: int | None,
+    intent_path: Path,
+    blocked_path: Path,
 ) -> None:
-    BLOCKED_PATH.unlink(missing_ok=True)
+    intent_path = _resolve_repo_path(intent_path)
+    blocked_path = _resolve_repo_path(blocked_path)
+    blocked_path.unlink(missing_ok=True)
     intent = {
         "schema_version": 1,
         "channel": channel,
@@ -124,9 +135,9 @@ def write_intent(
         "upload": upload,
         "max_videos": max_videos,
     }
-    INTENT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    INTENT_PATH.write_text(json.dumps(intent, indent=2) + "\n", encoding="utf-8")
-    print(f"✅ Wrote {INTENT_PATH.relative_to(_REPO)}")
+    intent_path.parent.mkdir(parents=True, exist_ok=True)
+    intent_path.write_text(json.dumps(intent, indent=2) + "\n", encoding="utf-8")
+    print(f"✅ Wrote {intent_path.relative_to(_REPO)}")
     print(json.dumps(intent, indent=2))
 
 
@@ -168,7 +179,31 @@ def main() -> int:
         default="",
         help="Comma-separated moods: skip suggestions and emit intent (must exist in moods.yaml).",
     )
+    parser.add_argument(
+        "--intent-output",
+        type=Path,
+        default=Path("data/run_intent.json"),
+        help="Path for run intent JSON (repo-relative or absolute).",
+    )
+    parser.add_argument(
+        "--blocked-output",
+        type=Path,
+        default=Path("data/reports/run-intent-blocked.md"),
+        help="Path for BLOCKED markdown when no intent is emitted.",
+    )
     args = parser.parse_args()
+
+    intent_out = _resolve_repo_path(args.intent_output)
+    blocked_out = _resolve_repo_path(args.blocked_output)
+    sug_path = _resolve_repo_path(args.suggestions)
+    try:
+        sug_rel = sug_path.relative_to(_REPO)
+    except ValueError:
+        sug_rel = sug_path
+    try:
+        intent_rel = intent_out.relative_to(_REPO)
+    except ValueError:
+        intent_rel = intent_out
 
     try:
         duration = validate_duration(args.duration)
@@ -184,11 +219,17 @@ def main() -> int:
         if bad:
             write_blocked(
                 f"**--force-moods** contains unknown moods: {bad!r}.\n\n"
-                f"Valid keys are from `config/moods.yaml`."
+                f"Valid keys are from `config/moods.yaml`.",
+                intent_path=intent_out,
+                blocked_path=blocked_out,
             )
             return 0
         if not moods:
-            write_blocked("**--force-moods** was empty after parsing.")
+            write_blocked(
+                "**--force-moods** was empty after parsing.",
+                intent_path=intent_out,
+                blocked_path=blocked_out,
+            )
             return 0
         write_intent(
             moods=moods[: args.max_moods],
@@ -197,14 +238,20 @@ def main() -> int:
             dual=args.dual,
             upload=args.upload,
             max_videos=None,
+            intent_path=intent_out,
+            blocked_path=blocked_out,
         )
         return 0
 
-    if not args.suggestions.exists():
-        write_blocked(f"**Missing file:** `{args.suggestions}` — run `scripts/correlate.py` / Analytics Agent first.")
+    if not sug_path.exists():
+        write_blocked(
+            f"**Missing file:** `{sug_rel}` — run `scripts/correlate.py` / Analytics Agent first.",
+            intent_path=intent_out,
+            blocked_path=blocked_out,
+        )
         return 0
 
-    with open(args.suggestions, encoding="utf-8") as f:
+    with open(sug_path, encoding="utf-8") as f:
         data = json.load(f)
 
     moods, reasons = moods_from_suggestions(data)
@@ -213,7 +260,7 @@ def main() -> int:
 
     if not moods:
         lines = [
-            "**No actionable mood increases** in `suggestions.json` passed the planner gate.",
+            f"**No actionable mood increases** in `{sug_rel}` passed the planner gate.",
             "",
             f"- Require `type=mood`, `action=increase`, `actionable=true` (n≥{MIN_SAMPLE_SIZE}, group_views≥{MIN_GROUP_VIEWS}).",
             "",
@@ -228,9 +275,9 @@ def main() -> int:
         lines.append("")
         lines.append(
             "**Smoke / dev:** re-run with `--force-moods trance,sleep` (or any valid keys) "
-            "to emit `data/run_intent.json` without using suggestions."
+            f"to emit `{intent_rel}` without using suggestions."
         )
-        write_blocked("\n".join(lines))
+        write_blocked("\n".join(lines), intent_path=intent_out, blocked_path=blocked_out)
         return 0
 
     write_intent(
@@ -240,6 +287,8 @@ def main() -> int:
         dual=args.dual,
         upload=args.upload,
         max_videos=None,
+        intent_path=intent_out,
+        blocked_path=blocked_out,
     )
     return 0
 

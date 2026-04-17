@@ -26,8 +26,8 @@ Ten workflow files automate video generation, YouTube deployment, analytics, and
 | WF-PIANO | `piano-batch.yml` | Manual only | Batch piano videos + upload | Brand |
 | WF-TEST | `test-art-creator.yml` | Manual + PR (path filter) | CI: spec validation + contract tests + 7× `art-creator` matrix (no production upload) | None |
 | WF-AGENT | `analytics-agent.yml` | Schedule (weekly) + Manual | Fetch YouTube stats, reports, correlate, **plan run intent**, channel audit, **`run-next` v0** (`scripts/run_next_report.py`) | Brand |
-| WF-AGENT-P | `analytics-personal.yml` | Schedule (weekly) + Manual | Fetch personal stats + weekly `*-personal.md` + `audit-*-personal.md` + correlate → `suggestions_personal.json` + `run-next-*-personal.md` (never writes brand `suggestions.json`) | Personal |
-| WF-RIC | `run-intent-consumer.yml` | Manual only | Validate `data/run_intent.json` → `batch_generate` → optional gated `youtube_upload` (brand or personal per intent) | Brand or personal |
+| WF-AGENT-P | `analytics-personal.yml` | Schedule (weekly) + Manual | Fetch personal stats + report + `analyze_data` + audit + correlate → `suggestions_personal.json` + **plan intent** (`run_intent_personal.json` / blocked) + `run-next-*-personal.md` (never writes brand `suggestions.json`) | Personal |
+| WF-RIC | `run-intent-consumer.yml` | Manual only | Validate intent JSON (default `data/run_intent.json`; personal: `data/run_intent_personal.json`) → `batch_generate` → optional gated `youtube_upload` (brand or personal per intent `channel`) | Brand or personal |
 
 ## Gating Rules
 
@@ -234,7 +234,7 @@ permissions:
 
 ## run-intent-consumer.yml
 
-**Purpose:** Validate committed **`data/run_intent.json`** against [`contracts/production-run-intent.md`](./contracts/production-run-intent.md) v1, then run **`batch_generate.py`** with the same flags Content Factory would use (`--moods`, `--durations`, optional `--dual`). Optionally upload via **`youtube_upload.py --batch`** with **`--catalog-channel`** set from intent `channel`. **Planner v0** still commits **`upload`: false**; uploads require intent **`upload`: true** *and* dispatcher **`confirm_upload`** (double gate).
+**Purpose:** Validate committed run intent JSON (defaults **`data/run_intent.json`** + blocked report **`data/reports/run-intent-blocked.md`**) against [`contracts/production-run-intent.md`](./contracts/production-run-intent.md) v1, then run **`batch_generate.py`** with the same flags Content Factory would use (`--moods`, `--durations`, optional `--dual`). Optionally upload via **`youtube_upload.py --batch`** with **`--catalog-channel`** set from intent `channel`. **Personal lane:** dispatch with **`intent_path`** = `data/run_intent_personal.json` and **`blocked_report_path`** = `data/reports/run-intent-blocked-personal.md` (pair produced by [`analytics-personal.yml`](../../.github/workflows/analytics-personal.yml)). **Planner v0** still commits **`upload`: false**; uploads require intent **`upload`: true** *and* dispatcher **`confirm_upload`** (double gate).
 
 **Spec:** [`contracts/production-run-intent.md`](./contracts/production-run-intent.md) · Validator: [`scripts/consume_run_intent.py`](../../scripts/consume_run_intent.py)
 
@@ -246,15 +246,17 @@ on:
     inputs:
       validate_only: boolean   # default false — if true, only parse/validate + Step Summary
       confirm_upload: boolean  # default false — required (with intent.upload) to run upload job
+      intent_path: string       # default data/run_intent.json — use data/run_intent_personal.json for personal lane
+      blocked_report_path: string  # default data/reports/run-intent-blocked.md — pair with intent_path
 ```
 
-When **`validate_only`** is true, `parse` passes **`--allow-planner-blocked`**: missing **`data/run_intent.json`** but present **`data/reports/run-intent-blocked.md`** exits **0** (expected after analytics gate) and writes a Step Summary — not a red failure. Full runs (generate) do **not** pass that flag: missing intent remains **exit 1**.
+When **`validate_only`** is true, `parse` passes **`--allow-planner-blocked`**: missing the chosen intent file but present the paired **`blocked_report_path`** exits **0** (expected after analytics gate) and writes a Step Summary — not a red failure. Full runs (generate) do **not** pass that flag: missing intent remains **exit 1**.
 
 ### Jobs
 
 | Job | Purpose |
 |-----|---------|
-| `parse` | Checkout; `pip install pyyaml`; run `consume_run_intent.py --intent data/run_intent.json --emit-github-output` (adds **`--allow-planner-blocked`** when `validate_only`). Validates intent or records planner BLOCKED; sets outputs when intent exists. |
+| `parse` | Checkout; `pip install pyyaml`; run `consume_run_intent.py --intent "$INTENT_PATH" --blocked-report "$BLOCKED_PATH" --emit-github-output` (adds **`--allow-planner-blocked`** when `validate_only`). Validates intent or records planner BLOCKED; sets outputs when intent exists. |
 | `generate` | Skipped when `validate_only`; else FFmpeg + `requirements.txt`, `batch_generate.py`, artifact `run-intent-generated-{channel}`. |
 | `upload` | Skipped unless `validate_only` is false **and** `confirm_upload` **and** `parse.outputs.upload == 'true'`; restores **brand** or **personal** OAuth secret by `channel`; `youtube_upload.py --batch ./generated --catalog-channel …`; commits catalog / ledger via `scripts/ci_merge_main_after_data_commit.sh`. |
 
@@ -620,7 +622,7 @@ on:
 
 | Job | Purpose |
 |-----|---------|
-| `analyze-personal` | Fetch with `--channel personal`, report + audit + correlate + run-next (env-scoped paths) |
+| `analyze-personal` | Fetch with `--channel personal`, report + analyze + audit + correlate + plan intent + run-next (env-scoped paths) |
 
 ### Job: analyze-personal — steps (ordered)
 
@@ -628,10 +630,12 @@ on:
 2. Setup Python + install deps
 3. Fetch analytics (`python -m agent.fetch_analytics --channel personal`)
 4. Weekly report (`python -m agent.report` with `ANALYTICS_JSON_PATH` / `ANALYTICS_CHANNEL` / `ANALYTICS_REPORT_SUFFIX`)
-5. Channel audit (`scripts/audit_channel.py` with same env)
-6. ML correlation (`scripts/correlate.py` with `ANALYTICS_JSON_PATH` + `SUGGESTIONS_JSON_PATH=data/suggestions_personal.json`)
-7. Run-next advisory personal (`scripts/run_next_report.py --lane personal`)
-8. Commit + push (`git pull --rebase origin main` before `git push`)
+5. Performance analysis (`scripts/analyze_data.py` with `ANALYTICS_JSON_PATH=data/analytics_personal.json`)
+6. Channel audit (`scripts/audit_channel.py` with same env as report)
+7. ML correlation (`scripts/correlate.py` with `ANALYTICS_JSON_PATH` + `SUGGESTIONS_JSON_PATH=data/suggestions_personal.json`)
+8. Plan run intent (`scripts/plan_run_intent.py` with `--suggestions data/suggestions_personal.json`, `--channel personal`, `--intent-output data/run_intent_personal.json`, `--blocked-output data/reports/run-intent-blocked-personal.md`)
+9. Run-next advisory personal (`scripts/run_next_report.py --lane personal`)
+10. Commit + push (`git pull --rebase origin main` before `git push`)
 
 ### Outputs
 
@@ -641,6 +645,7 @@ on:
 | Weekly report | `data/reports/YYYY-WW-personal.md` |
 | Channel audit | `data/reports/audit-YYYY-WW-personal.md` |
 | ML suggestions (personal) | `data/suggestions_personal.json` |
+| Run intent (personal v0) | `data/run_intent_personal.json` **or** `data/reports/run-intent-blocked-personal.md` |
 | Run-next (personal v0) | `data/reports/run-next-YYYY-WW-personal.md` |
 
 ### Secrets

@@ -6,8 +6,9 @@ Exits **1** on invalid JSON or contract violations (no downstream generate/uploa
 When ``--emit-github-output`` is set, expects ``GITHUB_OUTPUT`` and appends
 ``moods``, ``duration``, ``dual``, ``channel``, ``upload`` for later workflow steps.
 
-``--allow-planner-blocked`` (CI **validate-only**): if ``run_intent.json`` is missing but
-``data/reports/run-intent-blocked.md`` exists, exit **0** and document BLOCKED in the Step
+``--allow-planner-blocked`` (CI **validate-only**): if the intent file is missing but the
+paired ``--blocked-report`` file exists (default ``data/reports/run-intent-blocked.md``;
+personal lane: ``…-blocked-personal.md``), exit **0** and document BLOCKED in the Step
 Summary — not a failure (planner said “no intent”). Without this flag, missing intent is **1**.
 
 Spec: ``docs/spec/contracts/production-run-intent.md``.
@@ -27,8 +28,8 @@ except ImportError:  # pragma: no cover
 
 _REPO = Path(__file__).resolve().parents[1]
 DEFAULT_INTENT = _REPO / "data" / "run_intent.json"
+DEFAULT_BLOCKED = _REPO / "data" / "reports" / "run-intent-blocked.md"
 MOODS_YAML = _REPO / "config" / "moods.yaml"
-BLOCKED = _REPO / "data" / "reports" / "run-intent-blocked.md"
 
 ALLOWED_DURATIONS = frozenset(
     {"30s", "1min", "5min", "10min", "30m", "1h", "2h", "3h", "4h", "1.5h"}
@@ -143,6 +144,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--intent", type=Path, default=DEFAULT_INTENT, help="Path to run_intent.json")
     parser.add_argument(
+        "--blocked-report",
+        type=Path,
+        default=DEFAULT_BLOCKED,
+        help="Planner BLOCKED report path (paired with --intent for validate-only UX).",
+    )
+    parser.add_argument(
         "--moods-yaml",
         type=Path,
         default=None,
@@ -160,20 +167,23 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    intent_path: Path = args.intent
+    intent_path: Path = args.intent if args.intent.is_absolute() else (_REPO / args.intent)
+    blocked_path: Path = (
+        args.blocked_report if args.blocked_report.is_absolute() else (_REPO / args.blocked_report)
+    )
     if not intent_path.is_file():
         msg = f"Missing intent file: {intent_path}"
-        if BLOCKED.is_file():
+        if blocked_path.is_file():
             try:
-                blocked_ref = BLOCKED.relative_to(_REPO)
+                blocked_ref = blocked_path.relative_to(_REPO)
             except ValueError:
-                blocked_ref = BLOCKED
+                blocked_ref = blocked_path
             msg += f"\n\nPlanner wrote {blocked_ref} instead."
             if args.allow_planner_blocked:
                 print(msg)
                 append_step_summary(
                     "## Run intent consumer\n\n"
-                    "**Result:** Planner **BLOCKED** — no `data/run_intent.json`. "
+                    "**Result:** Planner **BLOCKED** — no validated intent JSON at the path you passed. "
                     f"See `{blocked_ref}`.\n\n"
                     "*This is expected when the analytics gate finds no actionable moods.*\n"
                 )

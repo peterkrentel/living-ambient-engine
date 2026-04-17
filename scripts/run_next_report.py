@@ -256,23 +256,35 @@ def build_markdown(
 
     lines += ["", "## Production hooks (manual)", ""]
     if is_personal:
-        lines.append(
-            "- **Run intent** (`data/run_intent.json`) is produced by the **brand** planner on "
-            "`data/suggestions.json`; personal lane does not emit intent."
-        )
-    ri = _REPO_ROOT / "data" / "run_intent.json"
-    blk = _REPO_ROOT / "data" / "reports" / "run-intent-blocked.md"
-    if ri.is_file():
-        lines.append(
-            f"- **`data/run_intent.json` present** — validate and run via "
-            f"[`run-intent-consumer.yml`](../../.github/workflows/run-intent-consumer.yml) (still **manual** / gated)."
-        )
-    elif blk.is_file():
-        lines.append(
-            "- **Planner blocked** — see `data/reports/run-intent-blocked.md` for this week's gate reason."
+        ri = _REPO_ROOT / "data" / "run_intent_personal.json"
+        blk = _REPO_ROOT / "data" / "reports" / "run-intent-blocked-personal.md"
+        intent_label = "`data/run_intent_personal.json`"
+        blocked_label = "`data/reports/run-intent-blocked-personal.md`"
+        consumer_note = (
+            "Set workflow inputs **`intent_path`** = `data/run_intent_personal.json` and "
+            "**`blocked_report_path`** = `data/reports/run-intent-blocked-personal.md` when dispatching the consumer."
         )
     else:
-        lines.append("- No committed `run_intent.json` or `run-intent-blocked.md` detected at write time.")
+        ri = _REPO_ROOT / "data" / "run_intent.json"
+        blk = _REPO_ROOT / "data" / "reports" / "run-intent-blocked.md"
+        intent_label = "`data/run_intent.json`"
+        blocked_label = "`data/reports/run-intent-blocked.md`"
+        consumer_note = (
+            "Dispatch [`run-intent-consumer.yml`](../../.github/workflows/run-intent-consumer.yml) with default intent paths "
+            "(or set **`intent_path`** / **`blocked_report_path`** for the personal lane file pair)."
+        )
+    if ri.is_file():
+        lines.append(
+            f"- **{intent_label} present** — validate and run via "
+            f"[`run-intent-consumer.yml`](../../.github/workflows/run-intent-consumer.yml) (still **manual** / gated). "
+            f"{consumer_note}"
+        )
+    elif blk.is_file():
+        lines.append(f"- **Planner blocked** — see {blocked_label} for this week's gate reason.")
+    else:
+        lines.append(
+            f"- No committed intent JSON or blocked report detected at write time (expected: {intent_label} or {blocked_label})."
+        )
     lines.append(
         "- **Batch strategy reminder:** before scaling one lever, skim mood vs algorithm batch intent in "
         "[`piano-batch.yml`](../../.github/workflows/piano-batch.yml) (personal cross-read there)."
