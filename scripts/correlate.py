@@ -9,7 +9,7 @@ NOTE: This is STATISTICS, not ML. No model learning weights, no predictions.
 Real ML comes in Phase 4 when we have 100+ videos.
 
 Output:
-- data/suggestions.json (machine-readable)
+- data/suggestions.json (machine-readable; override with env ``SUGGESTIONS_JSON_PATH``, e.g. personal lane → ``data/suggestions_personal.json``)
 - stdout (human-readable, captured by workflow for Step Summary)
 """
 import json
@@ -28,12 +28,17 @@ from agent.log_generation import video_id_index
 
 # Paths (analytics path is read at load time so audit / future tools can set ANALYTICS_JSON_PATH)
 DEFAULT_ANALYTICS_PATH = "data/analytics.json"
-SUGGESTIONS_PATH = "data/suggestions.json"
+DEFAULT_SUGGESTIONS_PATH = "data/suggestions.json"
 GENERATIONS_PATH = "data/generations.json"
 
 
 def _analytics_json_path() -> str:
     return os.environ.get("ANALYTICS_JSON_PATH", DEFAULT_ANALYTICS_PATH).strip() or DEFAULT_ANALYTICS_PATH
+
+
+def _suggestions_json_path() -> str:
+    """Output path for correlate JSON (brand default; personal lane uses env)."""
+    return os.environ.get("SUGGESTIONS_JSON_PATH", DEFAULT_SUGGESTIONS_PATH).strip() or DEFAULT_SUGGESTIONS_PATH
 
 # Statistical thresholds (per AGENT.md spec)
 MIN_SAMPLE_SIZE = 5  # Actionable requires n >= 5
@@ -451,8 +456,11 @@ def main():
         "all_stats_watch_time": all_stats_watch,
     }
 
-    os.makedirs(os.path.dirname(SUGGESTIONS_PATH), exist_ok=True)
-    with open(SUGGESTIONS_PATH, "w") as f:
+    sug_out = _suggestions_json_path()
+    sug_dir = os.path.dirname(sug_out)
+    if sug_dir:
+        os.makedirs(sug_dir, exist_ok=True)
+    with open(sug_out, "w") as f:
         json.dump(output, f, indent=2)
 
     # Print human-readable output (for Step Summary)
@@ -579,7 +587,7 @@ def main():
             f"\n⚠️  {len(low_sample)} groups have n<{MIN_SAMPLE_SIZE} eligible videos (need more data)"
         )
 
-    print(f"\n✅ Suggestions saved to {SUGGESTIONS_PATH}")
+    print(f"\n✅ Suggestions saved to {sug_out}")
 
 
 if __name__ == "__main__":

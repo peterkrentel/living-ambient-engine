@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 """Deterministic weekly advisory: rank next moves from correlate + audit (v0, no LLM).
 
-Reads ``data/suggestions.json``, the brand audit for the same ISO week, and optional
-personal-lane files. Writes ``data/reports/run-next-YYYY-WW.md``.
+**Brand** (default): ``data/suggestions.json`` + ``data/reports/audit-YYYY-WW.md`` →
+``data/reports/run-next-YYYY-WW.md``.
 
-Run from repo root: ``python scripts/run_next_report.py``
+**Personal** (``--lane personal``): ``data/suggestions_personal.json`` +
+``data/reports/audit-YYYY-WW-personal.md`` → ``data/reports/run-next-YYYY-WW-personal.md``.
+
+Run from repo root: ``python scripts/run_next_report.py`` or ``python scripts/run_next_report.py --lane personal``
 """
 from __future__ import annotations
 
@@ -16,7 +19,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_SUGGESTIONS = _REPO_ROOT / "data" / "suggestions.json"
+DEFAULT_SUGGESTIONS_BRAND = _REPO_ROOT / "data" / "suggestions.json"
+DEFAULT_SUGGESTIONS_PERSONAL = _REPO_ROOT / "data" / "suggestions_personal.json"
+DEFAULT_REPORTS = _REPO_ROOT / "data" / "reports"
+DEFAULT_PERSONAL_ANALYTICS = _REPO_ROOT / "data" / "analytics_personal.json"
+DEFAULT_BRAND_ANALYTICS = _REPO_ROOT / "data" / "analytics.json"
 
 
 def _display_path(path: Path) -> str:
@@ -25,8 +32,6 @@ def _display_path(path: Path) -> str:
         return str(path.resolve().relative_to(_REPO_ROOT))
     except ValueError:
         return str(path.resolve())
-DEFAULT_REPORTS = _REPO_ROOT / "data" / "reports"
-DEFAULT_PERSONAL_ANALYTICS = _REPO_ROOT / "data" / "analytics_personal.json"
 
 
 def iso_week_suffix(utc_now: datetime | None = None) -> str:
@@ -83,7 +88,21 @@ def _latest_personal_report(reports_dir: Path) -> Path | None:
     return cands[0] if cands else None
 
 
-def _personal_analytics_summary(path: Path) -> str | None:
+def _latest_brand_weekly_report(reports_dir: Path) -> Path | None:
+    """Latest ``YYYY-WW.md`` (brand weekly performance report), excluding audits/run-next."""
+    cands = sorted(
+        (
+            p
+            for p in reports_dir.glob("*.md")
+            if re.match(r"^\d{4}-W\d{2}\.md$", p.name)
+        ),
+        key=lambda p: p.stat().st_mtime,
+        reverse=True,
+    )
+    return cands[0] if cands else None
+
+
+def _analytics_snapshot_line(path: Path) -> str | None:
     if not path.is_file():
         return None
     try:
@@ -103,8 +122,11 @@ def build_markdown(
     suggestions_data: dict,
     audit_path: Path | None,
     audit_text: str | None,
-    personal_line: str | None,
-    latest_personal_report: str | None,
+    *,
+    lane: str,
+    suggestions_citation_path: str,
+    cross_analytics_summary: str | None,
+    cross_latest_report_rel: str | None,
 ) -> str:
     gen = suggestions_data.get("generated_at") or datetime.now(timezone.utc).isoformat()
     oar = suggestions_data.get("overall_avg_retention")
@@ -113,16 +135,27 @@ def build_markdown(
     vw = suggestions_data.get("videos_with_views")
     raw_sug: list[dict] = suggestions_data.get("suggestions") or []
 
+    is_personal = lane == "personal"
+    title = f"# Run next — personal advisory ({week})" if is_personal else f"# Run next — advisory ({week})"
+    primary = "Personal" if is_personal else "Brand"
+    other = "brand" if is_personal else "personal"
+    other_title = "Brand lane (cross-read only)" if is_personal else "Personal lane (context only)"
+    audit_heading = "Audit — overview excerpt (personal)" if is_personal else "Audit — overview excerpt (brand)"
+    audit_evidence_name = f"`data/reports/audit-{week}-personal.md`" if is_personal else f"`data/reports/audit-{week}.md`"
+    audit_md_name = f"audit-{week}-personal.md" if is_personal else f"audit-{week}.md"
+    ch = "personal" if is_personal else "brand"
+    intro_source = f"`{suggestions_citation_path}` and the **{ch}** channel audit (`{audit_md_name}`). "
+
     lines: list[str] = [
-        f"# Run next — advisory ({week})",
+        title,
         "",
         f"Generated (report): {datetime.now(timezone.utc).isoformat()}",
         f"**Correlate bundle `generated_at`:** {gen}",
         "",
         "## How to read this",
         "",
-        "This file is **machine-assembled** from `data/suggestions.json` and the **brand** channel audit. "
-        "It is **not** causal advice — see *Packaging & confounders* below.",
+        f"This file is **machine-assembled** from {intro_source}"
+        " It is **not** causal advice — see *Packaging & confounders* below.",
         "",
         "### Packaging & confounders",
         "",
@@ -132,7 +165,7 @@ def build_markdown(
         "when **packaging** differed across videos. Correlation addresses **patterns in the data**, not "
         "hidden causes. (Spec: [`docs/spec/AGENT.md`](../../docs/spec/AGENT.md) § *Confounders & packaging*.)",
         "",
-        "## Brand snapshot (this run)",
+        f"## {primary} snapshot (this run)",
         "",
         f"- **Overall avg retention:** {oar}%",
     ]
@@ -143,8 +176,8 @@ def build_markdown(
         "",
         "## Evidence (paths)",
         "",
-        f"- **Suggestions:** `data/suggestions.json`",
-        f"- **Brand audit:** `data/reports/audit-{week}.md`",
+        f"- **Suggestions:** `{suggestions_citation_path}`",
+        f"- **Channel audit:** {audit_evidence_name}",
     ]
     if audit_path and not audit_path.is_file():
         lines.append(f"- **Note:** expected audit file missing on disk (`{_display_path(audit_path)}`).")
@@ -165,7 +198,7 @@ def build_markdown(
             ml = _metric_label(s.get("metric"))
             lines.append(
                 f"{icon} **`{s.get('type')}` / `{s.get('name')}`** ({ml}) — {s.get('reason', '')} "
-                f"— `{s.get('confidence', '')}` — evidence index **`suggestions.json` → `suggestions[{i}]`**"
+                f"— `{s.get('confidence', '')}` — evidence index **`{suggestions_citation_path}` → `suggestions[{i}]`**"
             )
     lines += ["", "## Exploratory — lean in (low n / views)", ""]
     for i, s in exp_up[:12]:
@@ -175,7 +208,7 @@ def build_markdown(
             f"— `suggestions[{i}]`"
         )
     if not exp_up:
-        lines.append("_No exploratory “increase” rows._")
+        lines.append('_No exploratory "increase" rows._')
     lines += ["", "## Exploratory — tread carefully (underperformers)", ""]
     for i, s in exp_dn[:12]:
         ml = _metric_label(s.get("metric"))
@@ -184,9 +217,9 @@ def build_markdown(
             f"— `suggestions[{i}]`"
         )
     if not exp_dn:
-        lines.append("_No exploratory “reduce” rows._")
+        lines.append('_No exploratory "reduce" rows._')
 
-    lines += ["", "## Audit — overview excerpt (brand)", ""]
+    lines += ["", f"## {audit_heading}", ""]
     if audit_text:
         excerpt = _audit_overview_excerpt(audit_text)
         if excerpt:
@@ -196,21 +229,37 @@ def build_markdown(
     else:
         lines.append("_Audit body not loaded._")
 
-    lines += ["", "## Personal lane (context only)", ""]
-    if personal_line:
-        lines.append(f"- {personal_line}")
+    lines += ["", f"## {other_title}", ""]
+    if cross_analytics_summary:
+        lines.append(f"- {cross_analytics_summary}")
+    else:
+        if is_personal:
+            lines.append(
+                "- No committed `data/analytics.json` found — brand workflow publishes separately."
+            )
+        else:
+            lines.append(
+                "- No committed `data/analytics_personal.json` found — personal workflow publishes separately."
+            )
+    if cross_latest_report_rel:
+        lines.append(f"- **Latest {other} markdown report:** `{cross_latest_report_rel}`")
+    if is_personal:
+        lines.append(
+            "- **Not merged** into personal correlate — `data/suggestions.json` remains the **brand** bundle; "
+            "compare lanes deliberately ([`docs/PERSONAL_ANALYTICS.md`](../../docs/PERSONAL_ANALYTICS.md))."
+        )
     else:
         lines.append(
-            "- No committed `data/analytics_personal.json` found — personal workflow publishes separately."
+            "- **Not merged** into brand `suggestions.json` / correlate — use for cross-read only "
+            "([`docs/PERSONAL_ANALYTICS.md`](../../docs/PERSONAL_ANALYTICS.md))."
         )
-    if latest_personal_report:
-        lines.append(f"- **Latest personal markdown report:** `{latest_personal_report}`")
-    lines.append(
-        "- **Not merged** into brand `suggestions.json` / correlate — use for cross-read only "
-        "([`docs/PERSONAL_ANALYTICS.md`](../../docs/PERSONAL_ANALYTICS.md))."
-    )
 
     lines += ["", "## Production hooks (manual)", ""]
+    if is_personal:
+        lines.append(
+            "- **Run intent** (`data/run_intent.json`) is produced by the **brand** planner on "
+            "`data/suggestions.json`; personal lane does not emit intent."
+        )
     ri = _REPO_ROOT / "data" / "run_intent.json"
     blk = _REPO_ROOT / "data" / "reports" / "run-intent-blocked.md"
     if ri.is_file():
@@ -220,7 +269,7 @@ def build_markdown(
         )
     elif blk.is_file():
         lines.append(
-            "- **Planner blocked** — see `data/reports/run-intent-blocked.md` for this week’s gate reason."
+            "- **Planner blocked** — see `data/reports/run-intent-blocked.md` for this week's gate reason."
         )
     else:
         lines.append("- No committed `run_intent.json` or `run-intent-blocked.md` detected at write time.")
@@ -240,13 +289,19 @@ def build_markdown(
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Write data/reports/run-next-YYYY-WW.md from suggestions + audit.")
+    parser = argparse.ArgumentParser(description="Write run-next markdown from suggestions + audit.")
     parser.add_argument("--week", help="ISO week label e.g. 2026-W16 (default: UTC now)")
+    parser.add_argument(
+        "--lane",
+        choices=("brand", "personal"),
+        default="brand",
+        help="brand → suggestions.json + audit-{week}.md; personal → suggestions_personal + audit-{week}-personal.md",
+    )
     parser.add_argument(
         "--suggestions",
         type=Path,
-        default=DEFAULT_SUGGESTIONS,
-        help="Path to suggestions.json",
+        default=None,
+        help="Override path to suggestions JSON (default depends on --lane)",
     )
     parser.add_argument(
         "--reports-dir",
@@ -258,11 +313,19 @@ def main(argv: list[str] | None = None) -> int:
         "--personal-analytics",
         type=Path,
         default=DEFAULT_PERSONAL_ANALYTICS,
-        help="Optional personal analytics JSON",
+        help="Path to personal analytics JSON (for brand cross-read; default data/analytics_personal.json)",
+    )
+    parser.add_argument(
+        "--brand-analytics",
+        type=Path,
+        default=DEFAULT_BRAND_ANALYTICS,
+        help="Path to brand analytics JSON (for personal cross-read; default data/analytics.json)",
     )
     args = parser.parse_args(argv)
 
-    sug_path: Path = args.suggestions
+    lane = args.lane
+    default_sug = DEFAULT_SUGGESTIONS_PERSONAL if lane == "personal" else DEFAULT_SUGGESTIONS_BRAND
+    sug_path: Path = args.suggestions or default_sug
     reports_dir: Path = args.reports_dir
     if not sug_path.is_file():
         print(f"❌ Missing suggestions file: {sug_path}", file=sys.stderr)
@@ -276,26 +339,40 @@ def main(argv: list[str] | None = None) -> int:
     with sug_path.open(encoding="utf-8") as f:
         suggestions_data = json.load(f)
 
-    audit_path = reports_dir / f"audit-{week}.md"
+    if lane == "personal":
+        audit_path = reports_dir / f"audit-{week}-personal.md"
+        out_path = reports_dir / f"run-next-{week}-personal.md"
+        cross_summary = _analytics_snapshot_line(args.brand_analytics)
+        latest_br = _latest_brand_weekly_report(reports_dir)
+        cross_report = str(latest_br.relative_to(_REPO_ROOT)) if latest_br else None
+    else:
+        audit_path = reports_dir / f"audit-{week}.md"
+        out_path = reports_dir / f"run-next-{week}.md"
+        cross_summary = _analytics_snapshot_line(args.personal_analytics)
+        latest_pr = _latest_personal_report(reports_dir)
+        cross_report = str(latest_pr.relative_to(_REPO_ROOT)) if latest_pr else None
+
+    try:
+        suggestions_citation = str(sug_path.resolve().relative_to(_REPO_ROOT))
+    except ValueError:
+        suggestions_citation = str(sug_path.resolve())
+
     audit_text: str | None = None
     if audit_path.is_file():
         audit_text = audit_path.read_text(encoding="utf-8")
-
-    personal_line = _personal_analytics_summary(args.personal_analytics)
-    latest_pr = _latest_personal_report(reports_dir)
-    latest_personal_report = str(latest_pr.relative_to(_REPO_ROOT)) if latest_pr else None
 
     body = build_markdown(
         week,
         suggestions_data,
         audit_path,
         audit_text,
-        personal_line,
-        latest_personal_report,
+        lane=lane,
+        suggestions_citation_path=suggestions_citation,
+        cross_analytics_summary=cross_summary,
+        cross_latest_report_rel=cross_report,
     )
 
     reports_dir.mkdir(parents=True, exist_ok=True)
-    out_path = reports_dir / f"run-next-{week}.md"
     out_path.write_text(body, encoding="utf-8")
     print(f"✅ Wrote {_display_path(out_path)}")
     return 0

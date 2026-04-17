@@ -38,7 +38,7 @@
 ## Next actions (pick one thread when ready)
 
 1. **Consumers (later):** filter `audit_channel` / reports by **`channel`**, or **`generations.json`** `channel` when added — follow ADR; do **not** blend correlate rows across channels.
-2. **Personal parity (optional):** `suggestions_personal.json`, personal-aware audit/join — [`PERSONAL_ANALYTICS.md`](PERSONAL_ANALYTICS.md) roadmap.
+2. **Personal parity (optional):** **`suggestions_personal.json`** + **`run-next-*-personal`** ship in [`analytics-personal.yml`](../.github/workflows/analytics-personal.yml); remaining: personal-aware **audit/join filtering** on catalog when needed — [`PERSONAL_ANALYTICS.md`](PERSONAL_ANALYTICS.md).
 3. **Framework generalization (later):** multi-channel **channel profile** template (reusable workflow / config) — [`START_HERE`](START_HERE.md) checklist.
 4. **Optional automation (safe):** **Shipped:** [`run-intent-consumer.yml`](../.github/workflows/run-intent-consumer.yml) + [`scripts/consume_run_intent.py`](../scripts/consume_run_intent.py) validate **`data/run_intent.json`** → **`batch_generate`** / double-gated **`youtube_upload`** ([`spec/contracts/production-run-intent.md`](spec/contracts/production-run-intent.md)); planner v0 still defaults **`upload`: false**. **Next (optional):** personal-lane planner, richer intent→flags mapping, or LLM overrides — [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6 *Two doors*.
 5. **Phase 2.5 + inference hygiene:** extend **`correlate.py`** with CIs / z-scores / effect sizes **and** Step Summary + doc language that **CIs address noise, not confounders** (title/thumbnail/CTR vs params — **`AGENT.md`** § *Confounders & packaging*).

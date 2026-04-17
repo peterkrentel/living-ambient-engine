@@ -83,12 +83,28 @@ jobs:
           echo "📋 Writing personal channel coverage audit..."
           python scripts/audit_channel.py
 
+      - name: Run ML correlation (personal)
+        env:
+          ANALYTICS_JSON_PATH: data/analytics_personal.json
+          SUGGESTIONS_JSON_PATH: data/suggestions_personal.json
+        run: |
+          echo "🤖 Running personal-channel correlation (separate JSON from brand)..."
+          python scripts/correlate.py
+
+      - name: Run-next advisory personal (deterministic v0)
+        run: |
+          echo "🧭 Writing personal run-next markdown..."
+          python scripts/run_next_report.py --lane personal
+
       - name: Commit personal data
         run: |
           git config user.name "Analytics Agent (Personal)"
           git config user.email "actions@github.com"
 
           git add data/analytics_personal.json
+          if [ -f data/suggestions_personal.json ]; then
+            git add data/suggestions_personal.json
+          fi
           if compgen -G "data/reports/*-personal.md" > /dev/null; then
             git add data/reports/*-personal.md
           fi
