@@ -570,6 +570,8 @@ on:
 9. Run channel coverage audit (`scripts/audit_channel.py`) — read-only markdown from committed analytics; summarizes 14-mood and 9×9 art×music grid coverage plus generations ledger join stats (no API calls)
 10. Commit and push data files — after `git commit`, run `git pull --rebase origin main` then `git push` so a concurrent push on `main` (e.g. the other analytics workflow) does not cause the job to fail
 
+**Planned — advisory `run-next` (see [`COHESION_ROADMAP.md`](../COHESION_ROADMAP.md) § Phase 6 + `run-next` implementation, [`HANDOFF.md`](../HANDOFF.md) #9):** insert a step **after** correlate + audit (exact slot TBD) to emit **`data/reports/run-next-YYYY-WW.md`** from **`suggestions.json`** + **`audit-*.md`** + two-channel pointers — **deterministic v0** first (**no** LLM, **no** `batch_generate`). Then **validators** (cited ids, numeric parity). Then optional **LLM prose** on the fixed bundle (**self-hosted / open-weight** preferred; short-lived **Gemini** prototype allowed). **Automation** (e.g. auto-consumer) only after `run-next` is trusted.
+
 ### Outputs
 
 | Output | Location | Description |
@@ -578,6 +580,7 @@ on:
 | Weekly report | `data/reports/YYYY-WW.md` | Human-readable summary |
 | ML suggestions | `data/suggestions.json` | Bucket suggestions tagged by `metric` (`average_view_percentage` and/or `watch_time_minutes`); Step Summary lists both |
 | Run intent (v0) | `data/run_intent.json` **or** `data/reports/run-intent-blocked.md` | Planner output; committed when present (intent often absent until gates pass) |
+| Run-next (planned) | `data/reports/run-next-YYYY-WW.md` (name TBD) | Advisory “what next”; deterministic v0 → validators → optional LLM; see **Planned** paragraph above |
 | Channel audit | `data/reports/audit-YYYY-WW.md` | Coverage vs target grids + ledger join share (CI-generated) |
 
 ### Secrets Required

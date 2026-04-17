@@ -191,6 +191,13 @@ Videos published **before** `generations.json` exists have **no** joined params 
 
 **Advisory `run-next` (near-term, explicit):** add a **weekly** markdown artifact (path TBD, e.g. `data/reports/run-next-YYYY-WW.md`) or a **dedicated section** in the weekly report — **ranked** “what to try next,” mixing **strong** and **weak** signals with clear labels (same spirit as **actionable** vs **exploratory** in correlate). This is **separate** from the **strict** automation gate (`data/run_intent.json` / `run-intent-blocked.md`): humans read `run-next` for strategy; they run Content Factory / consumer only when ready. **Packaging / algorithm surface:** it is normal to exploit **same-franchise + slight title/thumb variation** when that matches how the feed clusters content — **[`piano-batch.yml`](../.github/workflows/piano-batch.yml)** is a repo example (strategy informed by **personal**-lane read). Still document **confounders** ([`AGENT.md`](spec/AGENT.md) § *Confounders & packaging*); per-channel **dedup / positioning** when two channels would share identical display titles stays a **later** polish ([`HANDOFF.md`](HANDOFF.md) next actions **#8**).
 
+**`run-next` implementation order (agreed):**
+
+1. **v0 deterministic** — new step in [`analytics-agent.yml`](../.github/workflows/analytics-agent.yml) after correlate + audit: emit `run-next-*.md` from structured data only; commit with weekly data. **No** LLM; **no** `batch_generate` / upload.
+2. **Validators** — CI or script checks: every claim traceable to `suggestions.json` / audit; numeric parity; fail the step on drift.
+3. **Optional LLM prose** — only after (1)(2) are boring: model consumes **fixed JSON bundle** + prompt from git; output still schema-validated. **Preferred:** open-weight on **self-hosted** runner or hardware you control (**MLOps / AI-ops**, no third-party inference). **Optional prototype:** vendor API (e.g. Gemini free tier) for speed **only** until a local path exists; document in `workflows.md` + secrets policy.
+4. **Automation** — optional `workflow_run` / scheduled consumer, richer `run_intent`, etc., **only** after `run-next` is trusted; keep Phase 6 steps **2–3** (human dispatch → later caps).
+
 ---
 
 ## Versioning this project
