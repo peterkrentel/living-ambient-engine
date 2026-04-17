@@ -6,6 +6,10 @@ Exits **1** on invalid JSON or contract violations (no downstream generate/uploa
 When ``--emit-github-output`` is set, expects ``GITHUB_OUTPUT`` and appends
 ``moods``, ``duration``, ``dual``, ``channel``, ``upload`` for later workflow steps.
 
+``--allow-planner-blocked`` (CI **validate-only**): if ``run_intent.json`` is missing but
+``data/reports/run-intent-blocked.md`` exists, exit **0** and document BLOCKED in the Step
+Summary — not a failure (planner said “no intent”). Without this flag, missing intent is **1**.
+
 Spec: ``docs/spec/contracts/production-run-intent.md``.
 """
 from __future__ import annotations
@@ -149,13 +153,31 @@ def main() -> int:
         action="store_true",
         help="Append moods,duration,dual,channel,upload to GITHUB_OUTPUT",
     )
+    parser.add_argument(
+        "--allow-planner-blocked",
+        action="store_true",
+        help="If intent is missing but run-intent-blocked.md exists, exit 0 (validate-only UX).",
+    )
     args = parser.parse_args()
 
     intent_path: Path = args.intent
     if not intent_path.is_file():
         msg = f"Missing intent file: {intent_path}"
         if BLOCKED.is_file():
-            msg += f"\n\nPlanner may have written {BLOCKED.relative_to(_REPO)} instead."
+            try:
+                blocked_ref = BLOCKED.relative_to(_REPO)
+            except ValueError:
+                blocked_ref = BLOCKED
+            msg += f"\n\nPlanner wrote {blocked_ref} instead."
+            if args.allow_planner_blocked:
+                print(msg)
+                append_step_summary(
+                    "## Run intent consumer\n\n"
+                    "**Result:** Planner **BLOCKED** — no `data/run_intent.json`. "
+                    f"See `{blocked_ref}`.\n\n"
+                    "*This is expected when the analytics gate finds no actionable moods.*\n"
+                )
+                return 0
         print(msg, file=sys.stderr)
         return 1
 
