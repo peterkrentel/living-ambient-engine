@@ -1,0 +1,870 @@
+{
+  "generated_at": "2026-04-17T19:18:21.930649Z",
+  "overall_avg_retention": 24.95,
+  "overall_avg_watch_minutes_per_video": 40.833,
+  "videos_analyzed": 90,
+  "videos_with_views": 12,
+  "coverage": {
+    "moods": {
+      "deep_focus": {
+        "total": 10,
+        "with_views": 3
+      },
+      "sleep": {
+        "total": 6,
+        "with_views": 0
+      },
+      "chill": {
+        "total": 4,
+        "with_views": 0
+      },
+      "study": {
+        "total": 6,
+        "with_views": 0
+      },
+      "energize": {
+        "total": 6,
+        "with_views": 0
+      },
+      "trance": {
+        "total": 10,
+        "with_views": 2
+      },
+      "ceremony": {
+        "total": 5,
+        "with_views": 1
+      },
+      "warrior": {
+        "total": 11,
+        "with_views": 1
+      },
+      "rain_sleep": {
+        "total": 7,
+        "with_views": 0
+      },
+      "fireplace": {
+        "total": 3,
+        "with_views": 0
+      },
+      "ocean_waves": {
+        "total": 4,
+        "with_views": 0
+      },
+      "lofi_study": {
+        "total": 2,
+        "with_views": 0
+      },
+      "piano_relax": {
+        "total": 4,
+        "with_views": 1
+      },
+      "forest_morning": {
+        "total": 0,
+        "with_views": 0
+      }
+    },
+    "art_periods": {
+      "cave_art": {
+        "total": 0,
+        "with_views": 0
+      },
+      "ancient": {
+        "total": 0,
+        "with_views": 0
+      },
+      "medieval": {
+        "total": 0,
+        "with_views": 0
+      },
+      "renaissance": {
+        "total": 0,
+        "with_views": 0
+      },
+      "baroque": {
+        "total": 0,
+        "with_views": 0
+      },
+      "impressionist": {
+        "total": 0,
+        "with_views": 0
+      },
+      "modern": {
+        "total": 0,
+        "with_views": 0
+      },
+      "contemporary": {
+        "total": 0,
+        "with_views": 0
+      },
+      "future": {
+        "total": 0,
+        "with_views": 0
+      }
+    },
+    "music_styles": {
+      "gnawa": {
+        "total": 0,
+        "with_views": 0
+      },
+      "taiko": {
+        "total": 0,
+        "with_views": 0
+      },
+      "gamelan": {
+        "total": 0,
+        "with_views": 0
+      },
+      "burundi": {
+        "total": 0,
+        "with_views": 0
+      },
+      "kuku": {
+        "total": 0,
+        "with_views": 0
+      },
+      "candomble": {
+        "total": 0,
+        "with_views": 0
+      },
+      "bamboula": {
+        "total": 0,
+        "with_views": 0
+      },
+      "heartbeat": {
+        "total": 0,
+        "with_views": 0
+      },
+      "none": {
+        "total": 0,
+        "with_views": 0
+      }
+    },
+    "art_music_combos": {
+      "cave_art+gnawa": {
+        "total": 0,
+        "with_views": 0
+      },
+      "cave_art+taiko": {
+        "total": 0,
+        "with_views": 0
+      },
+      "cave_art+gamelan": {
+        "total": 0,
+        "with_views": 0
+      },
+      "cave_art+burundi": {
+        "total": 0,
+        "with_views": 0
+      },
+      "cave_art+kuku": {
+        "total": 0,
+        "with_views": 0
+      },
+      "cave_art+candomble": {
+        "total": 0,
+        "with_views": 0
+      },
+      "cave_art+bamboula": {
+        "total": 0,
+        "with_views": 0
+      },
+      "cave_art+heartbeat": {
+        "total": 0,
+        "with_views": 0
+      },
+      "cave_art+none": {
+        "total": 0,
+        "with_views": 0
+      },
+      "ancient+gnawa": {
+        "total": 0,
+        "with_views": 0
+      },
+      "ancient+taiko": {
+        "total": 0,
+        "with_views": 0
+      },
+      "ancient+gamelan": {
+        "total": 0,
+        "with_views": 0
+      },
+      "ancient+burundi": {
+        "total": 0,
+        "with_views": 0
+      },
+      "ancient+kuku": {
+        "total": 0,
+        "with_views": 0
+      },
+      "ancient+candomble": {
+        "total": 0,
+        "with_views": 0
+      },
+      "ancient+bamboula": {
+        "total": 0,
+        "with_views": 0
+      },
+      "ancient+heartbeat": {
+        "total": 0,
+        "with_views": 0
+      },
+      "ancient+none": {
+        "total": 0,
+        "with_views": 0
+      },
+      "medieval+gnawa": {
+        "total": 0,
+        "with_views": 0
+      },
+      "medieval+taiko": {
+        "total": 0,
+        "with_views": 0
+      },
+      "medieval+gamelan": {
+        "total": 0,
+        "with_views": 0
+      },
+      "medieval+burundi": {
+        "total": 0,
+        "with_views": 0
+      },
+      "medieval+kuku": {
+        "total": 0,
+        "with_views": 0
+      },
+      "medieval+candomble": {
+        "total": 0,
+        "with_views": 0
+      },
+      "medieval+bamboula": {
+        "total": 0,
+        "with_views": 0
+      },
+      "medieval+heartbeat": {
+        "total": 0,
+        "with_views": 0
+      },
+      "medieval+none": {
+        "total": 0,
+        "with_views": 0
+      },
+      "renaissance+gnawa": {
+        "total": 0,
+        "with_views": 0
+      },
+      "renaissance+taiko": {
+        "total": 0,
+        "with_views": 0
+      },
+      "renaissance+gamelan": {
+        "total": 0,
+        "with_views": 0
+      },
+      "renaissance+burundi": {
+        "total": 0,
+        "with_views": 0
+      },
+      "renaissance+kuku": {
+        "total": 0,
+        "with_views": 0
+      },
+      "renaissance+candomble": {
+        "total": 0,
+        "with_views": 0
+      },
+      "renaissance+bamboula": {
+        "total": 0,
+        "with_views": 0
+      },
+      "renaissance+heartbeat": {
+        "total": 0,
+        "with_views": 0
+      },
+      "renaissance+none": {
+        "total": 0,
+        "with_views": 0
+      },
+      "baroque+gnawa": {
+        "total": 0,
+        "with_views": 0
+      },
+      "baroque+taiko": {
+        "total": 0,
+        "with_views": 0
+      },
+      "baroque+gamelan": {
+        "total": 0,
+        "with_views": 0
+      },
+      "baroque+burundi": {
+        "total": 0,
+        "with_views": 0
+      },
+      "baroque+kuku": {
+        "total": 0,
+        "with_views": 0
+      },
+      "baroque+candomble": {
+        "total": 0,
+        "with_views": 0
+      },
+      "baroque+bamboula": {
+        "total": 0,
+        "with_views": 0
+      },
+      "baroque+heartbeat": {
+        "total": 0,
+        "with_views": 0
+      },
+      "baroque+none": {
+        "total": 0,
+        "with_views": 0
+      },
+      "impressionist+gnawa": {
+        "total": 0,
+        "with_views": 0
+      },
+      "impressionist+taiko": {
+        "total": 0,
+        "with_views": 0
+      },
+      "impressionist+gamelan": {
+        "total": 0,
+        "with_views": 0
+      },
+      "impressionist+burundi": {
+        "total": 0,
+        "with_views": 0
+      },
+      "impressionist+kuku": {
+        "total": 0,
+        "with_views": 0
+      },
+      "impressionist+candomble": {
+        "total": 0,
+        "with_views": 0
+      },
+      "impressionist+bamboula": {
+        "total": 0,
+        "with_views": 0
+      },
+      "impressionist+heartbeat": {
+        "total": 0,
+        "with_views": 0
+      },
+      "impressionist+none": {
+        "total": 0,
+        "with_views": 0
+      },
+      "modern+gnawa": {
+        "total": 0,
+        "with_views": 0
+      },
+      "modern+taiko": {
+        "total": 0,
+        "with_views": 0
+      },
+      "modern+gamelan": {
+        "total": 0,
+        "with_views": 0
+      },
+      "modern+burundi": {
+        "total": 0,
+        "with_views": 0
+      },
+      "modern+kuku": {
+        "total": 0,
+        "with_views": 0
+      },
+      "modern+candomble": {
+        "total": 0,
+        "with_views": 0
+      },
+      "modern+bamboula": {
+        "total": 0,
+        "with_views": 0
+      },
+      "modern+heartbeat": {
+        "total": 0,
+        "with_views": 0
+      },
+      "modern+none": {
+        "total": 0,
+        "with_views": 0
+      },
+      "contemporary+gnawa": {
+        "total": 0,
+        "with_views": 0
+      },
+      "contemporary+taiko": {
+        "total": 0,
+        "with_views": 0
+      },
+      "contemporary+gamelan": {
+        "total": 0,
+        "with_views": 0
+      },
+      "contemporary+burundi": {
+        "total": 0,
+        "with_views": 0
+      },
+      "contemporary+kuku": {
+        "total": 0,
+        "with_views": 0
+      },
+      "contemporary+candomble": {
+        "total": 0,
+        "with_views": 0
+      },
+      "contemporary+bamboula": {
+        "total": 0,
+        "with_views": 0
+      },
+      "contemporary+heartbeat": {
+        "total": 0,
+        "with_views": 0
+      },
+      "contemporary+none": {
+        "total": 0,
+        "with_views": 0
+      },
+      "future+gnawa": {
+        "total": 0,
+        "with_views": 0
+      },
+      "future+taiko": {
+        "total": 0,
+        "with_views": 0
+      },
+      "future+gamelan": {
+        "total": 0,
+        "with_views": 0
+      },
+      "future+burundi": {
+        "total": 0,
+        "with_views": 0
+      },
+      "future+kuku": {
+        "total": 0,
+        "with_views": 0
+      },
+      "future+candomble": {
+        "total": 0,
+        "with_views": 0
+      },
+      "future+bamboula": {
+        "total": 0,
+        "with_views": 0
+      },
+      "future+heartbeat": {
+        "total": 0,
+        "with_views": 0
+      },
+      "future+none": {
+        "total": 0,
+        "with_views": 0
+      }
+    }
+  },
+  "suggestions": [],
+  "all_stats": [
+    {
+      "type": "mood",
+      "name": "piano_ambient",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 2,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "average_view_percentage"
+    },
+    {
+      "type": "mood",
+      "name": "piano_evening",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 2,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "average_view_percentage"
+    },
+    {
+      "type": "mood",
+      "name": "rain_piano",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 2,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "average_view_percentage"
+    },
+    {
+      "type": "mood",
+      "name": "piano_gentle",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 2,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "average_view_percentage"
+    },
+    {
+      "type": "mood",
+      "name": "piano_deep_calm",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 4,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "average_view_percentage"
+    },
+    {
+      "type": "mood",
+      "name": "warrior",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 11,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "average_view_percentage"
+    },
+    {
+      "type": "mood",
+      "name": "trance",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 10,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "average_view_percentage"
+    },
+    {
+      "type": "mood",
+      "name": "energize",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 6,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "average_view_percentage"
+    },
+    {
+      "type": "mood",
+      "name": "study",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 6,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "average_view_percentage"
+    },
+    {
+      "type": "mood",
+      "name": "chill",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 4,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "average_view_percentage"
+    },
+    {
+      "type": "mood",
+      "name": "sleep",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 6,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "average_view_percentage"
+    },
+    {
+      "type": "mood",
+      "name": "piano_relax",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 4,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "average_view_percentage"
+    },
+    {
+      "type": "mood",
+      "name": "lofi_study",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 2,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "average_view_percentage"
+    },
+    {
+      "type": "mood",
+      "name": "ceremony",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 5,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "average_view_percentage"
+    },
+    {
+      "type": "mood",
+      "name": "ocean_waves",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 4,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "average_view_percentage"
+    },
+    {
+      "type": "mood",
+      "name": "deep_focus",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 10,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "average_view_percentage"
+    },
+    {
+      "type": "mood",
+      "name": "rain_sleep",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 7,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "average_view_percentage"
+    },
+    {
+      "type": "mood",
+      "name": "fireplace",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 3,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "average_view_percentage"
+    }
+  ],
+  "all_stats_watch_time": [
+    {
+      "type": "mood",
+      "name": "piano_ambient",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 2,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "watch_time_minutes"
+    },
+    {
+      "type": "mood",
+      "name": "piano_evening",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 2,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "watch_time_minutes"
+    },
+    {
+      "type": "mood",
+      "name": "rain_piano",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 2,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "watch_time_minutes"
+    },
+    {
+      "type": "mood",
+      "name": "piano_gentle",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 2,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "watch_time_minutes"
+    },
+    {
+      "type": "mood",
+      "name": "piano_deep_calm",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 4,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "watch_time_minutes"
+    },
+    {
+      "type": "mood",
+      "name": "warrior",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 11,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "watch_time_minutes"
+    },
+    {
+      "type": "mood",
+      "name": "trance",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 10,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "watch_time_minutes"
+    },
+    {
+      "type": "mood",
+      "name": "energize",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 6,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "watch_time_minutes"
+    },
+    {
+      "type": "mood",
+      "name": "study",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 6,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "watch_time_minutes"
+    },
+    {
+      "type": "mood",
+      "name": "chill",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 4,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "watch_time_minutes"
+    },
+    {
+      "type": "mood",
+      "name": "sleep",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 6,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "watch_time_minutes"
+    },
+    {
+      "type": "mood",
+      "name": "piano_relax",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 4,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "watch_time_minutes"
+    },
+    {
+      "type": "mood",
+      "name": "lofi_study",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 2,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "watch_time_minutes"
+    },
+    {
+      "type": "mood",
+      "name": "ceremony",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 5,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "watch_time_minutes"
+    },
+    {
+      "type": "mood",
+      "name": "ocean_waves",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 4,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "watch_time_minutes"
+    },
+    {
+      "type": "mood",
+      "name": "deep_focus",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 10,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "watch_time_minutes"
+    },
+    {
+      "type": "mood",
+      "name": "rain_sleep",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 7,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "watch_time_minutes"
+    },
+    {
+      "type": "mood",
+      "name": "fireplace",
+      "avg": 0,
+      "delta": 0,
+      "count": 0,
+      "total": 3,
+      "group_views": 0,
+      "std_dev": 0,
+      "metric": "watch_time_minutes"
+    }
+  ]
+}
