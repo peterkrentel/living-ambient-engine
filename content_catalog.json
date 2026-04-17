@@ -1,8 +1,8 @@
 {
   "catalog_version": "1.0",
   "created_at": "2026-01-30T01:38:24.843138",
-  "last_updated": "2026-04-17T15:23:14.564552",
-  "total_videos": 94,
+  "last_updated": "2026-04-17T15:52:36.067461",
+  "total_videos": 96,
   "videos": [
     {
       "catalog_id": "video_0001_20260130_013826_32197db7",
@@ -3618,6 +3618,86 @@
           "forest birds",
           "tranquil forest",
           "forest background"
+        ]
+      },
+      "channel": "brand"
+    },
+    {
+      "catalog_id": "video_0095_20260417_155233_88990537",
+      "youtube_id": "dMEINB8gy2o",
+      "youtube_url": "https://youtube.com/watch?v=dMEINB8gy2o",
+      "title": "Let Go of Stress | 30 Seconds Soft Piano | Gently Evolving Melodies [Pure Ambience]",
+      "mood": "piano_relax",
+      "duration": 30,
+      "duration_str": "",
+      "seed": null,
+      "version": "standard",
+      "rhythm": "ambient",
+      "rhythm_name": "",
+      "uploaded_at": "2026-04-17T15:52:33.360472",
+      "generated_at": "2026-04-17T15:52:33.360472",
+      "metadata": {
+        "video_title": "Let Go of Stress | 30 Seconds Soft Piano | Gently Evolving Melodies [Pure Ambience]",
+        "mood": "piano_relax",
+        "duration": 30,
+        "description": "Peaceful piano for stress relief",
+        "tags": [
+          "ASMR",
+          "piano music",
+          "relaxing piano",
+          "peaceful piano",
+          "stress relief music",
+          "calm piano",
+          "soft piano",
+          "piano for sleep",
+          "meditation piano",
+          "piano ambient",
+          "gentle piano",
+          "piano relaxation",
+          "soothing piano",
+          "theta waves",
+          "piano lullaby",
+          "piano background"
+        ]
+      },
+      "channel": "brand"
+    },
+    {
+      "catalog_id": "video_0096_20260417_155236_89c70188",
+      "youtube_id": "26o48XIigM4",
+      "youtube_url": "https://youtube.com/watch?v=26o48XIigM4",
+      "title": "Let Go of Stress | 30 Seconds Soft Piano | Gently Evolving Melodies [With Music]",
+      "mood": "piano_relax",
+      "duration": 30,
+      "duration_str": "",
+      "seed": null,
+      "version": "standard",
+      "rhythm": "ambient",
+      "rhythm_name": "",
+      "uploaded_at": "2026-04-17T15:52:36.067349",
+      "generated_at": "2026-04-17T15:52:36.067349",
+      "metadata": {
+        "video_title": "Let Go of Stress | 30 Seconds Soft Piano | Gently Evolving Melodies [With Music]",
+        "mood": "piano_relax",
+        "duration": 30,
+        "description": "Peaceful piano for stress relief",
+        "tags": [
+          "ASMR",
+          "piano music",
+          "relaxing piano",
+          "peaceful piano",
+          "stress relief music",
+          "calm piano",
+          "soft piano",
+          "piano for sleep",
+          "meditation piano",
+          "piano ambient",
+          "gentle piano",
+          "piano relaxation",
+          "soothing piano",
+          "theta waves",
+          "piano lullaby",
+          "piano background"
         ]
       },
       "channel": "brand"
