@@ -185,7 +185,7 @@ Videos published **before** `generations.json` exists have **no** joined params 
 2. **`workflow_dispatch`** with suggested inputs — **human** runs.
 3. Only later: optional auto-trigger with **caps**, **guardrails**, and **spec updates**.
 
-**Two doors (keep both):** **(A)** Small manual **`workflow_dispatch`** on Content Factory workflows for smoke and hand-picked runs (fixed form fields). **(B) Precision path:** versioned **run intent JSON** — [`spec/contracts/production-run-intent.md`](spec/contracts/production-run-intent.md) — **validated in CI** then mapped to `batch_generate` / `youtube_upload` flags; a gated planner or future LLM emits **only** that shape (no ad-hoc shell, no unbounded growth of dropdown inputs). *Workflow reader implementation is TBD when Phase 6 work starts.*
+**Two doors (keep both):** **(A)** Small manual **`workflow_dispatch`** on Content Factory workflows for smoke and hand-picked runs (fixed form fields). **(B) Precision path:** versioned **run intent JSON** — [`spec/contracts/production-run-intent.md`](spec/contracts/production-run-intent.md) — **validated in CI** then mapped to `batch_generate` / `youtube_upload` flags; a gated planner or future LLM emits **only** that shape (no ad-hoc shell, no unbounded growth of dropdown inputs). *Workflow reader implementation is TBD when Phase 6 work starts.* **Planner v0:** [`scripts/plan_run_intent.py`](../scripts/plan_run_intent.py) (after brand correlate) writes intent or a **BLOCKED** report; no execution yet.
 
 **Explainability:** Recommendations must cite **evidence** (e.g. “top retention cluster: `mood=X`, `tempo` band Y, *n*=…”) — not vague “make more calm stuff.” Otherwise you won’t trust the loop.
 

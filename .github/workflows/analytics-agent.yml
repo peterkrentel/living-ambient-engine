@@ -81,6 +81,11 @@ jobs:
           echo "🤖 Running ML correlation analysis..."
           python scripts/correlate.py
 
+      - name: Plan run intent (gated)
+        run: |
+          echo "🧭 Planning run intent from suggestions (no upload)..."
+          python scripts/plan_run_intent.py
+
       - name: Channel coverage audit
         run: |
           echo "📋 Writing channel coverage audit (read-only)..."
@@ -91,8 +96,9 @@ jobs:
           git config user.name "Analytics Agent"
           git config user.email "actions@github.com"
 
-          # Add data files (including suggestions.json)
+          # Add data files (including suggestions.json, planner output)
           git add data/analytics.json data/reports/ data/suggestions.json || true
+          if [ -f data/run_intent.json ]; then git add data/run_intent.json; fi
 
           # Check if there are changes
           if git diff --staged --quiet; then
