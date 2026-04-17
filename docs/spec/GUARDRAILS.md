@@ -3,6 +3,8 @@
 > **Hard limits and forbidden states that must never be violated.**
 > These are non-negotiable constraints enforced across all components.
 
+**Process guardrail (assistants → maintainer):** Default verification is **GitHub Actions** and the **GitHub web UI**—not “run this locally” unless the maintainer asks for local steps. Details: [`.github/AGENT_INSTRUCTIONS.md`](../../.github/AGENT_INSTRUCTIONS.md) · [`.cursor/rules/ci-only-verification.mdc`](../../.cursor/rules/ci-only-verification.mdc).
+
 ## Quick Reference - Numeric Parameters
 
 | Parameter | Min | Max | Default | Enforcement |
