@@ -4,7 +4,7 @@
 
 ## Updated
 
-2026-04-18
+2026-04-17
 
 ## Branch / PR
 
@@ -13,7 +13,7 @@
 
 ## Anchor
 
-- **Analytics (two lanes):** **Brand** — [`analytics-agent.yml`](../.github/workflows/analytics-agent.yml) → `data/analytics.json`, `data/reports/YYYY-WW.md`, `suggestions.json`, `audit-*.md` (commit step uses `git pull --rebase` before push). **Personal** — [`analytics-personal.yml`](../.github/workflows/analytics-personal.yml) → `data/analytics_personal.json`, `*-personal.md`. Map: [`START_HERE`](START_HERE.md#two-channels-two-probes) · detail: [`PERSONAL_ANALYTICS`](PERSONAL_ANALYTICS.md).
+- **Analytics (two lanes):** **Brand** — [`analytics-agent.yml`](../.github/workflows/analytics-agent.yml) → `data/analytics.json`, `data/reports/YYYY-WW.md`, `suggestions.json`, `audit-*.md`, `run-next-*.md` (commit step uses `git pull --rebase` before push). **Personal** — [`analytics-personal.yml`](../.github/workflows/analytics-personal.yml) → `data/analytics_personal.json`, `*-personal.md`, `audit-*-personal.md`, `suggestions_personal.json`, `run-next-*-personal.md`. Map: [`START_HERE`](START_HERE.md#two-channels-two-probes) · detail: [`PERSONAL_ANALYTICS`](PERSONAL_ANALYTICS.md).
 - **Catalog channel:** New `content_catalog.json` rows from `youtube_upload.py` carry **`channel`: `brand` \| `personal`** (both values already on `main` in the catalog). Historic rows may omit the field — optional backfill later. **ADR:** [`decisions/0002-content-catalog-channel-field.md`](decisions/0002-content-catalog-channel-field.md).
 
 ## Goal (last phase — done)
@@ -21,7 +21,7 @@
 - **Personal analytics v1** in CI (token scopes, `analytics_personal.json`, `*-personal.md`, Studio cross-read).
 - **Brand + personal push race** fixed (`git pull --rebase origin main` before `git push` in both analytics workflows).
 - **Weekly reports** include **Analytics window** line ([`agent/report.py`](../agent/report.py)); merge on `main`.
-- **`run-next` v0:** [`scripts/run_next_report.py`](../scripts/run_next_report.py) + [`analytics-agent.yml`](../.github/workflows/analytics-agent.yml) step → `data/reports/run-next-YYYY-WW.md` (deterministic; **actionable** vs **exploratory**; packaging caveat). Validators / LLM / automation still roadmap — [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6.
+- **`run-next` v0:** [`scripts/run_next_report.py`](../scripts/run_next_report.py) on **brand + personal** workflows → `run-next-YYYY-WW.md` / `run-next-YYYY-WW-personal.md` (deterministic; **actionable** vs **exploratory**; packaging caveat). **Next:** validators → optional LLM → automation — [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6.
 
 ## Goal (this phase — in flight)
 
