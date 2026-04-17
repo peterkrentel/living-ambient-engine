@@ -89,7 +89,7 @@ This spec is enforced at multiple levels:
 | `content-factory-brand-batch.yml` | Dedicated **Commit generations ledger** step after upload |
 | `art-creator.yml` | **upload** job: `permissions.contents: write`, commit `data/generations.json` after upload (`--no-update-catalog` unchanged) |
 
-**Push race on `main`:** After `git commit` and before `git push`, workflows that update the repo run `git pull --rebase origin main` so another job (analytics, another upload lane) advancing `main` does not cause a non-fast-forward rejection.
+**Push race on `main`:** After the automated data `git commit`, upload workflows run **`scripts/ci_merge_main_after_data_commit.sh`**: `git merge origin/main`, then `git push`. If the merge conflicts on **`content_catalog.json`**, **`data/generations.json`**, and/or **`CONTENT_LIBRARY.md`**, **`scripts/merge_data_snapshot_conflicts.py`** performs an append-style **union** (by `youtube_id` / `video_id`) and regenerates **`CONTENT_LIBRARY.md`** from the merged catalog so parallel lanes (e.g. personal + piano) do not fail the job on rebase conflicts.
 
 **Verify:** `python scripts/verify_ledger_catalog.py` — catalog `youtube_id` set must equal ledger `video_id` set; warns when no `Content Factory (Personal)` rows exist.
 
