@@ -1,0 +1,206 @@
+# Run intent consumer — validate data/run_intent.json → batch_generate / optional youtube_upload
+# Spec: docs/spec/workflows.md#run-intent-consumeryml
+# Contract: docs/spec/contracts/production-run-intent.md
+
+name: Run intent consumer
+
+on:
+  workflow_dispatch:
+    inputs:
+      validate_only:
+        description: 'Only validate intent and write Step Summary (no generate/upload)'
+        required: false
+        type: boolean
+        default: false
+      confirm_upload:
+        description: 'Allow YouTube upload only if intent.upload is true (double gate)'
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: run-intent-consumer
+  cancel-in-progress: false
+
+env:
+  PYTHON_VERSION: '3.11'
+
+permissions:
+  contents: write
+
+jobs:
+  parse:
+    name: Validate run intent
+    runs-on: ubuntu-latest
+    outputs:
+      moods: ${{ steps.intent.outputs.moods }}
+      duration: ${{ steps.intent.outputs.duration }}
+      dual: ${{ steps.intent.outputs.dual }}
+      channel: ${{ steps.intent.outputs.channel }}
+      upload: ${{ steps.intent.outputs.upload }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install PyYAML (validator only)
+        run: pip install pyyaml
+
+      - name: Validate and export outputs
+        id: intent
+        run: python scripts/consume_run_intent.py --intent data/run_intent.json --emit-github-output
+
+  generate:
+    name: Generate from intent
+    needs: parse
+    if: ${{ github.event.inputs.validate_only != true && github.event.inputs.validate_only != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install FFmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Generate videos
+        env:
+          DUAL: ${{ needs.parse.outputs.dual }}
+        run: |
+          DUAL_FLAG=""
+          if [ "$DUAL" = "true" ]; then
+            DUAL_FLAG="--dual"
+          fi
+          python batch_generate.py \
+            --moods "${{ needs.parse.outputs.moods }}" \
+            --durations "${{ needs.parse.outputs.duration }}" \
+            $DUAL_FLAG \
+            --output ./generated
+
+      - name: Validate generated files
+        run: |
+          echo "🔍 Validating generated files..."
+          test -f ./generated/manifest.json || { echo "❌ manifest.json missing"; exit 1; }
+          for f in ./generated/*.mp4; do
+            [ -f "$f" ] || continue
+            SIZE=$(stat -c%s "$f" 2>/dev/null || stat -f%z "$f")
+            if [ "$SIZE" -lt 1000 ]; then
+              echo "❌ File too small: $f ($SIZE bytes)"
+              exit 1
+            fi
+            echo "✅ $f: $SIZE bytes"
+          done
+          for f in ./generated/*.mp4; do
+            [ -f "$f" ] || continue
+            DUR=$(ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$f" | cut -d. -f1)
+            echo "✅ $f: ${DUR}s"
+          done
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: run-intent-generated-${{ needs.parse.outputs.channel }}
+          path: ./generated/
+          retention-days: 7
+
+      - name: Generation summary
+        run: |
+          echo "## Run intent — generation" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Channel:** ${{ needs.parse.outputs.channel }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Moods:** ${{ needs.parse.outputs.moods }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Duration:** ${{ needs.parse.outputs.duration }}" >> "$GITHUB_STEP_SUMMARY"
+
+  upload:
+    name: Upload from intent
+    needs: [parse, generate]
+    if: >-
+      ${{
+        github.event.inputs.validate_only != true &&
+        github.event.inputs.validate_only != 'true' &&
+        (github.event.inputs.confirm_upload == true || github.event.inputs.confirm_upload == 'true') &&
+        needs.parse.outputs.upload == 'true'
+      }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install google-auth-oauthlib google-api-python-client
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: run-intent-generated-${{ needs.parse.outputs.channel }}
+          path: ./generated
+
+      - name: Restore YouTube credentials (brand)
+        if: needs.parse.outputs.channel == 'brand'
+        run: |
+          printf "%s" "${{ secrets.YOUTUBE_TOKEN_PICKLE_BRAND }}" | base64 -d > youtube_token.pickle
+          printf "%s" '${{ secrets.YOUTUBE_CLIENT_SECRETS }}' > client_secrets.json
+
+      - name: Restore YouTube credentials (personal)
+        if: needs.parse.outputs.channel == 'personal'
+        run: |
+          printf "%s" "${{ secrets.YOUTUBE_TOKEN_PICKLE }}" | base64 -d > youtube_token.pickle
+          printf "%s" '${{ secrets.YOUTUBE_CLIENT_SECRETS }}' > client_secrets.json
+
+      - name: Upload to YouTube
+        run: |
+          python youtube_upload.py --batch ./generated --catalog-channel "${{ needs.parse.outputs.channel }}"
+
+      - name: Cleanup credentials
+        if: always()
+        run: rm -f youtube_token.pickle client_secrets.json
+
+      - name: Commit catalog and ledger
+        run: |
+          git config user.name "Run intent consumer"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -f content_catalog.json ]; then git add content_catalog.json; fi
+          if [ -f CONTENT_LIBRARY.md ]; then git add CONTENT_LIBRARY.md; fi
+          if [ -f data/generations.json ]; then git add data/generations.json; fi
+          if git diff --staged --quiet; then
+            echo "No catalog or generations changes to commit"
+          else
+            git commit -m "📚 Catalog / generations from run-intent consumer [automated]"
+            bash scripts/ci_merge_main_after_data_commit.sh
+            echo "✅ Pushed data updates"
+          fi
+
+      - name: Upload summary
+        run: |
+          echo "## Run intent — YouTube upload" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Channel:** ${{ needs.parse.outputs.channel }}" >> "$GITHUB_STEP_SUMMARY"

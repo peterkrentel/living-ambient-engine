@@ -28,6 +28,7 @@ class TestWorkflowMetadataConsistency:
         'content-factory.yml',
         'content-factory-brand.yml',
         'art-creator.yml',
+        'run-intent-consumer.yml',
     ]
     
     # Patterns that indicate forbidden inline metadata generation

@@ -6,7 +6,7 @@
 
 ## Overview
 
-Nine workflow files automate video generation, YouTube deployment, analytics, and testing. Use the **Workflow Index** below as the map; YAML is the source of truth when this table drifts.
+Ten workflow files automate video generation, YouTube deployment, analytics, and testing. Use the **Workflow Index** below as the map; YAML is the source of truth when this table drifts.
 
 **Each workflow YAML file MUST include a spec reference comment:**
 
@@ -27,6 +27,7 @@ Nine workflow files automate video generation, YouTube deployment, analytics, an
 | WF-TEST | `test-art-creator.yml` | Manual + PR (path filter) | CI: spec validation + contract tests + 7× `art-creator` matrix (no production upload) | None |
 | WF-AGENT | `analytics-agent.yml` | Schedule (weekly) + Manual | Fetch YouTube stats, reports, correlate, **plan run intent**, channel audit | Brand |
 | WF-AGENT-P | `analytics-personal.yml` | Schedule (weekly) + Manual | Fetch personal stats + weekly `*-personal.md` + `audit-*-personal.md` (no correlate / `suggestions.json`) | Personal |
+| WF-RIC | `run-intent-consumer.yml` | Manual only | Validate `data/run_intent.json` → `batch_generate` → optional gated `youtube_upload` (brand or personal per intent) | Brand or personal |
 
 ## Gating Rules
 
@@ -75,6 +76,7 @@ This spec is enforced at multiple levels:
 | `content-factory.yml` | write | - | Catalog + generations ledger commit |
 | `content-factory-brand.yml` | write | - | Catalog + generations ledger commit |
 | `content-factory-brand-batch.yml` | write | read | Generations ledger commit after upload |
+| `run-intent-consumer.yml` | write | - | Catalog + generations ledger commit after gated upload |
 | `piano-batch.yml` | write | - | Catalog + generations ledger commit |
 | `art-creator.yml` | read (default); **upload** job sets `write` | read | Upload job pushes `data/generations.json` only |
 | `test-art-creator.yml` | **write** | read | Must allow `art-creator.yml`’s **upload** job `contents: write` (GitHub validates reusable-workflow permissions at parse time; test matrix skips upload via inputs) |
@@ -87,13 +89,14 @@ This spec is enforced at multiple levels:
 |----------|-------------------------------------------|
 | `content-factory.yml`, `content-factory-brand.yml`, `piano-batch.yml` | Same step as catalog: `git add` includes `data/generations.json` when present |
 | `content-factory-brand-batch.yml` | Dedicated **Commit generations ledger** step after upload |
+| `run-intent-consumer.yml` | **upload** job: same pattern as Content Factory — catalog / `CONTENT_LIBRARY.md` / `data/generations.json` + `ci_merge_main_after_data_commit.sh` |
 | `art-creator.yml` | **upload** job: `permissions.contents: write`, commit `data/generations.json` after upload (`--no-update-catalog` unchanged) |
 
 **Push race on `main`:** After the automated data `git commit`, upload workflows run **`scripts/ci_merge_main_after_data_commit.sh`**: `git merge origin/main`, then `git push`. If the merge conflicts on **`content_catalog.json`**, **`data/generations.json`**, and/or **`CONTENT_LIBRARY.md`**, **`scripts/merge_data_snapshot_conflicts.py`** performs an append-style **union** (by `youtube_id` / `video_id`) and regenerates **`CONTENT_LIBRARY.md`** from the merged catalog so parallel lanes (e.g. personal + piano) do not fail the job on rebase conflicts.
 
 **Verify:** `python scripts/verify_ledger_catalog.py` — catalog `youtube_id` set must equal ledger `video_id` set; warns when no `Content Factory (Personal)` rows exist.
 
-**Precision runs (planned):** Large or agent-driven matrices should use the **validated run intent** contract ([`contracts/production-run-intent.md`](./contracts/production-run-intent.md)) consumed by CI—not unbounded extra `workflow_dispatch` inputs alone. *Workflow reader: TBD with Phase 6 / planner.*
+**Precision runs:** Large or agent-driven matrices should use the **validated run intent** contract ([`contracts/production-run-intent.md`](./contracts/production-run-intent.md)) consumed by CI—not unbounded extra `workflow_dispatch` inputs alone. **Consumer:** [`run-intent-consumer.yml`](../../.github/workflows/run-intent-consumer.yml) (`workflow_dispatch`; optional `validate_only`).
 
 ## content-factory.yml
 
@@ -221,6 +224,45 @@ Each day generates 3 moods, rotating through all 14:
 |--------|---------|
 | `YOUTUBE_TOKEN_PICKLE_BRAND` | Brand channel OAuth |
 | `YOUTUBE_CLIENT_SECRETS` | OAuth client config |
+
+### Permissions
+
+```yaml
+permissions:
+  contents: write
+```
+
+## run-intent-consumer.yml
+
+**Purpose:** Validate committed **`data/run_intent.json`** against [`contracts/production-run-intent.md`](./contracts/production-run-intent.md) v1, then run **`batch_generate.py`** with the same flags Content Factory would use (`--moods`, `--durations`, optional `--dual`). Optionally upload via **`youtube_upload.py --batch`** with **`--catalog-channel`** set from intent `channel`. **Planner v0** still commits **`upload`: false**; uploads require intent **`upload`: true** *and* dispatcher **`confirm_upload`** (double gate).
+
+**Spec:** [`contracts/production-run-intent.md`](./contracts/production-run-intent.md) · Validator: [`scripts/consume_run_intent.py`](../../scripts/consume_run_intent.py)
+
+### Trigger
+
+```yaml
+on:
+  workflow_dispatch:
+    inputs:
+      validate_only: boolean   # default false — if true, only parse/validate + Step Summary
+      confirm_upload: boolean  # default false — required (with intent.upload) to run upload job
+```
+
+### Jobs
+
+| Job | Purpose |
+|-----|---------|
+| `parse` | Checkout; `pip install pyyaml`; `python scripts/consume_run_intent.py --intent data/run_intent.json --emit-github-output` — **fails** if intent missing or invalid (exit 1). Sets outputs `moods`, `duration`, `dual`, `channel`, `upload`. |
+| `generate` | Skipped when `validate_only`; else FFmpeg + `requirements.txt`, `batch_generate.py`, artifact `run-intent-generated-{channel}`. |
+| `upload` | Skipped unless `validate_only` is false **and** `confirm_upload` **and** `parse.outputs.upload == 'true'`; restores **brand** or **personal** OAuth secret by `channel`; `youtube_upload.py --batch ./generated --catalog-channel …`; commits catalog / ledger via `scripts/ci_merge_main_after_data_commit.sh`. |
+
+### Secrets
+
+| Secret | When |
+|--------|------|
+| `YOUTUBE_TOKEN_PICKLE_BRAND` | Upload job, `channel=brand` |
+| `YOUTUBE_TOKEN_PICKLE` | Upload job, `channel=personal` |
+| `YOUTUBE_CLIENT_SECRETS` | Upload job (both lanes) |
 
 ### Permissions
 
@@ -522,7 +564,7 @@ on:
 5. Generate weekly report (`python -m agent.report`)
 6. Run performance analysis (`scripts/analyze_data.py`)
 7. Run ML correlation (`scripts/correlate.py`) — suggests bucket-level **increase/reduce** using **retention %** and **watch minutes per video** (in the fetch window); see [AGENT.md](./AGENT.md) Phase 2
-8. Plan run intent (`scripts/plan_run_intent.py`) — gated v0: writes `data/run_intent.json` when actionable **mood** increases exist, else `data/reports/run-intent-blocked.md`; **`upload` defaults false** (no consumer yet); see [`contracts/production-run-intent.md`](./contracts/production-run-intent.md)
+8. Plan run intent (`scripts/plan_run_intent.py`) — gated v0: writes `data/run_intent.json` when actionable **mood** increases exist, else `data/reports/run-intent-blocked.md`; **`upload` defaults false**; execution is **manual** via [`run-intent-consumer.yml`](../../.github/workflows/run-intent-consumer.yml); see [`contracts/production-run-intent.md`](./contracts/production-run-intent.md)
 9. Run channel coverage audit (`scripts/audit_channel.py`) — read-only markdown from committed analytics; summarizes 14-mood and 9×9 art×music grid coverage plus generations ledger join stats (no API calls)
 10. Commit and push data files — after `git commit`, run `git pull --rebase origin main` then `git push` so a concurrent push on `main` (e.g. the other analytics workflow) does not cause the job to fail
 

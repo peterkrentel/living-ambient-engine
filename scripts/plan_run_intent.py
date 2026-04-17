@@ -6,8 +6,8 @@ Reads ``data/suggestions.json`` (brand correlate output). Emits either:
   - ``data/reports/run-intent-blocked.md`` — human-readable reasons (no intent file).
 
 **Gates (conservative):** only ``action=increase`` rows with ``type=mood`` and ``actionable=true``
-(n≥5, group_views≥200 per correlate). No auto-upload: ``upload`` is always ``false`` until a
-workflow consumer exists.
+(n≥5, group_views≥200 per correlate). No auto-upload by default: ``upload`` stays ``false`` unless
+``--upload`` is passed; CI upload still requires ``run-intent-consumer`` + ``confirm_upload`` when intent requests upload.
 
 **Overrides (explicit human / CI smoke):** ``--force-moods a,b`` skips suggestion mining and
 writes intent if moods validate against ``config/moods.yaml``.

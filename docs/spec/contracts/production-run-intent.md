@@ -1,14 +1,14 @@
 # Contract: Production run intent (CI / planner → batch & upload)
 
-> **Purpose:** One **versioned JSON** shape for “what to run next” so **humans**, a **gated planner**, or a future **LLM** can target moods, duration, dual, and upload flags **without** relying on an ever-growing set of static `workflow_dispatch` form fields alone. **Workflow consumer** (validate → `batch_generate` / `youtube_upload`) is still TBD.
+> **Purpose:** One **versioned JSON** shape for “what to run next” so **humans**, a **gated planner**, or a future **LLM** can target moods, duration, dual, and upload flags **without** relying on an ever-growing set of static `workflow_dispatch` form fields alone. **Workflow consumer** (validate → `batch_generate` / optional `youtube_upload`) is implemented as [`run-intent-consumer.yml`](../../../.github/workflows/run-intent-consumer.yml) + [`scripts/consume_run_intent.py`](../../../scripts/consume_run_intent.py).
 
-## Consumers (planned)
+## Consumers
 
 | Consumer | Role |
 |----------|------|
-| GitHub Actions workflow (TBD) | Read intent path or inline JSON → validate → invoke `batch_generate` / `youtube_upload` with equivalent flags (`--catalog-channel`, etc.). |
-| [`scripts/plan_run_intent.py`](../../scripts/plan_run_intent.py) | **v0 (shipped):** reads `data/suggestions.json` → writes `data/run_intent.json` **or** `data/reports/run-intent-blocked.md`; `upload` defaults **false**. Optional `--force-moods` for smoke. Wired from `analytics-agent.yml` after correlate. |
-| Gated planner / human PR | May edit intent JSON under `data/` or override via `workflow_dispatch` once consumer exists. |
+| [`run-intent-consumer.yml`](../../../.github/workflows/run-intent-consumer.yml) | **`workflow_dispatch`:** validate committed `data/run_intent.json` → `batch_generate.py` → artifact; **YouTube** only if intent **`upload`: true** *and* dispatcher **`confirm_upload`** (double gate). `--catalog-channel` matches intent `channel`. |
+| [`scripts/plan_run_intent.py`](../../../scripts/plan_run_intent.py) | **v0 (shipped):** reads `data/suggestions.json` → writes `data/run_intent.json` **or** `data/reports/run-intent-blocked.md`; `upload` defaults **false**. Optional `--force-moods` for smoke. Wired from `analytics-agent.yml` after correlate. |
+| Gated planner / human PR | May edit intent JSON under `data/` before dispatching the consumer workflow. |
 
 ## Schema version 1 (`schema_version: 1`)
 
