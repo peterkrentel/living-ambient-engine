@@ -109,3 +109,32 @@ def test_cli_missing_file(tmp_path: Path):
         text=True,
     )
     assert r.returncode == 1
+
+
+def test_allow_planner_blocked_exits_zero(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
+    intent = tmp_path / "run_intent.json"
+    blocked = tmp_path / "run-intent-blocked.md"
+    blocked.write_text("# Run intent — BLOCKED\n", encoding="utf-8")
+    monkeypatch.setattr(cr, "BLOCKED", blocked)
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "consume_run_intent",
+            "--intent",
+            str(intent),
+            "--allow-planner-blocked",
+        ],
+    )
+    assert cr.main() == 0
+
+
+def test_missing_intent_with_blocked_still_fails_without_flag(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+):
+    intent = tmp_path / "run_intent.json"
+    blocked = tmp_path / "run-intent-blocked.md"
+    blocked.write_text("# blocked\n", encoding="utf-8")
+    monkeypatch.setattr(cr, "BLOCKED", blocked)
+    monkeypatch.setattr(sys, "argv", ["consume_run_intent", "--intent", str(intent)])
+    assert cr.main() == 1

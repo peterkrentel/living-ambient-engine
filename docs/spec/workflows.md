@@ -248,11 +248,13 @@ on:
       confirm_upload: boolean  # default false — required (with intent.upload) to run upload job
 ```
 
+When **`validate_only`** is true, `parse` passes **`--allow-planner-blocked`**: missing **`data/run_intent.json`** but present **`data/reports/run-intent-blocked.md`** exits **0** (expected after analytics gate) and writes a Step Summary — not a red failure. Full runs (generate) do **not** pass that flag: missing intent remains **exit 1**.
+
 ### Jobs
 
 | Job | Purpose |
 |-----|---------|
-| `parse` | Checkout; `pip install pyyaml`; `python scripts/consume_run_intent.py --intent data/run_intent.json --emit-github-output` — **fails** if intent missing or invalid (exit 1). Sets outputs `moods`, `duration`, `dual`, `channel`, `upload`. |
+| `parse` | Checkout; `pip install pyyaml`; run `consume_run_intent.py --intent data/run_intent.json --emit-github-output` (adds **`--allow-planner-blocked`** when `validate_only`). Validates intent or records planner BLOCKED; sets outputs when intent exists. |
 | `generate` | Skipped when `validate_only`; else FFmpeg + `requirements.txt`, `batch_generate.py`, artifact `run-intent-generated-{channel}`. |
 | `upload` | Skipped unless `validate_only` is false **and** `confirm_upload` **and** `parse.outputs.upload == 'true'`; restores **brand** or **personal** OAuth secret by `channel`; `youtube_upload.py --batch ./generated --catalog-channel …`; commits catalog / ledger via `scripts/ci_merge_main_after_data_commit.sh`. |
 

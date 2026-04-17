@@ -6,7 +6,7 @@
 
 | Consumer | Role |
 |----------|------|
-| [`run-intent-consumer.yml`](../../../.github/workflows/run-intent-consumer.yml) | **`workflow_dispatch`:** validate committed `data/run_intent.json` → `batch_generate.py` → artifact; **YouTube** only if intent **`upload`: true** *and* dispatcher **`confirm_upload`** (double gate). `--catalog-channel` matches intent `channel`. |
+| [`run-intent-consumer.yml`](../../../.github/workflows/run-intent-consumer.yml) | **`workflow_dispatch`:** validate committed `data/run_intent.json` → `batch_generate.py` → artifact; **YouTube** only if intent **`upload`: true** *and* dispatcher **`confirm_upload`** (double gate). **`validate_only`:** missing intent + `run-intent-blocked.md` → **green** (planner BLOCKED, not a failure). `--catalog-channel` matches intent `channel`. |
 | [`scripts/plan_run_intent.py`](../../../scripts/plan_run_intent.py) | **v0 (shipped):** reads `data/suggestions.json` → writes `data/run_intent.json` **or** `data/reports/run-intent-blocked.md`; `upload` defaults **false**. Optional `--force-moods` for smoke. Wired from `analytics-agent.yml` after correlate. |
 | Gated planner / human PR | May edit intent JSON under `data/` before dispatching the consumer workflow. |
 

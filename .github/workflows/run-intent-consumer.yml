@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       validate_only:
-        description: 'Only validate intent and write Step Summary (no generate/upload)'
+        description: 'Only validate (no generate/upload). Missing intent + run-intent-blocked.md = green'
         required: false
         type: boolean
         default: false
@@ -53,7 +53,12 @@ jobs:
 
       - name: Validate and export outputs
         id: intent
-        run: python scripts/consume_run_intent.py --intent data/run_intent.json --emit-github-output
+        run: |
+          if [ "${{ github.event.inputs.validate_only }}" = "true" ] || [ "${{ github.event.inputs.validate_only }}" = "True" ]; then
+            python scripts/consume_run_intent.py --intent data/run_intent.json --emit-github-output --allow-planner-blocked
+          else
+            python scripts/consume_run_intent.py --intent data/run_intent.json --emit-github-output
+          fi
 
   generate:
     name: Generate from intent
