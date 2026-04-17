@@ -1,8 +1,8 @@
 {
   "catalog_version": "1.0",
   "created_at": "2026-01-30T01:38:24.843138",
-  "last_updated": "2026-04-17T15:52:36.067461",
-  "total_videos": 96,
+  "last_updated": "2026-04-17T16:10:23.698189",
+  "total_videos": 98,
   "videos": [
     {
       "catalog_id": "video_0001_20260130_013826_32197db7",
@@ -3701,6 +3701,86 @@
         ]
       },
       "channel": "brand"
+    },
+    {
+      "catalog_id": "video_0097_20260417_161022_520b42fe",
+      "youtube_id": "tIgDi2s467A",
+      "youtube_url": "https://youtube.com/watch?v=tIgDi2s467A",
+      "title": "Study Without Distractions | 30 Seconds Focus Soundscape | Always Evolving [Pure Ambience]",
+      "mood": "study",
+      "duration": 30,
+      "duration_str": "",
+      "seed": null,
+      "version": "standard",
+      "rhythm": "ambient",
+      "rhythm_name": "",
+      "uploaded_at": "2026-04-17T16:10:22.768371",
+      "generated_at": "2026-04-17T16:10:22.768371",
+      "metadata": {
+        "video_title": "Study Without Distractions | 30 Seconds Focus Soundscape | Always Evolving [Pure Ambience]",
+        "mood": "study",
+        "duration": 30,
+        "description": "Alert focus and learning state - Taiko rhythm",
+        "tags": [
+          "study music",
+          "music for studying",
+          "homework music",
+          "focus music for studying",
+          "concentration music",
+          "learning music",
+          "reading music",
+          "exam study music",
+          "background study music",
+          "taiko drums",
+          "alpha waves study",
+          "memory music",
+          "brain music",
+          "432 hz study",
+          "ambient study",
+          "ASMR"
+        ]
+      },
+      "channel": "personal"
+    },
+    {
+      "catalog_id": "video_0098_20260417_161023_4d3b947d",
+      "youtube_id": "mzUZrjTjOyY",
+      "youtube_url": "https://youtube.com/watch?v=mzUZrjTjOyY",
+      "title": "Study Without Distractions | 30 Seconds Focus Soundscape | Always Evolving [With Music]",
+      "mood": "study",
+      "duration": 30,
+      "duration_str": "",
+      "seed": null,
+      "version": "standard",
+      "rhythm": "ambient",
+      "rhythm_name": "",
+      "uploaded_at": "2026-04-17T16:10:23.698112",
+      "generated_at": "2026-04-17T16:10:23.698112",
+      "metadata": {
+        "video_title": "Study Without Distractions | 30 Seconds Focus Soundscape | Always Evolving [With Music]",
+        "mood": "study",
+        "duration": 30,
+        "description": "Alert focus and learning state - Taiko rhythm",
+        "tags": [
+          "study music",
+          "music for studying",
+          "homework music",
+          "focus music for studying",
+          "concentration music",
+          "learning music",
+          "reading music",
+          "exam study music",
+          "background study music",
+          "taiko drums",
+          "alpha waves study",
+          "memory music",
+          "brain music",
+          "432 hz study",
+          "ambient study",
+          "ASMR"
+        ]
+      },
+      "channel": "personal"
     }
   ]
 }
