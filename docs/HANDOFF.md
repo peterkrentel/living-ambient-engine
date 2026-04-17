@@ -1,6 +1,6 @@
 # Handoff (active work snapshot)
 
-> **[Doc map →](START_HERE.md)** · keep this file **short**; **overwrite** when state moves (no diary here).
+> **[Doc map →](START_HERE.md)** · keep this file **short**; **overwrite** when state moves (no diary here). **Record of what shipped:** not deleted bullets here — add or keep a **`Done`** row in [`START_HERE` § Plan checklist](START_HERE.md#plan-checklist-living-as-of-2026-04) (those rows **stay on purpose**), plus **ADRs** / **git + PRs** when it was a decision or merge.
 
 ## Updated
 

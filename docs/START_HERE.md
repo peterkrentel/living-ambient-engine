@@ -85,7 +85,7 @@ Answer these in **`HANDOFF.md`** (or an **ADR** if the choice is hard to reverse
 
 ## Plan checklist (living — as of 2026-04)
 
-Use this as a **checklist**, not a new doc layer. **Done** items stay for history; skip or replace when obsolete.
+Use this as a **checklist**, not a new doc layer. **Done** items stay for history; skip or replace when obsolete. When work **drops off [`HANDOFF.md`](HANDOFF.md) *Next actions*** because it is **finished**, add or update a **`Done`** row **here** so the trail stays explicit (handoff is a snapshot only).
 
 | Status | Item |
 |--------|------|
