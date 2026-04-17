@@ -1826,6 +1826,232 @@
       "generated_at": "2026-04-17T13:59:29+00:00",
       "uploaded_at": "2026-04-17T13:59:29+00:00",
       "updated_at": "2026-04-17T14:16:43.756638+00:00"
+    },
+    {
+      "generation_id": "7ece71a4-5949-4417-9eda-ee0b80320517",
+      "video_id": "jqTdaKKXTlo",
+      "workflow": "Content Factory (Personal)",
+      "mood": "deep_focus",
+      "duration_seconds": 30,
+      "params": {
+        "seed": 1281557859,
+        "variant": "ambience"
+      },
+      "metadata": {
+        "title": "Sounds for an Overactive Mind | 30 Seconds Evolving Focus Music | No Loops [Pure Ambience]",
+        "video_title": "Sounds for an Overactive Mind | 30 Seconds Evolving Focus Music | No Loops [Pure Ambience]",
+        "description": "Deep concentration and flow state - Hypnotic fractal journey",
+        "tags": [
+          "focus music",
+          "deep work music",
+          "concentration music",
+          "binaural beats focus",
+          "study music",
+          "work music",
+          "ambient focus",
+          "coding music",
+          "flow state music",
+          "productivity music",
+          "background music for work",
+          "music for concentration",
+          "gnawa rhythm",
+          "tribal drums focus",
+          "432 hz music",
+          "ASMR"
+        ]
+      },
+      "generated_at": "2026-04-17T15:01:56.803263",
+      "uploaded_at": "2026-04-17T15:02:32.603868+00:00",
+      "updated_at": "2026-04-17T15:02:32.603868+00:00",
+      "commit_sha": "3bfdbf311b4eddc1da6f5e68e0c1d1859270ed5c"
+    },
+    {
+      "generation_id": "3fd1f71d-ada9-4082-97a9-4d28555fe1e3",
+      "video_id": "rjdwvIqpaZU",
+      "workflow": "Content Factory (Personal)",
+      "mood": "deep_focus",
+      "duration_seconds": 30,
+      "params": {
+        "seed": 1281557859,
+        "variant": "melody"
+      },
+      "metadata": {
+        "title": "Sounds for an Overactive Mind | 30 Seconds Evolving Focus Music | No Loops [With Music]",
+        "video_title": "Sounds for an Overactive Mind | 30 Seconds Evolving Focus Music | No Loops [With Music]",
+        "description": "Deep concentration and flow state - Hypnotic fractal journey",
+        "tags": [
+          "focus music",
+          "deep work music",
+          "concentration music",
+          "binaural beats focus",
+          "study music",
+          "work music",
+          "ambient focus",
+          "coding music",
+          "flow state music",
+          "productivity music",
+          "background music for work",
+          "music for concentration",
+          "gnawa rhythm",
+          "tribal drums focus",
+          "432 hz music",
+          "ASMR"
+        ]
+      },
+      "generated_at": "2026-04-17T15:01:56.803292",
+      "uploaded_at": "2026-04-17T15:02:34.268261+00:00",
+      "updated_at": "2026-04-17T15:02:34.268261+00:00",
+      "commit_sha": "3bfdbf311b4eddc1da6f5e68e0c1d1859270ed5c"
+    },
+    {
+      "generation_id": "d47f54f2-7cc4-4f94-8200-445f9b84f8f1",
+      "video_id": "nvARLARnmw8",
+      "workflow": "Content Factory (Personal)",
+      "mood": "warrior",
+      "duration_seconds": 30,
+      "params": {
+        "seed": 1700701247,
+        "variant": "ambience"
+      },
+      "metadata": {
+        "title": "Find Your Strength | 30 Seconds Power Drums | Builds & Evolves [Pure Ambience]",
+        "video_title": "Find Your Strength | 30 Seconds Power Drums | Builds & Evolves [Pure Ambience]",
+        "description": "Power and strength - Burundi rhythm",
+        "tags": [
+          "warrior music",
+          "power music",
+          "strength music",
+          "motivation music",
+          "tribal drums",
+          "burundi drums",
+          "african drums",
+          "intense music",
+          "training music",
+          "workout drums",
+          "beta waves",
+          "741 hz",
+          "empowering music",
+          "fierce music",
+          "battle music"
+        ]
+      },
+      "generated_at": "2026-04-17T15:01:56.803316",
+      "uploaded_at": "2026-04-17T15:02:36.366747+00:00",
+      "updated_at": "2026-04-17T15:02:36.366747+00:00",
+      "commit_sha": "3bfdbf311b4eddc1da6f5e68e0c1d1859270ed5c"
+    },
+    {
+      "generation_id": "36135044-20a2-4a97-a12b-238f2aa459e5",
+      "video_id": "4tac8QqfBJc",
+      "workflow": "Content Factory (Personal)",
+      "mood": "warrior",
+      "duration_seconds": 30,
+      "params": {
+        "seed": 1700701247,
+        "variant": "melody"
+      },
+      "metadata": {
+        "title": "Find Your Strength | 30 Seconds Power Drums | Builds & Evolves [With Music]",
+        "video_title": "Find Your Strength | 30 Seconds Power Drums | Builds & Evolves [With Music]",
+        "description": "Power and strength - Burundi rhythm",
+        "tags": [
+          "warrior music",
+          "power music",
+          "strength music",
+          "motivation music",
+          "tribal drums",
+          "burundi drums",
+          "african drums",
+          "intense music",
+          "training music",
+          "workout drums",
+          "beta waves",
+          "741 hz",
+          "empowering music",
+          "fierce music",
+          "battle music"
+        ]
+      },
+      "generated_at": "2026-04-17T15:01:56.803329",
+      "uploaded_at": "2026-04-17T15:02:37.748239+00:00",
+      "updated_at": "2026-04-17T15:02:37.748239+00:00",
+      "commit_sha": "3bfdbf311b4eddc1da6f5e68e0c1d1859270ed5c"
+    },
+    {
+      "generation_id": "32b8f1d0-d5d1-43b0-a62f-d96529be4cf8",
+      "video_id": "ohqMfroropE",
+      "workflow": "Content Factory (Personal)",
+      "mood": "trance",
+      "duration_seconds": 30,
+      "params": {
+        "seed": 397214056,
+        "variant": "ambience"
+      },
+      "metadata": {
+        "title": "Journey Inward | 30 Seconds Hypnotic Trance | Never-Repeating Soundscape [Pure Ambience]",
+        "video_title": "Journey Inward | 30 Seconds Hypnotic Trance | Never-Repeating Soundscape [Pure Ambience]",
+        "description": "Deep hypnotic trance - Infinite fractal journey",
+        "tags": [
+          "trance music",
+          "hypnotic music",
+          "deep trance",
+          "theta waves",
+          "meditation trance",
+          "psychedelic music",
+          "trippy music",
+          "shamanic music",
+          "altered states music",
+          "bamboula rhythm",
+          "fractal music",
+          "journey music",
+          "inner exploration",
+          "transcendental music",
+          "visionary music",
+          "ASMR"
+        ]
+      },
+      "generated_at": "2026-04-17T15:01:56.803339",
+      "uploaded_at": "2026-04-17T15:02:39.236501+00:00",
+      "updated_at": "2026-04-17T15:02:39.236501+00:00",
+      "commit_sha": "3bfdbf311b4eddc1da6f5e68e0c1d1859270ed5c"
+    },
+    {
+      "generation_id": "24640ff8-b04f-4bbc-8d85-95df29dc2b43",
+      "video_id": "8y76NSGztds",
+      "workflow": "Content Factory (Personal)",
+      "mood": "trance",
+      "duration_seconds": 30,
+      "params": {
+        "seed": 397214056,
+        "variant": "melody"
+      },
+      "metadata": {
+        "title": "Journey Inward | 30 Seconds Hypnotic Trance | Never-Repeating Soundscape [With Music]",
+        "video_title": "Journey Inward | 30 Seconds Hypnotic Trance | Never-Repeating Soundscape [With Music]",
+        "description": "Deep hypnotic trance - Infinite fractal journey",
+        "tags": [
+          "trance music",
+          "hypnotic music",
+          "deep trance",
+          "theta waves",
+          "meditation trance",
+          "psychedelic music",
+          "trippy music",
+          "shamanic music",
+          "altered states music",
+          "bamboula rhythm",
+          "fractal music",
+          "journey music",
+          "inner exploration",
+          "transcendental music",
+          "visionary music",
+          "ASMR"
+        ]
+      },
+      "generated_at": "2026-04-17T15:01:56.803349",
+      "uploaded_at": "2026-04-17T15:02:40.492280+00:00",
+      "updated_at": "2026-04-17T15:02:40.492280+00:00",
+      "commit_sha": "3bfdbf311b4eddc1da6f5e68e0c1d1859270ed5c"
     }
   ]
 }

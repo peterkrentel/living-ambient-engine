@@ -1,18 +1,18 @@
 # Content Library
 
-*Last updated: 2026-04-17T09:16:59.175153*
+*Last updated: 2026-04-17T15:02:40.489490*
 
 ## Statistics
 
-- **Total Videos:** 80
-- **Total Duration:** 76.82 hours
-- **Average Duration:** 57.61 minutes
+- **Total Videos:** 86
+- **Total Duration:** 76.87 hours
+- **Average Duration:** 53.63 minutes
 
 ### Videos by Mood
 
 - **Ceremony:** 3 videos
 - **Chill:** 5 videos
-- **Deep Focus:** 7 videos
+- **Deep Focus:** 9 videos
 - **Energize:** 5 videos
 - **Fireplace:** 3 videos
 - **Forest Morning:** 4 videos
@@ -27,8 +27,8 @@
 - **Rain Sleep:** 5 videos
 - **Sleep:** 7 videos
 - **Study:** 5 videos
-- **Trance:** 8 videos
-- **Warrior:** 7 videos
+- **Trance:** 10 videos
+- **Warrior:** 9 videos
 
 ## Videos
 
@@ -187,6 +187,26 @@
 - **Uploaded:** 2026-04-17
 - **Seed:** `None`
 - **Catalog ID:** `video_0078_20260417_091659_28d05154`
+
+#### Sounds for an Overactive Mind | 30 Seconds Evolving Focus Music | No Loops [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=jqTdaKKXTlo](https://youtube.com/watch?v=jqTdaKKXTlo)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-04-17
+- **Seed:** `None`
+- **Catalog ID:** `video_0081_20260417_150232_b50f0add`
+
+#### Sounds for an Overactive Mind | 30 Seconds Evolving Focus Music | No Loops [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=rjdwvIqpaZU](https://youtube.com/watch?v=rjdwvIqpaZU)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-04-17
+- **Seed:** `None`
+- **Catalog ID:** `video_0082_20260417_150234_398a8e76`
 
 ### Energize
 
@@ -798,6 +818,26 @@
 - **Seed:** `None`
 - **Catalog ID:** `video_0070_20260417_134628_1dfc670f`
 
+#### Journey Inward | 30 Seconds Hypnotic Trance | Never-Repeating Soundscape [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=ohqMfroropE](https://youtube.com/watch?v=ohqMfroropE)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-04-17
+- **Seed:** `None`
+- **Catalog ID:** `video_0085_20260417_150239_7dd607fe`
+
+#### Journey Inward | 30 Seconds Hypnotic Trance | Never-Repeating Soundscape [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=8y76NSGztds](https://youtube.com/watch?v=8y76NSGztds)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-04-17
+- **Seed:** `None`
+- **Catalog ID:** `video_0086_20260417_150240_7c58ab34`
+
 ### Warrior
 
 #### Find Your Strength | 30 Seconds Power Drums | Builds & Evolves
@@ -869,3 +909,23 @@
 - **Uploaded:** 2026-02-26
 - **Seed:** `None`
 - **Catalog ID:** `video_0048_20260226_233628_8bebc9ce`
+
+#### Find Your Strength | 30 Seconds Power Drums | Builds & Evolves [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=nvARLARnmw8](https://youtube.com/watch?v=nvARLARnmw8)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-04-17
+- **Seed:** `None`
+- **Catalog ID:** `video_0083_20260417_150236_9e07fc87`
+
+#### Find Your Strength | 30 Seconds Power Drums | Builds & Evolves [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=4tac8QqfBJc](https://youtube.com/watch?v=4tac8QqfBJc)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-04-17
+- **Seed:** `None`
+- **Catalog ID:** `video_0084_20260417_150237_457ed56e`
