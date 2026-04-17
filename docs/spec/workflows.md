@@ -26,7 +26,7 @@ Nine workflow files automate video generation, YouTube deployment, analytics, an
 | WF-PIANO | `piano-batch.yml` | Manual only | Batch piano videos + upload | Brand |
 | WF-TEST | `test-art-creator.yml` | Manual + PR (path filter) | CI: spec validation + contract tests + 7× `art-creator` matrix (no production upload) | None |
 | WF-AGENT | `analytics-agent.yml` | Schedule (weekly) + Manual | Fetch YouTube stats, reports, correlate, channel audit | Brand |
-| WF-AGENT-P | `analytics-personal.yml` | Schedule (weekly) + Manual | Fetch personal stats + weekly `*-personal.md` report only | Personal |
+| WF-AGENT-P | `analytics-personal.yml` | Schedule (weekly) + Manual | Fetch personal stats + weekly `*-personal.md` + `audit-*-personal.md` (no correlate / `suggestions.json`) | Personal |
 
 ## Gating Rules
 
@@ -553,7 +553,7 @@ See: [GUARDRAILS.md](./GUARDRAILS.md) § Analytics Agent Guardrails
 
 ## analytics-personal.yml
 
-**Purpose:** Same *family* of metrics as the brand fetcher, but as a **separate experiment**: personal OAuth only, `data/analytics_personal.json`, and reports named `data/reports/YYYY-WW-personal.md`. Does **not** run correlate, audit, or `suggestions.json` (those remain brand-scoped until explicitly parameterized).
+**Purpose:** Same *family* of metrics as the brand fetcher, but as a **separate experiment**: personal OAuth only, `data/analytics_personal.json`, reports named `data/reports/YYYY-WW-personal.md`, and **`scripts/audit_channel.py`** with `ANALYTICS_JSON_PATH` / `ANALYTICS_CHANNEL=personal` / `ANALYTICS_REPORT_SUFFIX=-personal` → `data/reports/audit-YYYY-WW-personal.md`. Does **not** run correlate or write `suggestions.json` (those remain brand-scoped until explicitly parameterized).
 
 **Spec:** [PERSONAL_ANALYTICS.md](../PERSONAL_ANALYTICS.md), [AGENT.md](./AGENT.md)
 
@@ -570,7 +570,7 @@ on:
 
 | Job | Purpose |
 |-----|---------|
-| `analyze-personal` | Fetch with `--channel personal`, generate report with `ANALYTICS_CHANNEL=personal` |
+| `analyze-personal` | Fetch with `--channel personal`, report + channel audit (env-scoped paths) |
 
 ### Outputs
 
@@ -578,6 +578,7 @@ on:
 |--------|----------|
 | Analytics | `data/analytics_personal.json` |
 | Weekly report | `data/reports/YYYY-WW-personal.md` |
+| Channel audit | `data/reports/audit-YYYY-WW-personal.md` |
 
 ### Secrets
 

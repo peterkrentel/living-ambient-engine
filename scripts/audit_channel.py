@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 """Channel coverage audit from committed analytics (no YouTube API calls).
 
-Writes data/reports/audit-YYYY-WW.md and optionally appends to GITHUB_STEP_SUMMARY.
-Uses the same classification as scripts/correlate.py (imported dynamically).
+Writes ``data/reports/audit-YYYY-WW.md`` (brand) or ``audit-YYYY-WW{suffix}.md`` when
+``ANALYTICS_REPORT_SUFFIX`` is set (e.g. ``-personal`` for the personal workflow).
 
-Run from repo root: python scripts/audit_channel.py
+Uses the same classification as ``scripts/correlate.py`` (imported dynamically).
+``ANALYTICS_JSON_PATH`` selects the analytics file (default ``data/analytics.json``).
+``ANALYTICS_CHANNEL`` may be ``brand`` or ``personal``; if unset, personal is inferred
+when the analytics filename contains ``personal``.
+
+Run from repo root: ``python scripts/audit_channel.py``
 """
 from __future__ import annotations
 
@@ -29,10 +34,9 @@ load_analytics = _corr.load_analytics
 calculate_correlations = _corr.calculate_correlations
 generate_coverage_report = _corr.generate_coverage_report
 
-from agent.log_generation import load_generations  # noqa: E402
+from agent.log_generation import video_id_index  # noqa: E402
 
 REPORTS_DIR = _REPO_ROOT / "data" / "reports"
-ANALYTICS_PATH = _REPO_ROOT / "data" / "analytics.json"
 
 
 def _iso_week_file_suffix() -> str:
@@ -42,28 +46,69 @@ def _iso_week_file_suffix() -> str:
     return f"{y}-W{w:02d}"
 
 
-def _ledger_join_stats(videos: list) -> tuple[int, int, float]:
-    """Return (analytics_count, with_ledger_row, pct)."""
-    data = load_generations()
-    rows = data.get("videos") or []
-    ledger_ids = {r.get("video_id") for r in rows if r.get("video_id")}
+def _analytics_json_path() -> Path:
+    rel = os.environ.get("ANALYTICS_JSON_PATH", "data/analytics.json").strip() or "data/analytics.json"
+    p = Path(rel)
+    return p if p.is_absolute() else _REPO_ROOT / p
+
+
+def resolve_youtube_identity() -> str:
+    """Which YouTube channel this analytics file belongs to (brand vs personal)."""
+    raw = os.environ.get("ANALYTICS_CHANNEL", "").strip().lower()
+    if raw in ("brand", "personal"):
+        return raw
+    name = _analytics_json_path().name.lower()
+    if "personal" in name:
+        return "personal"
+    return "brand"
+
+
+def _audit_report_filename_suffix() -> str:
+    return os.environ.get("ANALYTICS_REPORT_SUFFIX", "").strip()
+
+
+def _ledger_row_identity(row: dict) -> str | None:
+    """Return brand / personal when known; else None (legacy or ambiguous workflow)."""
+    ch = row.get("channel")
+    if ch in ("brand", "personal"):
+        return ch
+    wf = row.get("workflow") or ""
+    if "Personal" in wf:
+        return "personal"
+    if "Brand" in wf:
+        return "brand"
+    return None
+
+
+def _ledger_join_stats(videos: list, identity: str) -> tuple[int, int, float, int, float]:
+    """Return (n_videos, any_ledger_hits, pct_any, aligned_hits, pct_aligned)."""
+    gen_by_vid = video_id_index()
     n = 0
-    hit = 0
+    any_hit = 0
+    aligned = 0
     for v in videos:
         vid = v.get("video_id")
         if not vid:
             continue
         n += 1
-        if vid in ledger_ids:
-            hit += 1
-    pct = (100.0 * hit / n) if n else 0.0
-    return n, hit, pct
+        row = gen_by_vid.get(vid)
+        if not row:
+            continue
+        any_hit += 1
+        if _ledger_row_identity(row) == identity:
+            aligned += 1
+    pct_any = (100.0 * any_hit / n) if n else 0.0
+    pct_aligned = (100.0 * aligned / n) if n else 0.0
+    return n, any_hit, pct_any, aligned, pct_aligned
 
 
 def write_audit_report() -> Path:
+    analytics_path = _analytics_json_path()
+    identity = resolve_youtube_identity()
+
     data = load_analytics()
     if not data:
-        raise SystemExit("No analytics data — run fetch_analytics first")
+        raise SystemExit(f"No analytics data — expected JSON at {analytics_path}")
 
     videos = data.get("videos") or []
     fetched_at = data.get("fetched_at", "")
@@ -79,26 +124,38 @@ def write_audit_report() -> Path:
     missing_combos = [k for k, s in combos.items() if s.get("total", 0) == 0]
     present_combos = len(combos) - len(missing_combos)
 
-    n_vid, n_ledger, pct_ledger = _ledger_join_stats(videos)
+    n_vid, n_ledger_any, pct_any, n_ledger_aligned, pct_aligned = _ledger_join_stats(videos, identity)
 
     week = _iso_week_file_suffix()
+    suffix = _audit_report_filename_suffix()
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
-    out_path = REPORTS_DIR / f"audit-{week}.md"
+    out_path = REPORTS_DIR / f"audit-{week}{suffix}.md"
+
+    analytics_display = str(analytics_path.relative_to(_REPO_ROOT))
+
+    mood_section_title = "## Mood preset coverage"
+    mood_note = ""
+    if identity == "brand":
+        mood_note = " *(brand SEO line: 14 presets)*"
 
     lines = [
         f"# Channel coverage audit ({week})",
         "",
         f"Generated: {datetime.now(timezone.utc).isoformat()}",
+        f"**YouTube identity (this run):** `{identity}`",
+        f"**Analytics file:** `{analytics_display}`",
         f"Analytics `fetched_at`: {fetched_at}",
         f"Analytics window: `{dr.get('start', '')}` → `{dr.get('end', '')}`",
         "",
         "## Overview",
         "",
-        f"- **Videos in analytics.json:** {len(videos)}",
-        f"- **generations.json join:** {n_ledger} / {n_vid} video_ids with a ledger row ({pct_ledger:.1f}%)",
-        "  - *Historic uploads may lack rows until logged by current upload pipeline.*",
+        f"- **Videos in analytics:** {len(videos)}",
+        f"- **generations.json join (any ledger row):** {n_ledger_any} / {n_vid} ({pct_any:.1f}%)",
+        f"- **generations.json join (identity-aligned):** {n_ledger_aligned} / {n_vid} ({pct_aligned:.1f}%)",
+        "  - *Identity-aligned uses optional ledger `channel`, else infers from `workflow` (e.g. `Content Factory (Brand)`). Rows with neither still count only toward “any”.*",
+        "  - *Historic uploads may lack rows until logged by the upload pipeline.*",
         "",
-        "## 14 mood presets (brand SEO line)",
+        f"{mood_section_title}{mood_note}",
         "",
         "| Mood | Videos | With views |",
         "|------|--------|------------|",
@@ -138,7 +195,7 @@ def write_audit_report() -> Path:
 
     lines.append("")
     lines.append("---")
-    lines.append("*Produced by `scripts/audit_channel.py` in the Analytics Agent workflow.*")
+    lines.append("*Produced by `scripts/audit_channel.py` (Analytics Agent or Analytics Agent Personal).*")
     lines.append("")
 
     text = "\n".join(lines)
@@ -152,9 +209,9 @@ def append_step_summary(markdown_path: Path) -> None:
     if not gs:
         return
     body = markdown_path.read_text(encoding="utf-8")
+    scope = "personal" if "personal" in markdown_path.name.lower() else "brand"
     with open(gs, "a", encoding="utf-8") as f:
-        f.write("\n## Channel coverage audit\n\n")
-        # Keep summary readable (full file is in repo)
+        f.write(f"\n## Channel coverage audit ({scope})\n\n")
         for line in body.splitlines()[:120]:
             f.write(line + "\n")
         if len(body.splitlines()) > 120:

@@ -74,6 +74,15 @@ jobs:
           echo "📈 Generating personal performance report..."
           python -m agent.report
 
+      - name: Channel coverage audit (personal)
+        env:
+          ANALYTICS_JSON_PATH: data/analytics_personal.json
+          ANALYTICS_CHANNEL: personal
+          ANALYTICS_REPORT_SUFFIX: '-personal'
+        run: |
+          echo "📋 Writing personal channel coverage audit..."
+          python scripts/audit_channel.py
+
       - name: Commit personal data
         run: |
           git config user.name "Analytics Agent (Personal)"

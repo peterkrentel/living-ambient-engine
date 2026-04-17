@@ -385,6 +385,7 @@ def main(
                                 **{k: meta[k] for k in ('video_title', 'description', 'tags') if k in meta},
                             },
                             generated_at=v.get('created_at'),
+                            channel=catalog_channel,
                         )
                     except Exception as e:
                         click.echo(f"  ⚠️  Could not write generations.json: {e}", err=True)
@@ -468,6 +469,7 @@ def main(
                     'title': upload_result.get('title'),
                     **{k: meta[k] for k in ('video_title', 'description', 'tags') if k in meta},
                 },
+                channel=catalog_channel,
             )
         except Exception as e:
             click.echo(f"⚠️  Could not write generations.json: {e}", err=True)

@@ -59,6 +59,16 @@ def video_id_index() -> Dict[str, Dict[str, Any]]:
     return out
 
 
+def _normalize_catalog_channel(channel: Optional[str]) -> Optional[str]:
+    """Return ``brand`` / ``personal`` or None (ADR 0002 + optional ledger mirror)."""
+    if channel is None:
+        return None
+    c = str(channel).strip().lower()
+    if c not in ("brand", "personal"):
+        raise ValueError(f"channel must be 'brand' or 'personal', got {channel!r}")
+    return c
+
+
 def record_generation_upload(
     *,
     video_id: str,
@@ -72,6 +82,7 @@ def record_generation_upload(
     metadata: Optional[Dict[str, Any]] = None,
     generated_at: Optional[str] = None,
     uploaded_at: Optional[str] = None,
+    channel: Optional[str] = None,
 ) -> str:
     """Upsert a ledger row after a successful upload.
 
@@ -123,6 +134,9 @@ def record_generation_upload(
     }
     if commit_sha:
         entry["commit_sha"] = commit_sha
+    ch = _normalize_catalog_channel(channel)
+    if ch is not None:
+        entry["channel"] = ch
 
     if idx_by_gen is not None:
         prev = rows[idx_by_gen]
