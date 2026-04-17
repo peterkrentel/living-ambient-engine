@@ -91,6 +91,8 @@ This spec is enforced at multiple levels:
 
 **Push race on `main`:** After `git commit` and before `git push`, workflows that update the repo run `git pull --rebase origin main` so another job (analytics, another upload lane) advancing `main` does not cause a non-fast-forward rejection.
 
+**Verify:** `python scripts/verify_ledger_catalog.py` — catalog `youtube_id` set must equal ledger `video_id` set; warns when no `Content Factory (Personal)` rows exist.
+
 ## content-factory.yml
 
 ### Trigger
