@@ -89,6 +89,8 @@ This spec is enforced at multiple levels:
 | `content-factory-brand-batch.yml` | Dedicated **Commit generations ledger** step after upload |
 | `art-creator.yml` | **upload** job: `permissions.contents: write`, commit `data/generations.json` after upload (`--no-update-catalog` unchanged) |
 
+**Push race on `main`:** After `git commit` and before `git push`, workflows that update the repo run `git pull --rebase origin main` so another job (analytics, another upload lane) advancing `main` does not cause a non-fast-forward rejection.
+
 **Verify:** `python scripts/verify_ledger_catalog.py` — catalog `youtube_id` set must equal ledger `video_id` set; warns when no `Content Factory (Personal)` rows exist.
 
 ## content-factory.yml
@@ -467,7 +469,7 @@ All 7 jobs use:
 **MANDATORY:** All workflows that upload to YouTube MUST:
 
 1. Generate `metadata.json` via orchestrator (or compatible generator)
-2. Call `python youtube_upload.py --batch <directory>`
+2. Call `python youtube_upload.py --batch <directory>` — CI factory workflows pass **`--catalog-channel personal`** or **`--catalog-channel brand`** so new `content_catalog.json` rows are tagged ([ADR 0002](../decisions/0002-content-catalog-channel-field.md))
 3. NOT generate title/description/tags inline in workflow YAML
 
 **Rationale:** Single source of truth for SEO optimization. Tags and descriptions are defined in `moods.yaml` and flow through the pipeline:

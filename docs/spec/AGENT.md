@@ -318,8 +318,8 @@ Your phased approach to learning MLOps:
 |-------|----------------|-----------|--------|
 | **1** | Data pipelines, API integration | `fetch_analytics.py`, `report.py` | ✅ Done |
 | **1.5** | Aggregation, feature extraction | `analyze_data.py` | ✅ Done |
-| **2** | Correlation (retention % + watch min), suggestions | `correlate.py`, `suggestions.json` | ✅ Shipped on `main` (still noisy for moods → **2.5**) |
-| **2.5** | Confidence intervals, z-scores | `correlate.py` enhancements | ⏳ Next |
+| **2** | Correlation (retention % + watch min), suggestions | `correlate.py`, `suggestions.json` | ✅ Shipped on `main` (see **Confounders & packaging**; **2.5** for uncertainty, not causality) |
+| **2.5** | CIs, z-scores, effect sizes **+** inference limits in docs / summaries | `correlate.py` + spec | ⏳ Next |
 | **3** | Predictive modeling (100+ videos) | sklearn models | ⏳ Future |
 | **4** | Optimization, recommendations | Bayesian/RL | ⏳ Future |
 
@@ -387,6 +387,14 @@ Your phased approach to learning MLOps:
 - **`watch_time_minutes`** (YouTube `estimatedMinutesWatched` per video in the fetch window) — **growth / attention**: mean minutes per video in a bucket vs channel mean. High values often reflect reach × hold, not “better art” alone.
 
 Use retention for “stickiness”; use watch minutes for “this bucket fed the channel in this period.” **Impressions / CTR** remain Studio-first until added to `fetch_analytics` (future).
+
+#### Confounders & packaging (read before trusting suggestions)
+
+**CTR and impression mix** often move because of **title, thumbnail, browse vs search surface, Shorts vs long-form routing, and seasonality**—not because mood/tempo “caused” a win. **Do not** treat bucket-level correlation as proof that generation **params** drove an outcome when **packaging** differed across rows.
+
+**Phase 2.5** (confidence intervals, z-scores, effect sizes) answers **“is this signal plausibly noise?”** It does **not** remove confounding. Ship **2.5** together with **explicit warnings** in Step Summary / consumer docs so humans and any future automation do not overfit.
+
+**Before using correlation to justify CTR or packaging bets:** extend **`fetch_analytics`** where the API allows (see `docs/PERSONAL_ANALYTICS.md`), add **joinable packaging fingerprints** (e.g. title + thumbnail hash at publish time, or stable asset ids) on ledger or catalog rows, and keep **matrix levers** (retention, watch minutes from joined params) mentally separate from **packaging experiments**.
 
 **What it outputs (suggestions.json):**
 ```json
@@ -526,19 +534,20 @@ Phase 2 correlation is **statistics**, not machine learning:
 
 ## Phase 2.5: Statistical Rigor (Before Real ML)
 
-Before adding predictive models, add:
+Before adding predictive models, tighten **uncertainty quantification** and **how results are described**—not only the numbers.
 
-| Feature | Purpose |
-|---------|---------|
 | Measure | Purpose | Status |
 |---------|---------|--------|
-| Sample size threshold | n ≥ 5 actionable, 3-4 exploratory, <3 ignore | ✅ Added |
-| Standard deviation | Measure spread within groups | ✅ Added |
-| Confidence intervals | Know when to trust results | ⏳ Future |
-| Z-score vs global mean | Statistical significance | ⏳ Future |
-| Effect size (Cohen's d) | Practical significance | ⏳ Future |
+| Sample size threshold | n ≥ 5 actionable, 3–4 exploratory, fewer than 3 ignore | ✅ Added |
+| Standard deviation | Spread within groups | ✅ Added |
+| Confidence intervals | Interval estimates for bucket vs mean | ⏳ Future |
+| Z-score vs global mean | Standardized distance from channel mean | ⏳ Future |
+| Effect size (e.g. Cohen's d) | Practical significance vs noise | ⏳ Future |
+| Summary / JSON **disclaimers** | Confounders (§ Phase 2); CIs **≠** causality | ⏳ Ship with 2.5 |
 
-**Why this matters:** This teaches more than throwing sklearn at it. You learn to distrust small samples and understand variance before building models.
+**Why this matters:** You learn to distrust small samples and variance **before** sklearn—and you avoid mistaking **statistical** confidence for **causal** claims about params when **packaging** is unmodeled.
+
+**Parallel track (not a substitute for 2.5):** **Packaging telemetry** (hashes or ids joinable to `video_id`) is its own milestone; schedule it when CTR-driven narratives or automation need defensible joins (optional ADR if schema impact is large).
 
 ---
 

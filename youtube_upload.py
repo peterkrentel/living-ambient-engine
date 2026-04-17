@@ -10,6 +10,7 @@ import sys
 import os
 from datetime import datetime
 from pathlib import Path
+from typing import Optional
 
 from youtube.uploader import YouTubeUploader, GOOGLE_API_AVAILABLE, QuotaExceededError
 from library import ContentLibrary
@@ -227,7 +228,23 @@ def get_tags(metadata: dict) -> list:
 @click.option('--batch', '-b', help='Upload all videos from manifest.json in directory')
 @click.option('--update-catalog/--no-update-catalog', default=True, help='Update content catalog with YouTube links')
 @click.option('--catalog-path', help='Path to catalog file (default: content_catalog.json)')
-def main(video: str, metadata: str, privacy: str, auth: bool, batch: str, update_catalog: bool, catalog_path: str):
+@click.option(
+    '--catalog-channel',
+    type=click.Choice(['brand', 'personal']),
+    default=None,
+    envvar='CONTENT_CATALOG_CHANNEL',
+    help='Tag new catalog rows (brand vs personal). See docs/decisions/0002-content-catalog-channel-field.md',
+)
+def main(
+    video: str,
+    metadata: str,
+    privacy: str,
+    auth: bool,
+    batch: str,
+    update_catalog: bool,
+    catalog_path: str,
+    catalog_channel: Optional[str],
+):
     """
     Upload videos to YouTube.
     
@@ -341,7 +358,8 @@ def main(video: str, metadata: str, privacy: str, auth: bool, batch: str, update
                         youtube_id=upload_result['video_id'],
                         youtube_url=upload_result['url'],
                         title=upload_result['title'],
-                        metadata=meta
+                        metadata=meta,
+                        channel=catalog_channel,
                     )
                     uploaded_count += 1
 
@@ -473,7 +491,8 @@ def main(video: str, metadata: str, privacy: str, auth: bool, batch: str, update
                 youtube_id=upload_result['video_id'],
                 youtube_url=upload_result['url'],
                 title=upload_result['title'],
-                metadata=meta
+                metadata=meta,
+                channel=catalog_channel,
             )
             md_path = library.export_markdown()
             click.echo(f"\n📚 Added to content library: {library.catalog_path}")

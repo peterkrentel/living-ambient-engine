@@ -165,7 +165,7 @@ jobs:
 
       - name: Upload to YouTube
         run: |
-          python youtube_upload.py --batch ./generated
+          python youtube_upload.py --batch ./generated --catalog-channel personal
 
       - name: Cleanup credentials
         if: always()
@@ -193,6 +193,8 @@ jobs:
             echo "No catalog or generations ledger changes to commit"
           else
             git commit -m "🎹 Update content library / generations ledger (piano) [automated]"
+            # main may advance during this job; rebase then push
+            git pull --rebase origin main
             git push
             echo "✅ Catalog updated and pushed to repository"
           fi

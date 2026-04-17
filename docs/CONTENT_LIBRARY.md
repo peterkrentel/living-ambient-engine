@@ -12,7 +12,7 @@ After running the Content Factory workflow:
 
 ## Files
 
-- **`content_catalog.json`** - Persistent JSON catalog with all video metadata
+- **`content_catalog.json`** - Persistent JSON catalog with all video metadata. **New** rows from CI uploads may include **`channel`**: `brand` \| `personal` ([ADR 0002](decisions/0002-content-catalog-channel-field.md)); older rows may omit it.
 - **`CONTENT_LIBRARY.md`** - Human-readable markdown export of the catalog
 
 ## Catalog Entry Structure

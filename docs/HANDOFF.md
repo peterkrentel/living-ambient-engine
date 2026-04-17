@@ -4,43 +4,45 @@
 
 ## Updated
 
-2026-04-15
+2026-04-17
 
 ## Branch / PR
 
-- **Policy:** All **code and docs** ship via **feature branch → pull request → merge to `main`**. No direct `git push` to `main` for that work (humans + agents). **Exception:** Actions may commit **`data/`** snapshots on `main` (analytics workflows).
+- **Policy:** All **code and docs** ship via **feature branch → pull request → merge to `main`** (humans + agents). **Exception:** Actions may commit **`data/`** (analytics) or **`content_catalog.json`** (upload bots) on `main`.
 - **Active branch / PR:** _Update when you start work (branch name + PR link)._
 
 ## Anchor
 
-- **Analytics lanes in repo:** **Brand** — `analytics-agent.yml` → `data/analytics.json`, weekly `data/reports/YYYY-WW.md`, `suggestions.json`, `audit-*.md`. **Personal (v1)** — `analytics-personal.yml` → `data/analytics_personal.json`, `data/reports/YYYY-WW-personal.md` (no correlate/audit/suggestions yet). Map: [`START_HERE`](START_HERE.md#two-channels-two-probes), detail: [`PERSONAL_ANALYTICS`](PERSONAL_ANALYTICS.md).
+- **Analytics (two lanes):** **Brand** — [`analytics-agent.yml`](../.github/workflows/analytics-agent.yml) → `data/analytics.json`, `data/reports/YYYY-WW.md`, `suggestions.json`, `audit-*.md` (commit step uses `git pull --rebase` before push). **Personal** — [`analytics-personal.yml`](../.github/workflows/analytics-personal.yml) → `data/analytics_personal.json`, `*-personal.md`. Map: [`START_HERE`](START_HERE.md#two-channels-two-probes) · detail: [`PERSONAL_ANALYTICS`](PERSONAL_ANALYTICS.md).
+- **Catalog channel (in progress):** New `content_catalog.json` rows from `youtube_upload.py` can carry **`channel`: `brand` \| `personal`** when `--catalog-channel` / `CONTENT_CATALOG_CHANNEL` is set (workflows wired). Historic rows omit the field — optional backfill later. **ADR:** [`decisions/0002-content-catalog-channel-field.md`](decisions/0002-content-catalog-channel-field.md).
 
 ## Goal (last phase — done)
 
-- **Ledger on `main`** + **CI commits** + **catalog backfill** → **`data/generations.json`** populated.
-- **Dual-metrics correlate** on `main` + **Analytics Agent** outputs aligned.
-- **Docs:** two-channel / two-probe, brand-only analytics vs mixed catalog, `fetch_analytics.py` scope.
+- **Personal analytics v1** in CI (token scopes, `analytics_personal.json`, `*-personal.md`, Studio cross-read).
+- **Brand + personal push race** fixed (`git pull --rebase origin main` before `git push` in both analytics workflows).
+- **Weekly reports** include **Analytics window** line ([`agent/report.py`](../agent/report.py)); merge on `main`.
 
 ## Goal (this phase — in flight)
 
-- **Prove the personal lane in CI:** run **Analytics Agent (Personal)** once on `main`; confirm `analytics_personal.json` + `*-personal.md` land and stay isolated from brand files.
-- **Iron out cross-read:** same week label, two JSON shapes comparable; note anything missing for “what next” (e.g. CTR — see `PERSONAL_ANALYTICS.md`).
-- **Defer abstraction:** multi-channel “template” (reusable workflow / channel profiles) only after this feels boring or a third channel is real — captured in plan checklist ([`START_HERE`](START_HERE.md) table + [`PERSONAL_ANALYTICS`](PERSONAL_ANALYTICS.md) roadmap).
+- **Catalog / channel:** land optional **`channel`** on new catalog rows + ADR; then (optional) backfill or consumers (audit, tooling) that filter by channel.
+- **Iron out cross-read:** brand vs personal reports + same `date_range` as Studio when sanity-checking totals.
 
 ## Facts
 
-- **Audit join (brand):** **`audit-*.md`** counts ledger rows against **brand** `analytics.json` only; personal snapshots do not change that metric until catalog/channel tagging improves. See **`START_HERE`** § *Two channels* + *Gap*.
-- **Human-in-the-loop:** still the operating mode; no auto-production from suggestions yet.
+- **Audit join (brand):** `audit-*.md` still uses **brand** `analytics.json` only; catalog rows tagged **`personal`** clarify which uploads are not in that join until personal-aware audit exists.
+- **Human-in-the-loop:** no auto-production from suggestions yet.
 
 ## Next actions (pick one thread when ready)
 
-1. **Ops:** trigger **`analytics-personal.yml`** (`workflow_dispatch`) and verify secrets/scopes; skim first `*-personal.md` vs same-week brand report.
-2. **Product / data model:** split or **`channel`**-tag **`content_catalog.json`** (or separate files) so brand join and personal intent stay aligned — **ADR** if the choice is hard to reverse.
-3. **Personal parity (when you want it):** `suggestions_personal.json`, personal-aware audit/join, or parameterize `correlate.py` — see **`PERSONAL_ANALYTICS.md`** roadmap (do **not** blend brand + personal rows in one correlate run until dimensions are explicit).
-4. **Framework generalization (later):** one **channel profile** template (OAuth secret name, `ANALYTICS_JSON_PATH`, report suffix, optional correlate flag) via reusable workflow or small config — **after** steps 1–3 stabilize; goal is add channel *N* without duplicating YAML logic.
+1. **Post-merge verify:** spot-check **catalog `channel`** on new rows (one personal + one brand upload path); [`ADR 0002`](decisions/0002-content-catalog-channel-field.md).
+2. **Consumers (later):** filter `audit_channel` / reports by **`channel`**, or **`generations.json`** `channel` when added — follow ADR; do **not** blend correlate rows across channels.
+3. **Personal parity (optional):** `suggestions_personal.json`, personal-aware audit/join — [`PERSONAL_ANALYTICS.md`](PERSONAL_ANALYTICS.md) roadmap.
+4. **Framework generalization (later):** multi-channel **channel profile** template (reusable workflow / config) — [`START_HERE`](START_HERE.md) checklist.
 5. **Optional automation (safe):** gated planner from `suggestions.json` → plan JSON or **BLOCKED** report (no blind renders).
-6. **Spec phases:** **`AGENT.md`** Phase **2.5** → **3** when volume justifies; **`COHESION_ROADMAP.md`** Phase **6** only after joins/trust feel right.
+6. **Phase 2.5 + inference hygiene:** extend **`correlate.py`** with CIs / z-scores / effect sizes **and** Step Summary + doc language that **CIs address noise, not confounders** (title/thumbnail/CTR vs params — **`AGENT.md`** § *Confounders & packaging*).
+7. **Packaging telemetry (later slice):** joinable **fingerprints** on ledger/catalog **before** CTR-heavy automation; optional ADR if schema grows.
+8. **Spec phases:** **`AGENT.md`** Phase **3** when volume **and** interpretation guardrails justify it; **`COHESION_ROADMAP.md`** Phase **6** only after joins/trust feel right.
 
 ## Risks / open questions
 
-- **Art Creator** uploads still skip **`content_catalog.json`** (`--no-update-catalog`); ledger gaps for those unless you add logging or catalog there.
+- **Art Creator** uploads with `--no-update-catalog` still skip the catalog; ledger-only path unchanged.

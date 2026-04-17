@@ -67,7 +67,7 @@ This is the **intentional** split so neither you nor an assistant “merges” t
 
 **Two analytics experiments (cross-read intentionally):** [`analytics-agent.yml`](../.github/workflows/analytics-agent.yml) is **brand**: `data/analytics.json`, weekly `data/reports/YYYY-WW.md`, **`suggestions.json`**, **`audit-*.md`**. [`analytics-personal.yml`](../.github/workflows/analytics-personal.yml) is **personal only**: `data/analytics_personal.json` and `data/reports/YYYY-WW-personal.md` (no correlate/audit/suggestions in v1). See [`PERSONAL_ANALYTICS.md`](PERSONAL_ANALYTICS.md).
 
-**Gap to name explicitly:** **`content_catalog.json`** is a **single** repo file today and can include rows from **both** lanes (personal + brand uploads that update the catalog). **`data/analytics.json`** is **only the brand channel’s** video list and metrics; **`audit-*.md` “generations join”** still counts ledger rows against **brand** analytics. Personal snapshots live in **`analytics_personal.json`**; aligning catalog rows with personal join is a later step (split catalog or `channel` field).
+**Gap to name explicitly:** **`content_catalog.json`** is a **single** repo file today and can include rows from **both** lanes (personal + brand uploads that update the catalog). **`data/analytics.json`** is **only the brand channel’s** video list and metrics; **`audit-*.md` “generations join”** still counts ledger rows against **brand** analytics. Personal snapshots live in **`analytics_personal.json`**. **New** catalog rows from CI uploads are tagged with **`channel`: `brand` \| `personal`** when using `youtube_upload.py --catalog-channel` ([ADR 0002](decisions/0002-content-catalog-channel-field.md)); legacy rows may omit the field until an optional backfill.
 
 ## Post-audit: questions that force the next answer
 
@@ -89,7 +89,10 @@ Use this as a **checklist**, not a new doc layer. **Done** items stay for histor
 | Done | **Catalog → ledger backfill:** [`scripts/backfill_generations_from_catalog.py`](../scripts/backfill_generations_from_catalog.py) + optional **`uploaded_at`** on historic rows ([`AGENT.md`](spec/AGENT.md) § ledger). |
 | Done | **Dual-metrics correlate** on `main` (retention + watch minutes → **`suggestions.json`**). |
 | Done | **Two-channel doc** + **brand-only analytics vs mixed catalog** gap named ([§ Two channels](#two-channels-two-probes)). |
-| Open | **Catalog / channel model:** split file or **`channel`** field so audit join and production intent stay aligned. |
+| Done (write path) | **Catalog `channel`:** CI uploads pass `--catalog-channel` (`brand` / `personal`); see [ADR 0002](decisions/0002-content-catalog-channel-field.md). Legacy catalog rows may omit `channel`. |
+| Open | **Catalog / channel follow-up:** optional backfill, audit/join filtering by `channel`, or split files if the single-file model stops scaling. |
+| Open | **Phase 2.5 + epistemology:** stats in **`correlate.py`** ship with **confounder / packaging** warnings ([`AGENT.md`](spec/AGENT.md) § Phase 2 — *Confounders & packaging*; Phase 2.5 table). **CIs ≠ causality.** |
+| Open | **Packaging fingerprints (later):** title/thumbnail hashes (or ids) joinable to **`video_id`** for honest CTR narratives—separate from “add more 2.5 math.” |
 | Open | **Gated production helper (optional):** read `suggestions.json` + gates → **plan JSON** or **BLOCKED** report — no blind auto-render ([`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6 ordering). |
 | Done (v1) | **Personal analytics:** [`analytics-personal.yml`](../.github/workflows/analytics-personal.yml) → `analytics_personal.json` + `*-personal.md`. Correlation / personal audit / `suggestions_personal.json` still open ([`PERSONAL_ANALYTICS.md`](PERSONAL_ANALYTICS.md)). |
 | Open | **Multi-channel analytics template (defer):** after personal CI + cross-read feel stable, collapse duplicate workflow YAML into a **reusable workflow** or **channel profile** config (secret name, JSON path, report suffix, which steps run) so channel *N* is additive—not copy-paste. See [`HANDOFF.md`](HANDOFF.md) next actions #4. |
