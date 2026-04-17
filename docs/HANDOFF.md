@@ -21,16 +21,12 @@
 - **Personal analytics v1** in CI (token scopes, `analytics_personal.json`, `*-personal.md`, Studio cross-read).
 - **Brand + personal push race** fixed (`git pull --rebase origin main` before `git push` in both analytics workflows).
 - **Weekly reports** include **Analytics window** line ([`agent/report.py`](../agent/report.py)); merge on `main`.
+- **`run-next` v0:** [`scripts/run_next_report.py`](../scripts/run_next_report.py) + [`analytics-agent.yml`](../.github/workflows/analytics-agent.yml) step → `data/reports/run-next-YYYY-WW.md` (deterministic; **actionable** vs **exploratory**; packaging caveat). Validators / LLM / automation still roadmap — [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6.
 
 ## Goal (this phase — in flight)
 
 - **Catalog / channel:** **`channel`** on new rows + ADR are **landed**; remaining work is optional **backfill** and **consumers** (audit, tooling) that filter by channel.
 - **Iron out cross-read:** brand vs personal reports + same `date_range` as Studio when sanity-checking totals.
-- **Advisory “what next” (`run-next`):** weekly **evidence-ranked** artifact (e.g. `data/reports/run-next-YYYY-WW.md` or a **report** section). **Phased delivery** ([`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6 — **`run-next` implementation order**):
-  1. **v0 deterministic** in [`analytics-agent.yml`](../.github/workflows/analytics-agent.yml): build from `suggestions.json` + `audit-*.md` + two-channel pointers; **actionable vs exploratory**; **packaging caveat**; **no** LLM, **no** `batch_generate` / upload.
-  2. **Validators:** script or tests — output must **cite** suggestion keys/ids; **numbers** must match source JSON (no hallucinated metrics).
-  3. **Optional prose layer (after v0 is stable):** small **open-weight** model on **infra you control** (self-hosted runner / local GGUF) *or* short-lived **Gemini free tier** only for **rewriting** the fixed bundle — still schema-checked; **policy:** prefer **no third-party inference** long-term; Gemini = optional **prototype** only.
-  4. **Automation later:** only after `run-next` is trusted — e.g. optional `workflow_run` → consumer, richer `run_intent`, caps in spec ([`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6 — steps 2–3 after the `run-next` implementation order).
 
 ## Facts
 
@@ -42,7 +38,7 @@
 ## Next actions (pick one thread when ready)
 
 1. **Consumers (later):** filter `audit_channel` / reports by **`channel`**, or **`generations.json`** `channel` when added — follow ADR; do **not** blend correlate rows across channels.
-2. **Personal parity (optional):** `suggestions_personal.json`, personal-aware audit/join — [`PERSONAL_ANALYTICS.md`](PERSONAL_ANALYTICS.md) roadmap.
+2. **Personal parity (optional):** **`suggestions_personal.json`** + **`run-next-*-personal`** ship in [`analytics-personal.yml`](../.github/workflows/analytics-personal.yml); remaining: personal-aware **audit/join filtering** on catalog when needed — [`PERSONAL_ANALYTICS.md`](PERSONAL_ANALYTICS.md).
 3. **Framework generalization (later):** multi-channel **channel profile** template (reusable workflow / config) — [`START_HERE`](START_HERE.md) checklist.
 4. **Optional automation (safe):** **Shipped:** [`run-intent-consumer.yml`](../.github/workflows/run-intent-consumer.yml) + [`scripts/consume_run_intent.py`](../scripts/consume_run_intent.py) validate **`data/run_intent.json`** → **`batch_generate`** / double-gated **`youtube_upload`** ([`spec/contracts/production-run-intent.md`](spec/contracts/production-run-intent.md)); planner v0 still defaults **`upload`: false**. **Next (optional):** personal-lane planner, richer intent→flags mapping, or LLM overrides — [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6 *Two doors*.
 5. **Phase 2.5 + inference hygiene:** extend **`correlate.py`** with CIs / z-scores / effect sizes **and** Step Summary + doc language that **CIs address noise, not confounders** (title/thumbnail/CTR vs params — **`AGENT.md`** § *Confounders & packaging*).
@@ -50,7 +46,7 @@
 7. **Spec phases:** **`AGENT.md`** Phase **3** when volume **and** interpretation guardrails justify it; **`COHESION_ROADMAP.md`** Phase **6** only after joins/trust feel right.
 8. **Title / packaging (defer):** same **mood × duration × dual** matrix on **brand + personal** reuses templates → **identical `video_title` strings** on two channels (different `video_id`s). Fine for smoke; before **high volume** or sharp **channel positioning**, tweak metadata (e.g. per-channel suffix or description line), rotation policy, or later **run intent** rules so packs are not unintentional clones — [`START_HERE.md`](START_HERE.md) checklist.
 
-9. **Advisory “run-next” (planned):** implement **Goal (in flight)** in order: **(1)** deterministic generator + commit in **Analytics Agent**; **(2)** validators; **(3)** optional LLM prose (self-hosted preferred; Gemini prototyping allowed); **(4)** revisit auto-chain to consumer / intent only when outputs are trustworthy — see [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6 (**`run-next` implementation order**).
+9. **`run-next` follow-ups:** **(1)** validators (cited indices, numeric parity with `suggestions.json`); **(2)** optional LLM prose on the fixed bundle (self-hosted preferred; Gemini prototyping allowed); **(3)** automation only when trustworthy — [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6.
 
 ## Risks / open questions
 

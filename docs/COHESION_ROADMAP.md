@@ -193,7 +193,7 @@ Videos published **before** `generations.json` exists have **no** joined params 
 
 **`run-next` implementation order (agreed):**
 
-1. **v0 deterministic** — new step in [`analytics-agent.yml`](../.github/workflows/analytics-agent.yml) after correlate + audit: emit `run-next-*.md` from structured data only; commit with weekly data. **No** LLM; **no** `batch_generate` / upload.
+1. **v0 deterministic** — step in [`analytics-agent.yml`](../.github/workflows/analytics-agent.yml) after audit: [`scripts/run_next_report.py`](../scripts/run_next_report.py) emits `run-next-*.md` from structured data; commit with weekly data. **No** LLM; **no** `batch_generate` / upload.
 2. **Validators** — CI or script checks: every claim traceable to `suggestions.json` / audit; numeric parity; fail the step on drift.
 3. **Optional LLM prose** — only after (1)(2) are boring: model consumes **fixed JSON bundle** + prompt from git; output still schema-validated. **Preferred:** open-weight on **self-hosted** runner or hardware you control (**MLOps / AI-ops**, no third-party inference). **Optional prototype:** vendor API (e.g. Gemini free tier) for speed **only** until a local path exists; document in `workflows.md` + secrets policy.
 4. **Automation** — optional `workflow_run` / scheduled consumer, richer `run_intent`, etc., **only** after `run-next` is trusted; keep Phase 6 steps **2–3** (human dispatch → later caps).
