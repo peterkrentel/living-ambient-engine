@@ -1,14 +1,14 @@
 # Personal channel — Analytics Report (2026-W16)
 
-Generated: 2026-04-16T23:23:44.169237+00:00
+Generated: 2026-04-17T14:18:49.581940+00:00
 
 > **Channel scope:** Personal YouTube only. Data file: `data/analytics_personal.json`. Brand metrics live in `data/analytics.json` (main Analytics Agent workflow).
 
 ## Summary
 
-- **Analytics window:** `2026-03-19` → `2026-04-15` (YouTube Analytics API range for metrics below. In Studio, pick the **same** custom dates when comparing totals — not e.g. “Last 28 days” unless `fetch_analytics` used `--days 28`.)
-- **Total videos tracked:** 76
-- **Videos with analytics:** 76
+- **Analytics window:** `2026-03-20` → `2026-04-16` (YouTube Analytics API range for metrics below. In Studio, pick the **same** custom dates when comparing totals — not e.g. “Last 28 days” unless `fetch_analytics` used `--days 28`.)
+- **Total videos tracked:** 80
+- **Videos with analytics:** 79
 
 ## Totals
 
@@ -45,7 +45,7 @@ Generated: 2026-04-16T23:23:44.169237+00:00
 | trance | 8 | 3 | 0.1% |
 | piano_ambient | 2 | 2 | 49.8% |
 | piano_relax | 2 | 2 | 9.4% |
-| unknown | 6 | 2 | 6.5% |
+| unknown | 8 | 2 | 6.5% |
 | ceremony | 5 | 1 | 0.2% |
 | deep_focus | 2 | 1 | 74.8% |
 | piano_evening | 2 | 0 | 0.0% |
@@ -54,7 +54,7 @@ Generated: 2026-04-16T23:23:44.169237+00:00
 | energize | 6 | 0 | 0.0% |
 | study | 4 | 0 | 0.0% |
 | chill | 4 | 0 | 0.0% |
-| sleep | 9 | 0 | 0.0% |
+| sleep | 11 | 0 | 0.0% |
 | lofi_study | 2 | 0 | 0.0% |
 | ocean_waves | 2 | 0 | 0.0% |
 | rain_sleep | 2 | 0 | 0.0% |
