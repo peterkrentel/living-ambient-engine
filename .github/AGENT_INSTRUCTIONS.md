@@ -5,16 +5,33 @@
 
 This project uses **spec-driven development**. Specifications are the source of truth for behavior.
 
+## Governance stack and read order
+
+**Why this section exists:** Git does not execute docs. Until this list, **no single file defined the sequence**—truth was spread across `START_HERE`, `GUARDRAILS`, contracts, workflows, and Cursor rules. Assistants guessed from fragments. **This heading is the canonical order** for a normal change; keep it in sync if you add layers.
+
+**Read in this order** (stop when you have enough context for the task):
+
+| Step | Read | What it answers |
+|------|------|-----------------|
+| 1 | [`docs/START_HERE.md`](../docs/START_HERE.md) | Where each kind of truth lives—**do not duplicate** that map in chat. |
+| 2 | [`docs/HANDOFF.md`](../docs/HANDOFF.md) | **Only if** continuing in-repo work (branch, next actions, pointers). |
+| 3 | [`docs/spec/GUARDRAILS.md`](../docs/spec/GUARDRAILS.md) | **Before** generation-parameter, mood, duration, or limit changes—hard caps. |
+| 4 | [`docs/spec/SYSTEM.md`](../docs/spec/SYSTEM.md), the relevant `*/SPEC.md`, and [`docs/spec/contracts/`](../docs/spec/contracts/) | Behavior and interfaces you are changing. |
+| 5 | [`docs/spec/workflows.md`](../docs/spec/workflows.md) | **Only if** editing `.github/workflows/*.yml`. |
+| 6 | [`.cursor/rules/*.mdc`](../.cursor/rules/) | Cursor-only maintainer preferences (e.g. CI-first verification). |
+
+**Then:** branch + PR (below); ship spec/contract/doc updates **in the same change** as code; verify via **GitHub Actions** and the **github.com** UI unless the maintainer asks for local steps.
+
 ## Git: always branch + PR
 
 Do **not** push completed work directly to `main`. Create a **feature branch** from up-to-date `main`, push it, and open a **pull request**. See [`CONTRIBUTING.md`](../CONTRIBUTING.md) § *Git workflow: branch + pull request*. The only routine direct commits on `main` are **automated `data/`** updates from Actions (analytics, etc.)—that exception does not apply to code, specs, or workflow YAML you edit.
 
 ## Before Coding
 
-1. **`docs/START_HERE.md`** — what belongs where (do not duplicate that map elsewhere). If continuing a thread: **`docs/HANDOFF.md`**.
-2. **`docs/spec/GUARDRAILS.md`** — before any generation-parameter or mood work (**mandatory**).
-3. **`docs/EXECUTION.md`** — venv or GitHub Actions only.
-4. **Read only what you will change:** `docs/spec/SYSTEM.md`; relevant `*/SPEC.md`; `docs/spec/contracts/` for interfaces; **`docs/spec/workflows.md`** for any `.github/workflows/` edit.
+Follow **Governance stack and read order** above. In addition:
+
+- **`docs/EXECUTION.md`** — how jobs run in **venv vs GitHub Actions** (implementation detail). Maintainer verification: **CI / GitHub UI first**—see *After Coding*.
+- **Narrow reading:** open only the specs and contracts that touch files you will edit—do not re-read the whole tree every time.
 
 ## While Coding
 
@@ -27,7 +44,7 @@ Do **not** push completed work directly to `main`. Create a **feature branch** f
 1. **Update specs**: Any behavior change requires a spec update in the same commit
 2. **Update contracts**: Interface changes require contract updates
 3. **Update docs**: User-facing changes need doc updates
-4. **Test**: Prefer **GitHub Actions** (`workflow_dispatch`) for full integration; for local smoke tests use an **activated venv** (`source venv/bin/activate`) then e.g. `python run_job.py --mood trance --duration 30` — see `docs/EXECUTION.md`
+4. **Test / verify:** Prefer **GitHub Actions** (`workflow_dispatch`), PR checks, and the **github.com** file/commit view. **Do not** instruct the maintainer to run local git, venv, or CLI verification unless they **explicitly** ask for local steps. Optional venv smoke for contributors who use it: `docs/EXECUTION.md`.
 
 ## Quick Reference
 
@@ -51,8 +68,11 @@ Do **not** push completed work directly to `main`. Create a **feature branch** f
 - ❌ Adding dependencies without using package manager
 - ❌ Adding parameters without defining limits in GUARDRAILS.md
 - ❌ Bypassing validation/clamping in generators
+- ❌ **Telling the maintainer to “run locally”** (git, venv, `python …`) as the default verification path—use **Actions + GitHub UI** unless they ask for local steps
 
 ## Testing Commands
+
+Optional for contributors using a **local venv** (not the default verification story for CI-only maintainers):
 
 ```bash
 # Quick smoke test (30 seconds)
@@ -94,6 +114,6 @@ render/SPEC.md          # FFmpeg wrapper
 
 1. Ask the user for clarification
 2. Read the spec again
-3. Check git history for similar changes: `git log --oneline --all -- <file>`
+3. Check history for similar changes (GitHub **Commits** / **Blame** on the file, or `git log` only when working in a clone)
 4. Look at existing tests for expected behavior
 
