@@ -1750,6 +1750,82 @@
       "uploaded_at": "2026-04-17T13:47:07.331256+00:00",
       "updated_at": "2026-04-17T13:47:07.331256+00:00",
       "commit_sha": "d001e6ddd8f99bee90e5235241cd68032be35571"
+    },
+    {
+      "generation_id": "128ae9c4-3176-4db7-9dbe-9838f4aaed13",
+      "video_id": "Z9LWNqbk4-A",
+      "workflow": "Content Factory (Personal)",
+      "mood": "deep_focus",
+      "duration_seconds": 3600,
+      "params": {
+        "manual_backfill": true,
+        "source": "studio_personal_apr17_2026",
+        "variant": "melody"
+      },
+      "metadata": {
+        "title": "Sounds for an Overactive Mind | 1 Hour Evolving Focus Music | No Loops [With Music]",
+        "video_title": "Sounds for an Overactive Mind | 1 Hour Evolving Focus Music | No Loops [With Music]"
+      },
+      "generated_at": "2026-04-17T13:56:27+00:00",
+      "uploaded_at": "2026-04-17T13:56:27+00:00",
+      "updated_at": "2026-04-17T14:16:43.751811+00:00"
+    },
+    {
+      "generation_id": "c60865e3-0a42-4878-afc5-b61f9988eeb7",
+      "video_id": "GVzHYaVF900",
+      "workflow": "Content Factory (Personal)",
+      "mood": "deep_focus",
+      "duration_seconds": 3600,
+      "params": {
+        "manual_backfill": true,
+        "source": "studio_personal_apr17_2026",
+        "variant": "ambience"
+      },
+      "metadata": {
+        "title": "Sounds for an Overactive Mind | 1 Hour Evolving Focus Music | No Loops [Pure Ambience]",
+        "video_title": "Sounds for an Overactive Mind | 1 Hour Evolving Focus Music | No Loops [Pure Ambience]"
+      },
+      "generated_at": "2026-04-17T13:57:33+00:00",
+      "uploaded_at": "2026-04-17T13:57:33+00:00",
+      "updated_at": "2026-04-17T14:16:43.753890+00:00"
+    },
+    {
+      "generation_id": "2dcd3a21-36e4-48fa-8e1b-91e25b60941b",
+      "video_id": "Zv4NOyTpAtY",
+      "workflow": "Content Factory (Personal)",
+      "mood": "rain_sleep",
+      "duration_seconds": 3600,
+      "params": {
+        "manual_backfill": true,
+        "source": "studio_personal_apr17_2026",
+        "variant": "ambience"
+      },
+      "metadata": {
+        "title": "Fall Asleep to Gentle Rain | 1 Hour | Evolving Storm, Never Loops [Pure Ambience]",
+        "video_title": "Fall Asleep to Gentle Rain | 1 Hour | Evolving Storm, Never Loops [Pure Ambience]"
+      },
+      "generated_at": "2026-04-17T13:58:32+00:00",
+      "uploaded_at": "2026-04-17T13:58:32+00:00",
+      "updated_at": "2026-04-17T14:16:43.755279+00:00"
+    },
+    {
+      "generation_id": "fa67b84c-16bb-4933-80c0-9fd04480dbee",
+      "video_id": "bFSrUdHfWk8",
+      "workflow": "Content Factory (Personal)",
+      "mood": "rain_sleep",
+      "duration_seconds": 3600,
+      "params": {
+        "manual_backfill": true,
+        "source": "studio_personal_apr17_2026",
+        "variant": "melody"
+      },
+      "metadata": {
+        "title": "Fall Asleep to Gentle Rain | 1 Hour | Evolving Storm, Never Loops [With Music]",
+        "video_title": "Fall Asleep to Gentle Rain | 1 Hour | Evolving Storm, Never Loops [With Music]"
+      },
+      "generated_at": "2026-04-17T13:59:29+00:00",
+      "uploaded_at": "2026-04-17T13:59:29+00:00",
+      "updated_at": "2026-04-17T14:16:43.756638+00:00"
     }
   ]
 }
