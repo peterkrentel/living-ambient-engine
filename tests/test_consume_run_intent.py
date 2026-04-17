@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -101,8 +102,6 @@ def test_upload_must_be_bool(tmp_path: Path):
 
 def test_cli_missing_file(tmp_path: Path):
     missing = tmp_path / "nope.json"
-    import subprocess
-
     r = subprocess.run(
         [sys.executable, str(_REPO / "scripts" / "consume_run_intent.py"), "--intent", str(missing)],
         capture_output=True,
@@ -111,30 +110,40 @@ def test_cli_missing_file(tmp_path: Path):
     assert r.returncode == 1
 
 
-def test_allow_planner_blocked_exits_zero(monkeypatch: pytest.MonkeyPatch, tmp_path: Path):
+def test_allow_planner_blocked_exits_zero(tmp_path: Path):
     intent = tmp_path / "run_intent.json"
     blocked = tmp_path / "run-intent-blocked.md"
     blocked.write_text("# Run intent — BLOCKED\n", encoding="utf-8")
-    monkeypatch.setattr(cr, "BLOCKED", blocked)
-    monkeypatch.setattr(
-        sys,
-        "argv",
+    r = subprocess.run(
         [
-            "consume_run_intent",
+            sys.executable,
+            str(_REPO / "scripts" / "consume_run_intent.py"),
             "--intent",
             str(intent),
+            "--blocked-report",
+            str(blocked),
             "--allow-planner-blocked",
         ],
+        capture_output=True,
+        text=True,
     )
-    assert cr.main() == 0
+    assert r.returncode == 0
 
 
-def test_missing_intent_with_blocked_still_fails_without_flag(
-    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
-):
+def test_missing_intent_with_blocked_still_fails_without_flag(tmp_path: Path):
     intent = tmp_path / "run_intent.json"
     blocked = tmp_path / "run-intent-blocked.md"
     blocked.write_text("# blocked\n", encoding="utf-8")
-    monkeypatch.setattr(cr, "BLOCKED", blocked)
-    monkeypatch.setattr(sys, "argv", ["consume_run_intent", "--intent", str(intent)])
-    assert cr.main() == 1
+    r = subprocess.run(
+        [
+            sys.executable,
+            str(_REPO / "scripts" / "consume_run_intent.py"),
+            "--intent",
+            str(intent),
+            "--blocked-report",
+            str(blocked),
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert r.returncode == 1

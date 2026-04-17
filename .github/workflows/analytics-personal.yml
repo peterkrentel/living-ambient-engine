@@ -74,6 +74,13 @@ jobs:
           echo "📈 Generating personal performance report..."
           python -m agent.report
 
+      - name: Run performance analysis (personal)
+        env:
+          ANALYTICS_JSON_PATH: data/analytics_personal.json
+        run: |
+          echo "🔬 Running performance analysis (personal snapshot)..."
+          python scripts/analyze_data.py
+
       - name: Channel coverage audit (personal)
         env:
           ANALYTICS_JSON_PATH: data/analytics_personal.json
@@ -91,6 +98,15 @@ jobs:
           echo "🤖 Running personal-channel correlation (separate JSON from brand)..."
           python scripts/correlate.py
 
+      - name: Plan run intent (personal, gated)
+        run: |
+          echo "🧭 Planning personal run intent from suggestions_personal.json (no upload)..."
+          python scripts/plan_run_intent.py \
+            --suggestions data/suggestions_personal.json \
+            --channel personal \
+            --intent-output data/run_intent_personal.json \
+            --blocked-output data/reports/run-intent-blocked-personal.md
+
       - name: Run-next advisory personal (deterministic v0)
         run: |
           echo "🧭 Writing personal run-next markdown..."
@@ -104,6 +120,9 @@ jobs:
           git add data/analytics_personal.json
           if [ -f data/suggestions_personal.json ]; then
             git add data/suggestions_personal.json
+          fi
+          if [ -f data/run_intent_personal.json ]; then
+            git add data/run_intent_personal.json
           fi
           if compgen -G "data/reports/*-personal.md" > /dev/null; then
             git add data/reports/*-personal.md
