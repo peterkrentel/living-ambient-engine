@@ -13,7 +13,7 @@ Accepted (implementation: new writes only; historic rows unchanged).
 ## Decision
 
 1. Add an optional string field **`channel`** on each **video** object in the catalog, with allowed values **`brand`** | **`personal`**.
-2. **New** rows written by `youtube_upload.py` set `channel` when the upload is invoked with **`--catalog-channel`** (or env **`CONTENT_CATALOG_CHANNEL`**, same values).
+2. **New** rows written by `youtube_upload.py` set `channel` when the upload is invoked with **`--catalog-channel`** (or env **`CONTENT_CATALOG_CHANNEL`**, same values). The same upload path sets optional **`channel`** on matching **`data/generations.json`** rows for analytics / audit joins.
 3. **Existing** rows remain valid **without** `channel` (unknown / legacy). Optional later: backfill from workflow provenance or heuristics.
 4. Do **not** change the top-level `catalog_version` in this ADR; treat `channel` as additive schema.
 

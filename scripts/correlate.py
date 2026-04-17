@@ -26,10 +26,14 @@ if _REPO_ROOT not in sys.path:
 
 from agent.log_generation import video_id_index
 
-# Paths
-ANALYTICS_PATH = "data/analytics.json"
+# Paths (analytics path is read at load time so audit / future tools can set ANALYTICS_JSON_PATH)
+DEFAULT_ANALYTICS_PATH = "data/analytics.json"
 SUGGESTIONS_PATH = "data/suggestions.json"
 GENERATIONS_PATH = "data/generations.json"
+
+
+def _analytics_json_path() -> str:
+    return os.environ.get("ANALYTICS_JSON_PATH", DEFAULT_ANALYTICS_PATH).strip() or DEFAULT_ANALYTICS_PATH
 
 # Statistical thresholds (per AGENT.md spec)
 MIN_SAMPLE_SIZE = 5  # Actionable requires n >= 5
@@ -42,10 +46,11 @@ MIN_DELTA_WATCH_MINUTES = 1.0
 
 def load_analytics():
     """Load analytics data."""
-    if not os.path.exists(ANALYTICS_PATH):
-        print("❌ No analytics data found")
+    path = _analytics_json_path()
+    if not os.path.exists(path):
+        print(f"❌ No analytics data found at {path!r}")
         return None
-    with open(ANALYTICS_PATH) as f:
+    with open(path) as f:
         return json.load(f)
 
 

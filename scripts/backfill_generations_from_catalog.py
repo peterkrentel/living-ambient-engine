@@ -95,6 +95,7 @@ def main() -> int:
             have.add(vid)
             continue
 
+        cat_ch = row.get("channel")
         record_generation_upload(
             video_id=vid,
             workflow="catalog_backfill",
@@ -106,6 +107,7 @@ def main() -> int:
             metadata={"title": title, "video_title": title},
             generated_at=str(generated_at) if generated_at else None,
             uploaded_at=str(uploaded_at) if uploaded_at else None,
+            channel=cat_ch if cat_ch in ("brand", "personal") else None,
         )
         have.add(vid)
         added += 1

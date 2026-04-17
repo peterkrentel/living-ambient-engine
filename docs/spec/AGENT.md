@@ -109,6 +109,8 @@ analytics-agent.yml
 
 **Implemented:** `agent/log_generation.py` writes **schema_version 1** rows on successful upload via `youtube_upload.py` (batch + single). Increment **`schema_version`** when adding required fields.
 
+**Optional `channel`:** Ledger rows may include **`channel`**: `"brand"` \| `"personal"` when the upload path passes the same value as catalog tagging ([ADR 0002](../decisions/0002-content-catalog-channel-field.md)); multi-channel **audit** uses it with `workflow` fallback. Omitted on legacy rows.
+
 **CI:** Persist updates on `main` per **[`workflows.md`](workflows.md) § Generations ledger** (same PR when changing upload YAML).
 
 ```json
