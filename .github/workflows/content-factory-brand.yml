@@ -168,7 +168,7 @@ jobs:
 
       - name: Upload to YouTube (Brand Channel)
         run: |
-          python youtube_upload.py --batch ./generated
+          python youtube_upload.py --batch ./generated --catalog-channel brand
 
       - name: Cleanup credentials
         if: always()

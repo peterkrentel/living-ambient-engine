@@ -67,7 +67,8 @@ class ContentLibrary:
         youtube_url: str,
         title: str,
         metadata: Dict,
-        upload_date: str = None
+        upload_date: str = None,
+        channel: Optional[str] = None,
     ) -> Dict:
         """
         Add a video to the catalog.
@@ -78,13 +79,17 @@ class ContentLibrary:
             title: Video title
             metadata: Video metadata (mood, duration, seed, etc.)
             upload_date: Upload date (ISO format, defaults to now)
-            
+            channel: Optional ``brand`` or ``personal`` (see ADR 0002). Omitted when unset.
+
         Returns:
             The catalog entry created
         """
         if upload_date is None:
             upload_date = datetime.now().isoformat()
-        
+
+        if channel is not None and channel not in ("brand", "personal"):
+            raise ValueError(f"channel must be 'brand' or 'personal', got {channel!r}")
+
         # Create catalog entry
         entry = {
             "catalog_id": self._generate_catalog_id(),
@@ -100,8 +105,10 @@ class ContentLibrary:
             "rhythm_name": metadata.get("rhythm_name", ""),
             "uploaded_at": upload_date,
             "generated_at": metadata.get("generated_at", upload_date),
-            "metadata": metadata
+            "metadata": metadata,
         }
+        if channel is not None:
+            entry["channel"] = channel
         
         # Check for duplicates (same seed and mood)
         if not self._is_duplicate(entry):
