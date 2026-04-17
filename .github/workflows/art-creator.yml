@@ -938,9 +938,7 @@ jobs:
             echo "No generations ledger changes to commit"
           else
             git commit -m "🧾 Update generations ledger (art creator) [automated]"
-            # main may advance during this job; rebase then push
-            git pull --rebase origin main
-            git push
+            bash scripts/ci_merge_main_after_data_commit.sh
             echo "✅ generations.json committed and pushed"
           fi
 

@@ -202,9 +202,8 @@ jobs:
             echo "No catalog or generations ledger changes to commit"
           else
             git commit -m "📚 Update content library and generations ledger [automated]"
-            # main may advance during this job (e.g. analytics or brand lane); rebase then push
-            git pull --rebase origin main
-            git push
+            # main may advance during this job; merge + union-resolve catalog/ledger conflicts (see scripts/ci_merge_main_after_data_commit.sh)
+            bash scripts/ci_merge_main_after_data_commit.sh
             echo "✅ Catalog updated and pushed to repository"
           fi
 
