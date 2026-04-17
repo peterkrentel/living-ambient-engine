@@ -1,7 +1,7 @@
 # Run next — advisory (2026-W16)
 
-Generated (report): 2026-04-17T19:15:49.711893+00:00
-**Correlate bundle `generated_at`:** 2026-04-17T19:15:49.475231Z
+Generated (report): 2026-04-17T19:35:54.647441+00:00
+**Correlate bundle `generated_at`:** 2026-04-17T19:35:54.410566Z
 
 ## How to read this
 
@@ -46,8 +46,8 @@ _None this week — all rows are exploratory or below actionable thresholds._
 
 ## Personal lane (context only)
 
-- `data/analytics_personal.json` — **80** videos in snapshot; `fetched_at`: 2026-04-17T14:18:49.424203+00:00
-- **Latest personal markdown report:** `data/reports/2026-W16-personal.md`
+- `data/analytics_personal.json` — **90** videos in snapshot; `fetched_at`: 2026-04-17T19:18:21.645531+00:00
+- **Latest personal markdown report:** `data/reports/audit-2026-W16-personal.md`
 - **Not merged** into brand `suggestions.json` / correlate — use for cross-read only ([`docs/PERSONAL_ANALYTICS.md`](../../docs/PERSONAL_ANALYTICS.md)).
 
 ## Production hooks (manual)
