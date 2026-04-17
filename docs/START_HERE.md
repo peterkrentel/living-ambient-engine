@@ -100,6 +100,7 @@ Use this as a **checklist**, not a new doc layer. **Done** items stay for histor
 | Open | **Multi-channel analytics template (defer):** after personal CI + cross-read feel stable, collapse duplicate workflow YAML into a **reusable workflow** or **channel profile** config (secret name, JSON path, report suffix, which steps run) so channel *N* is additive—not copy-paste. See [`HANDOFF.md`](HANDOFF.md) next actions #4. |
 | Open | **Cron / lanes:** post-audit questions above — which workflow leads, when to un-pause schedules. |
 | Open | **Art Creator ↔ catalog:** if you want full join, relax **`--no-update-catalog`** or add a parallel ledger path. |
+| Open (defer) | **Cross-channel title dedup / positioning:** parallel smokes on **brand + personal** can yield the **same display titles** (different `youtube_id`s). Optional polish before scaling uploads — templates, rotation, or **run intent** rules; see [`HANDOFF.md`](HANDOFF.md) next actions #9. |
 
 ## After this file
 
