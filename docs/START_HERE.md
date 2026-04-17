@@ -100,10 +100,10 @@ Use this as a **checklist**, not a new doc layer. **Done** items stay for histor
 | Open | **Gated production helper (v0 live):** [`scripts/plan_run_intent.py`](../scripts/plan_run_intent.py) after correlate → `data/run_intent.json` or `data/reports/run-intent-blocked.md` ([`spec/contracts/production-run-intent.md`](spec/contracts/production-run-intent.md)). **Consumer** (validate → batch/upload) still open. |
 | Open | **Run intent → CI consumer (when ready):** workflow or script that **reads + validates** intent JSON then drives `batch_generate` / `youtube_upload` (same contract as planner); keeps **LLM / agent** off static form-field explosion. |
 | Done (v1) | **Personal analytics:** [`analytics-personal.yml`](../.github/workflows/analytics-personal.yml) → `analytics_personal.json` + `*-personal.md` + `audit-*-personal.md`. Correlation / `suggestions_personal.json` still open ([`PERSONAL_ANALYTICS.md`](PERSONAL_ANALYTICS.md)). |
-| Open | **Multi-channel analytics template (defer):** after personal CI + cross-read feel stable, collapse duplicate workflow YAML into a **reusable workflow** or **channel profile** config (secret name, JSON path, report suffix, which steps run) so channel *N* is additive—not copy-paste. See [`HANDOFF.md`](HANDOFF.md) next actions #4. |
+| Open | **Multi-channel analytics template (defer):** after personal CI + cross-read feel stable, collapse duplicate workflow YAML into a **reusable workflow** or **channel profile** config (secret name, JSON path, report suffix, which steps run) so channel *N* is additive—not copy-paste. See [`HANDOFF.md`](HANDOFF.md) next actions #3. |
 | Open | **Cron / lanes:** post-audit questions above — which workflow leads, when to un-pause schedules. |
 | Open | **Art Creator ↔ catalog:** if you want full join, relax **`--no-update-catalog`** or add a parallel ledger path. |
-| Open (defer) | **Cross-channel title dedup / positioning:** parallel smokes on **brand + personal** can yield the **same display titles** (different `youtube_id`s). Optional polish before scaling uploads — templates, rotation, or **run intent** rules; see [`HANDOFF.md`](HANDOFF.md) next actions #9. |
+| Open (defer) | **Cross-channel title dedup / positioning:** parallel smokes on **brand + personal** can yield the **same display titles** (different `youtube_id`s). Optional polish before scaling uploads — templates, rotation, or **run intent** rules; see [`HANDOFF.md`](HANDOFF.md) next actions #8. |
 
 ## After this file
 
