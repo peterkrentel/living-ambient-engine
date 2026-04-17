@@ -333,6 +333,15 @@ complexity = max(0.1, min(1.0, complexity))
 | Videos per fetch | All | Paginate automatically (50 per API call) |
 | Fetch frequency | Weekly minimum | Cron schedule enforced |
 
+### Correlation & suggestions (interpretation)
+
+| Rule | Reason |
+|------|--------|
+| Prefer **joined params** for mood/tempo/matrix levers | Reduces title-parsing noise ([`AGENT.md`](AGENT.md) Phase 2). |
+| Do **not** attribute **CTR** swings to generation params without **packaging controls** | Thumbnails, titles, and impression mix dominate CTR. |
+| Treat Phase **2.5** stats as **uncertainty**, not **causality** | Confidence intervals do not remove confounders. |
+| Human review before changing batch YAML from **`suggestions.json` alone** | Until packaging telemetry exists where CTR matters. |
+
 ### Data Retention
 
 | Data Type | Retention | Location |

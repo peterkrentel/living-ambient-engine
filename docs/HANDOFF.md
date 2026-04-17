@@ -39,7 +39,9 @@
 3. **Personal parity (when you want it):** `suggestions_personal.json`, personal-aware audit/join, or parameterize `correlate.py` — see **`PERSONAL_ANALYTICS.md`** roadmap (do **not** blend brand + personal rows in one correlate run until dimensions are explicit).
 4. **Framework generalization (later):** one **channel profile** template (OAuth secret name, `ANALYTICS_JSON_PATH`, report suffix, optional correlate flag) via reusable workflow or small config — **after** steps 1–3 stabilize; goal is add channel *N* without duplicating YAML logic.
 5. **Optional automation (safe):** gated planner from `suggestions.json` → plan JSON or **BLOCKED** report (no blind renders).
-6. **Spec phases:** **`AGENT.md`** Phase **2.5** → **3** when volume justifies; **`COHESION_ROADMAP.md`** Phase **6** only after joins/trust feel right.
+6. **Phase 2.5 + inference hygiene:** extend **`correlate.py`** with CIs / z-scores / effect sizes **and** Step Summary + doc language that **CIs address noise, not confounders** (title/thumbnail/CTR vs params — canonical text: **`AGENT.md`** § *Confounders & packaging*).
+7. **Packaging telemetry (later slice):** joinable **fingerprints** (title + thumbnail hash at publish, or stable asset ids) on ledger/catalog **before** treating CTR-heavy suggestions or automation as param learning; optional ADR if schema grows.
+8. **Spec phases:** **`AGENT.md`** Phase **3** when volume **and** interpretation guardrails justify it; **`COHESION_ROADMAP.md`** Phase **6** only after joins/trust feel right.
 
 ## Risks / open questions
 
