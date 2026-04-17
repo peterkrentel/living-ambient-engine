@@ -9,12 +9,13 @@ Use a short opener so nobody re-derives context from scratch:
 
 1. **Mode:** Planning only / Implement / Review only  
 2. **Goal:** One sentence (verifiable outcome)  
-3. **Ground:** `@docs/HANDOFF.md` and, for behavior changes, the spec files below  
+3. **Ground:** `@docs/HANDOFF.md` and [`.github/AGENT_INSTRUCTIONS.md`](../.github/AGENT_INSTRUCTIONS.md#governance-stack-and-read-order) (canonical read order); for behavior changes, the spec files in that order  
 
 ## Where truth lives (do not duplicate long explanations)
 
 | Layer | File | What it answers |
 |-------|------|-----------------|
+| **AI read order (canonical)** | [`.github/AGENT_INSTRUCTIONS.md`](../.github/AGENT_INSTRUCTIONS.md#governance-stack-and-read-order) | **Step sequence** for assistants: map → handoff (if needed) → guardrails → specs/contracts → workflows (if CI) → Cursor rules → branch/PR + GitHub verification. |
 | **Right now** | [`HANDOFF.md`](HANDOFF.md) | Branch, anchor commit, next 1–3 actions, pointers to latest `data/reports/*`. **Overwrite** when state moves. |
 | **Strategic arc** | [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) | Ledgers, Phase 0–6, *why* sequencing (batch → join → catalog policy → …). |
 | **Analytics / data loop** | [`spec/AGENT.md`](spec/AGENT.md) | Schemas, phases 1–2.5, correlation, suggestions — *what the agent measures*. |
