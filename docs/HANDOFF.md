@@ -34,12 +34,14 @@
 
 ## Next actions (pick one thread when ready)
 
-1. **Merge + verify:** PR for **catalog `channel`** wiring; spot-check one personal + one brand upload path still commits catalog as expected.
-2. **Consumers (later):** filter `audit_channel` / reports by `channel`, or **`generations.json`** `channel` — follow ADR; do not blend correlate rows across channels.
-3. **Personal parity (optional):** `suggestions_personal.json`, personal audit — [`PERSONAL_ANALYTICS.md`](PERSONAL_ANALYTICS.md) roadmap.
-4. **Framework generalization (later):** multi-channel analytics **template** (reusable workflow) — [`START_HERE`](START_HERE.md) checklist.
-5. **Optional automation (safe):** gated planner from `suggestions.json`.
-6. **Spec phases:** [`AGENT.md`](spec/AGENT.md) Phase **2.5** → **3** when volume justifies.
+1. **Post-merge verify:** spot-check **catalog `channel`** on new rows (one personal + one brand upload path); [`ADR 0002`](decisions/0002-content-catalog-channel-field.md).
+2. **Consumers (later):** filter `audit_channel` / reports by **`channel`**, or **`generations.json`** `channel` when added — follow ADR; do **not** blend correlate rows across channels.
+3. **Personal parity (optional):** `suggestions_personal.json`, personal-aware audit/join — [`PERSONAL_ANALYTICS.md`](PERSONAL_ANALYTICS.md) roadmap.
+4. **Framework generalization (later):** multi-channel **channel profile** template (reusable workflow / config) — [`START_HERE`](START_HERE.md) checklist.
+5. **Optional automation (safe):** gated planner from `suggestions.json` → plan JSON or **BLOCKED** report (no blind renders).
+6. **Phase 2.5 + inference hygiene:** extend **`correlate.py`** with CIs / z-scores / effect sizes **and** Step Summary + doc language that **CIs address noise, not confounders** (title/thumbnail/CTR vs params — **`AGENT.md`** § *Confounders & packaging*).
+7. **Packaging telemetry (later slice):** joinable **fingerprints** on ledger/catalog **before** CTR-heavy automation; optional ADR if schema grows.
+8. **Spec phases:** **`AGENT.md`** Phase **3** when volume **and** interpretation guardrails justify it; **`COHESION_ROADMAP.md`** Phase **6** only after joins/trust feel right.
 
 ## Risks / open questions
 

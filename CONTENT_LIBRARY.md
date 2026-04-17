@@ -1,12 +1,12 @@
 # Content Library
 
-*Last updated: 2026-04-16T17:35:33.949357*
+*Last updated: 2026-04-17T13:47:07.327981*
 
 ## Statistics
 
-- **Total Videos:** 68
-- **Total Duration:** 71.48 hours
-- **Average Duration:** 63.07 minutes
+- **Total Videos:** 76
+- **Total Duration:** 72.82 hours
+- **Average Duration:** 57.49 minutes
 
 ### Videos by Mood
 
@@ -14,8 +14,8 @@
 - **Chill:** 5 videos
 - **Deep Focus:** 5 videos
 - **Energize:** 5 videos
-- **Fireplace:** 1 videos
-- **Forest Morning:** 2 videos
+- **Fireplace:** 3 videos
+- **Forest Morning:** 4 videos
 - **Lofi Study:** 2 videos
 - **Ocean Waves:** 5 videos
 - **Piano Ambient:** 2 videos
@@ -25,9 +25,9 @@
 - **Piano Relax:** 2 videos
 - **Rain Piano:** 2 videos
 - **Rain Sleep:** 3 videos
-- **Sleep:** 5 videos
+- **Sleep:** 7 videos
 - **Study:** 5 videos
-- **Trance:** 6 videos
+- **Trance:** 8 videos
 - **Warrior:** 7 videos
 
 ## Videos
@@ -232,6 +232,26 @@
 - **Seed:** `None`
 - **Catalog ID:** `video_0011_20260201_050207_8ec1b321`
 
+#### Cozy Night by the Fire | 10 Mins | Crackling That Shifts & Breathes [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=mpBTM6861eI](https://youtube.com/watch?v=mpBTM6861eI)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-04-17
+- **Seed:** `None`
+- **Catalog ID:** `video_0073_20260417_134652_bda239ba`
+
+#### Cozy Night by the Fire | 10 Mins | Crackling That Shifts & Breathes [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=7s29b_TeAyU](https://youtube.com/watch?v=7s29b_TeAyU)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-04-17
+- **Seed:** `None`
+- **Catalog ID:** `video_0074_20260417_134658_c65e1694`
+
 ### Forest Morning
 
 #### Wake Up in the Forest | 30 Seconds | Birds, Wind, Ever-Changing [Pure Ambience] `pure_ambience`
@@ -253,6 +273,26 @@
 - **Uploaded:** 2026-01-30
 - **Seed:** `734327657`
 - **Catalog ID:** `video_0002_20260130_013828_32b0d507`
+
+#### Wake Up in the Forest | 10 Mins | Birds, Wind, Ever-Changing [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=6GnR_tV6Wf8](https://youtube.com/watch?v=6GnR_tV6Wf8)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-04-17
+- **Seed:** `None`
+- **Catalog ID:** `video_0075_20260417_134703_c656a47c`
+
+#### Wake Up in the Forest | 10 Mins | Birds, Wind, Ever-Changing [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=sewKa-0smGM](https://youtube.com/watch?v=sewKa-0smGM)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-04-17
+- **Seed:** `None`
+- **Catalog ID:** `video_0076_20260417_134707_3c17f0de`
 
 ### Lofi Study
 
@@ -564,6 +604,26 @@
 - **Seed:** `None`
 - **Catalog ID:** `video_0062_20260416_173445_32da7d82`
 
+#### Can't Sleep? | 10 Mins Gentle Drift | Evolving Sounds That Never Repeat [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=t9EDEXzSgGI](https://youtube.com/watch?v=t9EDEXzSgGI)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-04-17
+- **Seed:** `None`
+- **Catalog ID:** `video_0071_20260417_134638_0c25fa70`
+
+#### Can't Sleep? | 10 Mins Gentle Drift | Evolving Sounds That Never Repeat [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=qtP5OzAhNHg](https://youtube.com/watch?v=qtP5OzAhNHg)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-04-17
+- **Seed:** `None`
+- **Catalog ID:** `video_0072_20260417_134647_0b2f218f`
+
 ### Study
 
 #### Study Without Distractions | 30 Seconds Focus Soundscape | Always Evolving
@@ -677,6 +737,26 @@
 - **Uploaded:** 2026-02-26
 - **Seed:** `None`
 - **Catalog ID:** `video_0046_20260226_035258_055b0ed7`
+
+#### Journey Inward | 10 Mins Hypnotic Trance | Never-Repeating Soundscape [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=D3C2Yi9PE9c](https://youtube.com/watch?v=D3C2Yi9PE9c)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-04-17
+- **Seed:** `None`
+- **Catalog ID:** `video_0069_20260417_134619_6151fe60`
+
+#### Journey Inward | 10 Mins Hypnotic Trance | Never-Repeating Soundscape [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=-tODsLzAzD0](https://youtube.com/watch?v=-tODsLzAzD0)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-04-17
+- **Seed:** `None`
+- **Catalog ID:** `video_0070_20260417_134628_1dfc670f`
 
 ### Warrior
 
