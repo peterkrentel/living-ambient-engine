@@ -89,6 +89,8 @@ This spec is enforced at multiple levels:
 | `content-factory-brand-batch.yml` | Dedicated **Commit generations ledger** step after upload |
 | `art-creator.yml` | **upload** job: `permissions.contents: write`, commit `data/generations.json` after upload (`--no-update-catalog` unchanged) |
 
+**Verify:** `python scripts/verify_ledger_catalog.py` — catalog `youtube_id` set must equal ledger `video_id` set; warns when no `Content Factory (Personal)` rows exist.
+
 ## content-factory.yml
 
 ### Trigger
