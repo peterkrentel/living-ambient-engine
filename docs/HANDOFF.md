@@ -26,12 +26,14 @@
 
 - **Catalog / channel:** **`channel`** on new rows + ADR are **landed**; remaining work is optional **backfill** and **consumers** (audit, tooling) that filter by channel.
 - **Iron out cross-read:** brand vs personal reports + same `date_range` as Studio when sanity-checking totals.
+- **Advisory “what next”:** weekly **evidence-ranked** artifact from `data/*` (name TBD, e.g. `data/reports/run-next-YYYY-WW.md` or a **report** section): actionable vs exploratory, cites audit + suggestions + two-channel read — **no** auto-generation ([`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6 step 1).
 
 ## Facts
 
 - **Catalog `channel` (done):** `content_catalog.json` on `main` already shows **`brand`** and **`personal`** on newer rows ([`ADR 0002`](decisions/0002-content-catalog-channel-field.md)); no further “post-merge spot-check” needed unless upload wiring changes.
 - **Audit join (brand):** `audit-*.md` still uses **brand** `analytics.json` only; catalog rows tagged **`personal`** clarify which uploads are not in that join until personal-aware audit exists.
 - **Human-in-the-loop:** no auto-production from suggestions yet.
+- **Surface / packaging strategy:** platforms often surface **similar niche + slight packaging variation** (title/thumbnail) well before you can claim **param causality** from correlate alone — see [`spec/AGENT.md`](spec/AGENT.md) § *Confounders & packaging*. **[`piano-batch.yml`](../.github/workflows/piano-batch.yml)** is a deliberate example (incl. cross-read of the **personal** lane before running). Per-channel **positioning** / dedup when the *same* strings hit two channels stays open — **#8** below.
 
 ## Next actions (pick one thread when ready)
 
@@ -43,6 +45,8 @@
 6. **Packaging telemetry (later slice):** joinable **fingerprints** on ledger/catalog **before** CTR-heavy automation; optional ADR if schema grows.
 7. **Spec phases:** **`AGENT.md`** Phase **3** when volume **and** interpretation guardrails justify it; **`COHESION_ROADMAP.md`** Phase **6** only after joins/trust feel right.
 8. **Title / packaging (defer):** same **mood × duration × dual** matrix on **brand + personal** reuses templates → **identical `video_title` strings** on two channels (different `video_id`s). Fine for smoke; before **high volume** or sharp **channel positioning**, tweak metadata (e.g. per-channel suffix or description line), rotation policy, or later **run intent** rules so packs are not unintentional clones — [`START_HERE.md`](START_HERE.md) checklist.
+
+9. **Advisory “run-next” (planned):** ship the **weekly ranked “what next”** artifact under **Goal (in flight)** — wire from `suggestions.json` + `audit-*.md` + two-channel context; **evidence tiers** (actionable vs exploratory); **no** `batch_generate` / upload unless a human runs a factory workflow or edits `run_intent.json` + consumer ([`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6 step 1).
 
 ## Risks / open questions
 

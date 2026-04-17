@@ -189,6 +189,8 @@ Videos published **before** `generations.json` exists have **no** joined params 
 
 **Explainability:** Recommendations must cite **evidence** (e.g. “top retention cluster: `mood=X`, `tempo` band Y, *n*=…”) — not vague “make more calm stuff.” Otherwise you won’t trust the loop.
 
+**Advisory `run-next` (near-term, explicit):** add a **weekly** markdown artifact (path TBD, e.g. `data/reports/run-next-YYYY-WW.md`) or a **dedicated section** in the weekly report — **ranked** “what to try next,” mixing **strong** and **weak** signals with clear labels (same spirit as **actionable** vs **exploratory** in correlate). This is **separate** from the **strict** automation gate (`data/run_intent.json` / `run-intent-blocked.md`): humans read `run-next` for strategy; they run Content Factory / consumer only when ready. **Packaging / algorithm surface:** it is normal to exploit **same-franchise + slight title/thumb variation** when that matches how the feed clusters content — **[`piano-batch.yml`](../.github/workflows/piano-batch.yml)** is a repo example (strategy informed by **personal**-lane read). Still document **confounders** ([`AGENT.md`](spec/AGENT.md) § *Confounders & packaging*); per-channel **dedup / positioning** when two channels would share identical display titles stays a **later** polish ([`HANDOFF.md`](HANDOFF.md) next actions **#8**).
+
 ---
 
 ## Versioning this project
