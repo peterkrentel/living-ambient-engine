@@ -89,6 +89,8 @@ This spec is enforced at multiple levels:
 | `content-factory-brand-batch.yml` | Dedicated **Commit generations ledger** step after upload |
 | `art-creator.yml` | **upload** job: `permissions.contents: write`, commit `data/generations.json` after upload (`--no-update-catalog` unchanged) |
 
+**Push race on `main`:** After `git commit` and before `git push`, workflows that update the repo run `git pull --rebase origin main` so another job (analytics, another upload lane) advancing `main` does not cause a non-fast-forward rejection.
+
 ## content-factory.yml
 
 ### Trigger
