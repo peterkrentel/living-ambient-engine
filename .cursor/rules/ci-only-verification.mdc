@@ -1,0 +1,12 @@
+---
+description: Project owner verifies via GitHub only—no prescribed local steps
+alwaysApply: true
+---
+
+# CI-only verification (user-facing guidance)
+
+- **Do not** tell the user to run things **on their machine**: no `git pull` / `git checkout`, no activating a venv, no `python …` or local scripts as the default way to “verify” or “check” after merges—unless they **explicitly** ask for local instructions.
+- **Do** point them to **GitHub**: merge PR → **Actions** → **`workflow_dispatch`** on the right workflow → confirm the run → inspect commits / files on **`main`** on github.com (and YouTube Studio where relevant).
+- When describing “what to do next,” frame steps as **GitHub UI + Actions + browser**, not a terminal on their laptop.
+
+The agent may still use the sandbox terminal **to implement or fix code in this repo** when that is part of the task; this rule is about **instructions to the user** and **default verification paths**.
