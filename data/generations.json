@@ -1446,6 +1446,310 @@
       "generated_at": "2026-03-15T15:27:27.316431",
       "uploaded_at": "2026-03-15T15:27:27.316431",
       "updated_at": "2026-04-16T19:34:49.377455+00:00"
+    },
+    {
+      "generation_id": "0bff0fc1-d19e-4485-85f1-03646dbd8590",
+      "video_id": "D3C2Yi9PE9c",
+      "workflow": "Content Factory (Brand)",
+      "mood": "trance",
+      "duration_seconds": 600,
+      "params": {
+        "seed": 1570565101,
+        "variant": "ambience"
+      },
+      "metadata": {
+        "title": "Journey Inward | 10 Mins Hypnotic Trance | Never-Repeating Soundscape [Pure Ambience]",
+        "video_title": "Journey Inward | 10 Mins Hypnotic Trance | Never-Repeating Soundscape [Pure Ambience]",
+        "description": "Deep hypnotic trance - Infinite fractal journey",
+        "tags": [
+          "trance music",
+          "hypnotic music",
+          "deep trance",
+          "theta waves",
+          "meditation trance",
+          "psychedelic music",
+          "trippy music",
+          "shamanic music",
+          "altered states music",
+          "bamboula rhythm",
+          "fractal music",
+          "journey music",
+          "inner exploration",
+          "transcendental music",
+          "visionary music",
+          "ASMR"
+        ]
+      },
+      "generated_at": "2026-04-17T13:45:10.645989",
+      "uploaded_at": "2026-04-17T13:46:19.279821+00:00",
+      "updated_at": "2026-04-17T13:46:19.279821+00:00",
+      "commit_sha": "d001e6ddd8f99bee90e5235241cd68032be35571"
+    },
+    {
+      "generation_id": "505ad117-f769-4e9c-81f1-5a857ac3072d",
+      "video_id": "-tODsLzAzD0",
+      "workflow": "Content Factory (Brand)",
+      "mood": "trance",
+      "duration_seconds": 600,
+      "params": {
+        "seed": 1570565101,
+        "variant": "melody"
+      },
+      "metadata": {
+        "title": "Journey Inward | 10 Mins Hypnotic Trance | Never-Repeating Soundscape [With Music]",
+        "video_title": "Journey Inward | 10 Mins Hypnotic Trance | Never-Repeating Soundscape [With Music]",
+        "description": "Deep hypnotic trance - Infinite fractal journey",
+        "tags": [
+          "trance music",
+          "hypnotic music",
+          "deep trance",
+          "theta waves",
+          "meditation trance",
+          "psychedelic music",
+          "trippy music",
+          "shamanic music",
+          "altered states music",
+          "bamboula rhythm",
+          "fractal music",
+          "journey music",
+          "inner exploration",
+          "transcendental music",
+          "visionary music",
+          "ASMR"
+        ]
+      },
+      "generated_at": "2026-04-17T13:45:10.646018",
+      "uploaded_at": "2026-04-17T13:46:28.954224+00:00",
+      "updated_at": "2026-04-17T13:46:28.954224+00:00",
+      "commit_sha": "d001e6ddd8f99bee90e5235241cd68032be35571"
+    },
+    {
+      "generation_id": "c4201394-c1ce-4438-a272-4cfeb2bde458",
+      "video_id": "t9EDEXzSgGI",
+      "workflow": "Content Factory (Brand)",
+      "mood": "sleep",
+      "duration_seconds": 600,
+      "params": {
+        "seed": 1723239404,
+        "variant": "ambience"
+      },
+      "metadata": {
+        "title": "Can't Sleep? | 10 Mins Gentle Drift | Evolving Sounds That Never Repeat [Pure Ambience]",
+        "video_title": "Can't Sleep? | 10 Mins Gentle Drift | Evolving Sounds That Never Repeat [Pure Ambience]",
+        "description": "Deep relaxation and sleep induction - Gentle fractal drift",
+        "tags": [
+          "ASMR",
+          "sleep music",
+          "music for sleep",
+          "insomnia relief",
+          "deep sleep music",
+          "relaxing sleep music",
+          "sleep sounds",
+          "delta waves sleep",
+          "528 hz sleep",
+          "fall asleep fast",
+          "sleeping music",
+          "bedtime music",
+          "calming music for sleep",
+          "heartbeat sleep",
+          "binaural beats sleep",
+          "8 hour sleep music"
+        ]
+      },
+      "generated_at": "2026-04-17T13:45:10.646029",
+      "uploaded_at": "2026-04-17T13:46:38.388271+00:00",
+      "updated_at": "2026-04-17T13:46:38.388271+00:00",
+      "commit_sha": "d001e6ddd8f99bee90e5235241cd68032be35571"
+    },
+    {
+      "generation_id": "e56a1a99-31ef-445b-bb0a-36a923ddebdc",
+      "video_id": "qtP5OzAhNHg",
+      "workflow": "Content Factory (Brand)",
+      "mood": "sleep",
+      "duration_seconds": 600,
+      "params": {
+        "seed": 1723239404,
+        "variant": "melody"
+      },
+      "metadata": {
+        "title": "Can't Sleep? | 10 Mins Gentle Drift | Evolving Sounds That Never Repeat [With Music]",
+        "video_title": "Can't Sleep? | 10 Mins Gentle Drift | Evolving Sounds That Never Repeat [With Music]",
+        "description": "Deep relaxation and sleep induction - Gentle fractal drift",
+        "tags": [
+          "ASMR",
+          "sleep music",
+          "music for sleep",
+          "insomnia relief",
+          "deep sleep music",
+          "relaxing sleep music",
+          "sleep sounds",
+          "delta waves sleep",
+          "528 hz sleep",
+          "fall asleep fast",
+          "sleeping music",
+          "bedtime music",
+          "calming music for sleep",
+          "heartbeat sleep",
+          "binaural beats sleep",
+          "8 hour sleep music"
+        ]
+      },
+      "generated_at": "2026-04-17T13:45:10.646036",
+      "uploaded_at": "2026-04-17T13:46:47.096350+00:00",
+      "updated_at": "2026-04-17T13:46:47.096350+00:00",
+      "commit_sha": "d001e6ddd8f99bee90e5235241cd68032be35571"
+    },
+    {
+      "generation_id": "24eeed08-79bb-4f73-9e5a-4ff395977dc9",
+      "video_id": "mpBTM6861eI",
+      "workflow": "Content Factory (Brand)",
+      "mood": "fireplace",
+      "duration_seconds": 600,
+      "params": {
+        "seed": 2036530923,
+        "variant": "ambience"
+      },
+      "metadata": {
+        "title": "Cozy Night by the Fire | 10 Mins | Crackling That Shifts & Breathes [Pure Ambience]",
+        "video_title": "Cozy Night by the Fire | 10 Mins | Crackling That Shifts & Breathes [Pure Ambience]",
+        "description": "Cozy fireplace crackling - Comfort content",
+        "tags": [
+          "ASMR",
+          "fireplace sounds",
+          "crackling fire",
+          "fire sounds",
+          "cozy fireplace",
+          "fireplace asmr",
+          "fire crackling",
+          "relaxing fireplace",
+          "fireplace ambience",
+          "cozy night",
+          "fire for sleep",
+          "fireplace white noise",
+          "winter fireplace",
+          "warm ambience",
+          "cabin fireplace",
+          "10 hours fireplace"
+        ]
+      },
+      "generated_at": "2026-04-17T13:45:10.646043",
+      "uploaded_at": "2026-04-17T13:46:52.916850+00:00",
+      "updated_at": "2026-04-17T13:46:52.916850+00:00",
+      "commit_sha": "d001e6ddd8f99bee90e5235241cd68032be35571"
+    },
+    {
+      "generation_id": "a4775401-ecfa-4cb7-af4b-8f5edcaeb1a5",
+      "video_id": "7s29b_TeAyU",
+      "workflow": "Content Factory (Brand)",
+      "mood": "fireplace",
+      "duration_seconds": 600,
+      "params": {
+        "seed": 2036530923,
+        "variant": "melody"
+      },
+      "metadata": {
+        "title": "Cozy Night by the Fire | 10 Mins | Crackling That Shifts & Breathes [With Music]",
+        "video_title": "Cozy Night by the Fire | 10 Mins | Crackling That Shifts & Breathes [With Music]",
+        "description": "Cozy fireplace crackling - Comfort content",
+        "tags": [
+          "ASMR",
+          "fireplace sounds",
+          "crackling fire",
+          "fire sounds",
+          "cozy fireplace",
+          "fireplace asmr",
+          "fire crackling",
+          "relaxing fireplace",
+          "fireplace ambience",
+          "cozy night",
+          "fire for sleep",
+          "fireplace white noise",
+          "winter fireplace",
+          "warm ambience",
+          "cabin fireplace",
+          "10 hours fireplace"
+        ]
+      },
+      "generated_at": "2026-04-17T13:45:10.646052",
+      "uploaded_at": "2026-04-17T13:46:58.852294+00:00",
+      "updated_at": "2026-04-17T13:46:58.852294+00:00",
+      "commit_sha": "d001e6ddd8f99bee90e5235241cd68032be35571"
+    },
+    {
+      "generation_id": "c3d5df6b-5aa1-47ef-a2ac-41be60d08005",
+      "video_id": "6GnR_tV6Wf8",
+      "workflow": "Content Factory (Brand)",
+      "mood": "forest_morning",
+      "duration_seconds": 600,
+      "params": {
+        "seed": 2897684,
+        "variant": "ambience"
+      },
+      "metadata": {
+        "title": "Wake Up in the Forest | 10 Mins | Birds, Wind, Ever-Changing [Pure Ambience]",
+        "video_title": "Wake Up in the Forest | 10 Mins | Birds, Wind, Ever-Changing [Pure Ambience]",
+        "description": "Forest ambience with birds - Nature immersion",
+        "tags": [
+          "ASMR",
+          "forest sounds",
+          "nature sounds",
+          "bird sounds",
+          "forest ambience",
+          "morning sounds",
+          "nature asmr",
+          "birds singing",
+          "forest meditation",
+          "peaceful nature",
+          "woodland sounds",
+          "morning meditation",
+          "nature relaxation",
+          "forest birds",
+          "tranquil forest",
+          "forest background"
+        ]
+      },
+      "generated_at": "2026-04-17T13:45:10.646058",
+      "uploaded_at": "2026-04-17T13:47:03.238187+00:00",
+      "updated_at": "2026-04-17T13:47:03.238187+00:00",
+      "commit_sha": "d001e6ddd8f99bee90e5235241cd68032be35571"
+    },
+    {
+      "generation_id": "c12fc20f-226f-43b7-8aeb-73c548a72e5e",
+      "video_id": "sewKa-0smGM",
+      "workflow": "Content Factory (Brand)",
+      "mood": "forest_morning",
+      "duration_seconds": 600,
+      "params": {
+        "seed": 2897684,
+        "variant": "melody"
+      },
+      "metadata": {
+        "title": "Wake Up in the Forest | 10 Mins | Birds, Wind, Ever-Changing [With Music]",
+        "video_title": "Wake Up in the Forest | 10 Mins | Birds, Wind, Ever-Changing [With Music]",
+        "description": "Forest ambience with birds - Nature immersion",
+        "tags": [
+          "ASMR",
+          "forest sounds",
+          "nature sounds",
+          "bird sounds",
+          "forest ambience",
+          "morning sounds",
+          "nature asmr",
+          "birds singing",
+          "forest meditation",
+          "peaceful nature",
+          "woodland sounds",
+          "morning meditation",
+          "nature relaxation",
+          "forest birds",
+          "tranquil forest",
+          "forest background"
+        ]
+      },
+      "generated_at": "2026-04-17T13:45:10.646067",
+      "uploaded_at": "2026-04-17T13:47:07.331256+00:00",
+      "updated_at": "2026-04-17T13:47:07.331256+00:00",
+      "commit_sha": "d001e6ddd8f99bee90e5235241cd68032be35571"
     }
   ]
 }
