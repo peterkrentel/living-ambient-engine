@@ -1,7 +1,7 @@
 # Run next — personal advisory (2026-W16)
 
-Generated (report): 2026-04-17T19:18:21.980437+00:00
-**Correlate bundle `generated_at`:** 2026-04-17T19:18:21.930649Z
+Generated (report): 2026-04-17T19:35:19.494558+00:00
+**Correlate bundle `generated_at`:** 2026-04-17T19:35:19.318245Z
 
 ## How to read this
 
@@ -50,8 +50,7 @@ _No exploratory "reduce" rows._
 
 ## Production hooks (manual)
 
-- **Run intent** (`data/run_intent.json`) is produced by the **brand** planner on `data/suggestions.json`; personal lane does not emit intent.
-- **Planner blocked** — see `data/reports/run-intent-blocked.md` for this week's gate reason.
+- **Planner blocked** — see `data/reports/run-intent-blocked-personal.md` for this week's gate reason.
 - **Batch strategy reminder:** before scaling one lever, skim mood vs algorithm batch intent in [`piano-batch.yml`](../../.github/workflows/piano-batch.yml) (personal cross-read there).
 
 ---
