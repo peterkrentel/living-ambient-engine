@@ -1,18 +1,18 @@
 # Content Library
 
-*Last updated: 2026-04-17T13:47:07.327981*
+*Last updated: 2026-04-17T09:16:59.175153*
 
 ## Statistics
 
-- **Total Videos:** 76
-- **Total Duration:** 72.82 hours
-- **Average Duration:** 57.49 minutes
+- **Total Videos:** 80
+- **Total Duration:** 76.82 hours
+- **Average Duration:** 57.61 minutes
 
 ### Videos by Mood
 
 - **Ceremony:** 3 videos
 - **Chill:** 5 videos
-- **Deep Focus:** 5 videos
+- **Deep Focus:** 7 videos
 - **Energize:** 5 videos
 - **Fireplace:** 3 videos
 - **Forest Morning:** 4 videos
@@ -24,7 +24,7 @@
 - **Piano Gentle:** 2 videos
 - **Piano Relax:** 2 videos
 - **Rain Piano:** 2 videos
-- **Rain Sleep:** 3 videos
+- **Rain Sleep:** 5 videos
 - **Sleep:** 7 videos
 - **Study:** 5 videos
 - **Trance:** 8 videos
@@ -167,6 +167,26 @@
 - **Uploaded:** 2026-02-12
 - **Seed:** `None`
 - **Catalog ID:** `video_0018_20260212_210833_039cd6ff`
+
+#### Sounds for an Overactive Mind | 1 Hour Evolving Focus Music | No Loops [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=Z9LWNqbk4-A](https://youtube.com/watch?v=Z9LWNqbk4-A)
+
+- **Duration:** 1 Hour
+- **Rhythm:** Ambient
+- **Uploaded:** 2026-04-17
+- **Seed:** `None`
+- **Catalog ID:** `video_0077_20260417_091659_feadd85c`
+
+#### Sounds for an Overactive Mind | 1 Hour Evolving Focus Music | No Loops [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=GVzHYaVF900](https://youtube.com/watch?v=GVzHYaVF900)
+
+- **Duration:** 1 Hour
+- **Rhythm:** Ambient
+- **Uploaded:** 2026-04-17
+- **Seed:** `None`
+- **Catalog ID:** `video_0078_20260417_091659_28d05154`
 
 ### Energize
 
@@ -551,6 +571,26 @@
 - **Uploaded:** 2026-02-12
 - **Seed:** `None`
 - **Catalog ID:** `video_0016_20260212_210830_d6d14878`
+
+#### Fall Asleep to Gentle Rain | 1 Hour | Evolving Storm, Never Loops [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=Zv4NOyTpAtY](https://youtube.com/watch?v=Zv4NOyTpAtY)
+
+- **Duration:** 1 Hour
+- **Rhythm:** Ambient
+- **Uploaded:** 2026-04-17
+- **Seed:** `None`
+- **Catalog ID:** `video_0079_20260417_091659_e837bb63`
+
+#### Fall Asleep to Gentle Rain | 1 Hour | Evolving Storm, Never Loops [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=bFSrUdHfWk8](https://youtube.com/watch?v=bFSrUdHfWk8)
+
+- **Duration:** 1 Hour
+- **Rhythm:** Ambient
+- **Uploaded:** 2026-04-17
+- **Seed:** `None`
+- **Catalog ID:** `video_0080_20260417_091659_9be2b589`
 
 ### Sleep
 
