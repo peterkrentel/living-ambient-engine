@@ -1,12 +1,15 @@
 ---
-description: Project owner verifies via GitHub only—no prescribed local steps
+description: Maintainer verifies via GitHub only—never default to local smoke/verify steps
 alwaysApply: true
 ---
 
-# CI-only verification (user-facing guidance)
+# CI-only verification (maintainer-facing)
 
-- **Do not** tell the user to run things **on their machine**: no `git pull` / `git checkout`, no activating a venv, no `python …` or local scripts as the default way to “verify” or “check” after merges—unless they **explicitly** ask for local instructions.
-- **Do** point them to **GitHub**: merge PR → **Actions** → **`workflow_dispatch`** on the right workflow → confirm the run → inspect commits / files on **`main`** on github.com (and YouTube Studio where relevant).
-- When describing “what to do next,” frame steps as **GitHub UI + Actions + browser**, not a terminal on their laptop.
+**Default:** Any **smoke test**, **post-merge check**, or **“did it work?”** path for the maintainer is **GitHub Actions + github.com** (and Studio in-browser)—**not** their laptop terminal.
 
-The agent may still use the sandbox terminal **to implement or fix code in this repo** when that is part of the task; this rule is about **instructions to the user** and **default verification paths**.
+- **Never** present **local** steps as an option for that: no “or run locally,” no “fastest is `python …` on your machine,” no venv activation for **verification**—unless the maintainer **explicitly** asks for local/debug steps.
+- **Do not** tell the maintainer to run **`git`**, **`python`**, **`pip`**, or **project scripts** on their machine to confirm CI-integrated behavior (analytics, planner, uploads, correlate)—unless they **explicitly** ask.
+- **Do** tell them exactly **which workflow** to open → **Run workflow** (`workflow_dispatch`) → which **job step** / **log line** / **committed file** on **`main`** proves success (and YouTube Studio only as a **browser** check, not “run a script”).
+- **Smoke-test questions** get an **Actions-only** answer. If a script exists (e.g. `scripts/plan_run_intent.py`), the smoke is still **“dispatch the workflow that runs it”**, not “clone and run python.”
+
+The agent may still use its **own** terminal/sandbox **to implement** the repo when the task is coding; this rule is **only** about **what you tell the maintainer to do** for verification and operational checks.

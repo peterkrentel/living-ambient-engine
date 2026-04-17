@@ -3,6 +3,8 @@
 > **Read this file before making any changes to this codebase.**
 > **⚠️ MANDATORY: Check GUARDRAILS.md for every change!**
 
+**Maintainer verification default:** **GitHub Actions + github.com only** — do **not** instruct the maintainer to run local `git` / venv / `python …` for smoke or “did it work?” unless they **explicitly** ask for local steps (see [`.cursor/rules/ci-only-verification.mdc`](../.cursor/rules/ci-only-verification.mdc) and *After Coding*).
+
 This project uses **spec-driven development**. Specifications are the source of truth for behavior.
 
 ## Governance stack and read order
