@@ -483,6 +483,8 @@ Use retention for “stickiness”; use watch minutes for “this bucket fed the
 - Creates PR with changes
 - You approve/reject
 
+**Production execution (future, two doors):** (1) **Small `workflow_dispatch`** on factory workflows for smoke and deliberate one-offs. (2) **Run intent JSON** — [`contracts/production-run-intent.md`](contracts/production-run-intent.md) — validated in CI and mapped to batch/upload flags; a gated planner or LLM (later) emits **only** that structured shape so targeting moods/duration/dual/upload does not depend on static form fields alone.
+
 **MLOps concepts:**
 - Automated model deployment
 - Continuous learning

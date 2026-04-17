@@ -38,7 +38,7 @@
 2. **Consumers (later):** filter `audit_channel` / reports by **`channel`**, or **`generations.json`** `channel` when added — follow ADR; do **not** blend correlate rows across channels.
 3. **Personal parity (optional):** `suggestions_personal.json`, personal-aware audit/join — [`PERSONAL_ANALYTICS.md`](PERSONAL_ANALYTICS.md) roadmap.
 4. **Framework generalization (later):** multi-channel **channel profile** template (reusable workflow / config) — [`START_HERE`](START_HERE.md) checklist.
-5. **Optional automation (safe):** gated planner from `suggestions.json` → plan JSON or **BLOCKED** report (no blind renders).
+5. **Optional automation (safe):** gated planner from `suggestions.json` → **run intent** JSON ([`spec/contracts/production-run-intent.md`](spec/contracts/production-run-intent.md)) or **BLOCKED** report; a future CI step **validates and executes** intent (static `workflow_dispatch` stays the **human smoke** door—see [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6 *Two doors*).
 6. **Phase 2.5 + inference hygiene:** extend **`correlate.py`** with CIs / z-scores / effect sizes **and** Step Summary + doc language that **CIs address noise, not confounders** (title/thumbnail/CTR vs params — **`AGENT.md`** § *Confounders & packaging*).
 7. **Packaging telemetry (later slice):** joinable **fingerprints** on ledger/catalog **before** CTR-heavy automation; optional ADR if schema grows.
 8. **Spec phases:** **`AGENT.md`** Phase **3** when volume **and** interpretation guardrails justify it; **`COHESION_ROADMAP.md`** Phase **6** only after joins/trust feel right.

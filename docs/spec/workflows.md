@@ -93,6 +93,8 @@ This spec is enforced at multiple levels:
 
 **Verify:** `python scripts/verify_ledger_catalog.py` — catalog `youtube_id` set must equal ledger `video_id` set; warns when no `Content Factory (Personal)` rows exist.
 
+**Precision runs (planned):** Large or agent-driven matrices should use the **validated run intent** contract ([`contracts/production-run-intent.md`](./contracts/production-run-intent.md)) consumed by CI—not unbounded extra `workflow_dispatch` inputs alone. *Workflow reader: TBD with Phase 6 / planner.*
+
 ## content-factory.yml
 
 ### Trigger
