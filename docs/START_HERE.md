@@ -10,6 +10,9 @@ Use a short opener so nobody re-derives context from scratch:
 1. **Mode:** Planning only / Implement / Review only  
 2. **Goal:** One sentence (verifiable outcome)  
 3. **Ground:** `@docs/HANDOFF.md` and [`.github/AGENT_INSTRUCTIONS.md`](../.github/AGENT_INSTRUCTIONS.md#governance-stack-and-read-order) (canonical read order); for behavior changes, the spec files in that order  
+4. **Verify:** **CI only** — use **GitHub Actions** (`workflow_dispatch`) + **github.com** on `main`; **do not** default to “run this locally” for the maintainer (see [`.cursor/rules/ci-only-verification.mdc`](../.cursor/rules/ci-only-verification.mdc)).
+
+**If you only get one line:** use something like: **“CI-only verify · `@docs/START_HERE.md` `@.github/AGENT_INSTRUCTIONS.md`”** (still attach the files when the UI allows).
 
 ## Where truth lives (do not duplicate long explanations)
 
@@ -66,7 +69,7 @@ This is the **intentional** split so neither you nor an assistant “merges” t
 | **Personal** | `YOUTUBE_TOKEN_PICKLE` — [`content-factory.yml`](../.github/workflows/content-factory.yml) (and [`piano-batch.yml`](../.github/workflows/piano-batch.yml), same secret) | Longer **ambient / mood** exploration; how YouTube treats **depth / length** and calmer catalog | Multi-hour or long-form runs; not the “fill every grid cell” game |
 | **Brand** | `YOUTUBE_TOKEN_PICKLE_BRAND` — brand factory, brand batch, Art Creator **brand** upload | Shorter clips, **preset + matrix** output; how YouTube treats **high variety / SEO + art×music** surface | Often **~5 min** and many distinct titles (factory + Art Creator rows in analytics) |
 
-**Two analytics experiments (cross-read intentionally):** [`analytics-agent.yml`](../.github/workflows/analytics-agent.yml) is **brand**: `data/analytics.json`, weekly `data/reports/YYYY-WW.md`, **`suggestions.json`**, **`audit-*.md`**. [`analytics-personal.yml`](../.github/workflows/analytics-personal.yml) is **personal only**: `data/analytics_personal.json` and `data/reports/YYYY-WW-personal.md` (no correlate/audit/suggestions in v1). See [`PERSONAL_ANALYTICS.md`](PERSONAL_ANALYTICS.md).
+**Two analytics experiments (cross-read intentionally):** [`analytics-agent.yml`](../.github/workflows/analytics-agent.yml) is **brand**: `data/analytics.json`, weekly `data/reports/YYYY-WW.md`, **`suggestions.json`**, **`audit-*.md`**. [`analytics-personal.yml`](../.github/workflows/analytics-personal.yml) is **personal only**: `data/analytics_personal.json`, `data/reports/YYYY-WW-personal.md`, and **`audit-*-personal.md`** from **`audit_channel.py`** (no **correlate** / **`suggestions_personal.json`** in v1). See [`PERSONAL_ANALYTICS.md`](PERSONAL_ANALYTICS.md).
 
 **Gap to name explicitly:** **`content_catalog.json`** is a **single** repo file today and can include rows from **both** lanes (personal + brand uploads that update the catalog). **`data/analytics.json`** is **only the brand channel’s** video list and metrics; **`audit-*.md` “generations join”** still counts ledger rows against **brand** analytics. Personal snapshots live in **`analytics_personal.json`**. **New** catalog rows from CI uploads are tagged with **`channel`: `brand` \| `personal`** when using `youtube_upload.py --catalog-channel` ([ADR 0002](decisions/0002-content-catalog-channel-field.md)); legacy rows may omit the field until an optional backfill.
 
@@ -96,7 +99,7 @@ Use this as a **checklist**, not a new doc layer. **Done** items stay for histor
 | Open | **Packaging fingerprints (later):** title/thumbnail hashes (or ids) joinable to **`video_id`** for honest CTR narratives—separate from “add more 2.5 math.” |
 | Open | **Gated production helper (v0 live):** [`scripts/plan_run_intent.py`](../scripts/plan_run_intent.py) after correlate → `data/run_intent.json` or `data/reports/run-intent-blocked.md` ([`spec/contracts/production-run-intent.md`](spec/contracts/production-run-intent.md)). **Consumer** (validate → batch/upload) still open. |
 | Open | **Run intent → CI consumer (when ready):** workflow or script that **reads + validates** intent JSON then drives `batch_generate` / `youtube_upload` (same contract as planner); keeps **LLM / agent** off static form-field explosion. |
-| Done (v1) | **Personal analytics:** [`analytics-personal.yml`](../.github/workflows/analytics-personal.yml) → `analytics_personal.json` + `*-personal.md`. Correlation / personal audit / `suggestions_personal.json` still open ([`PERSONAL_ANALYTICS.md`](PERSONAL_ANALYTICS.md)). |
+| Done (v1) | **Personal analytics:** [`analytics-personal.yml`](../.github/workflows/analytics-personal.yml) → `analytics_personal.json` + `*-personal.md` + `audit-*-personal.md`. Correlation / `suggestions_personal.json` still open ([`PERSONAL_ANALYTICS.md`](PERSONAL_ANALYTICS.md)). |
 | Open | **Multi-channel analytics template (defer):** after personal CI + cross-read feel stable, collapse duplicate workflow YAML into a **reusable workflow** or **channel profile** config (secret name, JSON path, report suffix, which steps run) so channel *N* is additive—not copy-paste. See [`HANDOFF.md`](HANDOFF.md) next actions #4. |
 | Open | **Cron / lanes:** post-audit questions above — which workflow leads, when to un-pause schedules. |
 | Open | **Art Creator ↔ catalog:** if you want full join, relax **`--no-update-catalog`** or add a parallel ledger path. |
