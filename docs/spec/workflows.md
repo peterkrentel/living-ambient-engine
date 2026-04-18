@@ -6,7 +6,7 @@
 
 ## Overview
 
-Eleven workflow files automate video generation, YouTube deployment, analytics, and testing. Use the **Workflow Index** below as the map; YAML is the source of truth when this table drifts.
+Twelve workflow files automate video generation, YouTube deployment, analytics, and testing. Use the **Workflow Index** below as the map; YAML is the source of truth when this table drifts.
 
 **Each workflow YAML file MUST include a spec reference comment:**
 
@@ -19,6 +19,7 @@ Eleven workflow files automate video generation, YouTube deployment, analytics, 
 | ID | Workflow | Trigger | Purpose | Channel |
 |----|----------|---------|---------|---------|
 | WF-CF | `content-factory.yml` | Manual (cron **commented out** in YAML; strategy TBD) | Batch generation + upload | Personal |
+| WF-CFLPB | `content-factory-personal-long-batch.yml` | Manual (schedule **commented**; 6h runner cap) | 24×1h personal pressure batch (`data/personal_long_batch_pressure_v1.json` + state); pick → generate → optional upload | Personal |
 | WF-CFB | `content-factory-brand.yml` | Manual only | Batch generation + upload | Brand |
 | WF-CFBATCH | `content-factory-brand-batch.yml` | Manual (+ optional schedule) | Mood rotation (SEO; cron may be off) | Brand |
 | WF-CFBMICRO | `content-factory-brand-micro-batch.yml` | Manual + schedule (daily) | 4× short brand videos/day from **`data/brand_micro_batch_state.json`** until 20 slots done; optional one-shot all 20 | Brand |
@@ -240,6 +241,21 @@ permissions:
 **Inputs:** `day_override` (1–5), `reset_state`, `run_full_batch`, `dry_run`, `upload`.
 
 *Future:* declarative **template + vars** for moods (see [COHESION_ROADMAP.md](../COHESION_ROADMAP.md) § Mood config templates) — **not** required for this batch; current `micro_*` entries are static YAML.
+
+## content-factory-personal-long-batch.yml
+
+**Purpose:** Personal **long-form pressure** batch v1: **24×1h** videos from **`data/personal_long_batch_pressure_v1.json`** (moods **`piano_deep_calm`**, **`ceremony`**, **`energize`**, **`deep_focus`** only; slots **interleaved** 6/day × 4 days for temporal clustering). **`pick`** reads **`data/personal_long_batch_pressure_state.json`** → **`generate`** → optional **`upload`** via `youtube_upload.py --batch ./generated --catalog-channel personal`. Runner: **`scripts/run_personal_long_batch.py`**. **Title hooks** for these four moods are upgraded in **`config/moods.yaml`** (`title_template` only; join-safe).
+
+**Ops:** GitHub-hosted jobs are **capped at 6 hours**; six sequential **1h** renders often exceed that — prefer **local / self-hosted** generation or **`run_full_batch`** on a capable runner; CI is still valid for **`dry_run`**, partial tests (`--max-count`), and **upload** after artifacts exist.
+
+**Inputs:** `day_override` (1–4), `reset_state`, `run_full_batch`, `dry_run`, `upload` (dispatch-only upload gate, same pattern as brand micro batch).
+
+### Planned follow-ups (not in this workflow)
+
+| Phase | Scope |
+|-------|--------|
+| **P1** | **Thumbnail differentiation:** post-render overlay or visual presets rotated per slot (today thumbnails are video frame grabs — see `render/renderer.py`). |
+| **P2** | **`title_hook` / `title_override`:** first-phrase rotation or per-slot titles from batch JSON, logged in manifest for joins. |
 
 ## run-intent-consumer.yml
 
