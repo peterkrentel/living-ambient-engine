@@ -21,7 +21,7 @@ Eleven workflow files automate video generation, YouTube deployment, analytics, 
 | WF-CF | `content-factory.yml` | Manual (cron **commented out** in YAML; strategy TBD) | Batch generation + upload | Personal |
 | WF-CFB | `content-factory-brand.yml` | Manual only | Batch generation + upload | Brand |
 | WF-CFBATCH | `content-factory-brand-batch.yml` | Manual (+ optional schedule) | Mood rotation (SEO; cron may be off) | Brand |
-| WF-CFBMICRO | `content-factory-brand-micro-batch.yml` | Manual | 20× short brand slots (`data/brand_micro_batch_v1.json`; `micro_*` moods in `config/moods.yaml`) | Brand |
+| WF-CFBMICRO | `content-factory-brand-micro-batch.yml` | Manual + schedule (daily) | 4× short brand videos/day from **`data/brand_micro_batch_state.json`** until 20 slots done; optional one-shot all 20 | Brand |
 | WF-ART | `art-creator.yml` | Manual / workflow_call | Single custom video | Brand (optional) |
 | WF-BATCH | `art-creator-batch.yml` | Manual (+ optional schedule) | Matrix generation (cron may be off) | Brand |
 | WF-PIANO | `piano-batch.yml` | Manual only | Batch piano videos + upload | Brand |
@@ -235,9 +235,11 @@ permissions:
 
 ## content-factory-brand-micro-batch.yml
 
-**Purpose:** One-shot **20 short** brand videos (5s / 10s / 30s) from **`data/brand_micro_batch_v1.json`**, each slot bound to a **`micro_*`** mood defined in **`config/moods.yaml`** (same universe as other moods). Local / CI entrypoint: **`scripts/run_brand_micro_batch.py`** → `./generated/manifest.json`; optional **`youtube_upload.py --batch ./generated --catalog-channel brand`**. *Future:* declarative **template + vars** for moods (see [COHESION_ROADMAP.md](../COHESION_ROADMAP.md) § Mood config templates) — **not** required for this batch; current `micro_*` entries are static YAML.
+**Purpose:** Brand **micro** batch v1: **20 short** videos (5s / 10s / 30s) from **`data/brand_micro_batch_v1.json`**, each slot bound to a **`micro_*`** mood in **`config/moods.yaml`**. **Default CI path** mirrors **`content-factory-brand-batch.yml`**: **`pick`** (day/mode from **`data/brand_micro_batch_state.json`** or override) → **`generate`** → optional **`upload`**. **Daily mode** runs **4 slots per calendar day** (days 1–5) and advances **`next_day`** in the state file (committed after each successful non–dry run). **Dispatch** `run_full_batch` runs all 20 in one job (no state advance). Local / CI: **`scripts/run_brand_micro_batch.py`** → `./generated/manifest.json`; optional **`youtube_upload.py --batch ./generated --catalog-channel brand`** (upload only on **`workflow_dispatch`** with **`upload`: true**, same as before).
 
-**Inputs:** `dry_run` (plan only), `upload` (requires non–dry-run artifact).
+**Inputs:** `day_override` (1–5), `reset_state`, `run_full_batch`, `dry_run`, `upload`.
+
+*Future:* declarative **template + vars** for moods (see [COHESION_ROADMAP.md](../COHESION_ROADMAP.md) § Mood config templates) — **not** required for this batch; current `micro_*` entries are static YAML.
 
 ## run-intent-consumer.yml
 
