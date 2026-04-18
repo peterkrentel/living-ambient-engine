@@ -2590,6 +2590,130 @@
       "updated_at": "2026-04-17T16:10:39.616001+00:00",
       "commit_sha": "402011cf16bc8d305e33c48434c9effa577b4e24",
       "channel": "brand"
+    },
+    {
+      "generation_id": "49f5c340-7c8c-43d1-9d4f-f50537e35a7e",
+      "video_id": "2_8XAjQCVF8",
+      "workflow": "Content Factory Brand Micro Batch v1",
+      "mood": "micro_clarity_sharp",
+      "duration_seconds": 10,
+      "params": {
+        "seed": 1653530049,
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "10 Seconds of Mental Clarity",
+        "video_title": "10 Seconds of Mental Clarity",
+        "description": "Brand micro: 10 Seconds of Mental Clarity",
+        "tags": [
+          "brand micro batch",
+          "micro ambient",
+          "short ambient",
+          "ambient music",
+          "sound design",
+          "binaural beats",
+          "mental clarity",
+          "focus reset"
+        ]
+      },
+      "generated_at": "2026-04-18T08:47:37.398776",
+      "uploaded_at": "2026-04-18T08:48:06.089520+00:00",
+      "updated_at": "2026-04-18T08:48:06.089520+00:00",
+      "commit_sha": "a3bd3dd4260f290592b834991d2646c1b4ecd1d2",
+      "channel": "brand"
+    },
+    {
+      "generation_id": "5a72214a-3c7d-4efb-961b-c5ddf1f476ad",
+      "video_id": "BMXgJ9Vpezk",
+      "workflow": "Content Factory Brand Micro Batch v1",
+      "mood": "micro_focus_lock",
+      "duration_seconds": 30,
+      "params": {
+        "seed": 1133266950,
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "30 Seconds to Enter Flow State",
+        "video_title": "30 Seconds to Enter Flow State",
+        "description": "Brand micro: 30 Seconds to Enter Flow State",
+        "tags": [
+          "brand micro batch",
+          "micro ambient",
+          "short ambient",
+          "ambient music",
+          "sound design",
+          "binaural beats",
+          "flow state",
+          "deep focus"
+        ]
+      },
+      "generated_at": "2026-04-18T08:47:37.398800",
+      "uploaded_at": "2026-04-18T08:48:07.478517+00:00",
+      "updated_at": "2026-04-18T08:48:07.478517+00:00",
+      "commit_sha": "a3bd3dd4260f290592b834991d2646c1b4ecd1d2",
+      "channel": "brand"
+    },
+    {
+      "generation_id": "ae8ad4fa-5c3f-4a85-8d2c-9a201b5fb472",
+      "video_id": "XTBo1GS99gs",
+      "workflow": "Content Factory Brand Micro Batch v1",
+      "mood": "micro_energy_boost",
+      "duration_seconds": 5,
+      "params": {
+        "seed": 4377818,
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "5 Seconds to Boost Your Energy",
+        "video_title": "5 Seconds to Boost Your Energy",
+        "description": "Brand micro: 5 Seconds to Boost Your Energy",
+        "tags": [
+          "brand micro batch",
+          "micro ambient",
+          "short ambient",
+          "ambient music",
+          "sound design",
+          "binaural beats",
+          "energy boost",
+          "wake up"
+        ]
+      },
+      "generated_at": "2026-04-18T08:47:37.398809",
+      "uploaded_at": "2026-04-18T08:48:08.475554+00:00",
+      "updated_at": "2026-04-18T08:48:08.475554+00:00",
+      "commit_sha": "a3bd3dd4260f290592b834991d2646c1b4ecd1d2",
+      "channel": "brand"
+    },
+    {
+      "generation_id": "d63308e0-d24a-4e65-941a-be06600be656",
+      "video_id": "AuMxAf76HIM",
+      "workflow": "Content Factory Brand Micro Batch v1",
+      "mood": "micro_wake_spark",
+      "duration_seconds": 10,
+      "params": {
+        "seed": 844638668,
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "10 Seconds to Wake Your Brain Up",
+        "video_title": "10 Seconds to Wake Your Brain Up",
+        "description": "Brand micro: 10 Seconds to Wake Your Brain Up",
+        "tags": [
+          "brand micro batch",
+          "micro ambient",
+          "short ambient",
+          "ambient music",
+          "sound design",
+          "binaural beats",
+          "morning energy",
+          "alertness"
+        ]
+      },
+      "generated_at": "2026-04-18T08:47:37.398825",
+      "uploaded_at": "2026-04-18T08:48:09.666774+00:00",
+      "updated_at": "2026-04-18T08:48:09.666774+00:00",
+      "commit_sha": "a3bd3dd4260f290592b834991d2646c1b4ecd1d2",
+      "channel": "brand"
     }
   ]
 }
