@@ -1,19 +1,37 @@
 # Brand micro batch v1 — 20 short videos (5s/10s/30s) from data/brand_micro_batch_v1.json
+# Daily mode: 4 videos/day for 5 days; progress in data/brand_micro_batch_state.json (like brand batch: pick → generate → upload).
 # Moods: micro_* keys in config/moods.yaml (single source of truth).
 # Spec: docs/spec/workflows.md
 
 name: Content Factory Brand Micro Batch v1
 
 on:
+  schedule:
+    - cron: "0 8 * * *" # Daily 08:00 UTC (pause by removing schedule block, same idea as content-factory-brand-batch)
+
   workflow_dispatch:
     inputs:
+      day_override:
+        description: "Day 1–5 (optional). Empty = use data/brand_micro_batch_state.json next_day"
+        required: false
+        default: ""
+      reset_state:
+        description: "Reset progress file to day 1 (dispatch only)"
+        required: false
+        type: boolean
+        default: false
+      run_full_batch:
+        description: "If true, generate all 20 in one run (ignores daily state)"
+        required: false
+        type: boolean
+        default: false
       dry_run:
-        description: "If true, print batch plan only (no generation)"
+        description: "Dry run — plan only, no video generation"
         required: false
         type: boolean
         default: false
       upload:
-        description: "Upload to YouTube (brand) after generation"
+        description: "Upload to YouTube (brand) after generation (workflow_dispatch only; same gate as prior micro batch)"
         required: false
         type: boolean
         default: false
@@ -30,9 +48,54 @@ permissions:
   actions: read
 
 jobs:
+  pick:
+    runs-on: ubuntu-latest
+    outputs:
+      mode: ${{ steps.pick.outputs.mode }}
+      day_num: ${{ steps.pick.outputs.day_num }}
+      should_run: ${{ steps.pick.outputs.should_run }}
+      advance_state: ${{ steps.pick.outputs.advance_state }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Reset brand micro batch progress
+        if: ${{ github.event_name == 'workflow_dispatch' && (github.event.inputs.reset_state == true || github.event.inputs.reset_state == 'true') }}
+        run: |
+          python3 scripts/run_brand_micro_batch.py --reset-state --state-file data/brand_micro_batch_state.json
+          git config user.name "Content Factory Bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/brand_micro_batch_state.json
+          if git diff --staged --quiet; then
+            echo "State already at initial values"
+          else
+            git commit -m "Reset brand micro batch state [automated]"
+            bash scripts/ci_merge_main_after_data_commit.sh || true
+          fi
+
+      - name: Pick day / mode
+        id: pick
+        env:
+          DAY_OVERRIDE: ${{ github.event.inputs.day_override }}
+          PICK_DRY_RUN: ${{ github.event.inputs.dry_run }}
+          RUN_FULL_BATCH: ${{ github.event.inputs.run_full_batch }}
+        run: python3 scripts/run_brand_micro_batch.py --pick-for-ci --state-file data/brand_micro_batch_state.json
+
+      - name: Pick summary
+        run: |
+          echo "## Brand micro batch — pick" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "**mode:** ${{ steps.pick.outputs.mode }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "**day_num:** ${{ steps.pick.outputs.day_num }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "**should_run:** ${{ steps.pick.outputs.should_run }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "**advance_state:** ${{ steps.pick.outputs.advance_state }}" >> "$GITHUB_STEP_SUMMARY"
+
   generate:
+    needs: pick
+    if: ${{ needs.pick.outputs.should_run == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 720
+
     steps:
       - uses: actions/checkout@v4
 
@@ -54,12 +117,39 @@ jobs:
       - name: Plan (dry run)
         if: ${{ github.event.inputs.dry_run == true || github.event.inputs.dry_run == 'true' }}
         run: |
-          python scripts/run_brand_micro_batch.py --dry-run --output ./generated | tee "$GITHUB_STEP_SUMMARY"
+          MODE="${{ needs.pick.outputs.mode }}"
+          if [ "$MODE" = "all" ]; then
+            python scripts/run_brand_micro_batch.py --dry-run --output ./generated --mode all | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            python scripts/run_brand_micro_batch.py --dry-run --output ./generated --mode daily --day "${{ needs.pick.outputs.day_num }}" | tee -a "$GITHUB_STEP_SUMMARY"
+          fi
 
       - name: Generate brand micro batch
         if: ${{ github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true' }}
         run: |
-          python scripts/run_brand_micro_batch.py --output ./generated
+          MODE="${{ needs.pick.outputs.mode }}"
+          if [ "$MODE" = "all" ]; then
+            python scripts/run_brand_micro_batch.py --output ./generated --mode all
+          else
+            python scripts/run_brand_micro_batch.py --output ./generated --mode daily --day "${{ needs.pick.outputs.day_num }}"
+          fi
+
+      - name: Commit micro batch progress
+        if: >-
+          success()
+          && needs.pick.outputs.advance_state == 'true'
+          && (github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true')
+        run: |
+          python3 scripts/run_brand_micro_batch.py --advance-day "${{ needs.pick.outputs.day_num }}" --state-file data/brand_micro_batch_state.json
+          git config user.name "Content Factory Bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/brand_micro_batch_state.json
+          if git diff --staged --quiet; then
+            echo "No state file changes to commit"
+          else
+            git commit -m "Advance brand micro batch state [automated]"
+            bash scripts/ci_merge_main_after_data_commit.sh || true
+          fi
 
       - name: Upload artifacts
         if: ${{ github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true' }}
@@ -72,19 +162,24 @@ jobs:
       - name: Generation summary
         if: ${{ github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true' }}
         run: |
-          echo "## Brand micro batch v1" >> "$GITHUB_STEP_SUMMARY"
+          echo "## Brand micro batch v1 — generate" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
-          test -f ./generated/manifest.json && python -c "import json; d=json.load(open('./generated/manifest.json')); print('**Videos:**', d.get('total_videos'))" >> "$GITHUB_STEP_SUMMARY" || true
+          echo "**mode:** ${{ needs.pick.outputs.mode }} **day:** ${{ needs.pick.outputs.day_num }}" >> "$GITHUB_STEP_SUMMARY"
+          test -f ./generated/manifest.json && python -c "import json; d=json.load(open('./generated/manifest.json')); print('**Videos (manifest total):**', d.get('total_videos'))" >> "$GITHUB_STEP_SUMMARY" || true
 
   upload:
-    needs: generate
+    needs: [pick, generate]
     runs-on: ubuntu-latest
     if: >-
       ${{
-        (github.event.inputs.upload == true || github.event.inputs.upload == 'true')
+        needs.pick.outputs.should_run == 'true'
+        && needs.generate.result == 'success'
+        && github.event_name == 'workflow_dispatch'
         && github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true'
+        && (github.event.inputs.upload == true || github.event.inputs.upload == 'true')
       }}
     timeout-minutes: 120
+
     steps:
       - uses: actions/checkout@v4
 
