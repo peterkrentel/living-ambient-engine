@@ -1384,3 +1384,1408 @@ rain_piano:
         beat: 6
         amplitude: 0.05
 
+# -----------------------------------------------------------------------------
+# Brand micro batch v1 — micro_* moods (shorts packaging experiment)
+# -----------------------------------------------------------------------------
+
+micro_clarity_sharp:
+  description: 'Brand micro: 10 Seconds of Mental Clarity'
+  title_template: 10 Seconds of Mental Clarity
+  description_template: 'Brand micro batch — 10 Seconds of Mental Clarity. Short evolving
+    ambient tool.
+
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+    ⏱️ {duration_str}
+
+
+    #MicroAmbient #Shorts #AmbientMusic #SoundDesign'
+  tags:
+  - brand micro batch
+  - micro ambient
+  - short ambient
+  - ambient music
+  - sound design
+  - binaural beats
+  - mental clarity
+  - focus reset
+  rhythm_origin: Brand micro batch v1 (add-only variants; distinct visuals per key)
+  audio:
+    rhythm: gnawa
+    rhythm_volume: 0.45
+    rhythm_volume_variation: 0.1
+    base_frequency: 18
+    base_frequency_variation: 4
+    binaural_beat: 18
+    binaural_beat_variation: 4
+    layers:
+    - type: sine
+      frequency: 432
+      amplitude: 0.1
+      amplitude_variation: 0.02
+    - type: pad
+      frequency: 110
+      amplitude: 0.1
+      amplitude_variation: 0.02
+    - type: binaural
+      carrier: 200
+      carrier_variation: 20
+      beat: 18
+      amplitude: 0.1
+      amplitude_variation: 0.02
+  visual:
+    type: fractal_zoom
+    colors:
+      primary:
+      - 0
+      - 140
+      - 200
+      secondary:
+      - 40
+      - 90
+      - 160
+      accent:
+      - 180
+      - 255
+      - 255
+    pattern: mandelbrot
+    speed: 0.55
+    speed_variation: 0.12
+    complexity: 0.82
+    complexity_variation: 0.08
+    symmetry: 4
+    pulse_frequency: 0.12
+    pulse_frequency_variation: 0.03
+micro_focus_lock:
+  description: 'Brand micro: 30 Seconds to Enter Flow State'
+  title_template: 30 Seconds to Enter Flow State
+  description_template: 'Brand micro batch — 30 Seconds to Enter Flow State. Short
+    evolving ambient tool.
+
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+    ⏱️ {duration_str}
+
+
+    #MicroAmbient #Shorts #AmbientMusic #SoundDesign'
+  tags:
+  - brand micro batch
+  - micro ambient
+  - short ambient
+  - ambient music
+  - sound design
+  - binaural beats
+  - flow state
+  - deep focus
+  rhythm_origin: Brand micro batch v1 (add-only variants; distinct visuals per key)
+  audio:
+    rhythm: gnawa
+    rhythm_volume: 0.45
+    rhythm_volume_variation: 0.1
+    base_frequency: 18
+    base_frequency_variation: 4
+    binaural_beat: 18
+    binaural_beat_variation: 4
+    layers:
+    - type: sine
+      frequency: 432
+      amplitude: 0.1
+      amplitude_variation: 0.02
+    - type: pad
+      frequency: 110
+      amplitude: 0.1
+      amplitude_variation: 0.02
+    - type: binaural
+      carrier: 200
+      carrier_variation: 20
+      beat: 18
+      amplitude: 0.1
+      amplitude_variation: 0.02
+  visual:
+    type: fractal_zoom
+    colors:
+      primary:
+      - 20
+      - 60
+      - 140
+      secondary:
+      - 80
+      - 40
+      - 180
+      accent:
+      - 0
+      - 200
+      - 255
+    pattern: julia
+    speed: 0.45
+    speed_variation: 0.12
+    complexity: 0.78
+    complexity_variation: 0.08
+    symmetry: 4
+    pulse_frequency: 0.12
+    pulse_frequency_variation: 0.03
+micro_energy_boost:
+  description: 'Brand micro: 5 Seconds to Boost Your Energy'
+  title_template: 5 Seconds to Boost Your Energy
+  description_template: 'Brand micro batch — 5 Seconds to Boost Your Energy. Short
+    evolving ambient tool.
+
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+    ⏱️ {duration_str}
+
+
+    #MicroAmbient #Shorts #AmbientMusic #SoundDesign'
+  tags:
+  - brand micro batch
+  - micro ambient
+  - short ambient
+  - ambient music
+  - sound design
+  - binaural beats
+  - energy boost
+  - wake up
+  rhythm_origin: Brand micro batch v1 (add-only variants; distinct visuals per key)
+  audio:
+    rhythm: kuku
+    rhythm_volume: 0.65
+    rhythm_volume_variation: 0.1
+    base_frequency: 22
+    base_frequency_variation: 5
+    binaural_beat: 22
+    binaural_beat_variation: 5
+    layers:
+    - type: sine
+      frequency: 639
+      amplitude: 0.1
+      amplitude_variation: 0.02
+    - type: white_noise
+      amplitude: 0.05
+      amplitude_variation: 0.02
+    - type: binaural
+      carrier: 210
+      carrier_variation: 25
+      beat: 22
+      amplitude: 0.12
+      amplitude_variation: 0.02
+  visual:
+    type: fractal_zoom
+    colors:
+      primary:
+      - 255
+      - 90
+      - 30
+      secondary:
+      - 255
+      - 200
+      - 40
+      accent:
+      - 255
+      - 255
+      - 200
+    pattern: mandelbrot
+    speed: 0.75
+    speed_variation: 0.12
+    complexity: 0.85
+    complexity_variation: 0.08
+    symmetry: 4
+    pulse_frequency: 0.12
+    pulse_frequency_variation: 0.03
+micro_wake_spark:
+  description: 'Brand micro: 10 Seconds to Wake Your Brain Up'
+  title_template: 10 Seconds to Wake Your Brain Up
+  description_template: 'Brand micro batch — 10 Seconds to Wake Your Brain Up. Short
+    evolving ambient tool.
+
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+    ⏱️ {duration_str}
+
+
+    #MicroAmbient #Shorts #AmbientMusic #SoundDesign'
+  tags:
+  - brand micro batch
+  - micro ambient
+  - short ambient
+  - ambient music
+  - sound design
+  - binaural beats
+  - morning energy
+  - alertness
+  rhythm_origin: Brand micro batch v1 (add-only variants; distinct visuals per key)
+  audio:
+    rhythm: kuku
+    rhythm_volume: 0.65
+    rhythm_volume_variation: 0.1
+    base_frequency: 22
+    base_frequency_variation: 5
+    binaural_beat: 22
+    binaural_beat_variation: 5
+    layers:
+    - type: sine
+      frequency: 639
+      amplitude: 0.1
+      amplitude_variation: 0.02
+    - type: white_noise
+      amplitude: 0.05
+      amplitude_variation: 0.02
+    - type: binaural
+      carrier: 210
+      carrier_variation: 25
+      beat: 22
+      amplitude: 0.12
+      amplitude_variation: 0.02
+  visual:
+    type: fractal_zoom
+    colors:
+      primary:
+      - 255
+      - 180
+      - 0
+      secondary:
+      - 255
+      - 100
+      - 50
+      accent:
+      - 255
+      - 255
+      - 255
+    pattern: mandelbrot
+    speed: 0.7
+    speed_variation: 0.12
+    complexity: 0.8
+    complexity_variation: 0.08
+    symmetry: 4
+    pulse_frequency: 0.12
+    pulse_frequency_variation: 0.03
+micro_relief_exhale:
+  description: 'Brand micro: 10 Seconds of Relief'
+  title_template: 10 Seconds of Relief
+  description_template: 'Brand micro batch — 10 Seconds of Relief. Short evolving
+    ambient tool.
+
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+    ⏱️ {duration_str}
+
+
+    #MicroAmbient #Shorts #AmbientMusic #SoundDesign'
+  tags:
+  - brand micro batch
+  - micro ambient
+  - short ambient
+  - ambient music
+  - sound design
+  - binaural beats
+  - relief
+  - stress relief
+  rhythm_origin: Brand micro batch v1 (add-only variants; distinct visuals per key)
+  audio:
+    rhythm: gamelan
+    rhythm_volume: 0.4
+    rhythm_volume_variation: 0.1
+    base_frequency: 8
+    base_frequency_variation: 2
+    binaural_beat: 8
+    binaural_beat_variation: 2
+    layers:
+    - type: pink_noise
+      amplitude: 0.05
+      amplitude_variation: 0.02
+    - type: pad
+      frequency: 90
+      frequency_variation: 12
+      amplitude: 0.1
+      amplitude_variation: 0.02
+    - type: binaural
+      carrier: 136
+      carrier_variation: 15
+      beat: 8
+      amplitude: 0.1
+      amplitude_variation: 0.02
+  visual:
+    type: particle_flow
+    colors:
+      primary:
+      - 40
+      - 120
+      - 90
+      secondary:
+      - 80
+      - 160
+      - 120
+      accent:
+      - 160
+      - 220
+      - 200
+    pattern: particle_flow
+    speed: 0.12
+    speed_variation: 0.06
+    complexity: 0.35
+    complexity_variation: 0.1
+    symmetry: 1
+    pulse_frequency: 0.06
+    pulse_frequency_variation: 0.02
+micro_relief_soft:
+  description: 'Brand micro: 30 Seconds to Finally Relax'
+  title_template: 30 Seconds to Finally Relax
+  description_template: 'Brand micro batch — 30 Seconds to Finally Relax. Short evolving
+    ambient tool.
+
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+    ⏱️ {duration_str}
+
+
+    #MicroAmbient #Shorts #AmbientMusic #SoundDesign'
+  tags:
+  - brand micro batch
+  - micro ambient
+  - short ambient
+  - ambient music
+  - sound design
+  - binaural beats
+  - relaxation
+  - unwind
+  rhythm_origin: Brand micro batch v1 (add-only variants; distinct visuals per key)
+  audio:
+    rhythm: gamelan
+    rhythm_volume: 0.4
+    rhythm_volume_variation: 0.1
+    base_frequency: 8
+    base_frequency_variation: 2
+    binaural_beat: 8
+    binaural_beat_variation: 2
+    layers:
+    - type: pink_noise
+      amplitude: 0.05
+      amplitude_variation: 0.02
+    - type: pad
+      frequency: 90
+      frequency_variation: 12
+      amplitude: 0.1
+      amplitude_variation: 0.02
+    - type: binaural
+      carrier: 136
+      carrier_variation: 15
+      beat: 8
+      amplitude: 0.1
+      amplitude_variation: 0.02
+  visual:
+    type: particle_flow
+    colors:
+      primary:
+      - 120
+      - 140
+      - 200
+      secondary:
+      - 160
+      - 180
+      - 240
+      accent:
+      - 200
+      - 220
+      - 255
+    pattern: organic_flow
+    speed: 0.1
+    speed_variation: 0.08
+    complexity: 0.4
+    complexity_variation: 0.12
+    symmetry: 2
+    pulse_frequency: 0.1
+    pulse_frequency_variation: 0.03
+micro_drift_calm:
+  description: 'Brand micro: 30 Seconds of Deep Calm'
+  title_template: 30 Seconds of Deep Calm
+  description_template: 'Brand micro batch — 30 Seconds of Deep Calm. Short evolving
+    ambient tool.
+
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+    ⏱️ {duration_str}
+
+
+    #MicroAmbient #Shorts #AmbientMusic #SoundDesign'
+  tags:
+  - brand micro batch
+  - micro ambient
+  - short ambient
+  - ambient music
+  - sound design
+  - binaural beats
+  - deep calm
+  - meditation
+  rhythm_origin: Brand micro batch v1 (add-only variants; distinct visuals per key)
+  audio:
+    rhythm: gamelan
+    rhythm_volume: 0.4
+    rhythm_volume_variation: 0.1
+    base_frequency: 8
+    base_frequency_variation: 2
+    binaural_beat: 8
+    binaural_beat_variation: 2
+    layers:
+    - type: pink_noise
+      amplitude: 0.05
+      amplitude_variation: 0.02
+    - type: pad
+      frequency: 90
+      frequency_variation: 12
+      amplitude: 0.1
+      amplitude_variation: 0.02
+    - type: binaural
+      carrier: 136
+      carrier_variation: 15
+      beat: 8
+      amplitude: 0.1
+      amplitude_variation: 0.02
+  visual:
+    type: particle_flow
+    colors:
+      primary:
+      - 30
+      - 50
+      - 90
+      secondary:
+      - 50
+      - 80
+      - 120
+      accent:
+      - 100
+      - 140
+      - 180
+    pattern: particle_flow
+    speed: 0.08
+    speed_variation: 0.06
+    complexity: 0.32
+    complexity_variation: 0.1
+    symmetry: 1
+    pulse_frequency: 0.06
+    pulse_frequency_variation: 0.02
+micro_sharpen_edge:
+  description: 'Brand micro: 5 Seconds to Sharpen Your Mind'
+  title_template: 5 Seconds to Sharpen Your Mind
+  description_template: 'Brand micro batch — 5 Seconds to Sharpen Your Mind. Short
+    evolving ambient tool.
+
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+    ⏱️ {duration_str}
+
+
+    #MicroAmbient #Shorts #AmbientMusic #SoundDesign'
+  tags:
+  - brand micro batch
+  - micro ambient
+  - short ambient
+  - ambient music
+  - sound design
+  - binaural beats
+  - sharp focus
+  - clarity
+  rhythm_origin: Brand micro batch v1 (add-only variants; distinct visuals per key)
+  audio:
+    rhythm: gnawa
+    rhythm_volume: 0.45
+    rhythm_volume_variation: 0.1
+    base_frequency: 18
+    base_frequency_variation: 4
+    binaural_beat: 18
+    binaural_beat_variation: 4
+    layers:
+    - type: sine
+      frequency: 432
+      amplitude: 0.1
+      amplitude_variation: 0.02
+    - type: pad
+      frequency: 110
+      amplitude: 0.1
+      amplitude_variation: 0.02
+    - type: binaural
+      carrier: 200
+      carrier_variation: 20
+      beat: 18
+      amplitude: 0.1
+      amplitude_variation: 0.02
+  visual:
+    type: fractal_zoom
+    colors:
+      primary:
+      - 10
+      - 80
+      - 120
+      secondary:
+      - 30
+      - 120
+      - 180
+      accent:
+      - 200
+      - 255
+      - 255
+    pattern: julia
+    speed: 0.6
+    speed_variation: 0.12
+    complexity: 0.88
+    complexity_variation: 0.08
+    symmetry: 4
+    pulse_frequency: 0.12
+    pulse_frequency_variation: 0.03
+micro_racing_cool:
+  description: 'Brand micro: 10 Seconds to Stop Racing Thoughts'
+  title_template: 10 Seconds to Stop Racing Thoughts
+  description_template: 'Brand micro batch — 10 Seconds to Stop Racing Thoughts. Short
+    evolving ambient tool.
+
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+    ⏱️ {duration_str}
+
+
+    #MicroAmbient #Shorts #AmbientMusic #SoundDesign'
+  tags:
+  - brand micro batch
+  - micro ambient
+  - short ambient
+  - ambient music
+  - sound design
+  - binaural beats
+  - racing thoughts
+  - anxiety relief
+  rhythm_origin: Brand micro batch v1 (add-only variants; distinct visuals per key)
+  audio:
+    rhythm: null
+    rhythm_volume: 0
+    base_frequency: 5
+    base_frequency_variation: 1
+    binaural_beat: 5
+    binaural_beat_variation: 1
+    layers:
+    - type: pink_noise
+      amplitude: 0.06
+      amplitude_variation: 0.02
+    - type: pad
+      frequency: 72
+      frequency_variation: 10
+      amplitude: 0.12
+      amplitude_variation: 0.03
+    - type: binaural
+      carrier: 120
+      carrier_variation: 20
+      beat: 5
+      amplitude: 0.08
+      amplitude_variation: 0.02
+  visual:
+    type: fractal_zoom
+    colors:
+      primary:
+      - 40
+      - 60
+      - 80
+      secondary:
+      - 70
+      - 100
+      - 130
+      accent:
+      - 200
+      - 220
+      - 240
+    pattern: julia
+    speed: 0.5
+    speed_variation: 0.12
+    complexity: 0.75
+    complexity_variation: 0.08
+    symmetry: 4
+    pulse_frequency: 0.12
+    pulse_frequency_variation: 0.03
+micro_spiral_stop:
+  description: 'Brand micro: 5 Seconds to Break the Spiral'
+  title_template: 5 Seconds to Break the Spiral
+  description_template: 'Brand micro batch — 5 Seconds to Break the Spiral. Short
+    evolving ambient tool.
+
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+    ⏱️ {duration_str}
+
+
+    #MicroAmbient #Shorts #AmbientMusic #SoundDesign'
+  tags:
+  - brand micro batch
+  - micro ambient
+  - short ambient
+  - ambient music
+  - sound design
+  - binaural beats
+  - break spiral
+  - reset
+  rhythm_origin: Brand micro batch v1 (add-only variants; distinct visuals per key)
+  audio:
+    rhythm: burundi
+    rhythm_volume: 0.72
+    rhythm_volume_variation: 0.08
+    base_frequency: 22
+    base_frequency_variation: 4
+    binaural_beat: 22
+    binaural_beat_variation: 4
+    layers:
+    - type: sine
+      frequency: 741
+      amplitude: 0.08
+      amplitude_variation: 0.02
+    - type: white_noise
+      amplitude: 0.05
+      amplitude_variation: 0.02
+    - type: binaural
+      carrier: 200
+      carrier_variation: 25
+      beat: 22
+      amplitude: 0.1
+      amplitude_variation: 0.02
+  visual:
+    type: geometric_morph
+    colors:
+      primary:
+      - 160
+      - 40
+      - 40
+      secondary:
+      - 220
+      - 80
+      - 40
+      accent:
+      - 255
+      - 200
+      - 80
+    pattern: geometric_morph
+    speed: 0.65
+    speed_variation: 0.12
+    complexity: 0.72
+    complexity_variation: 0.1
+    symmetry: 4
+    pulse_frequency: 0.18
+    pulse_frequency_variation: 0.04
+micro_overthink_a:
+  description: 'Brand micro: 10 Seconds to Stop Overthinking'
+  title_template: 10 Seconds to Stop Overthinking
+  description_template: 'Brand micro batch — 10 Seconds to Stop Overthinking. Short
+    evolving ambient tool.
+
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+    ⏱️ {duration_str}
+
+
+    #MicroAmbient #Shorts #AmbientMusic #SoundDesign'
+  tags:
+  - brand micro batch
+  - micro ambient
+  - short ambient
+  - ambient music
+  - sound design
+  - binaural beats
+  - overthinking
+  - mental noise
+  rhythm_origin: Brand micro batch v1 (add-only variants; distinct visuals per key)
+  audio:
+    rhythm: bamboula
+    rhythm_volume: 0.55
+    rhythm_volume_variation: 0.1
+    base_frequency: 6
+    base_frequency_variation: 1.5
+    binaural_beat: 6
+    binaural_beat_variation: 1.5
+    layers:
+    - type: melody
+      scale: phrygian
+      root: 165
+      tempo: 72
+      tempo_variation: 12
+      amplitude: 0.16
+      amplitude_variation: 0.03
+    - type: pad
+      frequency: 55
+      frequency_variation: 10
+      amplitude: 0.1
+      amplitude_variation: 0.02
+    - type: binaural
+      carrier: 111
+      carrier_variation: 15
+      beat: 6
+      amplitude: 0.1
+      amplitude_variation: 0.02
+  visual:
+    type: fractal_zoom
+    colors:
+      primary:
+      - 90
+      - 40
+      - 120
+      secondary:
+      - 140
+      - 60
+      - 180
+      accent:
+      - 220
+      - 180
+      - 255
+    pattern: julia
+    speed: 0.58
+    speed_variation: 0.12
+    complexity: 0.9
+    complexity_variation: 0.08
+    symmetry: 4
+    pulse_frequency: 0.12
+    pulse_frequency_variation: 0.03
+micro_overthink_b:
+  description: 'Brand micro: 10 Seconds to Clear Mental Noise'
+  title_template: 10 Seconds to Clear Mental Noise
+  description_template: 'Brand micro batch — 10 Seconds to Clear Mental Noise. Short
+    evolving ambient tool.
+
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+    ⏱️ {duration_str}
+
+
+    #MicroAmbient #Shorts #AmbientMusic #SoundDesign'
+  tags:
+  - brand micro batch
+  - micro ambient
+  - short ambient
+  - ambient music
+  - sound design
+  - binaural beats
+  - clear mind
+  - mental clutter
+  rhythm_origin: Brand micro batch v1 (add-only variants; distinct visuals per key)
+  audio:
+    rhythm: bamboula
+    rhythm_volume: 0.55
+    rhythm_volume_variation: 0.1
+    base_frequency: 6
+    base_frequency_variation: 1.5
+    binaural_beat: 6
+    binaural_beat_variation: 1.5
+    layers:
+    - type: melody
+      scale: phrygian
+      root: 165
+      tempo: 72
+      tempo_variation: 12
+      amplitude: 0.16
+      amplitude_variation: 0.03
+    - type: pad
+      frequency: 55
+      frequency_variation: 10
+      amplitude: 0.1
+      amplitude_variation: 0.02
+    - type: binaural
+      carrier: 111
+      carrier_variation: 15
+      beat: 6
+      amplitude: 0.1
+      amplitude_variation: 0.02
+  visual:
+    type: fractal_zoom
+    colors:
+      primary:
+      - 50
+      - 50
+      - 120
+      secondary:
+      - 100
+      - 80
+      - 200
+      accent:
+      - 180
+      - 200
+      - 255
+    pattern: mandelbrot
+    speed: 0.52
+    speed_variation: 0.12
+    complexity: 0.86
+    complexity_variation: 0.08
+    symmetry: 4
+    pulse_frequency: 0.12
+    pulse_frequency_variation: 0.03
+micro_thought_loop:
+  description: 'Brand micro: 10 Seconds to Break the Thought Loop'
+  title_template: 10 Seconds to Break the Thought Loop
+  description_template: 'Brand micro batch — 10 Seconds to Break the Thought Loop.
+    Short evolving ambient tool.
+
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+    ⏱️ {duration_str}
+
+
+    #MicroAmbient #Shorts #AmbientMusic #SoundDesign'
+  tags:
+  - brand micro batch
+  - micro ambient
+  - short ambient
+  - ambient music
+  - sound design
+  - binaural beats
+  - thought loop
+  - interrupt
+  rhythm_origin: Brand micro batch v1 (add-only variants; distinct visuals per key)
+  audio:
+    rhythm: burundi
+    rhythm_volume: 0.72
+    rhythm_volume_variation: 0.08
+    base_frequency: 22
+    base_frequency_variation: 4
+    binaural_beat: 22
+    binaural_beat_variation: 4
+    layers:
+    - type: sine
+      frequency: 741
+      amplitude: 0.08
+      amplitude_variation: 0.02
+    - type: white_noise
+      amplitude: 0.05
+      amplitude_variation: 0.02
+    - type: binaural
+      carrier: 200
+      carrier_variation: 25
+      beat: 22
+      amplitude: 0.1
+      amplitude_variation: 0.02
+  visual:
+    type: geometric_morph
+    colors:
+      primary:
+      - 200
+      - 60
+      - 40
+      secondary:
+      - 255
+      - 120
+      - 60
+      accent:
+      - 255
+      - 220
+      - 120
+    pattern: platonic_solids
+    speed: 0.5
+    speed_variation: 0.1
+    complexity: 0.68
+    complexity_variation: 0.1
+    symmetry: 4
+    pulse_frequency: 0.2
+    pulse_frequency_variation: 0.05
+micro_stuck_jolt:
+  description: 'Brand micro: 10 Seconds to Get Unstuck'
+  title_template: 10 Seconds to Get Unstuck
+  description_template: 'Brand micro batch — 10 Seconds to Get Unstuck. Short evolving
+    ambient tool.
+
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+    ⏱️ {duration_str}
+
+
+    #MicroAmbient #Shorts #AmbientMusic #SoundDesign'
+  tags:
+  - brand micro batch
+  - micro ambient
+  - short ambient
+  - ambient music
+  - sound design
+  - binaural beats
+  - get unstuck
+  - motivation
+  rhythm_origin: Brand micro batch v1 (add-only variants; distinct visuals per key)
+  audio:
+    rhythm: burundi
+    rhythm_volume: 0.72
+    rhythm_volume_variation: 0.08
+    base_frequency: 22
+    base_frequency_variation: 4
+    binaural_beat: 22
+    binaural_beat_variation: 4
+    layers:
+    - type: sine
+      frequency: 741
+      amplitude: 0.08
+      amplitude_variation: 0.02
+    - type: white_noise
+      amplitude: 0.05
+      amplitude_variation: 0.02
+    - type: binaural
+      carrier: 200
+      carrier_variation: 25
+      beat: 22
+      amplitude: 0.1
+      amplitude_variation: 0.02
+  visual:
+    type: geometric_morph
+    colors:
+      primary:
+      - 20
+      - 100
+      - 140
+      secondary:
+      - 60
+      - 160
+      - 200
+      accent:
+      - 255
+      - 240
+      - 120
+    pattern: geometric_morph
+    speed: 0.62
+    speed_variation: 0.12
+    complexity: 0.7
+    complexity_variation: 0.1
+    symmetry: 4
+    pulse_frequency: 0.18
+    pulse_frequency_variation: 0.04
+micro_noise_hush:
+  description: 'Brand micro: 5 Seconds to Quiet Mental Noise'
+  title_template: 5 Seconds to Quiet Mental Noise
+  description_template: 'Brand micro batch — 5 Seconds to Quiet Mental Noise. Short
+    evolving ambient tool.
+
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+    ⏱️ {duration_str}
+
+
+    #MicroAmbient #Shorts #AmbientMusic #SoundDesign'
+  tags:
+  - brand micro batch
+  - micro ambient
+  - short ambient
+  - ambient music
+  - sound design
+  - binaural beats
+  - quiet mind
+  - stillness
+  rhythm_origin: Brand micro batch v1 (add-only variants; distinct visuals per key)
+  audio:
+    rhythm: null
+    rhythm_volume: 0
+    base_frequency: 5
+    base_frequency_variation: 1
+    binaural_beat: 5
+    binaural_beat_variation: 1
+    layers:
+    - type: pink_noise
+      amplitude: 0.06
+      amplitude_variation: 0.02
+    - type: pad
+      frequency: 72
+      frequency_variation: 10
+      amplitude: 0.12
+      amplitude_variation: 0.03
+    - type: binaural
+      carrier: 120
+      carrier_variation: 20
+      beat: 5
+      amplitude: 0.08
+      amplitude_variation: 0.02
+  visual:
+    type: fractal_zoom
+    colors:
+      primary:
+      - 35
+      - 35
+      - 50
+      secondary:
+      - 70
+      - 70
+      - 100
+      accent:
+      - 120
+      - 130
+      - 160
+    pattern: mandelbrot
+    speed: 0.35
+    speed_variation: 0.12
+    complexity: 0.55
+    complexity_variation: 0.08
+    symmetry: 4
+    pulse_frequency: 0.12
+    pulse_frequency_variation: 0.03
+micro_interrupt_snap:
+  description: 'Brand micro: 5 Seconds to Interrupt the Loop'
+  title_template: 5 Seconds to Interrupt the Loop
+  description_template: 'Brand micro batch — 5 Seconds to Interrupt the Loop. Short
+    evolving ambient tool.
+
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+    ⏱️ {duration_str}
+
+
+    #MicroAmbient #Shorts #AmbientMusic #SoundDesign'
+  tags:
+  - brand micro batch
+  - micro ambient
+  - short ambient
+  - ambient music
+  - sound design
+  - binaural beats
+  - interrupt loop
+  - snap out
+  rhythm_origin: Brand micro batch v1 (add-only variants; distinct visuals per key)
+  audio:
+    rhythm: burundi
+    rhythm_volume: 0.72
+    rhythm_volume_variation: 0.08
+    base_frequency: 22
+    base_frequency_variation: 4
+    binaural_beat: 22
+    binaural_beat_variation: 4
+    layers:
+    - type: sine
+      frequency: 741
+      amplitude: 0.08
+      amplitude_variation: 0.02
+    - type: white_noise
+      amplitude: 0.05
+      amplitude_variation: 0.02
+    - type: binaural
+      carrier: 200
+      carrier_variation: 25
+      beat: 22
+      amplitude: 0.1
+      amplitude_variation: 0.02
+  visual:
+    type: geometric_morph
+    colors:
+      primary:
+      - 180
+      - 30
+      - 30
+      secondary:
+      - 255
+      - 100
+      - 40
+      accent:
+      - 255
+      - 220
+      - 100
+    pattern: platonic_solids
+    speed: 0.68
+    speed_variation: 0.1
+    complexity: 0.74
+    complexity_variation: 0.1
+    symmetry: 4
+    pulse_frequency: 0.2
+    pulse_frequency_variation: 0.05
+micro_sacred_drop:
+  description: 'Brand micro: 30 Seconds to Drop Into Sacred Space'
+  title_template: 30 Seconds to Drop Into Sacred Space
+  description_template: 'Brand micro batch — 30 Seconds to Drop Into Sacred Space.
+    Short evolving ambient tool.
+
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+    ⏱️ {duration_str}
+
+
+    #MicroAmbient #Shorts #AmbientMusic #SoundDesign'
+  tags:
+  - brand micro batch
+  - micro ambient
+  - short ambient
+  - ambient music
+  - sound design
+  - binaural beats
+  - sacred space
+  - ritual ambient
+  rhythm_origin: Brand micro batch v1 (add-only variants; distinct visuals per key)
+  audio:
+    rhythm: candomble
+    rhythm_volume: 0.65
+    rhythm_volume_variation: 0.1
+    base_frequency: 10
+    base_frequency_variation: 2
+    binaural_beat: 10
+    binaural_beat_variation: 2
+    layers:
+    - type: sine
+      frequency: 285
+      amplitude: 0.08
+      amplitude_variation: 0.02
+    - type: pink_noise
+      amplitude: 0.04
+      amplitude_variation: 0.01
+    - type: binaural
+      carrier: 185
+      carrier_variation: 20
+      beat: 10
+      amplitude: 0.1
+      amplitude_variation: 0.02
+  visual:
+    type: sacred_geometry
+    colors:
+      primary:
+      - 120
+      - 70
+      - 40
+      secondary:
+      - 180
+      - 120
+      - 60
+      accent:
+      - 240
+      - 200
+      - 100
+    pattern: sacred_geometry
+    speed: 0.35
+    speed_variation: 0.1
+    complexity: 0.72
+    complexity_variation: 0.1
+    symmetry: 6
+    pulse_frequency: 0.16
+    pulse_frequency_variation: 0.04
+micro_ritual_in:
+  description: 'Brand micro: 10 Seconds Pulled Into Ritual Stillness'
+  title_template: 10 Seconds Pulled Into Ritual Stillness
+  description_template: 'Brand micro batch — 10 Seconds Pulled Into Ritual Stillness.
+    Short evolving ambient tool.
+
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+    ⏱️ {duration_str}
+
+
+    #MicroAmbient #Shorts #AmbientMusic #SoundDesign'
+  tags:
+  - brand micro batch
+  - micro ambient
+  - short ambient
+  - ambient music
+  - sound design
+  - binaural beats
+  - ritual music
+  - sacred stillness
+  rhythm_origin: Brand micro batch v1 (add-only variants; distinct visuals per key)
+  audio:
+    rhythm: candomble
+    rhythm_volume: 0.65
+    rhythm_volume_variation: 0.1
+    base_frequency: 10
+    base_frequency_variation: 2
+    binaural_beat: 10
+    binaural_beat_variation: 2
+    layers:
+    - type: sine
+      frequency: 285
+      amplitude: 0.08
+      amplitude_variation: 0.02
+    - type: pink_noise
+      amplitude: 0.04
+      amplitude_variation: 0.01
+    - type: binaural
+      carrier: 185
+      carrier_variation: 20
+      beat: 10
+      amplitude: 0.1
+      amplitude_variation: 0.02
+  visual:
+    type: sacred_geometry
+    colors:
+      primary:
+      - 80
+      - 50
+      - 120
+      secondary:
+      - 130
+      - 90
+      - 170
+      accent:
+      - 200
+      - 180
+      - 255
+    pattern: sacred_geometry
+    speed: 0.32
+    speed_variation: 0.1
+    complexity: 0.68
+    complexity_variation: 0.1
+    symmetry: 6
+    pulse_frequency: 0.16
+    pulse_frequency_variation: 0.04
+micro_immersion_deep:
+  description: 'Brand micro: 30 Seconds of Deep Immersion'
+  title_template: 30 Seconds of Deep Immersion
+  description_template: 'Brand micro batch — 30 Seconds of Deep Immersion. Short evolving
+    ambient tool.
+
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+    ⏱️ {duration_str}
+
+
+    #MicroAmbient #Shorts #AmbientMusic #SoundDesign'
+  tags:
+  - brand micro batch
+  - micro ambient
+  - short ambient
+  - ambient music
+  - sound design
+  - binaural beats
+  - deep immersion
+  - inner space
+  rhythm_origin: Brand micro batch v1 (add-only variants; distinct visuals per key)
+  audio:
+    rhythm: bamboula
+    rhythm_volume: 0.55
+    rhythm_volume_variation: 0.1
+    base_frequency: 6
+    base_frequency_variation: 1.5
+    binaural_beat: 6
+    binaural_beat_variation: 1.5
+    layers:
+    - type: melody
+      scale: phrygian
+      root: 165
+      tempo: 72
+      tempo_variation: 12
+      amplitude: 0.16
+      amplitude_variation: 0.03
+    - type: pad
+      frequency: 55
+      frequency_variation: 10
+      amplitude: 0.1
+      amplitude_variation: 0.02
+    - type: binaural
+      carrier: 111
+      carrier_variation: 15
+      beat: 6
+      amplitude: 0.1
+      amplitude_variation: 0.02
+  visual:
+    type: fractal_zoom
+    colors:
+      primary:
+      - 10
+      - 30
+      - 80
+      secondary:
+      - 30
+      - 60
+      - 140
+      accent:
+      - 80
+      - 140
+      - 220
+    pattern: julia
+    speed: 0.25
+    speed_variation: 0.12
+    complexity: 0.88
+    complexity_variation: 0.08
+    symmetry: 4
+    pulse_frequency: 0.12
+    pulse_frequency_variation: 0.03
+micro_drop_inward:
+  description: 'Brand micro: 10 Seconds to Drop Inward'
+  title_template: 10 Seconds to Drop Inward
+  description_template: 'Brand micro batch — 10 Seconds to Drop Inward. Short evolving
+    ambient tool.
+
+
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+    ⏱️ {duration_str}
+
+
+    #MicroAmbient #Shorts #AmbientMusic #SoundDesign'
+  tags:
+  - brand micro batch
+  - micro ambient
+  - short ambient
+  - ambient music
+  - sound design
+  - binaural beats
+  - drop inward
+  - meditation
+  rhythm_origin: Brand micro batch v1 (add-only variants; distinct visuals per key)
+  audio:
+    rhythm: null
+    rhythm_volume: 0
+    base_frequency: 5
+    base_frequency_variation: 1
+    binaural_beat: 5
+    binaural_beat_variation: 1
+    layers:
+    - type: pink_noise
+      amplitude: 0.06
+      amplitude_variation: 0.02
+    - type: pad
+      frequency: 72
+      frequency_variation: 10
+      amplitude: 0.12
+      amplitude_variation: 0.03
+    - type: binaural
+      carrier: 120
+      carrier_variation: 20
+      beat: 5
+      amplitude: 0.08
+      amplitude_variation: 0.02
+  visual:
+    type: particle_flow
+    colors:
+      primary:
+      - 15
+      - 40
+      - 70
+      secondary:
+      - 40
+      - 90
+      - 130
+      accent:
+      - 90
+      - 160
+      - 200
+    pattern: particle_flow
+    speed: 0.09
+    speed_variation: 0.06
+    complexity: 0.38
+    complexity_variation: 0.1
+    symmetry: 1
+    pulse_frequency: 0.06
+    pulse_frequency_variation: 0.02

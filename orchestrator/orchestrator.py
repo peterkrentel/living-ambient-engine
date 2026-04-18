@@ -26,9 +26,9 @@ class Orchestrator:
         self.defaults = self._load_defaults()
         
     def _load_moods(self) -> Dict:
-        """Load mood configurations."""
+        """Load mood configurations from ``config/moods.yaml`` (single source of truth)."""
         moods_path = self.config_dir / "moods.yaml"
-        with open(moods_path, 'r') as f:
+        with open(moods_path, encoding="utf-8") as f:
             return yaml.safe_load(f)
     
     def _load_defaults(self) -> Dict:

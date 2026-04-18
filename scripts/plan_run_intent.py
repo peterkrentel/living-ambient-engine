@@ -40,7 +40,7 @@ MIN_SAMPLE_SIZE = 5
 MIN_GROUP_VIEWS = 200
 
 ALLOWED_DURATIONS = frozenset(
-    {"30s", "1min", "5min", "10min", "30m", "1h", "2h", "3h", "4h", "1.5h"}
+    {"5s", "10s", "30s", "1min", "5min", "10min", "30m", "1h", "2h", "3h", "4h", "1.5h"}
 )
 
 
@@ -48,7 +48,7 @@ def load_factory_moods() -> list[str]:
     if yaml is None:
         raise SystemExit("PyYAML required: pip install pyyaml")
     with open(MOODS_YAML, encoding="utf-8") as f:
-        data = yaml.safe_load(f)
+        data = yaml.safe_load(f) or {}
     return sorted(data.keys())
 
 

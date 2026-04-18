@@ -218,11 +218,24 @@ Videos published **before** `generations.json` exists have **no** joined params 
 3. **Phase 2c** — **CI persistence** of `generations.json` on `main` (see [workflows.md](spec/workflows.md) § Generations ledger; [ADR 0001](decisions/0001-persist-generations-json-on-ci.md)).  
 4. **Phase 2d** (correlate) + **2e** (2.5 stats + disclaimers) + lock **AGENT.md** schema (“data constitution”). Treat **2f** (packaging hashes) as a separate scheduling decision when CTR automation matters.  
 5. **Phase 3** — confirm **B** (or A/hybrid) per section above.  
-6. **Polish:** Phases **4–5**; Phase **6** when joins feel trustworthy.
+6. **Polish:** Phases **4–5**; Phase **6** when joins feel trustworthy.  
+7. **Optional (later):** Mood **template + vars** resolver (see § *Future — Mood config templates*) once `micro_*` editing feels repetitive — **not** required for the current static batch.
 
 **Stripped execution (first code sprint):** (1) minimal `generations.json` + `schema_version` + **`generation_id`** per run; (2) upload path **creates** row then **updates** `video_id` on success / retry; (3) workflows **commit** `data/generations.json` to `main`; (4) test on **manual** brand workflow; (5) correlate: join by `video_id` → title fallback; (6) Phase **2.5** + **confounder** language before trusting suggestions at scale ([AGENT.md](spec/AGENT.md)).
 
 **Status on `main` (2026-04):** (1)–(4) **landed** (see [ADR 0001](decisions/0001-persist-generations-json-on-ci.md)); (5) **evolving** — `correlate.py` uses **dual engagement** metrics (retention + watch minutes); **catalog backfill** added ledger rows for historic **`content_catalog.json`** uploads; **brand-only** `analytics.json` vs **mixed** catalog is documented in [`START_HERE.md`](START_HERE.md). **Personal** snapshots: `analytics-personal.yml` → `analytics_personal.json` + `*-personal.md` ([`PERSONAL_ANALYTICS.md`](PERSONAL_ANALYTICS.md)). **Catalog `channel`:** new CI catalog rows carry optional **`channel`** (`brand` / `personal`) per [ADR 0002](decisions/0002-content-catalog-channel-field.md) once merged; historic rows may omit the field — optional backfill / audit filtering. **Next:** post-merge spot-check `channel` on upload paths; optional personal correlate/suggestions; **later** multi-channel **profile template** ([`HANDOFF.md`](HANDOFF.md), [`START_HERE`](START_HERE.md) checklist). Remaining: **Phase 2.5 + confounder language** ([AGENT.md](spec/AGENT.md)), **packaging fingerprints** before CTR-heavy automation, optional **gated production plan** before Phase 6 auto-trigger.
+
+---
+
+## Future — Mood config templates (`template` + `vars`)
+
+**Goal:** Stop copy-pasting large `visual` / `audio` blocks for every `micro_*` (and similar) variant. Keep **one universe** in `config/moods.yaml`: a `templates:` (or top-level template keys) section holds **shared recipes**; each mood row only sets **`template`** + **`vars`** (or small overrides). At load time, a **resolver** deep-merges template → instance so [`orchestrator/orchestrator.py`](../orchestrator/orchestrator.py) still receives the same flat dict shape as today.
+
+**When:** After the current **brand micro batch** is stable in the wild — **not** a blocker for shipping static `micro_*` moods.
+
+**Scope (v1 of templates):** YAML-only; no Python “mood classes.” Document merge order (`vars` wins), forbidden keys, and contract tests for resolved moods (tags + `description_template` still required).
+
+**Suggested order:** (1) Add `templates:` + one pilot template + migrate **2–3** moods; (2) resolver in `_load_moods` (or a `config/resolve_moods.py` imported once); (3) migrate remaining `micro_*` rows; (4) optional codegen path later if YAML becomes awkward.
 
 ---
 
@@ -237,4 +250,4 @@ Videos published **before** `generations.json` exists have **no** joined params 
 
 ---
 
-*Last updated: 2026-04-16 — living document; adjust phases as the channel and codebase evolve.*
+*Last updated: 2026-04-15 — living document; adjust phases as the channel and codebase evolve.*

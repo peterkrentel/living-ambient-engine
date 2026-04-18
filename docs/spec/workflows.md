@@ -6,7 +6,7 @@
 
 ## Overview
 
-Ten workflow files automate video generation, YouTube deployment, analytics, and testing. Use the **Workflow Index** below as the map; YAML is the source of truth when this table drifts.
+Eleven workflow files automate video generation, YouTube deployment, analytics, and testing. Use the **Workflow Index** below as the map; YAML is the source of truth when this table drifts.
 
 **Each workflow YAML file MUST include a spec reference comment:**
 
@@ -21,6 +21,7 @@ Ten workflow files automate video generation, YouTube deployment, analytics, and
 | WF-CF | `content-factory.yml` | Manual (cron **commented out** in YAML; strategy TBD) | Batch generation + upload | Personal |
 | WF-CFB | `content-factory-brand.yml` | Manual only | Batch generation + upload | Brand |
 | WF-CFBATCH | `content-factory-brand-batch.yml` | Manual (+ optional schedule) | Mood rotation (SEO; cron may be off) | Brand |
+| WF-CFBMICRO | `content-factory-brand-micro-batch.yml` | Manual | 20× short brand slots (`data/brand_micro_batch_v1.json`; `micro_*` moods in `config/moods.yaml`) | Brand |
 | WF-ART | `art-creator.yml` | Manual / workflow_call | Single custom video | Brand (optional) |
 | WF-BATCH | `art-creator-batch.yml` | Manual (+ optional schedule) | Matrix generation (cron may be off) | Brand |
 | WF-PIANO | `piano-batch.yml` | Manual only | Batch piano videos + upload | Brand |
@@ -231,6 +232,12 @@ Each day generates 3 moods, rotating through all 14:
 permissions:
   contents: write
 ```
+
+## content-factory-brand-micro-batch.yml
+
+**Purpose:** One-shot **20 short** brand videos (5s / 10s / 30s) from **`data/brand_micro_batch_v1.json`**, each slot bound to a **`micro_*`** mood defined in **`config/moods.yaml`** (same universe as other moods). Local / CI entrypoint: **`scripts/run_brand_micro_batch.py`** → `./generated/manifest.json`; optional **`youtube_upload.py --batch ./generated --catalog-channel brand`**. *Future:* declarative **template + vars** for moods (see [COHESION_ROADMAP.md](../COHESION_ROADMAP.md) § Mood config templates) — **not** required for this batch; current `micro_*` entries are static YAML.
+
+**Inputs:** `dry_run` (plan only), `upload` (requires non–dry-run artifact).
 
 ## run-intent-consumer.yml
 
