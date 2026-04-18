@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "batch": "personal_long_batch_pressure_v1",
+  "next_day": 1,
+  "completed": false,
+  "slots_per_day": 6,
+  "total_slots": 24
+}

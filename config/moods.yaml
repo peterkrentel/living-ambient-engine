@@ -4,7 +4,7 @@
 
 deep_focus:
   description: "Deep concentration and flow state - Hypnotic fractal journey"
-  title_template: "Sounds for an Overactive Mind | {duration_str} Evolving Focus Music | No Loops"
+  title_template: "Enter Flow State | {duration_str} Zero Distraction Focus | Continuous"
   description_template: |
     🎯 Created to quiet an overactive mind and unlock deep concentration.
     ✨ This soundscape evolves through phases and never repeats.
@@ -332,7 +332,7 @@ study:
 
 energize:
   description: "Energized and motivated state - Kuku rhythm"
-  title_template: "Get Moving | {duration_str} Energizing Ambient Beats | Non-Repeating Flow"
+  title_template: "Boost Your Energy | {duration_str} Smooth Activation | No Crash"
   description_template: |
     ⚡ Created to build energy and momentum when you need a boost.
     ✨ This soundscape evolves through phases and never repeats.
@@ -494,7 +494,7 @@ trance:
 
 ceremony:
   description: "Ritual and ceremony - Candomblé rhythm"
-  title_template: "Sacred Space | {duration_str} Ceremonial Sounds | Evolving Ritual Ambient"
+  title_template: "Ground Yourself Instantly | {duration_str} Deep Ritual Atmosphere | No Loops"
   description_template: |
     🕯️ Created to hold space for ritual, intention, and presence.
     ✨ This soundscape evolves through phases and never repeats.
@@ -1260,7 +1260,7 @@ piano_gentle:
 
 piano_deep_calm:
   description: "Deep calm piano - Dark blue night starfield visual"
-  title_template: "Let Go of Stress | Deep Calm Piano Atmosphere"
+  title_template: "Calm Anxiety Fast | {duration_str} Deep Piano Relief | No Loops"
   description_template: |
     🎹 Created to help you sink into deep relaxation.
     ✨ This soundscape gently evolves and never loops.
