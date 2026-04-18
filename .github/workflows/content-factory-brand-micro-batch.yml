@@ -1,5 +1,6 @@
 # Brand micro batch v1 — 20 short videos (5s/10s/30s) from data/brand_micro_batch_v1.json
-# Daily mode: 4 videos/day for 5 days; progress in data/brand_micro_batch_state.json (like brand batch: pick → generate → upload).
+# Daily mode: 4 videos/day for 5 days; progress in data/brand_micro_batch_state.json (pick → generate → upload).
+# Upload: same idea as content-factory-brand-batch.yml — runs after successful generate unless workflow_dispatch dry_run (scheduled runs always upload when pick runs).
 # Moods: micro_* keys in config/moods.yaml (single source of truth).
 # Spec: docs/spec/workflows.md
 
@@ -31,7 +32,7 @@ on:
         type: boolean
         default: false
       upload:
-        description: "Upload to YouTube (brand) after generation (workflow_dispatch only; same gate as prior micro batch)"
+        description: "workflow_dispatch: require true to upload after generation. Scheduled runs upload automatically when generation succeeds."
         required: false
         type: boolean
         default: false
@@ -115,7 +116,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Plan (dry run)
-        if: ${{ github.event.inputs.dry_run == true || github.event.inputs.dry_run == 'true' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && (github.event.inputs.dry_run == true || github.event.inputs.dry_run == 'true') }}
         run: |
           MODE="${{ needs.pick.outputs.mode }}"
           if [ "$MODE" = "all" ]; then
@@ -125,7 +126,7 @@ jobs:
           fi
 
       - name: Generate brand micro batch
-        if: ${{ github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true' }}
+        if: ${{ github.event_name == 'schedule' || (github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true') }}
         run: |
           MODE="${{ needs.pick.outputs.mode }}"
           if [ "$MODE" = "all" ]; then
@@ -138,7 +139,7 @@ jobs:
         if: >-
           success()
           && needs.pick.outputs.advance_state == 'true'
-          && (github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true')
+          && (github.event_name == 'schedule' || (github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true'))
         run: |
           python3 scripts/run_brand_micro_batch.py --advance-day "${{ needs.pick.outputs.day_num }}" --state-file data/brand_micro_batch_state.json
           git config user.name "Content Factory Bot"
@@ -152,7 +153,7 @@ jobs:
           fi
 
       - name: Upload artifacts
-        if: ${{ github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true' }}
+        if: ${{ github.event_name == 'schedule' || (github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true') }}
         uses: actions/upload-artifact@v4
         with:
           name: brand-micro-batch-v1
@@ -160,7 +161,7 @@ jobs:
           retention-days: 7
 
       - name: Generation summary
-        if: ${{ github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true' }}
+        if: ${{ github.event_name == 'schedule' || (github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true') }}
         run: |
           echo "## Brand micro batch v1 — generate" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
@@ -174,9 +175,14 @@ jobs:
       ${{
         needs.pick.outputs.should_run == 'true'
         && needs.generate.result == 'success'
-        && github.event_name == 'workflow_dispatch'
-        && github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true'
-        && (github.event.inputs.upload == true || github.event.inputs.upload == 'true')
+        && (
+          github.event_name == 'schedule'
+          || (
+            github.event_name == 'workflow_dispatch'
+            && github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true'
+            && (github.event.inputs.upload == true || github.event.inputs.upload == 'true')
+          )
+        )
       }}
     timeout-minutes: 120
 
