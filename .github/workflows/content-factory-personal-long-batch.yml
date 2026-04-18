@@ -1,14 +1,14 @@
 # Personal long-form pressure batch — 24×1h from data/personal_long_batch_pressure_v1.json
 # 6 slots/day × 4 days (interleaved moods). State: data/personal_long_batch_pressure_state.json
-# GitHub-hosted jobs are capped at 6h; six 1h renders often need local/self-hosted — see docs/spec/workflows.md
+# Daily 09:00 UTC: pick → generate → upload (like brand batch); stops when state completed. Staggered vs brand micro 08:00 UTC.
+# GitHub-hosted jobs are capped at 6h — six 1h renders may need a larger runner or local generation; see docs/spec/workflows.md
 # Spec: docs/spec/workflows.md#content-factory-personal-long-batchyml
 
 name: Content Factory Personal Long Batch (Pressure v1)
 
 on:
-  # Optional: uncomment for same-time daily slices (ensure runners can finish 6×1h)
-  # schedule:
-  #   - cron: "0 10 * * *"
+  schedule:
+    - cron: "0 9 * * *" # Daily 09:00 UTC; upload when generation succeeds (pause by removing schedule block)
 
   workflow_dispatch:
     inputs:
@@ -32,7 +32,7 @@ on:
         type: boolean
         default: false
       upload:
-        description: "Upload to YouTube (personal) after generation (workflow_dispatch only)"
+        description: "workflow_dispatch: require true to upload after generation. Scheduled runs upload automatically when generation succeeds."
         required: false
         type: boolean
         default: false
@@ -116,7 +116,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Plan (dry run)
-        if: ${{ github.event.inputs.dry_run == true || github.event.inputs.dry_run == 'true' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && (github.event.inputs.dry_run == true || github.event.inputs.dry_run == 'true') }}
         run: |
           MODE="${{ needs.pick.outputs.mode }}"
           if [ "$MODE" = "all" ]; then
@@ -126,7 +126,7 @@ jobs:
           fi
 
       - name: Generate personal long batch
-        if: ${{ github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true' }}
+        if: ${{ github.event_name == 'schedule' || (github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true') }}
         run: |
           MODE="${{ needs.pick.outputs.mode }}"
           if [ "$MODE" = "all" ]; then
@@ -153,7 +153,7 @@ jobs:
           fi
 
       - name: Upload artifacts
-        if: ${{ github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true' }}
+        if: ${{ github.event_name == 'schedule' || (github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true') }}
         uses: actions/upload-artifact@v4
         with:
           name: personal-long-batch-pressure-v1
@@ -161,7 +161,7 @@ jobs:
           retention-days: 7
 
       - name: Generation summary
-        if: ${{ github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true' }}
+        if: ${{ github.event_name == 'schedule' || (github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true') }}
         run: |
           echo "## Personal long batch pressure v1 — generate" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
@@ -175,9 +175,14 @@ jobs:
       ${{
         needs.pick.outputs.should_run == 'true'
         && needs.generate.result == 'success'
-        && github.event_name == 'workflow_dispatch'
-        && github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true'
-        && (github.event.inputs.upload == true || github.event.inputs.upload == 'true')
+        && (
+          github.event_name == 'schedule'
+          || (
+            github.event_name == 'workflow_dispatch'
+            && github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true'
+            && (github.event.inputs.upload == true || github.event.inputs.upload == 'true')
+          )
+        )
       }}
     timeout-minutes: 120
 

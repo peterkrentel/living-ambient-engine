@@ -19,10 +19,10 @@ Twelve workflow files automate video generation, YouTube deployment, analytics, 
 | ID | Workflow | Trigger | Purpose | Channel |
 |----|----------|---------|---------|---------|
 | WF-CF | `content-factory.yml` | Manual (cron **commented out** in YAML; strategy TBD) | Batch generation + upload | Personal |
-| WF-CFLPB | `content-factory-personal-long-batch.yml` | Manual (schedule **commented**; 6h runner cap) | 24×1h personal pressure batch (`data/personal_long_batch_pressure_v1.json` + state); pick → generate → optional upload | Personal |
+| WF-CFLPB | `content-factory-personal-long-batch.yml` | Manual + schedule (daily 09:00 UTC; 6h runner cap) | 24×1h personal pressure batch; pick → generate → **upload on schedule** (dispatch upload gated by `upload`) | Personal |
 | WF-CFB | `content-factory-brand.yml` | Manual only | Batch generation + upload | Brand |
 | WF-CFBATCH | `content-factory-brand-batch.yml` | Manual (+ optional schedule) | Mood rotation (SEO; cron may be off) | Brand |
-| WF-CFBMICRO | `content-factory-brand-micro-batch.yml` | Manual + schedule (daily) | 4× short brand videos/day from **`data/brand_micro_batch_state.json`** until 20 slots done; optional one-shot all 20 | Brand |
+| WF-CFBMICRO | `content-factory-brand-micro-batch.yml` | Manual + schedule (daily 08:00 UTC) | 4× short brand/day + **upload on schedule** (like brand batch); dispatch `upload` for manual runs | Brand |
 | WF-ART | `art-creator.yml` | Manual / workflow_call | Single custom video | Brand (optional) |
 | WF-BATCH | `art-creator-batch.yml` | Manual (+ optional schedule) | Matrix generation (cron may be off) | Brand |
 | WF-PIANO | `piano-batch.yml` | Manual only | Batch piano videos + upload | Brand |
@@ -236,7 +236,7 @@ permissions:
 
 ## content-factory-brand-micro-batch.yml
 
-**Purpose:** Brand **micro** batch v1: **20 short** videos (5s / 10s / 30s) from **`data/brand_micro_batch_v1.json`**, each slot bound to a **`micro_*`** mood in **`config/moods.yaml`**. **Default CI path** mirrors **`content-factory-brand-batch.yml`**: **`pick`** (day/mode from **`data/brand_micro_batch_state.json`** or override) → **`generate`** → optional **`upload`**. **Daily mode** runs **4 slots per calendar day** (days 1–5) and advances **`next_day`** in the state file (committed after each successful non–dry run). **Dispatch** `run_full_batch` runs all 20 in one job (no state advance). Local / CI: **`scripts/run_brand_micro_batch.py`** → `./generated/manifest.json`; optional **`youtube_upload.py --batch ./generated --catalog-channel brand`** (upload only on **`workflow_dispatch`** with **`upload`: true**, same as before).
+**Purpose:** Brand **micro** batch v1: **20 short** videos (5s / 10s / 30s) from **`data/brand_micro_batch_v1.json`**, each slot bound to a **`micro_*`** mood in **`config/moods.yaml`**. **`pick`** → **`generate`** → **`upload`**. **Scheduled** runs (**08:00 UTC**) upload after successful generate (same spirit as **`content-factory-brand-batch.yml`** upload job: not blocked by a dispatch-only gate). **`workflow_dispatch`:** set **`upload`: true** (and not **`dry_run`**) to upload. **Daily mode** runs **4 slots per calendar day** (days 1–5) and advances **`next_day`** in the state file when **`advance_state`** applies. **`run_full_batch`** runs all 20 in one job (no state advance). **`pick`** skips when **`data/brand_micro_batch_state.json`** has **`completed: true`** until **`reset_state`**. Runner: **`scripts/run_brand_micro_batch.py`** → `./generated/manifest.json`; **`youtube_upload.py --batch ./generated --catalog-channel brand`**.
 
 **Inputs:** `day_override` (1–5), `reset_state`, `run_full_batch`, `dry_run`, `upload`.
 
@@ -244,11 +244,11 @@ permissions:
 
 ## content-factory-personal-long-batch.yml
 
-**Purpose:** Personal **long-form pressure** batch v1: **24×1h** videos from **`data/personal_long_batch_pressure_v1.json`** (moods **`piano_deep_calm`**, **`ceremony`**, **`energize`**, **`deep_focus`** only; slots **interleaved** 6/day × 4 days for temporal clustering). **`pick`** reads **`data/personal_long_batch_pressure_state.json`** → **`generate`** → optional **`upload`** via `youtube_upload.py --batch ./generated --catalog-channel personal`. Runner: **`scripts/run_personal_long_batch.py`**. **Title hooks** for these four moods are upgraded in **`config/moods.yaml`** (`title_template` only; join-safe).
+**Purpose:** Personal **long-form pressure** batch v1: **24×1h** videos from **`data/personal_long_batch_pressure_v1.json`** (moods **`piano_deep_calm`**, **`ceremony`**, **`energize`**, **`deep_focus`** only; slots **interleaved** 6/day × 4 days). **`pick`** → **`generate`** → **`upload`**. **Scheduled** runs (**09:00 UTC**, staggered vs brand micro) **upload** after successful generate. **`workflow_dispatch`:** **`upload`: true** (and not **`dry_run`**) to upload. **`pick`** skips when **`data/personal_long_batch_pressure_state.json`** has **`completed: true`** until **`reset_state`**. Runner: **`scripts/run_personal_long_batch.py`**; **`youtube_upload.py --batch ./generated --catalog-channel personal`**. **Title hooks** for the four moods: **`config/moods.yaml`** `title_template` only.
 
-**Ops:** GitHub-hosted jobs are **capped at 6 hours**; six sequential **1h** renders often exceed that — prefer **local / self-hosted** generation or **`run_full_batch`** on a capable runner; CI is still valid for **`dry_run`**, partial tests (`--max-count`), and **upload** after artifacts exist.
+**Ops:** GitHub-hosted jobs are **capped at 6 hours**; six sequential **1h** renders often exceed that — prefer **local / self-hosted** or a larger runner when needed.
 
-**Inputs:** `day_override` (1–4), `reset_state`, `run_full_batch`, `dry_run`, `upload` (dispatch-only upload gate, same pattern as brand micro batch).
+**Inputs:** `day_override` (1–4), `reset_state`, `run_full_batch`, `dry_run`, `upload` (required **true** on dispatch to upload; schedule uploads automatically when generation succeeds).
 
 ### Planned follow-ups (not in this workflow)
 
