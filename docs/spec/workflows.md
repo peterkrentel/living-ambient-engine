@@ -27,8 +27,8 @@ Twelve workflow files automate video generation, YouTube deployment, analytics, 
 | WF-BATCH | `art-creator-batch.yml` | Manual (+ optional schedule) | Matrix generation (cron may be off) | Brand |
 | WF-PIANO | `piano-batch.yml` | Manual only | Batch piano videos + upload | Brand |
 | WF-TEST | `test-art-creator.yml` | Manual + PR (path filter) | CI: spec validation + contract tests + 7× `art-creator` matrix (no production upload) | None |
-| WF-AGENT | `analytics-agent.yml` | Schedule (weekly) + Manual | Fetch YouTube stats, reports, correlate, **plan run intent**, channel audit, **`run-next` v0** (`scripts/run_next_report.py`) | Brand |
-| WF-AGENT-P | `analytics-personal.yml` | Schedule (weekly) + Manual | Fetch personal stats + report + `analyze_data` + audit + correlate → `suggestions_personal.json` + **plan intent** (`run_intent_personal.json` / blocked) + `run-next-*-personal.md` (never writes brand `suggestions.json`) | Personal |
+| WF-AGENT | `analytics-agent.yml` | Schedule (weekly) + Manual | Fetch YouTube stats, reports, correlate, **plan run intent**, channel audit, **`run-next` v0**, optional **dual LLM advisory** (Gemini API + runner GGUF via `scripts/agent_dual_advisory.py`) | Brand |
+| WF-AGENT-P | `analytics-personal.yml` | Schedule (weekly) + Manual | Fetch personal stats + report + `analyze_data` + audit + correlate → `suggestions_personal.json` + **plan intent** (`run_intent_personal.json` / blocked) + `run-next-*-personal.md` + optional **dual LLM advisory** (never writes brand `suggestions.json`) | Personal |
 | WF-RIC | `run-intent-consumer.yml` | Manual only | Validate intent JSON (default `data/run_intent.json`; personal: `data/run_intent_personal.json`) → `batch_generate` → optional gated `youtube_upload` (brand or personal per intent `channel`) | Brand or personal |
 
 ## Gating Rules
@@ -596,9 +596,11 @@ on:
 8. Plan run intent (`scripts/plan_run_intent.py`) — gated v0: writes `data/run_intent.json` when actionable **mood** increases exist, else `data/reports/run-intent-blocked.md`; **`upload` defaults false**; execution is **manual** via [`run-intent-consumer.yml`](../../.github/workflows/run-intent-consumer.yml); see [`contracts/production-run-intent.md`](./contracts/production-run-intent.md)
 9. Run channel coverage audit (`scripts/audit_channel.py`) — read-only markdown from committed analytics; summarizes 14-mood and 9×9 art×music grid coverage plus generations ledger join stats (no API calls)
 10. Write **`run-next`** advisory (`scripts/run_next_report.py`) — deterministic markdown from **`suggestions.json`** + **`audit-YYYY-WW.md`** + optional personal-lane pointers (**no** LLM, **no** `batch_generate` / upload); same ISO week label as the brand audit
-11. Commit and push data files — after `git commit`, run `git pull --rebase origin main` then `git push` so a concurrent push on `main` (e.g. the other analytics workflow) does not cause the job to fail
+11. **Cache runner GGUF** — `actions/cache` on `~/.cache/living-agent` (default Qwen2.5-0.5B Instruct q4 GGUF path used by the script)
+12. **Dual LLM advisory (optional v0):** `pip install llama-cpp-python`, then **`scripts/agent_dual_advisory.py --lane brand`** with the same ISO week as step 10. The script runs **Gemini (REST)** and **runner GGUF inference** in **parallel threads**, writing `agent-insight-YYYY-WW-brand-gemini.md` and `agent-insight-YYYY-WW-brand-runner.md`. If `GEMINI_API_KEY` is unset, Gemini output is a short stub; if `llama-cpp-python` is missing, runner output is a stub (CI installs it).
+13. Commit and push data files — after `git commit`, run `git pull --rebase origin main` then `git push` so a concurrent push on `main` (e.g. the other analytics workflow) does not cause the job to fail
 
-**Roadmap (same week family, not this workflow yet):** **validators** (cited indices, numeric parity with JSON), optional **LLM prose** on the fixed bundle (**self-hosted / open-weight** preferred; short-lived **Gemini** prototype allowed), **automation** only after outputs are trusted — [`COHESION_ROADMAP.md`](../COHESION_ROADMAP.md) Phase 6 · [`HANDOFF.md`](../HANDOFF.md).
+**Roadmap (same week family):** **validators** (cited indices, numeric parity with JSON); richer **self-hosted** options later; **automation** only after outputs are trusted — [`COHESION_ROADMAP.md`](../COHESION_ROADMAP.md) Phase 6 · [`HANDOFF.md`](../HANDOFF.md). **Shipped (prototype):** dual advisory (Gemini API + small GGUF on the GitHub runner for comparison).
 
 ### Outputs
 
@@ -609,13 +611,18 @@ on:
 | ML suggestions | `data/suggestions.json` | Bucket suggestions tagged by `metric` (`average_view_percentage` and/or `watch_time_minutes`); Step Summary lists both |
 | Run intent (v0) | `data/run_intent.json` **or** `data/reports/run-intent-blocked.md` | Planner output; committed when present (intent often absent until gates pass) |
 | Run-next (v0) | `data/reports/run-next-YYYY-WW.md` | Advisory “what next” from correlate + brand audit + personal pointers; validators / LLM layers tracked in roadmap above |
+| Gemini advisory (v0) | `data/reports/agent-insight-YYYY-WW-brand-gemini.md` | API prose on the fixed bundle; stub if no `GEMINI_API_KEY` |
+| Runner GGUF advisory (v0) | `data/reports/agent-insight-YYYY-WW-brand-runner.md` | Small instruct GGUF on the workflow runner (default Qwen2.5-0.5B path); stub if `llama-cpp-python` / model missing |
 | Channel audit | `data/reports/audit-YYYY-WW.md` | Coverage vs target grids + ledger join share (CI-generated) |
 
 ### Secrets Required
 
 | Secret | Purpose |
 |--------|---------|
-| `YOUTUBE_TOKEN_PICKLE` | YouTube API authentication |
+| `YOUTUBE_TOKEN_PICKLE_BRAND` | YouTube API authentication (brand token pickle) |
+| `GEMINI_API_KEY` | Optional — enables Gemini half of dual advisory; omit for Gemini stub |
+
+**Optional env (runner half, set in workflow YAML or runner config):** `AGENT_GGUF_PATH`, `AGENT_GGUF_URL` (default Hugging Face Qwen2.5-0.5B Instruct q4), `AGENT_LLAMA_THREADS`, `GEMINI_MODEL`.
 
 ### Guardrails
 
@@ -660,7 +667,9 @@ on:
 7. ML correlation (`scripts/correlate.py` with `ANALYTICS_JSON_PATH` + `SUGGESTIONS_JSON_PATH=data/suggestions_personal.json`)
 8. Plan run intent (`scripts/plan_run_intent.py` with `--suggestions data/suggestions_personal.json`, `--channel personal`, `--intent-output data/run_intent_personal.json`, `--blocked-output data/reports/run-intent-blocked-personal.md`)
 9. Run-next advisory personal (`scripts/run_next_report.py --lane personal`)
-10. Commit + push (`git pull --rebase origin main` before `git push`)
+10. **Cache runner GGUF** — same cache key family as brand (`~/.cache/living-agent`)
+11. **Dual LLM advisory personal:** `pip install llama-cpp-python` + `scripts/agent_dual_advisory.py --lane personal` → `agent-insight-YYYY-WW-personal-gemini.md` and `agent-insight-YYYY-WW-personal-runner.md` (Gemini + runner GGUF in parallel inside the script)
+12. Commit + push (`git pull --rebase origin main` before `git push`; `git add` includes `agent-insight-*-personal-*.md` in addition to `*-personal.md`)
 
 ### Outputs
 
@@ -672,12 +681,15 @@ on:
 | ML suggestions (personal) | `data/suggestions_personal.json` |
 | Run intent (personal v0) | `data/run_intent_personal.json` **or** `data/reports/run-intent-blocked-personal.md` |
 | Run-next (personal v0) | `data/reports/run-next-YYYY-WW-personal.md` |
+| Gemini advisory (personal v0) | `data/reports/agent-insight-YYYY-WW-personal-gemini.md` |
+| Runner GGUF advisory (personal v0) | `data/reports/agent-insight-YYYY-WW-personal-runner.md` |
 
 ### Secrets
 
 | Secret | Purpose |
 |--------|---------|
 | `YOUTUBE_TOKEN_PICKLE` | Personal channel OAuth (same as Content Factory personal) |
+| `GEMINI_API_KEY` | Optional — Gemini half of dual advisory; omit for Gemini stub |
 
 **Guardrail:** This workflow must **not** set `YOUTUBE_TOKEN_PICKLE_BRAND`, so `fetch_analytics` never picks the brand token for personal runs.
 
