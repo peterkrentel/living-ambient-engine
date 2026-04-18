@@ -11,18 +11,17 @@ import os
 import sys
 import re
 import json
+import yaml
 from datetime import datetime
 from pathlib import Path
-import yaml
-
 from orchestrator.orchestrator import Orchestrator
 
 
 def load_moods(config_dir: str = "config") -> list:
-    """Load all available moods from config."""
+    """Load all available mood keys from ``config/moods.yaml``."""
     moods_path = Path(config_dir) / "moods.yaml"
-    with open(moods_path, 'r') as f:
-        moods = yaml.safe_load(f)
+    with open(moods_path, encoding="utf-8") as f:
+        moods = yaml.safe_load(f) or {}
     return list(moods.keys())
 
 

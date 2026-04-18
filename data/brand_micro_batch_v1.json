@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "name": "brand_micro_batch_v1",
+  "split": "40% core / 40% curiosity-pain / 20% sacred-immersion",
+  "notes": "Each row uses a distinct micro_* mood in config/moods.yaml (static definitions for this batch). thumbnail_text is for thumb design, not rendered automatically. Future: template+vars moods per COHESION_ROADMAP.",
+  "slots": [
+    {"slot": 1, "mood": "micro_clarity_sharp", "duration_s": 10, "bucket": "core", "thumbnail_text": "CLEAR"},
+    {"slot": 2, "mood": "micro_focus_lock", "duration_s": 30, "bucket": "core", "thumbnail_text": "FOCUS"},
+    {"slot": 3, "mood": "micro_energy_boost", "duration_s": 5, "bucket": "core", "thumbnail_text": "WAKE"},
+    {"slot": 4, "mood": "micro_wake_spark", "duration_s": 10, "bucket": "core", "thumbnail_text": "WAKE"},
+    {"slot": 5, "mood": "micro_relief_exhale", "duration_s": 10, "bucket": "core", "thumbnail_text": "RELAX"},
+    {"slot": 6, "mood": "micro_relief_soft", "duration_s": 30, "bucket": "core", "thumbnail_text": "RELAX"},
+    {"slot": 7, "mood": "micro_drift_calm", "duration_s": 30, "bucket": "core", "thumbnail_text": "CALM"},
+    {"slot": 8, "mood": "micro_sharpen_edge", "duration_s": 5, "bucket": "core", "thumbnail_text": "FOCUS"},
+    {"slot": 9, "mood": "micro_racing_cool", "duration_s": 10, "bucket": "curiosity", "thumbnail_text": "STOP"},
+    {"slot": 10, "mood": "micro_spiral_stop", "duration_s": 5, "bucket": "curiosity", "thumbnail_text": "BREAK"},
+    {"slot": 11, "mood": "micro_overthink_a", "duration_s": 10, "bucket": "curiosity", "thumbnail_text": "STOP"},
+    {"slot": 12, "mood": "micro_overthink_b", "duration_s": 10, "bucket": "curiosity", "thumbnail_text": "CLEAR"},
+    {"slot": 13, "mood": "micro_thought_loop", "duration_s": 10, "bucket": "curiosity", "thumbnail_text": "BREAK"},
+    {"slot": 14, "mood": "micro_stuck_jolt", "duration_s": 10, "bucket": "curiosity", "thumbnail_text": "SNAP"},
+    {"slot": 15, "mood": "micro_noise_hush", "duration_s": 5, "bucket": "curiosity", "thumbnail_text": "QUIET"},
+    {"slot": 16, "mood": "micro_interrupt_snap", "duration_s": 5, "bucket": "curiosity", "thumbnail_text": "BREAK"},
+    {"slot": 17, "mood": "micro_sacred_drop", "duration_s": 30, "bucket": "experimental", "thumbnail_text": "SACRED"},
+    {"slot": 18, "mood": "micro_ritual_in", "duration_s": 10, "bucket": "experimental", "thumbnail_text": "RITUAL"},
+    {"slot": 19, "mood": "micro_immersion_deep", "duration_s": 30, "bucket": "experimental", "thumbnail_text": "DEEP"},
+    {"slot": 20, "mood": "micro_drop_inward", "duration_s": 10, "bucket": "experimental", "thumbnail_text": "DROP"}
+  ]
+}

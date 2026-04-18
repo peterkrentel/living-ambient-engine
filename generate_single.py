@@ -13,10 +13,10 @@ from orchestrator.orchestrator import Orchestrator
 
 
 def load_moods(config_dir: str = "config") -> dict:
-    """Load all mood configurations."""
+    """Load all mood configurations from ``config/moods.yaml``."""
     moods_path = Path(config_dir) / "moods.yaml"
-    with open(moods_path, 'r') as f:
-        return yaml.safe_load(f)
+    with open(moods_path, encoding="utf-8") as f:
+        return yaml.safe_load(f) or {}
 
 
 def parse_duration(duration_str: str) -> int:

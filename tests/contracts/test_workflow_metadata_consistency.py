@@ -27,6 +27,7 @@ class TestWorkflowMetadataConsistency:
     UPLOAD_WORKFLOWS = [
         'content-factory.yml',
         'content-factory-brand.yml',
+        'content-factory-brand-micro-batch.yml',
         'art-creator.yml',
         'run-intent-consumer.yml',
     ]
@@ -81,17 +82,17 @@ class TestWorkflowMetadataConsistency:
 
 class TestMetadataFlowIntegrity:
     """Ensure metadata flows from moods.yaml through the pipeline."""
-    
+
     def test_moods_yaml_has_required_fields(self):
-        """All moods in moods.yaml should have SEO fields."""
+        """All moods in moods.yaml have SEO fields."""
         import yaml
-        
-        moods_path = REPO_ROOT / 'config' / 'moods.yaml'
+
+        moods_path = REPO_ROOT / "config" / "moods.yaml"
         assert moods_path.exists(), "config/moods.yaml must exist"
-        
-        with open(moods_path) as f:
-            moods = yaml.safe_load(f)
-        
+
+        with open(moods_path, encoding="utf-8") as f:
+            moods = yaml.safe_load(f) or {}
+
         for name, config in moods.items():
             # Skip non-mood entries (like defaults)
             if not isinstance(config, dict):

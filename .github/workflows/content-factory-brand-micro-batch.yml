@@ -1,0 +1,133 @@
+# Brand micro batch v1 — 20 short videos (5s/10s/30s) from data/brand_micro_batch_v1.json
+# Moods: micro_* keys in config/moods.yaml (single source of truth).
+# Spec: docs/spec/workflows.md
+
+name: Content Factory Brand Micro Batch v1
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "If true, print batch plan only (no generation)"
+        required: false
+        type: boolean
+        default: false
+      upload:
+        description: "Upload to YouTube (brand) after generation"
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: brand-micro-batch-v1
+  cancel-in-progress: false
+
+env:
+  PYTHON_VERSION: "3.11"
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 720
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install FFmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Plan (dry run)
+        if: ${{ github.event.inputs.dry_run == true || github.event.inputs.dry_run == 'true' }}
+        run: |
+          python scripts/run_brand_micro_batch.py --dry-run --output ./generated | tee "$GITHUB_STEP_SUMMARY"
+
+      - name: Generate brand micro batch
+        if: ${{ github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true' }}
+        run: |
+          python scripts/run_brand_micro_batch.py --output ./generated
+
+      - name: Upload artifacts
+        if: ${{ github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: brand-micro-batch-v1
+          path: ./generated/
+          retention-days: 7
+
+      - name: Generation summary
+        if: ${{ github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true' }}
+        run: |
+          echo "## Brand micro batch v1" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          test -f ./generated/manifest.json && python -c "import json; d=json.load(open('./generated/manifest.json')); print('**Videos:**', d.get('total_videos'))" >> "$GITHUB_STEP_SUMMARY" || true
+
+  upload:
+    needs: generate
+    runs-on: ubuntu-latest
+    if: >-
+      ${{
+        (github.event.inputs.upload == true || github.event.inputs.upload == 'true')
+        && github.event.inputs.dry_run != true && github.event.inputs.dry_run != 'true'
+      }}
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install google-auth-oauthlib google-api-python-client
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: brand-micro-batch-v1
+          path: ./generated
+
+      - name: Restore YouTube credentials
+        run: |
+          printf "%s" "${{ secrets.YOUTUBE_TOKEN_PICKLE_BRAND }}" | base64 -d > youtube_token.pickle
+          printf "%s" '${{ secrets.YOUTUBE_CLIENT_SECRETS }}' > client_secrets.json
+
+      - name: Upload to YouTube (brand)
+        run: |
+          python youtube_upload.py --batch ./generated --catalog-channel brand
+
+      - name: Cleanup credentials
+        if: always()
+        run: |
+          rm -f youtube_token.pickle client_secrets.json
+
+      - name: Commit generations ledger
+        run: |
+          git config user.name "Content Factory Bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -f data/generations.json ]; then
+            git add data/generations.json
+          fi
+          if git diff --staged --quiet; then
+            echo "No generations ledger changes to commit"
+          else
+            git commit -m "Update generations ledger (brand micro batch v1) [automated]"
+            bash scripts/ci_merge_main_after_data_commit.sh || true
+          fi

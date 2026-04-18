@@ -32,7 +32,7 @@ DEFAULT_BLOCKED = _REPO / "data" / "reports" / "run-intent-blocked.md"
 MOODS_YAML = _REPO / "config" / "moods.yaml"
 
 ALLOWED_DURATIONS = frozenset(
-    {"30s", "1min", "5min", "10min", "30m", "1h", "2h", "3h", "4h", "1.5h"}
+    {"5s", "10s", "30s", "1min", "5min", "10min", "30m", "1h", "2h", "3h", "4h", "1.5h"}
 )
 
 
@@ -41,7 +41,7 @@ def load_factory_moods(path: Path | None = None) -> dict[str, object]:
         raise RuntimeError("PyYAML required: pip install pyyaml")
     p = path or MOODS_YAML
     with open(p, encoding="utf-8") as f:
-        return yaml.safe_load(f)
+        return yaml.safe_load(f) or {}
 
 
 def validate_and_normalize(
