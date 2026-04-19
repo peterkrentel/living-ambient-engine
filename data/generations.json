@@ -3062,6 +3062,231 @@
       "updated_at": "2026-04-19T08:54:34.768061+00:00",
       "commit_sha": "497c9cf65e9f2b18f36bfd122db2d3cd3cb04b3e",
       "channel": "brand"
+    },
+    {
+      "generation_id": "4ecd3f9a-ca36-416d-9055-e5436000ef62",
+      "video_id": "s2EemWYj5qo",
+      "workflow": "Content Factory Personal Long Batch (Pressure v1)",
+      "mood": "piano_deep_calm",
+      "duration_seconds": 3600,
+      "params": {
+        "seed": 274648937,
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Calm Anxiety Fast | 1 Hour Deep Piano Relief | No Loops",
+        "video_title": "Calm Anxiety Fast | 1 Hour Deep Piano Relief | No Loops",
+        "description": "Deep calm piano - Dark blue night starfield visual",
+        "tags": [
+          "ASMR",
+          "piano music",
+          "relaxing piano",
+          "deep calm",
+          "stress relief music",
+          "calm piano",
+          "soft piano",
+          "piano for sleep",
+          "meditation piano",
+          "piano ambient",
+          "piano atmosphere",
+          "soothing piano",
+          "theta waves"
+        ]
+      },
+      "generated_at": "2026-04-19T10:58:03.524013",
+      "uploaded_at": "2026-04-19T10:59:36.864419+00:00",
+      "updated_at": "2026-04-19T10:59:36.864419+00:00",
+      "commit_sha": "4b79333d10cb4b5e6c60284a4cde1ee90a54085d",
+      "channel": "personal"
+    },
+    {
+      "generation_id": "094f0fe2-1d45-421c-81da-90c0979ea31b",
+      "video_id": "WdxlarZEvic",
+      "workflow": "Content Factory Personal Long Batch (Pressure v1)",
+      "mood": "piano_deep_calm",
+      "duration_seconds": 3600,
+      "params": {
+        "seed": 1691334071,
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Calm Anxiety Fast | 1 Hour Deep Piano Relief | No Loops",
+        "video_title": "Calm Anxiety Fast | 1 Hour Deep Piano Relief | No Loops",
+        "description": "Deep calm piano - Dark blue night starfield visual",
+        "tags": [
+          "ASMR",
+          "piano music",
+          "relaxing piano",
+          "deep calm",
+          "stress relief music",
+          "calm piano",
+          "soft piano",
+          "piano for sleep",
+          "meditation piano",
+          "piano ambient",
+          "piano atmosphere",
+          "soothing piano",
+          "theta waves"
+        ]
+      },
+      "generated_at": "2026-04-19T10:58:03.524063",
+      "uploaded_at": "2026-04-19T10:59:56.442988+00:00",
+      "updated_at": "2026-04-19T10:59:56.442988+00:00",
+      "commit_sha": "4b79333d10cb4b5e6c60284a4cde1ee90a54085d",
+      "channel": "personal"
+    },
+    {
+      "generation_id": "809ec366-b803-47dd-90b2-878fb32c58f7",
+      "video_id": "Vk8YqUF5NG4",
+      "workflow": "Content Factory Personal Long Batch (Pressure v1)",
+      "mood": "piano_deep_calm",
+      "duration_seconds": 3600,
+      "params": {
+        "seed": 1705701024,
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Calm Anxiety Fast | 1 Hour Deep Piano Relief | No Loops",
+        "video_title": "Calm Anxiety Fast | 1 Hour Deep Piano Relief | No Loops",
+        "description": "Deep calm piano - Dark blue night starfield visual",
+        "tags": [
+          "ASMR",
+          "piano music",
+          "relaxing piano",
+          "deep calm",
+          "stress relief music",
+          "calm piano",
+          "soft piano",
+          "piano for sleep",
+          "meditation piano",
+          "piano ambient",
+          "piano atmosphere",
+          "soothing piano",
+          "theta waves"
+        ]
+      },
+      "generated_at": "2026-04-19T10:58:03.524079",
+      "uploaded_at": "2026-04-19T11:00:15.458701+00:00",
+      "updated_at": "2026-04-19T11:00:15.458701+00:00",
+      "commit_sha": "4b79333d10cb4b5e6c60284a4cde1ee90a54085d",
+      "channel": "personal"
+    },
+    {
+      "generation_id": "232550e0-8e4d-4568-9615-f93dec582ceb",
+      "video_id": "9WyqdOWQ0uc",
+      "workflow": "Content Factory Personal Long Batch (Pressure v1)",
+      "mood": "ceremony",
+      "duration_seconds": 3600,
+      "params": {
+        "seed": 1297982842,
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Ground Yourself Instantly | 1 Hour Deep Ritual Atmosphere | No Loops",
+        "video_title": "Ground Yourself Instantly | 1 Hour Deep Ritual Atmosphere | No Loops",
+        "description": "Ritual and ceremony - Candombl\u00e9 rhythm",
+        "tags": [
+          "ceremonial music",
+          "ritual music",
+          "sacred music",
+          "spiritual music",
+          "healing music",
+          "sacred geometry",
+          "candomble rhythm",
+          "brazilian drums",
+          "shamanic drums",
+          "intention music",
+          "meditation ritual",
+          "sacred space music",
+          "prayer music",
+          "solfeggio frequencies",
+          "285 hz healing",
+          "ASMR"
+        ]
+      },
+      "generated_at": "2026-04-19T10:58:03.524092",
+      "uploaded_at": "2026-04-19T11:00:36.798116+00:00",
+      "updated_at": "2026-04-19T11:00:36.798116+00:00",
+      "commit_sha": "4b79333d10cb4b5e6c60284a4cde1ee90a54085d",
+      "channel": "personal"
+    },
+    {
+      "generation_id": "4e5d0d1a-ab22-46dd-a082-4d440b23dd76",
+      "video_id": "2Gvv2klVvl0",
+      "workflow": "Content Factory Personal Long Batch (Pressure v1)",
+      "mood": "ceremony",
+      "duration_seconds": 3600,
+      "params": {
+        "seed": 949869932,
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Ground Yourself Instantly | 1 Hour Deep Ritual Atmosphere | No Loops",
+        "video_title": "Ground Yourself Instantly | 1 Hour Deep Ritual Atmosphere | No Loops",
+        "description": "Ritual and ceremony - Candombl\u00e9 rhythm",
+        "tags": [
+          "ceremonial music",
+          "ritual music",
+          "sacred music",
+          "spiritual music",
+          "healing music",
+          "sacred geometry",
+          "candomble rhythm",
+          "brazilian drums",
+          "shamanic drums",
+          "intention music",
+          "meditation ritual",
+          "sacred space music",
+          "prayer music",
+          "solfeggio frequencies",
+          "285 hz healing",
+          "ASMR"
+        ]
+      },
+      "generated_at": "2026-04-19T10:58:03.524102",
+      "uploaded_at": "2026-04-19T11:00:58.384301+00:00",
+      "updated_at": "2026-04-19T11:00:58.384301+00:00",
+      "commit_sha": "4b79333d10cb4b5e6c60284a4cde1ee90a54085d",
+      "channel": "personal"
+    },
+    {
+      "generation_id": "fbff9cab-2c35-4f3b-a314-f744b1f81a88",
+      "video_id": "u-95eFJGciw",
+      "workflow": "Content Factory Personal Long Batch (Pressure v1)",
+      "mood": "deep_focus",
+      "duration_seconds": 3600,
+      "params": {
+        "seed": 1796570914,
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Enter Flow State | 1 Hour Zero Distraction Focus | Continuous",
+        "video_title": "Enter Flow State | 1 Hour Zero Distraction Focus | Continuous",
+        "description": "Deep concentration and flow state - Hypnotic fractal journey",
+        "tags": [
+          "focus music",
+          "deep work music",
+          "concentration music",
+          "binaural beats focus",
+          "study music",
+          "work music",
+          "ambient focus",
+          "coding music",
+          "flow state music",
+          "productivity music",
+          "background music for work",
+          "music for concentration",
+          "gnawa rhythm",
+          "tribal drums focus",
+          "432 hz music",
+          "ASMR"
+        ]
+      },
+      "generated_at": "2026-04-19T10:58:03.524114",
+      "uploaded_at": "2026-04-19T11:01:27.811618+00:00",
+      "updated_at": "2026-04-19T11:01:27.811618+00:00",
+      "commit_sha": "4b79333d10cb4b5e6c60284a4cde1ee90a54085d",
+      "channel": "personal"
     }
   ]
 }
