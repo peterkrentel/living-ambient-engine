@@ -2938,6 +2938,130 @@
       "updated_at": "2026-04-18T10:40:00.992640+00:00",
       "commit_sha": "5d582bfa68d6900de0c385cf40d74fa80f95b8b9",
       "channel": "personal"
+    },
+    {
+      "generation_id": "164e17f6-349a-4846-bec7-a41e6605b28e",
+      "video_id": "b1fOR_7xiOM",
+      "workflow": "Content Factory Brand Micro Batch v1",
+      "mood": "micro_relief_exhale",
+      "duration_seconds": 10,
+      "params": {
+        "seed": 1465325529,
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "10 Seconds of Relief",
+        "video_title": "10 Seconds of Relief",
+        "description": "Brand micro: 10 Seconds of Relief",
+        "tags": [
+          "brand micro batch",
+          "micro ambient",
+          "short ambient",
+          "ambient music",
+          "sound design",
+          "binaural beats",
+          "relief",
+          "stress relief"
+        ]
+      },
+      "generated_at": "2026-04-19T08:53:46.397274",
+      "uploaded_at": "2026-04-19T08:54:29.361159+00:00",
+      "updated_at": "2026-04-19T08:54:29.361159+00:00",
+      "commit_sha": "497c9cf65e9f2b18f36bfd122db2d3cd3cb04b3e",
+      "channel": "brand"
+    },
+    {
+      "generation_id": "960ca16f-2e37-4851-848b-f66082992b28",
+      "video_id": "SwD5Nwcj8u4",
+      "workflow": "Content Factory Brand Micro Batch v1",
+      "mood": "micro_relief_soft",
+      "duration_seconds": 30,
+      "params": {
+        "seed": 456405172,
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "30 Seconds to Finally Relax",
+        "video_title": "30 Seconds to Finally Relax",
+        "description": "Brand micro: 30 Seconds to Finally Relax",
+        "tags": [
+          "brand micro batch",
+          "micro ambient",
+          "short ambient",
+          "ambient music",
+          "sound design",
+          "binaural beats",
+          "relaxation",
+          "unwind"
+        ]
+      },
+      "generated_at": "2026-04-19T08:53:46.397300",
+      "uploaded_at": "2026-04-19T08:54:31.040448+00:00",
+      "updated_at": "2026-04-19T08:54:31.040448+00:00",
+      "commit_sha": "497c9cf65e9f2b18f36bfd122db2d3cd3cb04b3e",
+      "channel": "brand"
+    },
+    {
+      "generation_id": "e424b9b7-10f7-473b-a7fa-f593b5fc8968",
+      "video_id": "ye6j1Y-TCAc",
+      "workflow": "Content Factory Brand Micro Batch v1",
+      "mood": "micro_drift_calm",
+      "duration_seconds": 30,
+      "params": {
+        "seed": 533361740,
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "30 Seconds of Deep Calm",
+        "video_title": "30 Seconds of Deep Calm",
+        "description": "Brand micro: 30 Seconds of Deep Calm",
+        "tags": [
+          "brand micro batch",
+          "micro ambient",
+          "short ambient",
+          "ambient music",
+          "sound design",
+          "binaural beats",
+          "deep calm",
+          "meditation"
+        ]
+      },
+      "generated_at": "2026-04-19T08:53:46.397311",
+      "uploaded_at": "2026-04-19T08:54:32.839017+00:00",
+      "updated_at": "2026-04-19T08:54:32.839017+00:00",
+      "commit_sha": "497c9cf65e9f2b18f36bfd122db2d3cd3cb04b3e",
+      "channel": "brand"
+    },
+    {
+      "generation_id": "6870911e-8ad6-4bea-8fb8-8a99c819164a",
+      "video_id": "TcyB1jaaBVE",
+      "workflow": "Content Factory Brand Micro Batch v1",
+      "mood": "micro_sharpen_edge",
+      "duration_seconds": 5,
+      "params": {
+        "seed": 2120878049,
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "5 Seconds to Sharpen Your Mind",
+        "video_title": "5 Seconds to Sharpen Your Mind",
+        "description": "Brand micro: 5 Seconds to Sharpen Your Mind",
+        "tags": [
+          "brand micro batch",
+          "micro ambient",
+          "short ambient",
+          "ambient music",
+          "sound design",
+          "binaural beats",
+          "sharp focus",
+          "clarity"
+        ]
+      },
+      "generated_at": "2026-04-19T08:53:46.397327",
+      "uploaded_at": "2026-04-19T08:54:34.768061+00:00",
+      "updated_at": "2026-04-19T08:54:34.768061+00:00",
+      "commit_sha": "497c9cf65e9f2b18f36bfd122db2d3cd3cb04b3e",
+      "channel": "brand"
     }
   ]
 }
