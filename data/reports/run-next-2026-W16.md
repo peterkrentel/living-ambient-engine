@@ -1,7 +1,7 @@
 # Run next — advisory (2026-W16)
 
-Generated (report): 2026-04-17T19:35:54.647441+00:00
-**Correlate bundle `generated_at`:** 2026-04-17T19:35:54.410566Z
+Generated (report): 2026-04-19T02:31:57.134409+00:00
+**Correlate bundle `generated_at`:** 2026-04-19T02:31:56.828070Z
 
 ## How to read this
 
@@ -13,9 +13,9 @@ This file is **machine-assembled** from `data/suggestions.json` and the **brand*
 
 ## Brand snapshot (this run)
 
-- **Overall avg retention:** 11.42%
-- **Overall avg watch min / video (window):** 6.838
-- **Videos analyzed:** 117 with views / 334 total
+- **Overall avg retention:** 17.73%
+- **Overall avg watch min / video (window):** 6.934
+- **Videos analyzed:** 122 with views / 338 total
 
 ## Evidence (paths)
 
@@ -28,25 +28,23 @@ _None this week — all rows are exploratory or below actionable thresholds._
 
 ## Exploratory — lean in (low n / views)
 
-↑ `art_period` / `contemporary` (retention %) — +3.7% vs channel avg (n=3, views=179, exploratory) — `suggestions[0]`
-↑ `music_style` / `heartbeat` (retention %) — +2.7% vs channel avg (n=4, views=113, exploratory) — `suggestions[1]`
+_No exploratory "increase" rows._
 
 ## Exploratory — tread carefully (underperformers)
 
-↓ `music_style` / `none` (retention %) — -3.6% vs channel avg (n=3, views=164, exploratory) — `suggestions[3]`
-↓ `art_period` / `future` (retention %) — -2.5% vs channel avg (n=3, views=118, exploratory) — `suggestions[2]`
+↓ `music_style` / `none` (retention %) — -9.4% vs channel avg (n=3, views=158, exploratory) — `suggestions[0]`
 
 ## Audit — overview excerpt (brand)
 
-- **Videos in analytics:** 334
-- **generations.json join (any ledger row):** 42 / 334 (12.6%)
-- **generations.json join (identity-aligned):** 28 / 334 (8.4%)
+- **Videos in analytics:** 338
+- **generations.json join (any ledger row):** 46 / 338 (13.6%)
+- **generations.json join (identity-aligned):** 32 / 338 (9.5%)
   - *Identity-aligned uses optional ledger `channel`, else infers from `workflow` (e.g. `Content Factory (Brand)`). Rows with neither still count only toward “any”.*
   - *Historic uploads may lack rows until logged by the upload pipeline.*
 
 ## Personal lane (context only)
 
-- `data/analytics_personal.json` — **90** videos in snapshot; `fetched_at`: 2026-04-17T19:18:21.645531+00:00
+- `data/analytics_personal.json` — **90** videos in snapshot; `fetched_at`: 2026-04-17T19:35:19.040977+00:00
 - **Latest personal markdown report:** `data/reports/audit-2026-W16-personal.md`
 - **Not merged** into brand `suggestions.json` / correlate — use for cross-read only ([`docs/PERSONAL_ANALYTICS.md`](../../docs/PERSONAL_ANALYTICS.md)).
 
