@@ -1,6 +1,6 @@
 # Personal channel — Analytics Report (2026-W17)
 
-Generated: 2026-04-20T18:31:49.530197+00:00
+Generated: 2026-04-20T19:30:10.772417+00:00
 
 > **Channel scope:** Personal YouTube only. Data file: `data/analytics_personal.json`. Brand metrics live in `data/analytics.json` (main Analytics Agent workflow).
 
@@ -12,9 +12,9 @@ Generated: 2026-04-20T18:31:49.530197+00:00
 
 ## Totals
 
-- **Total views:** 109
-- **Total watch time:** 462 minutes
-- **Subscribers gained:** 0
+- **Total views:** 313
+- **Total watch time:** 892 minutes
+- **Subscribers gained:** 4
 
 ## Top 5 by Retention
 
@@ -30,30 +30,30 @@ Generated: 2026-04-20T18:31:49.530197+00:00
 
 | Video | Mood | Views | Watch Time (min) |
 |-------|------|-------|------------------|
-| Sounds for an Overactive Mind | 1 Hour E | deep_focus | 40 | 16 |
-| Fall Asleep to Gentle Rain | 1 Hour | Ev | rain_sleep | 18 | 39 |
-| Let Go of Stress | Deep Calm Piano Atmos | piano_deep_calm | 11 | 275 |
-| warrior_10s_20260124_160306 | warrior | 9 | 0 |
-| Let Go of Stress | Deep Calm Piano Atmos | piano_deep_calm | 5 | 1 |
+| Enter Flow State | 1 Hour Zero Distracti | deep_focus | 116 | 289 |
+| Sounds for an Overactive Mind | 1 Hour E | deep_focus | 50 | 18 |
+| Calm Anxiety Fast | 1 Hour Deep Piano Re | piano_deep_calm | 27 | 21 |
+| Calm Anxiety Fast | 1 Hour Deep Piano Re | piano_deep_calm | 24 | 78 |
+| Fall Asleep to Gentle Rain | 1 Hour | Ev | rain_sleep | 19 | 39 |
 
 ## Performance by Mood
 
 | Mood | Videos | Total Views | Avg Retention |
 |------|--------|-------------|---------------|
-| deep_focus | 9 | 45 | 23.4% |
-| rain_sleep | 4 | 22 | 2.1% |
-| piano_deep_calm | 12 | 16 | 21.1% |
+| deep_focus | 9 | 172 | 19.5% |
+| piano_deep_calm | 12 | 69 | 9.8% |
+| rain_sleep | 4 | 23 | 2.0% |
+| ceremony | 10 | 17 | 1.0% |
 | warrior | 11 | 9 | 57.0% |
+| energize | 8 | 6 | 6.7% |
 | study | 6 | 5 | 20.2% |
+| trance | 10 | 4 | 6.1% |
 | unknown | 8 | 4 | 17.8% |
-| trance | 10 | 3 | 8.6% |
 | piano_ambient | 2 | 2 | 49.8% |
 | piano_relax | 2 | 2 | 9.4% |
-| ceremony | 10 | 1 | 0.2% |
 | piano_evening | 2 | 0 | 0.0% |
 | rain_piano | 2 | 0 | 0.0% |
 | piano_gentle | 2 | 0 | 0.0% |
-| energize | 8 | 0 | 0.0% |
 | chill | 4 | 0 | 0.0% |
 | sleep | 9 | 0 | 0.0% |
 | lofi_study | 2 | 0 | 0.0% |

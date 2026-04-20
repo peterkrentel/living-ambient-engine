@@ -3,4 +3,4 @@
 > **Advisory only (v0).** Not `run_intent`, not `batch_generate`, not causal proof. Sparse metrics and packaging confounders apply — see `docs/spec/AGENT.md`.
 
 ---
-I have reviewed the provided bundle of committed repository files, including the personal channel analytics report for 2026-W17, the run-next advisory, the run-intent blocked
+I have reviewed the provided bundle of committed repository files and analytics pipeline excerpts for the personal YouTube ambient music channel for Week 17, 2026. My analysis will synthesize these reports to

@@ -1,7 +1,7 @@
 # Run next — personal advisory (2026-W17)
 
-Generated (report): 2026-04-20T18:31:49.861204+00:00
-**Correlate bundle `generated_at`:** 2026-04-20T18:31:49.647988Z
+Generated (report): 2026-04-20T19:30:11.150817+00:00
+**Correlate bundle `generated_at`:** 2026-04-20T19:30:10.907984Z
 
 ## How to read this
 
@@ -13,9 +13,9 @@ This file is **machine-assembled** from `data/suggestions_personal.json` and the
 
 ## Personal snapshot (this run)
 
-- **Overall avg retention:** 20.16%
-- **Overall avg watch min / video (window):** 21.000
-- **Videos analyzed:** 22 with views / 108 total
+- **Overall avg retention:** 16.25%
+- **Overall avg watch min / video (window):** 31.857
+- **Videos analyzed:** 28 with views / 108 total
 
 ## Evidence (paths)
 

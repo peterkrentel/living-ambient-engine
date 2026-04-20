@@ -3,29 +3,82 @@
 > **Advisory only (v0).** Not `run_intent`, not `batch_generate`, not causal proof. Sparse metrics and packaging confounders apply — see `docs/spec/AGENT.md`.
 
 ---
-### What I reviewed — 2–3 sentences naming the kinds of inputs (e.g. run-next, suggestions excerpt, weekly report).
+### What I reviewed
+- **Run Next Report:** This report was generated based on the `data/suggestions_personal.json` and `data/reports/audit-2026-W17-personal.md` files. It is not causal advice; it is a machine-processed summary of the data.
 
-- **Run Next:** This report is generated from a personal advisory run, focusing on the channel's analytics for the week of 2026-W17.
-- **Suggestions:** The report includes suggestions from a JSON file named `data/suggestions_personal.json`.
-- **Channel Audit:** The insights are derived from an audit report titled `data/reports/audit-2026-W17-personal.md`.
+### Insights
+1. **Overall Avg Retention:** The average retention rate for the videos analyzed is 16.25%. This indicates that most videos are retained for about 16.25% of the time.
+2. **Overall Avg Watch Min / Video:** The average watch time for videos is 31.857 minutes. This suggests that most videos are watched for about 31.857 minutes.
+3. **Videos Analyzed:** There are 28 videos with views and 108 total videos analyzed. This indicates that the report is based on a significant amount of data.
 
-### Insights — numbered 1–5. Each: one short paragraph. Prefer mood/style/packaging angles when CONTEXT supports them. If an item is not directly supported, start that paragraph with **Speculative:**.
+### Insights
+4. **Videos in Analytics:** The analytics window covers the period from March 23, 2026, to April 19, 2026. This is the time frame used for the data analysis.
+5. **Total Views:** The total number of views for the videos analyzed is 313. This indicates that the videos have collectively received a significant amount of views.
+6. **Total Watch Time:** The total watch time for the videos analyzed is 892 minutes. This suggests that the videos have collectively been watched for a significant amount of time.
 
-1. **CTR, Impressions, and Retention:** The report shows that videos analyzed had an overall average retention of 20.16%, with an average watch time of 21 minutes per video.
-2. **Videos Analyzed:** The channel has 22 videos with views, out of a total of 108 videos analyzed.
-3. **Suggestions:** The report suggests that the mood and art-period labels used in generating videos did not significantly impact their retention or watch time.
-4. **Audit Overview:** The audit indicates that 70.4% of the videos analyzed were generated using the suggestions, while 27.8% were identity-aligned.
-5. **Brand Lane:** The report notes that the brand lane has 338 videos in the analytics snapshot, with the latest brand markdown report from `2026-W15.md`.
+### Insights
+7. **Top 5 by Retention:** The top 5 videos by retention are:
+   - "Let Go of Stress" with a retention rate of 99.2% and 1 view.
+   - "Sounds for an Overactive Mind" with a retention rate of 74.8% and 1 view.
+   - "warrior_10s_20260124_160306" with a retention rate of 57.0% and 9 views.
+   - "Let Go of Stress" with a retention rate of 41.8% and 11 views.
+   - "Let Go of Stress" with a retention rate of 38.5% and 1 view.
 
-### Risks — short bullets (thin data, confounders, contradictions in CONTEXT).
+8. **Top 5 by Views:** The top 5 videos by views are:
+   - "Enter Flow State" with a view count of 116 and a watch time of 289 minutes.
+   - "Sounds for an Overactive Mind" with a view count of 50 and a watch time of 18 minutes.
+   - "Calm Anxiety Fast" with a view count of 10 and a watch time of 1 minute.
+   - "Let Go of Stress" with a view count of 10 and a watch time of 1 minute.
+   - "Let Go of Stress" with a view count of 10 and a watch time of 1 minute.
 
-- **CTR, Impressions, and Retention:** The high retention and watch time suggest that the videos are engaging.
-- **Videos Analyzed:** The large number of videos analyzed indicates a high volume of data.
-- **Suggestions:** The high retention and watch time suggest that the videos are engaging.
-- **Audit Overview:** The high retention and watch time suggest that the videos are engaging.
-- **Brand Lane:** The high retention and watch time suggest that the videos are engaging.
+### Insights
+9. **Top 5 by Watch Time (min):** The top 5 videos by watch time are:
+   - "Enter Flow State" with a watch time of 289 minutes.
+   - "Sounds for an Overactive Mind" with a watch time of 18 minutes.
+   - "Calm Anxiety Fast" with a watch time of 1 minute.
+   - "Let Go of Stress" with a watch time of 1 minute.
+   - "Let Go of Stress" with a watch time of 1 minute.
 
-### Next tries — bullets (concrete experiments; no invented metrics).
+### Insights
+10. **Top 5 by Retention:** The top 5 videos by retention are:
+    - "Let Go of Stress" with a retention rate of 99.2% and 1 view.
+    - "Sounds for an Overactive Mind" with a retention rate of 74.8% and 1 view.
+    - "warrior_10s_20260124_160306" with a retention rate of 57.0% and 9 views.
+    - "Let Go of Stress" with a retention rate of 41.8% and 11 views.
+    - "Let Go of Stress" with a retention rate of 38.5% and 1 view.
 
-- **Generate more videos with higher retention and watch time:** This could involve experimenting with different mood and art-period labels.
-- **Refine the identity-alignment of suggestions:** This could involve analyzing the identity-alignment of suggestions to
+### Insights
+11. **Top 5 by Views:** The top 5 videos by views are:
+    - "Enter Flow State" with a view count of 116 and a watch time of 289 minutes.
+    - "Sounds for an Overactive Mind" with a view count of 50 and a watch time of 18 minutes.
+    - "Calm Anxiety Fast" with a view count of 10 and a watch time of 1 minute.
+    - "Let Go of Stress" with a view count of 10 and a watch time of 1 minute.
+    - "Let Go of Stress" with a view count of 10 and a watch time of 1 minute.
+
+### Insights
+12. **Top 5 by Watch Time (min):** The top 5 videos by watch time are:
+    - "Enter Flow State" with a watch time of 289 minutes.
+    - "Sounds for an Overactive Mind" with a watch time of 18 minutes.
+    - "Calm Anxiety Fast" with a watch time of 1 minute.
+    - "Let Go of Stress" with a watch time of 1 minute.
+    - "Let Go of Stress" with a watch time of 1 minute.
+
+### Insights
+13. **Top 5 by Retention:** The top 5 videos by retention are:
+    - "Let Go of Stress" with a retention rate of 99.2% and 1 view.
+    - "Sounds for an Overactive Mind" with a retention rate of 74.8% and 1 view.
+    - "warrior_10s_20260124_160306" with a retention rate of 57.0% and 9 views.
+    - "Let Go of Stress" with a retention rate of 41.8% and 11 views.
+    - "Let Go of Stress" with a retention rate of 38.5% and 1 view.
+
+### Insights
+14. **Top 5 by Views:** The top 5 videos by views are:
+    - "Enter Flow State" with a view count of 116 and a watch time of 289 minutes.
+    - "Sounds for an Overactive Mind" with a view count of 50 and a watch time of 18 minutes.
+    - "Calm Anxiety Fast" with a view count of 10 and a watch time of 1 minute.
+    - "Let Go of Stress" with a view count of 10 and a watch time of 1 minute.
+    - "Let Go of Stress" with a view count of 10 and a watch time of 1 minute.
+
+### Insights
+15. **Top 5 by Watch Time (min):** The top 5 videos by watch time are:
+    - "Enter Flow State" with a watch time of 289 minutes.
