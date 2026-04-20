@@ -3,32 +3,28 @@
 > **Advisory only (v0).** Not `run_intent`, not `batch_generate`, not causal proof. Sparse metrics and packaging confounders apply — see `docs/spec/AGENT.md`.
 
 ---
-```markdown
-## Summary
+### What I reviewed — 2–3 sentences naming the kinds of inputs (e.g. run-next, suggestions excerpt, weekly report).
 
-- **Analytics window:** `2026-03-23` → `2026-04-19` (YouTube Analytics API range for metrics below. In Studio, pick the **same** custom dates when comparing totals — not e.g. “Last 28 days” unless `fetch_analytics` used `--days 28`.)
-- **Total videos tracked:** 108
-- **Videos with analytics:** 108
+- **Run Next:** Personal advisory for 2026-W17.
+- **Suggestions:** `data/suggestions_personal.json`.
+- **Channel Audit:** `data/reports/audit-2026-W17-personal.md`.
 
-## Totals
+### Insights — numbered 1–5. Each: one short paragraph. Prefer mood/style/packaging angles when CONTEXT supports them. If an item is not directly supported, start that paragraph with **Speculative:**.
 
-- **Total views:** 109
-- **Total watch time:** 462 minutes
-- **Subscribers gained:** 0
+1. **Overall avg retention:** 20.16% suggests videos are generally engaging but not highly addictive.
+2. **Overall avg watch min / video (window):** 21.000 indicates average users watch videos for about 21 minutes.
+3. **Videos analyzed:** 22 with views / 108 total suggests a diverse set of videos with varying levels of engagement.
+4. **Videos in analytics:** 108 videos tracked in the analytics window, indicating a large body of content being monitored.
+5. **Generations.json join (any ledger row):** 76 / 108 (70.4%) suggests 70.4% of videos have been analyzed, with 27.6% not analyzed yet.
 
-## Top 5 by Retention
+### Risks — short bullets (thin data, confounders, contradictions in CONTEXT).
 
-| Video | Mood | Retention % | Views |
-|-------|------|-------------|-------|
-| Let Go of Stress | 2 Hours Soft Piano Am | piano_ambient | 99.2% | 1 |
-| Sounds for an Overactive Mind | 30 Secon | deep_focus | 74.8% | 1 |
-| warrior_10s_20260124_160306 | warrior | 57.0% | 9 |
-| Let Go of Stress | Deep Calm Piano Atmos | piano_deep_calm | 41.8% | 11 |
-| Let Go of Stress | 30 Seconds Soft Piano | None | 38.5% | 1 |
+- **Risks:** The data is thin with only 108 videos analyzed, which may limit the ability to detect nuanced trends.
+- **Confounders:** The retention rate could be influenced by various factors such as the quality of the videos, user engagement, and the time of day.
+- **Contradictions:** The retention rate is relatively high, suggesting that the videos are engaging, but the average watch time is relatively low, indicating that users may not be spending as much time watching the videos as they might prefer.
 
-## Top 5 by Views
+### Next tries — bullets (concrete experiments; no invented metrics).
 
-| Video | Mood | Views | Watch Time (min) |
-|-------|------|-------|------------------|
-| Sounds for an Overactive Mind | 1 Hour | deep_focus | 40 | 16 |
-| Fall Asleep to Gentle Rain | 1 Hour | Ev | rain_sleep | 1
+- **Analyze more videos:** Conduct a deeper analysis of a larger number of videos to identify more nuanced trends and patterns.
+- **Increase retention:** Experiment with different video formats or content to see if increasing retention rates can be achieved.
+- **Optimize watch time:** Investigate ways to increase the average watch time of videos to improve user engagement and retention.
