@@ -6,8 +6,10 @@ Thank you for your interest in contributing! This project thrives on community i
 
 All **code and documentation** reach **`main`** only through a **pull request** from a **feature branch** (not by pushing commits straight to `main`). That applies to maintainers, contributors, and AI agents working in this repo.
 
+**Always a new branch** for each PR-sized change set: pull `main`, then create a **fresh** branch (do not reuse one stale branch across unrelated topics unless you intentionally stack work).
+
 1. `git checkout main && git pull origin main`
-2. `git checkout -b feat/short-topic` (or `fix/…`, `docs/…`)
+2. `git checkout -b feat/short-topic` (or `fix/…`, `docs/…`) — **new** branch per logical PR
 3. Make commits on that branch; `git push -u origin feat/short-topic`
 4. Open a PR on GitHub, wait for checks / review, **merge via the PR** (squash or merge commit per repo preference).
 

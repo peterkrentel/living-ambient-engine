@@ -108,7 +108,7 @@ Use this as a **checklist**, not a new doc layer. **Done** items stay for histor
 
 ## After this file
 
-[`.github/AGENT_INSTRUCTIONS.md`](../.github/AGENT_INSTRUCTIONS.md) — ordered checklist (includes GUARDRAILS before generation changes). **Continuing work?** Open [`HANDOFF.md`](HANDOFF.md) first. **Git:** [`CONTRIBUTING.md`](../CONTRIBUTING.md) — always **branch + PR** to `main` (no direct pushes for product work).
+[`.github/AGENT_INSTRUCTIONS.md`](../.github/AGENT_INSTRUCTIONS.md) — ordered checklist (includes GUARDRAILS before generation changes). **Continuing work?** Open [`HANDOFF.md`](HANDOFF.md) first. **Git:** [`CONTRIBUTING.md`](../CONTRIBUTING.md) — always a **new** **branch + PR** to `main` (no direct pushes for product work).
 
 ## Humans
 

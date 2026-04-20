@@ -20,13 +20,13 @@ This project uses **spec-driven development**. Specifications are the source of 
 | 3 | [`docs/spec/GUARDRAILS.md`](../docs/spec/GUARDRAILS.md) | **Before** generation-parameter, mood, duration, or limit changes—hard caps. |
 | 4 | [`docs/spec/SYSTEM.md`](../docs/spec/SYSTEM.md), the relevant `*/SPEC.md`, and [`docs/spec/contracts/`](../docs/spec/contracts/) | Behavior and interfaces you are changing. |
 | 5 | [`docs/spec/workflows.md`](../docs/spec/workflows.md) | **Only if** editing `.github/workflows/*.yml`. |
-| 6 | [`.cursor/rules/*.mdc`](../.cursor/rules/) | Cursor-only maintainer preferences (e.g. CI-first verification). |
+| 6 | [`.cursor/rules/*.mdc`](../.cursor/rules/) | Cursor-only maintainer preferences (CI-first verification, **always new branch + PR**). |
 
 **Then:** branch + PR (below); ship spec/contract/doc updates **in the same change** as code; verify via **GitHub Actions** and the **github.com** UI unless the maintainer asks for local steps.
 
 ## Git: always branch + PR
 
-Do **not** push completed work directly to `main`. Create a **feature branch** from up-to-date `main`, push it, and open a **pull request**. See [`CONTRIBUTING.md`](../CONTRIBUTING.md) § *Git workflow: branch + pull request*. The only routine direct commits on `main` are **automated `data/`** updates from Actions (analytics, etc.)—that exception does not apply to code, specs, or workflow YAML you edit.
+Do **not** push completed work directly to `main`. **Always** create a **new** feature branch from up-to-date `main` (`git pull` then `git checkout -b feat/…` / `fix/…` / `docs/…`) for each change set, push **that** branch, and open a **pull request**. See [`CONTRIBUTING.md`](../CONTRIBUTING.md) § *Git workflow: branch + pull request*. The only routine direct commits on `main` are **automated `data/`** updates from Actions (analytics, etc.)—that exception does not apply to code, specs, or workflow YAML you edit.
 
 ## Before Coding
 

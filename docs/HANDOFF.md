@@ -8,8 +8,8 @@
 
 ## Branch / PR
 
-- **Policy:** All **code and docs** ship via **feature branch → pull request → merge to `main`** (humans + agents). **Exception:** Actions may commit **`data/`** (analytics) or **`content_catalog.json`** (upload bots) on `main`.
-- **Active branch / PR:** _Update when you start work (branch name + PR link)._
+- **Policy:** All **code and docs** ship via **new feature branch (from pulled `main`) → pull request → merge to `main`** (humans + agents). **Exception:** Actions may commit **`data/`** (analytics) or **`content_catalog.json`** (upload bots) on `main`.
+- **Active branch / PR:** `feat/always-new-branch-rule` — policy + Cursor rule (**open PR** to merge).
 
 ## Anchor
 
