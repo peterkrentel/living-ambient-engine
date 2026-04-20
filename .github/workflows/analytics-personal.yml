@@ -125,7 +125,10 @@ jobs:
           set -euo pipefail
           pip install 'llama-cpp-python>=0.2.90,<0.4'
           WEEK=$(python -c "from datetime import datetime, timezone; n=datetime.now(timezone.utc); y,w,_=n.isocalendar(); print(f'{y}-W{w:02d}')")
+          echo "::group::Dual advisory (personal week=$WEEK)"
+          echo "Runner logs are prefixed with [runner-advisory] in script output below."
           python scripts/agent_dual_advisory.py --lane personal --week "$WEEK"
+          echo "::endgroup::"
 
       - name: Commit personal data
         run: |

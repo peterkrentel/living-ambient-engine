@@ -26,3 +26,9 @@ def test_iso_week_suffix_matches_run_next():
 
     dt = datetime(2026, 4, 15, tzinfo=timezone.utc)
     assert adv.iso_week_suffix(dt) == rn.iso_week_suffix(dt) == "2026-W16"
+
+
+def test_runner_bundle_stays_within_ctx_budget():
+    """Lean runner bundle must stay under RUNNER_BUNDLE_MAX_CHARS (missing files = small)."""
+    b = adv.build_runner_bundle("personal", "2099-W99")
+    assert len(b) <= adv.RUNNER_BUNDLE_MAX_CHARS + 200

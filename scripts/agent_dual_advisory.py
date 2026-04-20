@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Dual advisory v0: Gemini (API) + small GGUF on the workflow runner (e.g. Qwen2.5-0.5B).
 
-Both run **in parallel** (threads) after deterministic ``run-next``. Same fixed bundle as
-Phase 6 — advisory only, not ``run_intent`` / ``batch_generate``.
+Both run **in parallel** (threads) after deterministic ``run-next``. **Gemini** sees the full
+file bundle; **runner GGUF** uses a **lean** bundle (run-next + compact JSON + short reports)
+so small ``n_ctx`` fits. Advisory only — not ``run_intent`` / ``batch_generate``.
 
 Outputs (per lane ``brand`` | ``personal``):
 
@@ -21,6 +22,7 @@ import argparse
 import json
 import os
 import shutil
+import time
 import urllib.error
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -33,9 +35,16 @@ DATA = _REPO / "data"
 
 _DEFAULT_GEMINI = "gemini-2.0-flash"
 MAX_CONTEXT_GEMINI = 24_000
-MAX_CONTEXT_RUNNER = 12_000
+# Runner GGUF: small n_ctx; char→token ratio ~3–4 for EN/JSON — keep prompt+context safely under n_ctx.
+RUNNER_BUNDLE_MAX_CHARS = 4200
 MAX_RUNNER_TOKENS = 384
+_LLAMA_N_CTX = 4096
 DEFAULT_GGUF = Path.home() / ".cache" / "living-agent" / "qwen2.5-0.5b-instruct-q4_k_m.gguf"
+
+
+def _runner_log(msg: str) -> None:
+    """Lines show in GitHub Actions job logs for the non-cloud path."""
+    print(f"[runner-advisory] {msg}", flush=True)
 DEFAULT_GGUF_URL = (
     "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF/resolve/main/"
     "qwen2.5-0.5b-instruct-q4_k_m.gguf"
@@ -80,6 +89,91 @@ def build_bundle(lane: str, week: str) -> str:
     for p in paths:
         parts.append(f"### {p.as_posix()}\n\n{_read(p, 8000)}")
     return "\n\n".join(parts)
+
+
+def _compact_suggestions(path: Path, max_chars: int = 2200) -> str:
+    """Correlate JSON without huge ``coverage`` grids — keeps top suggestion rows + headline stats."""
+    if not path.exists():
+        rel = path.relative_to(_REPO) if path.is_relative_to(_REPO) else path
+        return f"(missing: {rel})"
+    try:
+        data = json.loads(path.read_text(encoding="utf-8", errors="replace"))
+    except json.JSONDecodeError:
+        return _read(path, 1200)
+    slim = {
+        "generated_at": data.get("generated_at"),
+        "overall_avg_retention": data.get("overall_avg_retention"),
+        "overall_avg_watch_minutes_per_video": data.get("overall_avg_watch_minutes_per_video"),
+        "videos_analyzed": data.get("videos_analyzed"),
+        "videos_with_views": data.get("videos_with_views"),
+        "suggestions": (data.get("suggestions") or [])[:15],
+    }
+    text = json.dumps(slim, indent=2, ensure_ascii=False)
+    if len(text) > max_chars:
+        return text[: max_chars - 40] + "\n… truncated suggestions json\n"
+    return text
+
+
+def _compact_analytics(path: Path, max_chars: int = 1600) -> str:
+    """Top videos by views only (no descriptions) — analytics JSON is huge on disk."""
+    if not path.exists():
+        rel = path.relative_to(_REPO) if path.is_relative_to(_REPO) else path
+        return f"(missing: {rel})"
+    try:
+        data = json.loads(path.read_text(encoding="utf-8", errors="replace"))
+    except json.JSONDecodeError:
+        return _read(path, 800)
+    videos = data.get("videos") or []
+
+    def _views(v: dict) -> int:
+        m = v.get("metrics") or {}
+        return int(m.get("views") or 0)
+
+    top = sorted(videos, key=_views, reverse=True)[:10]
+    rows: list[dict] = []
+    for v in top:
+        m = v.get("metrics") or {}
+        rows.append(
+            {
+                "title": ((v.get("title") or "")[:90]),
+                "views": m.get("views"),
+                "avg_pct": m.get("average_view_percentage"),
+                "watch_min": m.get("watch_time_minutes"),
+            }
+        )
+    slim = {"fetched_at": data.get("fetched_at"), "n_videos": len(videos), "top_by_views": rows}
+    text = json.dumps(slim, ensure_ascii=False, separators=(",", ":"))
+    if len(text) > max_chars:
+        return text[: max_chars - 30] + "…"
+    return text
+
+
+def build_runner_bundle(lane: str, week: str) -> str:
+    """Lean context for small GGUF: run-next + compact JSON + short prose (fits ``n_ctx``)."""
+    if lane == "personal":
+        weekly = REPORTS / f"{week}-personal.md"
+        run_next = REPORTS / f"run-next-{week}-personal.md"
+        blocked = REPORTS / "run-intent-blocked-personal.md"
+        sug_path = DATA / "suggestions_personal.json"
+        ana_path = DATA / "analytics_personal.json"
+    else:
+        weekly = REPORTS / f"{week}.md"
+        run_next = REPORTS / f"run-next-{week}.md"
+        blocked = REPORTS / "run-intent-blocked.md"
+        sug_path = DATA / "suggestions.json"
+        ana_path = DATA / "analytics.json"
+
+    parts = [
+        "### run-next (priority)\n\n" + _read(run_next, 3800),
+        "### weekly report\n\n" + _read(weekly, 2200),
+        "### run-intent blocked\n\n" + _read(blocked, 1200),
+        "### suggestions (compact)\n\n" + _compact_suggestions(sug_path),
+        "### analytics (compact top videos)\n\n" + _compact_analytics(ana_path),
+    ]
+    text = "\n\n".join(parts)
+    if len(text) > RUNNER_BUNDLE_MAX_CHARS:
+        return text[: RUNNER_BUNDLE_MAX_CHARS - 40] + "\n… hard-capped for runner ctx\n"
+    return text
 
 
 def _header_gemini(lane: str, week: str) -> str:
@@ -178,17 +272,22 @@ def _gguf_url() -> str:
 def _ensure_gguf(path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.exists() and path.stat().st_size > 1_000_000:
+        mb = path.stat().st_size / (1024 * 1024)
+        _runner_log(f"GGUF present: {path} ({mb:.1f} MiB)")
         return
     url = _gguf_url()
-    print(f"Downloading GGUF → {path} …")
+    _runner_log(f"Downloading GGUF → {path} (url tail: …{url[-60:]})")
     req = urllib.request.Request(url, headers={"User-Agent": "living-ambient-engine-agent-dual/1"})
     with urllib.request.urlopen(req, timeout=900) as resp, path.open("wb") as out:
         shutil.copyfileobj(resp, out, length=1024 * 1024)
+    mb = path.stat().st_size / (1024 * 1024)
+    _runner_log(f"Download complete ({mb:.1f} MiB)")
 
 
 def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
     out = REPORTS / f"agent-insight-{week}-{lane}-runner.md"
     out.parent.mkdir(parents=True, exist_ok=True)
+    _runner_log(f"lane={lane} week={week} (non-cloud GGUF path)")
 
     try:
         from llama_cpp import Llama  # noqa: WPS433
@@ -198,6 +297,7 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
             + "_Runner LLM skipped:_ `llama-cpp-python` not installed (e.g. `pip install llama-cpp-python`).\n",
             encoding="utf-8",
         )
+        _runner_log("skip: llama_cpp import failed")
         print(f"Wrote {out} (runner skipped, no llama_cpp)")
         return out
 
@@ -209,33 +309,57 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
             _header_runner(lane, week) + f"## Model download failed\n\n`{type(e).__name__}`: {e}\n",
             encoding="utf-8",
         )
+        _runner_log(f"download failed: {type(e).__name__}: {e}")
         print(f"Runner GGUF download failed: {e}; wrote {out}")
         return out
 
+    ctx_used = bundle[:RUNNER_BUNDLE_MAX_CHARS]
     prompt = (
         "[INST]You are a compact advisor for a YouTube ambient channel. Use only CONTEXT. "
-        "Output markdown: ## Summary, ## Risks, ## Ideas (bullets). Under 350 words.[/INST]\n"
-        f"CONTEXT:\n{bundle[:MAX_CONTEXT_RUNNER]}"
+        "Output markdown: ## Summary, ## Risks, ## Ideas (bullets). Under 300 words.[/INST]\n"
+        f"CONTEXT:\n{ctx_used}"
     )
+    prompt_chars = len(prompt)
+    est_prompt_tokens = max(1, int(prompt_chars / 3.5))
+    n_threads = int(os.environ.get("AGENT_LLAMA_THREADS", "4"))
+    _runner_log(
+        f"context: bundle_chars={len(ctx_used)} prompt_chars≈{prompt_chars} "
+        f"est_input_tokens≈{est_prompt_tokens} (rough; model tokenizer may differ)"
+    )
+    _runner_log(
+        f"llama: n_ctx={_LLAMA_N_CTX} max_output_tokens={MAX_RUNNER_TOKENS} "
+        f"n_threads={n_threads} n_gpu_layers=0"
+    )
+
     try:
+        t0 = time.perf_counter()
         llm = Llama(
             model_path=str(gguf),
-            n_ctx=2048,
-            n_threads=int(os.environ.get("AGENT_LLAMA_THREADS", "4")),
+            n_ctx=_LLAMA_N_CTX,
+            n_threads=n_threads,
             n_gpu_layers=0,
             verbose=False,
         )
+        t_load = time.perf_counter()
+        _runner_log(f"model load wall_s={t_load - t0:.2f}s")
         result = llm(
             prompt,
             max_tokens=MAX_RUNNER_TOKENS,
             temperature=0.25,
             stop=["</s>", "[INST]"],
         )
+        t_done = time.perf_counter()
         text = (result["choices"][0]["text"] or "").strip() or "(empty runner response)"
+        _runner_log(
+            f"inference wall_s={t_done - t_load:.2f}s total_since_start_s={t_done - t0:.2f}s "
+            f"output_chars={len(text)}"
+        )
     except Exception as e:  # noqa: BLE001 — advisory path; always write markdown
         text = f"## Inference error\n\n`{type(e).__name__}`: {e}\n"
+        _runner_log(f"inference error: {type(e).__name__}: {e}")
 
     out.write_text(_header_runner(lane, week) + text + "\n", encoding="utf-8")
+    _runner_log(f"wrote {out.relative_to(_REPO) if out.is_relative_to(_REPO) else out}")
     print(f"Wrote {out} (runner GGUF)")
     return out
 
@@ -250,12 +374,13 @@ def main() -> None:
     )
     args = ap.parse_args()
     week = args.week.strip() or iso_week_suffix()
-    bundle = build_bundle(args.lane, week)
+    bundle_gemini = build_bundle(args.lane, week)
+    bundle_runner = build_runner_bundle(args.lane, week)
 
     with ThreadPoolExecutor(max_workers=2) as pool:
         futures = {
-            pool.submit(write_gemini, args.lane, week, bundle): "gemini",
-            pool.submit(write_runner_gguf, args.lane, week, bundle): "runner",
+            pool.submit(write_gemini, args.lane, week, bundle_gemini): "gemini",
+            pool.submit(write_runner_gguf, args.lane, week, bundle_runner): "runner",
         }
         for fut in as_completed(futures):
             fut.result()
