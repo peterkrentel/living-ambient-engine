@@ -5,21 +5,27 @@
 ---
 ### What I reviewed — 2–3 sentences naming the kinds of inputs (e.g. run-next, suggestions excerpt, weekly report).
 
-- **Run Next Report:** A machine-assembled report from `data/suggestions_personal.json` and the personal channel audit (`audit-2026-W17-personal.md`).
-- **Weekly Report:** A summary of analytics data for the personal YouTube channel from `data/analytics_personal.json`.
-- **Top 5 by Retention:** The top videos based on retention percentage.
-- **Top 5 by Views:** The top videos based on views and watch time.
+- **Run Next:** This report is generated from a personal advisory run, focusing on the channel's analytics for the week of 2026-W17.
+- **Suggestions:** The report includes suggestions from a JSON file named `data/suggestions_personal.json`.
+- **Channel Audit:** The insights are derived from an audit report titled `data/reports/audit-2026-W17-personal.md`.
 
 ### Insights — numbered 1–5. Each: one short paragraph. Prefer mood/style/packaging angles when CONTEXT supports them. If an item is not directly supported, start that paragraph with **Speculative:**.
 
-1. **Insight 1:** The report shows that the personal channel has a high retention rate of 20.16%, indicating that users tend to watch videos for a longer period.
-2. **Insight 2:** The top videos by retention are "Let Go of Stress" and "Sounds for an Overactive Mind," suggesting that videos with a 2-hour soft piano atmosphere or deep focus mood tend to have higher retention rates.
-3. **Insight 3:** The videos with the highest views are "Let Go of Stress" and "Sounds for an Overactive Mind," indicating that videos with a 1-hour deep focus mood tend to have the highest views.
-4. **Insight 4:** The videos with the highest watch time are "Fall Asleep to Gentle Rain" and "Let Go of Stress," suggesting that videos with a 1-hour rain sleep mood tend to have the highest watch time.
-5. **Insight 5:** The videos with the highest retention and views are "Let Go of Stress" and "Sounds for an Overactive Mind," indicating that videos with a 2-hour soft piano atmosphere or deep focus mood tend to have both high retention and high views.
+1. **CTR, Impressions, and Retention:** The report shows that videos analyzed had an overall average retention of 20.16%, with an average watch time of 21 minutes per video.
+2. **Videos Analyzed:** The channel has 22 videos with views, out of a total of 108 videos analyzed.
+3. **Suggestions:** The report suggests that the mood and art-period labels used in generating videos did not significantly impact their retention or watch time.
+4. **Audit Overview:** The audit indicates that 70.4% of the videos analyzed were generated using the suggestions, while 27.8% were identity-aligned.
+5. **Brand Lane:** The report notes that the brand lane has 338 videos in the analytics snapshot, with the latest brand markdown report from `2026-W15.md`.
 
 ### Risks — short bullets (thin data, confounders, contradictions in CONTEXT).
 
-- **Risk 1:** The retention rate of 20.16% might be inflated due to the high retention of "Let Go of Stress" and "Sounds for an Overactive Mind."
-- **Risk 2:** The high retention of these videos might be due to the high retention of other videos with similar moods.
-- **Risk 3:** The high views and watch
+- **CTR, Impressions, and Retention:** The high retention and watch time suggest that the videos are engaging.
+- **Videos Analyzed:** The large number of videos analyzed indicates a high volume of data.
+- **Suggestions:** The high retention and watch time suggest that the videos are engaging.
+- **Audit Overview:** The high retention and watch time suggest that the videos are engaging.
+- **Brand Lane:** The high retention and watch time suggest that the videos are engaging.
+
+### Next tries — bullets (concrete experiments; no invented metrics).
+
+- **Generate more videos with higher retention and watch time:** This could involve experimenting with different mood and art-period labels.
+- **Refine the identity-alignment of suggestions:** This could involve analyzing the identity-alignment of suggestions to
