@@ -209,7 +209,7 @@ Videos published **before** `generations.json` exists have **no** joined params 
 3. **Grounding / trust** — align with step **2** above (*validators*): numeric parity and “numbers only if present in JSON” checks on advisory output **before** any automation consumes it.
 4. **Weights** — swap default GGUF via `AGENT_GGUF_URL` / `AGENT_GGUF_PATH` (documented in [`spec/workflows.md`](spec/workflows.md)); bump Actions **cache key** when the default filename changes.
 
-**Gemini CI:** repository **Secret** `GEMINI_API_KEY`; optional **Variable** `GEMINI_MODEL` (workflow passes it as `env` when set; script defaults if empty).
+**Gemini CI:** repository **Secrets** — brand analytics: `GEMINI_API_KEY`; personal analytics: `GEMINI_API_KEY_PERSONAL` (see [`analytics-personal.yml`](../.github/workflows/analytics-personal.yml)). Optional **Variable** `GEMINI_MODEL` (both workflows pass `env` when set; script defaults if empty).
 
 ---
 

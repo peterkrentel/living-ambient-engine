@@ -12,6 +12,7 @@ Outputs (per lane ``brand`` | ``personal``):
 
   pip install llama-cpp-python   # runner path only; Gemini uses stdlib + REST
   GEMINI_API_KEY=... python scripts/agent_dual_advisory.py --lane brand --week 2026-W16
+  GEMINI_API_KEY_PERSONAL=... python scripts/agent_dual_advisory.py --lane personal --week 2026-W16
 
 **Gemini rate limits (optional env):** ``GEMINI_MIN_INTERVAL_SEC`` (default ``6``) — minimum
 seconds between completed Gemini HTTP calls in this process (reduces 429s when re-running locally).
@@ -319,14 +320,26 @@ def _gemini_generate_json(url: str, payload: dict) -> dict:
             raise
 
 
+def _gemini_api_key(lane: str) -> str:
+    """Brand: ``GEMINI_API_KEY``. Personal: that or ``GEMINI_API_KEY_PERSONAL`` (personal analytics CI)."""
+    generic = os.environ.get("GEMINI_API_KEY", "").strip()
+    if lane == "personal":
+        return generic or os.environ.get("GEMINI_API_KEY_PERSONAL", "").strip()
+    return generic
+
+
 def write_gemini(lane: str, week: str, bundle: str) -> Path:
     out = REPORTS / f"agent-insight-{week}-{lane}-gemini.md"
     out.parent.mkdir(parents=True, exist_ok=True)
-    key = os.environ.get("GEMINI_API_KEY", "").strip()
+    key = _gemini_api_key(lane)
     if not key:
+        hint = (
+            "set repository secret `GEMINI_API_KEY_PERSONAL` (personal workflow) or env `GEMINI_API_KEY`."
+            if lane == "personal"
+            else "set repository secret `GEMINI_API_KEY` (brand workflow) or env `GEMINI_API_KEY`."
+        )
         out.write_text(
-            _header_gemini(lane, week)
-            + "_Gemini skipped:_ set repository secret `GEMINI_API_KEY` to enable API calls.\n",
+            _header_gemini(lane, week) + f"_Gemini skipped:_ {hint}\n",
             encoding="utf-8",
         )
         print(f"Wrote {out} (Gemini skipped, no API key)")
