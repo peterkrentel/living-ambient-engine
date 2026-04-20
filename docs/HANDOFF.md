@@ -4,12 +4,12 @@
 
 ## Updated
 
-2026-04-15
+2026-04-23
 
 ## Branch / PR
 
 - **Policy:** All **code and docs** ship via **new feature branch (from pulled `main`) → pull request → merge to `main`** (humans + agents). **Exception:** Actions may commit **`data/`** (analytics) or **`content_catalog.json`** (upload bots) on `main`.
-- **Active branch / PR:** `feat/always-new-branch-rule` — policy + Cursor rule (**open PR** to merge).
+- **Active branch / PR:** `docs/horizon-dual-advisory-compare` — horizon checklist + roadmap: dual-advisory **human** compare (**open PR**).
 
 ## Anchor
 
@@ -46,7 +46,7 @@
 7. **Spec phases:** **`AGENT.md`** Phase **3** when volume **and** interpretation guardrails justify it; **`COHESION_ROADMAP.md`** Phase **6** only after joins/trust feel right.
 8. **Title / packaging (defer):** same **mood × duration × dual** matrix on **brand + personal** reuses templates → **identical `video_title` strings** on two channels (different `video_id`s). Fine for smoke; before **high volume** or sharp **channel positioning**, tweak metadata (e.g. per-channel suffix or description line), rotation policy, or later **run intent** rules so packs are not unintentional clones — [`START_HERE.md`](START_HERE.md) checklist.
 
-9. **`run-next` + dual-advisory follow-ups:** **(1)** validators (cited indices, numeric parity with `suggestions.json` / JSON excerpts); **(2)** LLM prose — **runner:** refine lean bundle + prompts (`agent_dual_advisory.py`); **Gemini:** optional API side-by-side compare, then keep or drop per marginal value — details under [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6 *Dual advisory refinement*; **(3)** automation only when trustworthy.
+9. **`run-next` + dual-advisory follow-ups:** **(1)** validators (cited indices, numeric parity with `suggestions.json` / JSON excerpts); **(2)** LLM prose — **runner:** refine lean bundle + prompts (`agent_dual_advisory.py`); **Gemini:** optional API side-by-side compare (**human** reads `*-gemini.md` vs `*-runner.md` vs `run-next`/JSON—no in-repo auto-merge); keep or drop per marginal value — [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6 *Dual advisory refinement* · [`START_HERE.md` § Plan checklist](START_HERE.md#plan-checklist-living--as-of-2026-04) (**Dual advisory comparison** row); **(3)** automation only when trustworthy.
 
 ## Risks / open questions
 
