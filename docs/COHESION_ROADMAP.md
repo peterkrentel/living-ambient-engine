@@ -205,7 +205,7 @@ Videos published **before** `generations.json` exists have **no** joined params 
 **Iteration order (cheap → expensive):**
 
 1. **Runner quality** — tighten **what goes in the lean bundle** (compacts: top actionable rows, deltas, *n*, views) and **prompt contracts** (no generic platitudes, required sections, **Speculative:** labels, lower temperature if needed). This is the main lever before trusting any LLM prose.
-2. **Compare** — same week + lane: read **`*-gemini.md`** vs **`*-runner.md`**. Keep Gemini only while it adds **grounded** nuance you care about; otherwise simplify (runner-only) to cut keys, egress, and vendor surface.
+2. **Compare** — same week + lane: read **`*-gemini.md`** vs **`*-runner.md`**. **There is no in-repo tool** that merges, scores, or diffs the two automatically today—this step is **human** review (optional later: structural checks / validators aligned with step **3**). Keep Gemini only while it adds **grounded** nuance you care about; otherwise simplify (runner-only) to cut keys, egress, and vendor surface.
 3. **Grounding / trust** — align with step **2** above (*validators*): numeric parity and “numbers only if present in JSON” checks on advisory output **before** any automation consumes it.
 4. **Weights** — swap default GGUF via `AGENT_GGUF_URL` / `AGENT_GGUF_PATH` (documented in [`spec/workflows.md`](spec/workflows.md)); bump Actions **cache key** when the default filename changes.
 
