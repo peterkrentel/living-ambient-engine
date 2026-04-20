@@ -112,6 +112,21 @@ jobs:
           echo "🧭 Writing personal run-next markdown..."
           python scripts/run_next_report.py --lane personal
 
+      - name: Cache runner GGUF (dual advisory)
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/living-agent
+          key: living-agent-gguf-qwen25-05b-q4-${{ runner.os }}-v1
+
+      - name: Dual LLM advisory personal (Gemini + runner GGUF, parallel)
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          set -euo pipefail
+          pip install 'llama-cpp-python>=0.2.90,<0.4'
+          WEEK=$(python -c "from datetime import datetime, timezone; n=datetime.now(timezone.utc); y,w,_=n.isocalendar(); print(f'{y}-W{w:02d}')")
+          python scripts/agent_dual_advisory.py --lane personal --week "$WEEK"
+
       - name: Commit personal data
         run: |
           git config user.name "Analytics Agent (Personal)"
@@ -126,6 +141,9 @@ jobs:
           fi
           if compgen -G "data/reports/*-personal.md" > /dev/null; then
             git add data/reports/*-personal.md
+          fi
+          if compgen -G "data/reports/agent-insight-*-personal-*.md" > /dev/null; then
+            git add data/reports/agent-insight-*-personal-*.md
           fi
 
           if git diff --staged --quiet; then
