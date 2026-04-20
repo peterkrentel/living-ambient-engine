@@ -73,6 +73,32 @@ def test_max_runner_tokens_env(monkeypatch):
     assert adv.max_runner_tokens() == 2048
 
 
+def test_log_gemini_response_smoke(capsys, monkeypatch):
+    monkeypatch.delenv("GEMINI_MODEL", raising=False)
+    raw = {
+        "modelVersion": "gemini-2.5-flash",
+        "usageMetadata": {
+            "promptTokenCount": 100,
+            "candidatesTokenCount": 50,
+            "totalTokenCount": 200,
+            "thoughtsTokenCount": 10,
+        },
+        "candidates": [{"finishReason": "STOP", "content": {"parts": [{"text": "x"}]}}],
+    }
+    adv._log_gemini_response(
+        raw,
+        "## Summary\n\nShort body.",
+        lane="personal",
+        week="2026-W99",
+        prompt_chars=500,
+        context_chars=400,
+    )
+    out = capsys.readouterr().out
+    assert "[gemini-advisory]" in out
+    assert "finishReason" in out
+    assert "thoughtsTokenCount=10" in out
+
+
 def test_gemini_api_key_brand_only_generic(monkeypatch):
     monkeypatch.delenv("GEMINI_API_KEY", raising=False)
     monkeypatch.delenv("GEMINI_API_KEY_PERSONAL", raising=False)
