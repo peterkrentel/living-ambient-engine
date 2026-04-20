@@ -626,7 +626,7 @@ on:
 
 **Optional (script / workflow `env`):** `GEMINI_MIN_INTERVAL_SEC` (default `6`), `GEMINI_MAX_RETRIES` (default `5`), `GEMINI_429_MIN_SLEEP_SEC` (default `0`) — spacing between Gemini calls and **minimum** sleep before 429/503 retries; see [`agent_dual_advisory.py`](../../scripts/agent_dual_advisory.py). Brand analytics usually leaves these unset (one request per job). **Personal** workflow sets conservative values on the dual-advisory step for tight free-tier quotas (often **~5 RPM** class limits on Flash in AI Studio for small projects).
 
-**Optional env (runner GGUF, workflow or runner config):** `AGENT_GGUF_PATH`, `AGENT_GGUF_URL` (default Hugging Face Qwen2.5-1.5B Instruct q4), `AGENT_LLAMA_THREADS`.
+**Optional env (runner GGUF, workflow or runner config):** `AGENT_GGUF_PATH`, `AGENT_GGUF_URL` (default Hugging Face Qwen2.5-1.5B Instruct q4), `AGENT_LLAMA_THREADS`, `MAX_RUNNER_TOKENS` (default `1536` in [`agent_dual_advisory.py`](../../scripts/agent_dual_advisory.py) — raise if runner advisory markdown stops mid-section with `finish_reason=length` in logs).
 
 ### Guardrails
 
