@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Dual advisory v0: Gemini (API) + small GGUF on the workflow runner (e.g. Qwen2.5-0.5B).
+"""Dual advisory v0: Gemini (API) + GGUF on the workflow runner (default Qwen2.5-1.5B Instruct q4).
 
 Both run **in parallel** (threads) after deterministic ``run-next``. **Gemini** sees the full
 file bundle; **runner GGUF** uses a **lean** bundle (run-next + compact JSON + short reports)
@@ -37,9 +37,9 @@ _DEFAULT_GEMINI = "gemini-2.0-flash"
 MAX_CONTEXT_GEMINI = 24_000
 # Runner GGUF: small n_ctx; char→token ratio ~3–4 for EN/JSON — keep prompt+context safely under n_ctx.
 RUNNER_BUNDLE_MAX_CHARS = 4200
-MAX_RUNNER_TOKENS = 384
+MAX_RUNNER_TOKENS = 512
 _LLAMA_N_CTX = 4096
-DEFAULT_GGUF = Path.home() / ".cache" / "living-agent" / "qwen2.5-0.5b-instruct-q4_k_m.gguf"
+DEFAULT_GGUF = Path.home() / ".cache" / "living-agent" / "qwen2.5-1.5b-instruct-q4_k_m.gguf"
 
 
 def _runner_log(msg: str) -> None:
@@ -48,8 +48,8 @@ def _runner_log(msg: str) -> None:
 
 
 DEFAULT_GGUF_URL = (
-    "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF/resolve/main/"
-    "qwen2.5-0.5b-instruct-q4_k_m.gguf"
+    "https://huggingface.co/Qwen/Qwen2.5-1.5B-Instruct-GGUF/resolve/main/"
+    "qwen2.5-1.5b-instruct-q4_k_m.gguf"
 )
 
 # Qwen2.5 ChatML specials (HF tokenizer 151644 / 151645). Built with concat so literals are never mangled.
@@ -228,10 +228,15 @@ def write_gemini(lane: str, week: str, bundle: str) -> Path:
 
     prompt = (
         "You are a metrics-aware creative advisor for a YouTube ambient music channel.\n"
-        "Use ONLY the CONTEXT below. If the planner blocked or data is thin, say so plainly.\n"
-        "Output GitHub-flavored markdown with sections: ## Summary, ## Risks / caveats, "
-        "## Experiments or packaging ideas (bullets).\n"
-        "Do not invent statistics; quote approximate values only if present in CONTEXT.\n\n"
+        "You ONLY read the CONTEXT block below (committed repo files / excerpts from the analytics pipeline). "
+        "You did NOT query YouTube live.\n"
+        "Start with 2–3 sentences: confirm you reviewed that bundle and what you will do in this answer.\n"
+        "Then use ONLY that CONTEXT. If the planner blocked or data is thin, say so plainly.\n"
+        "Output GitHub-flavored markdown with: ## What I reviewed, ## Summary, ## Risks / caveats, "
+        "## Insights (numbered 1–5: one paragraph each; tie mood/style when CONTEXT supports it; "
+        "prefix **Speculative:** when not directly supported), ## Experiments or packaging ideas (bullets).\n"
+        "Do not invent statistics; quote approximate values only if present in CONTEXT.\n"
+        "Avoid large duplicate tables unless CONTEXT has no prose summary.\n\n"
         f"## CONTEXT\n\n{bundle[:MAX_CONTEXT_GEMINI]}"
     )
     payload = {
@@ -332,10 +337,17 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
     ctx_used = bundle[:RUNNER_BUNDLE_MAX_CHARS]
     system = (
         "You are a compact advisor for a YouTube ambient music channel. "
-        "Use ONLY the user CONTEXT (markdown + JSON excerpts). "
-        "Output GitHub-flavored markdown with exactly these sections: "
-        "## Summary, ## Risks, ## Ideas (bullets). "
-        "Under 300 words. Do not invent numbers not present in CONTEXT."
+        "You ONLY see the user CONTEXT (markdown + JSON excerpts from this repo’s analytics run). "
+        "You did NOT call YouTube or the internet.\n"
+        "Respond AS IF you finished reading that bundle, then give concise interpretation.\n"
+        "Required shape (GitHub-flavored markdown, under ~450 words, no outer ``` fences):\n"
+        "## What I reviewed — 2–3 sentences naming the kinds of inputs (e.g. run-next, suggestions excerpt, weekly report).\n"
+        "## Insights — numbered 1–5. Each: one short paragraph. Prefer mood/style/packaging angles when CONTEXT supports them. "
+        "If an item is not directly supported, start that paragraph with **Speculative:**.\n"
+        "## Risks — short bullets (thin data, confounders, contradictions in CONTEXT).\n"
+        "## Next tries — bullets (concrete experiments; no invented metrics).\n"
+        "Do not paste large tables; at most one tiny 3-row markdown table if essential. "
+        "Numbers must match CONTEXT; never fabricate counts."
     )
     user = f"CONTEXT:\n{ctx_used}"
     prompt = _qwen25_chat_prompt(system=system, user=user)
