@@ -5,19 +5,21 @@
 ---
 ### What I reviewed — 2–3 sentences naming the kinds of inputs (e.g. run-next, suggestions excerpt, weekly report).
 
-- **run-next:** Personal advisory generated on April 20, 2026, based on suggestions and channel audit.
-- **suggestions:** Data from `data/suggestions_personal.json`.
-- **weekly report:** Analytics report for April 20, 2026, covering videos from March 23 to April 19.
+- **Run Next Report:** A machine-assembled report from `data/suggestions_personal.json` and the personal channel audit (`audit-2026-W17-personal.md`).
+- **Weekly Report:** A summary of analytics data for the personal YouTube channel from `data/analytics_personal.json`.
+- **Top 5 by Retention:** The top videos based on retention percentage.
+- **Top 5 by Views:** The top videos based on views and watch time.
 
 ### Insights — numbered 1–5. Each: one short paragraph. Prefer mood/style/packaging angles when CONTEXT supports them. If an item is not directly supported, start that paragraph with **Speculative:**.
 
-1. **CTR, impressions, and retention:** These metrics often change due to title, thumbnail, traffic source, and seasonality, not because a mood or art-period label "caused" an outcome. Do not treat bucket-level correlation as proof that generation parameters drove a result when packaging differed across videos. Correlation addresses patterns in the data, not hidden causes.
-2. **Personal snapshot:** The overall average retention is 20.16%, and the average watch time per video is 21 minutes. Videos analyzed are 22 with views out of 108 total.
-3. **Evidence:** The evidence paths include suggestions and channel audit. The channel audit shows that 76 out of 108 generations are identity-aligned, with 30 aligning with the brand.
-4. **Audit overview:** The videos analyzed are 108, and the latest brand markdown report is `data/reports/2026-W15.md`. The not merged into personal correlate is `data/suggestions.json`.
-5. **Brand lane:** The videos in the analytics file are 338, and the latest brand markdown report is `data/reports/2026-W15.md`.
+1. **Insight 1:** The report shows that the personal channel has a high retention rate of 20.16%, indicating that users tend to watch videos for a longer period.
+2. **Insight 2:** The top videos by retention are "Let Go of Stress" and "Sounds for an Overactive Mind," suggesting that videos with a 2-hour soft piano atmosphere or deep focus mood tend to have higher retention rates.
+3. **Insight 3:** The videos with the highest views are "Let Go of Stress" and "Sounds for an Overactive Mind," indicating that videos with a 1-hour deep focus mood tend to have the highest views.
+4. **Insight 4:** The videos with the highest watch time are "Fall Asleep to Gentle Rain" and "Let Go of Stress," suggesting that videos with a 1-hour rain sleep mood tend to have the highest watch time.
+5. **Insight 5:** The videos with the highest retention and views are "Let Go of Stress" and "Sounds for an Overactive Mind," indicating that videos with a 2-hour soft piano atmosphere or deep focus mood tend to have both high retention and high views.
 
 ### Risks — short bullets (thin data, confounders, contradictions in CONTEXT).
 
-- **CTR, impressions, and retention:** These metrics often change due to title, thumbnail, traffic source, and seasonality, not because a mood or art-period label "caused" an outcome. Do not treat bucket-level correlation as proof that generation parameters drove a result when packaging differed across videos. Correlation addresses patterns in the data, not hidden causes.
-- **Personal snapshot:** The overall average retention is 20.16%, and the average watch time per video
+- **Risk 1:** The retention rate of 20.16% might be inflated due to the high retention of "Let Go of Stress" and "Sounds for an Overactive Mind."
+- **Risk 2:** The high retention of these videos might be due to the high retention of other videos with similar moods.
+- **Risk 3:** The high views and watch
