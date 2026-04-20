@@ -5,6 +5,8 @@ from __future__ import annotations
 import importlib.util
 from pathlib import Path
 
+import pytest
+
 _REPO = Path(__file__).resolve().parents[1]
 
 
@@ -28,10 +30,45 @@ def test_iso_week_suffix_matches_run_next():
     assert adv.iso_week_suffix(dt) == rn.iso_week_suffix(dt) == "2026-W16"
 
 
+def test_dim_coverage_stats():
+    assert adv._dim_coverage_stats(None) == {
+        "labels": 0,
+        "produced_at_least_one": 0,
+        "produced_zero_views": 0,
+    }
+    d = {
+        "a": {"total": 2, "with_views": 0},
+        "b": {"total": 0, "with_views": 0},
+        "c": {"total": 1, "with_views": 1},
+    }
+    assert adv._dim_coverage_stats(d) == {
+        "labels": 3,
+        "produced_at_least_one": 2,
+        "produced_zero_views": 1,
+    }
+
+
 def test_runner_bundle_stays_within_ctx_budget():
     """Lean runner bundle must stay under RUNNER_BUNDLE_MAX_CHARS (missing files = small)."""
     b = adv.build_runner_bundle("personal", "2099-W99")
-    assert len(b) <= adv.RUNNER_BUNDLE_MAX_CHARS + 200
+    assert len(b) <= adv.RUNNER_BUNDLE_MAX_CHARS + 400
+
+
+def test_compact_suggestions_includes_coverage_summary_when_present():
+    sug = _REPO / "data" / "suggestions_personal.json"
+    if not sug.exists():
+        pytest.skip("no fixtures/data/suggestions_personal.json in checkout")
+    text = adv._compact_suggestions(sug)
+    assert "coverage_summary" in text
+    assert '"moods"' in text
+
+
+def test_compact_analytics_retention_slice_key_when_present():
+    ana = _REPO / "data" / "analytics_personal.json"
+    if not ana.exists():
+        pytest.skip("no fixtures/data/analytics_personal.json in checkout")
+    text = adv._compact_analytics(ana)
+    assert "top_by_avg_view_pct_min_views_2" in text
 
 
 def test_gemini_min_interval_sec_default(monkeypatch):

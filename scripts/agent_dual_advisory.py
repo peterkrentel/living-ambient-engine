@@ -2,8 +2,9 @@
 """Dual advisory v0: Gemini (API) + GGUF on the workflow runner (default Qwen2.5-1.5B Instruct q4).
 
 Both run **in parallel** (threads) after deterministic ``run-next``. **Gemini** sees the full
-file bundle; **runner GGUF** uses a **lean** bundle (run-next + compact JSON + short reports)
-so small ``n_ctx`` fits. Advisory only — not ``run_intent`` / ``batch_generate``.
+file bundle; **runner GGUF** uses a **lean** bundle (run-next + compact JSON + short reports +
+**coverage_summary** from correlate + two analytics slices) so small ``n_ctx`` still fits.
+Advisory only — not ``run_intent`` / ``batch_generate``.
 
 Outputs (per lane ``brand`` | ``personal``):
 
@@ -53,7 +54,7 @@ DATA = _REPO / "data"
 _DEFAULT_GEMINI = "gemini-2.5-flash"
 MAX_CONTEXT_GEMINI = 24_000
 # Runner GGUF: small n_ctx; char→token ratio ~3–4 for EN/JSON — keep prompt+context safely under n_ctx.
-RUNNER_BUNDLE_MAX_CHARS = 4200
+RUNNER_BUNDLE_MAX_CHARS = 5200
 # Default output cap (was 512; logs showed finish_reason=length mid-markdown). Override: ``MAX_RUNNER_TOKENS`` env.
 _DEFAULT_MAX_RUNNER_TOKENS = 1536
 _LLAMA_N_CTX = 4096
@@ -184,8 +185,30 @@ def build_bundle(lane: str, week: str) -> str:
     return "\n\n".join(parts)
 
 
-def _compact_suggestions(path: Path, max_chars: int = 2200) -> str:
-    """Correlate JSON without huge ``coverage`` grids — keeps top suggestion rows + headline stats."""
+def _dim_coverage_stats(block: object) -> dict[str, int]:
+    """One correlate ``coverage`` sub-map → tiny counts (no per-label explosion)."""
+    if not isinstance(block, dict):
+        return {"labels": 0, "produced_at_least_one": 0, "produced_zero_views": 0}
+    labels = produced = zero_views = 0
+    for v in block.values():
+        if not isinstance(v, dict):
+            continue
+        labels += 1
+        t = int(v.get("total") or 0)
+        w = int(v.get("with_views") or 0)
+        if t > 0:
+            produced += 1
+        if t > 0 and w == 0:
+            zero_views += 1
+    return {
+        "labels": labels,
+        "produced_at_least_one": produced,
+        "produced_zero_views": zero_views,
+    }
+
+
+def _compact_suggestions(path: Path, max_chars: int = 3400) -> str:
+    """Correlate JSON without huge ``coverage`` grids — top rows + stats + coverage_summary."""
     if not path.exists():
         rel = path.relative_to(_REPO) if path.is_relative_to(_REPO) else path
         return f"(missing: {rel})"
@@ -193,22 +216,30 @@ def _compact_suggestions(path: Path, max_chars: int = 2200) -> str:
         data = json.loads(path.read_text(encoding="utf-8", errors="replace"))
     except json.JSONDecodeError:
         return _read(path, 1200)
-    slim = {
+    slim: dict[str, object] = {
         "generated_at": data.get("generated_at"),
         "overall_avg_retention": data.get("overall_avg_retention"),
         "overall_avg_watch_minutes_per_video": data.get("overall_avg_watch_minutes_per_video"),
         "videos_analyzed": data.get("videos_analyzed"),
         "videos_with_views": data.get("videos_with_views"),
-        "suggestions": (data.get("suggestions") or [])[:15],
+        "suggestions": (data.get("suggestions") or [])[:25],
     }
+    cov = data.get("coverage")
+    if isinstance(cov, dict):
+        slim["coverage_summary"] = {
+            "moods": _dim_coverage_stats(cov.get("moods")),
+            "art_periods": _dim_coverage_stats(cov.get("art_periods")),
+            "music_styles": _dim_coverage_stats(cov.get("music_styles")),
+            "art_music_combos": _dim_coverage_stats(cov.get("art_music_combos")),
+        }
     text = json.dumps(slim, indent=2, ensure_ascii=False)
     if len(text) > max_chars:
         return text[: max_chars - 40] + "\n… truncated suggestions json\n"
     return text
 
 
-def _compact_analytics(path: Path, max_chars: int = 1600) -> str:
-    """Top videos by views only (no descriptions) — analytics JSON is huge on disk."""
+def _compact_analytics(path: Path, max_chars: int = 2400) -> str:
+    """Top videos by views + by retention (small rows; analytics JSON is huge on disk)."""
     if not path.exists():
         rel = path.relative_to(_REPO) if path.is_relative_to(_REPO) else path
         return f"(missing: {rel})"
@@ -222,19 +253,32 @@ def _compact_analytics(path: Path, max_chars: int = 1600) -> str:
         m = v.get("metrics") or {}
         return int(m.get("views") or 0)
 
-    top = sorted(videos, key=_views, reverse=True)[:10]
-    rows: list[dict] = []
-    for v in top:
+    def _avg_pct(v: dict) -> float:
         m = v.get("metrics") or {}
-        rows.append(
-            {
-                "title": ((v.get("title") or "")[:90]),
-                "views": m.get("views"),
-                "avg_pct": m.get("average_view_percentage"),
-                "watch_min": m.get("watch_time_minutes"),
-            }
-        )
-    slim = {"fetched_at": data.get("fetched_at"), "n_videos": len(videos), "top_by_views": rows}
+        try:
+            return float(m.get("average_view_percentage") or 0.0)
+        except (TypeError, ValueError):
+            return 0.0
+
+    def _row(v: dict) -> dict:
+        m = v.get("metrics") or {}
+        return {
+            "title": ((v.get("title") or "")[:90]),
+            "views": m.get("views"),
+            "avg_pct": m.get("average_view_percentage"),
+            "watch_min": m.get("watch_time_minutes"),
+        }
+
+    top_views = sorted(videos, key=_views, reverse=True)[:12]
+    min_views = 2
+    qualified = [v for v in videos if _views(v) >= min_views]
+    top_ret = sorted(qualified, key=_avg_pct, reverse=True)[:8]
+    slim = {
+        "fetched_at": data.get("fetched_at"),
+        "n_videos": len(videos),
+        "top_by_views": [_row(v) for v in top_views],
+        "top_by_avg_view_pct_min_views_2": [_row(v) for v in top_ret],
+    }
     text = json.dumps(slim, ensure_ascii=False, separators=(",", ":"))
     if len(text) > max_chars:
         return text[: max_chars - 30] + "…"
@@ -257,11 +301,11 @@ def build_runner_bundle(lane: str, week: str) -> str:
         ana_path = DATA / "analytics.json"
 
     parts = [
-        "### run-next (priority)\n\n" + _read(run_next, 3800),
-        "### weekly report\n\n" + _read(weekly, 2200),
+        "### run-next (priority)\n\n" + _read(run_next, 4500),
+        "### weekly report\n\n" + _read(weekly, 2800),
         "### run-intent blocked\n\n" + _read(blocked, 1200),
         "### suggestions (compact)\n\n" + _compact_suggestions(sug_path),
-        "### analytics (compact top videos)\n\n" + _compact_analytics(ana_path),
+        "### analytics (compact top videos + retention slice)\n\n" + _compact_analytics(ana_path),
     ]
     text = "\n\n".join(parts)
     if len(text) > RUNNER_BUNDLE_MAX_CHARS:
@@ -590,15 +634,21 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
         "You are a compact advisor for a YouTube ambient music channel. "
         "You ONLY see the user CONTEXT (markdown + JSON excerpts from this repo’s analytics run). "
         "You did NOT call YouTube or the internet.\n"
-        "Respond AS IF you finished reading that bundle, then give concise interpretation.\n"
+        "Treat CONTEXT as the sole evidence. Do not reference files you did not read here; "
+        "do not answer with pointers only (e.g. “see run-next”) — synthesize takeaways in your own words.\n"
         "Required shape (GitHub-flavored markdown, stay concise—complete sections beat padding, no outer ``` fences):\n"
-        "## What I reviewed — 2–3 sentences naming the kinds of inputs (e.g. run-next, suggestions excerpt, weekly report).\n"
-        "## Insights — numbered 1–5. Each: one short paragraph. Prefer mood/style/packaging angles when CONTEXT supports them. "
+        "## What I reviewed — 2–3 bullets naming concrete CONTEXT blocks "
+        "(e.g. run-next, weekly report, suggestions JSON incl. coverage_summary if present, analytics compact).\n"
+        "## Summary — 2–4 sentences: the main story the metrics tell (thin data is OK to name explicitly).\n"
+        "## Insights — numbered 1–5. Each: one short paragraph. "
+        "Use **at least three distinct numeric facts** copied from CONTEXT (counts, %, averages, views) across these items; "
+        "every number must appear verbatim in CONTEXT (no rounding invented, no new totals). "
+        "Prefer mood / art_period / music_style / packaging angles when CONTEXT supports them. "
         "If an item is not directly supported, start that paragraph with **Speculative:**.\n"
-        "## Risks — short bullets (thin data, confounders, contradictions in CONTEXT).\n"
-        "## Next tries — bullets (concrete experiments; no invented metrics).\n"
+        "## Risks — short bullets (thin data, confounders, contradictions inside CONTEXT).\n"
+        "## Next tries — bullets: concrete experiments grounded in what CONTEXT shows; no invented KPIs.\n"
         "Do not paste large tables; at most one tiny 3-row markdown table if essential. "
-        "Numbers must match CONTEXT; never fabricate counts."
+        "If a metric is missing from CONTEXT, say **Not in CONTEXT** instead of guessing."
     )
     user = f"CONTEXT:\n{ctx_used}"
     prompt = _qwen25_chat_prompt(system=system, user=user)
