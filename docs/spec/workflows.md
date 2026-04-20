@@ -622,9 +622,9 @@ on:
 | `YOUTUBE_TOKEN_PICKLE_BRAND` | YouTube API authentication (brand token pickle) |
 | `GEMINI_API_KEY` | Optional — enables Gemini half of dual advisory; omit for Gemini stub |
 
-**Repository Variable (optional):** `GEMINI_MODEL` — set under *Settings → Secrets and variables → Actions → Variables*; both analytics workflows pass it as `env.GEMINI_MODEL`. When empty, [`agent_dual_advisory.py`](../../scripts/agent_dual_advisory.py) uses its built-in default.
+**Repository Variable (optional):** `GEMINI_MODEL` — set under *Settings → Secrets and variables → Actions → Variables*; both analytics workflows pass it as `env.GEMINI_MODEL`. When empty, [`agent_dual_advisory.py`](../../scripts/agent_dual_advisory.py) defaults to **`gemini-2.5-flash`** (not 2.0).
 
-**Optional (script / workflow `env`):** `GEMINI_MIN_INTERVAL_SEC` (default `6`) and `GEMINI_MAX_RETRIES` (default `5`) — client-side spacing between Gemini calls in one process and backoff on HTTP 429/503; see [`agent_dual_advisory.py`](../../scripts/agent_dual_advisory.py) module docstring. Usually left unset in CI (one request per job).
+**Optional (script / workflow `env`):** `GEMINI_MIN_INTERVAL_SEC` (default `6`), `GEMINI_MAX_RETRIES` (default `5`), `GEMINI_429_MIN_SLEEP_SEC` (default `0`) — spacing between Gemini calls and **minimum** sleep before 429/503 retries; see [`agent_dual_advisory.py`](../../scripts/agent_dual_advisory.py). Brand analytics usually leaves these unset (one request per job). **Personal** workflow sets conservative values on the dual-advisory step for tight free-tier quotas (often **~5 RPM** class limits on Flash in AI Studio for small projects).
 
 **Optional env (runner GGUF, workflow or runner config):** `AGENT_GGUF_PATH`, `AGENT_GGUF_URL` (default Hugging Face Qwen2.5-1.5B Instruct q4), `AGENT_LLAMA_THREADS`.
 
@@ -672,7 +672,7 @@ on:
 8. Plan run intent (`scripts/plan_run_intent.py` with `--suggestions data/suggestions_personal.json`, `--channel personal`, `--intent-output data/run_intent_personal.json`, `--blocked-output data/reports/run-intent-blocked-personal.md`)
 9. Run-next advisory personal (`scripts/run_next_report.py --lane personal`)
 10. **Cache runner GGUF** — same cache key family as brand (`~/.cache/living-agent`)
-11. **Dual LLM advisory personal:** `pip install llama-cpp-python` + `scripts/agent_dual_advisory.py --lane personal` → `agent-insight-YYYY-WW-personal-gemini.md` and `agent-insight-YYYY-WW-personal-runner.md` (Gemini full bundle + runner lean bundle in parallel; logs **`[runner-advisory]`** in the folded **Dual advisory** group). Secret **`GEMINI_API_KEY_PERSONAL`** → env `GEMINI_API_KEY_PERSONAL` (separate Google AI project from brand `GEMINI_API_KEY`).
+11. **Dual LLM advisory personal:** `pip install llama-cpp-python` + `scripts/agent_dual_advisory.py --lane personal` → `agent-insight-YYYY-WW-personal-gemini.md` and `agent-insight-YYYY-WW-personal-runner.md` (Gemini full bundle + runner lean bundle in parallel; logs **`[runner-advisory]`** in the folded **Dual advisory** group). Secret **`GEMINI_API_KEY_PERSONAL`** → env `GEMINI_API_KEY_PERSONAL` (separate Google AI project from brand `GEMINI_API_KEY`). Step **`env`** sets **`GEMINI_MIN_INTERVAL_SEC`**, **`GEMINI_MAX_RETRIES`**, **`GEMINI_429_MIN_SLEEP_SEC`** so a single job stays under typical **free-tier RPM** for **Gemini 2.5 Flash** (check [rate limits](https://ai.google.dev/gemini-api/docs/rate-limits) and AI Studio usage — **RPD** can still 429 if the daily cap is exhausted).
 12. Commit + push (`git pull --rebase origin main` before `git push`; `git add` includes `agent-insight-*-personal-*.md` in addition to `*-personal.md`)
 
 ### Outputs
@@ -695,7 +695,9 @@ on:
 | `YOUTUBE_TOKEN_PICKLE` | Personal channel OAuth (same as Content Factory personal) |
 | `GEMINI_API_KEY_PERSONAL` | Optional — Gemini half of dual advisory on **this** workflow; [`agent_dual_advisory.py`](../../scripts/agent_dual_advisory.py) reads `GEMINI_API_KEY_PERSONAL` (or `GEMINI_API_KEY` for local override); omit for Gemini stub |
 
-**Repository Variable (optional):** `GEMINI_MODEL` — same as brand analytics (Actions Variables → `env.GEMINI_MODEL`).
+**Repository Variable (optional):** `GEMINI_MODEL` — same as brand analytics (Actions Variables → `env.GEMINI_MODEL`). When unset, the script default is **`gemini-2.5-flash`**.
+
+**Gemini free tier (personal project):** Limits are **per API key / project** and **per model** (RPM, RPD, TPM). AI Studio’s **Rate limits breakdown** for **Gemini 2.5 Flash** often shows a **~5 RPM** ceiling on free tier; daily request caps can be low. This workflow’s dual-advisory step sets conservative pacing **`env`** (see step 11 above). If **`agent-insight-*-personal-gemini.md`** still contains a **429**, treat as **quota** (wait for reset, change **`GEMINI_MODEL`**, use another Google AI **project** for a separate bucket, or billing per Google) — not a runner GGUF failure.
 
 **Guardrail:** This workflow must **not** set `YOUTUBE_TOKEN_PICKLE_BRAND`, so `fetch_analytics` never picks the brand token for personal runs.
 

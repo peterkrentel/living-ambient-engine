@@ -18,6 +18,9 @@ Outputs (per lane ``brand`` | ``personal``):
 seconds between completed Gemini HTTP calls in this process (reduces 429s when re-running locally).
 ``GEMINI_MAX_RETRIES`` (default ``5``) — retries on HTTP 429 / 503 with backoff and
 ``Retry-After`` when the API sends it. Set interval ``0`` to disable spacing only.
+``GEMINI_429_MIN_SLEEP_SEC`` (default ``0``) — floor on **retry** sleep after 429/503 (e.g. ``20`` under **~5 RPM** free-tier caps so retries do not stack in the same minute).
+
+**Default REST model** when ``GEMINI_MODEL`` is unset: ``gemini-2.5-flash`` (not 2.0). Override per project via env / Actions **Variable** ``GEMINI_MODEL`` if you need another tier.
 
 Week label: ISO calendar (same as ``audit_channel`` / ``run_next_report``).
 """
@@ -41,7 +44,7 @@ _REPO = Path(__file__).resolve().parents[1]
 REPORTS = _REPO / "data" / "reports"
 DATA = _REPO / "data"
 
-_DEFAULT_GEMINI = "gemini-2.0-flash"
+_DEFAULT_GEMINI = "gemini-2.5-flash"
 MAX_CONTEXT_GEMINI = 24_000
 # Runner GGUF: small n_ctx; char→token ratio ~3–4 for EN/JSON — keep prompt+context safely under n_ctx.
 RUNNER_BUNDLE_MAX_CHARS = 4200
@@ -245,6 +248,17 @@ def _gemini_max_retries() -> int:
         return 5
 
 
+def _gemini_429_min_sleep_sec() -> float:
+    """Minimum seconds to sleep before retrying after HTTP 429 / 503 (free-tier RPM safety)."""
+    raw = (os.environ.get("GEMINI_429_MIN_SLEEP_SEC") or "").strip()
+    if not raw:
+        return 0.0
+    try:
+        return max(0.0, float(raw))
+    except ValueError:
+        return 0.0
+
+
 def _wait_gemini_spacing() -> None:
     """Space out Gemini calls in this process (free-tier RPM / burst)."""
     interval = _gemini_min_interval_sec()
@@ -308,7 +322,8 @@ def _gemini_generate_json(url: str, payload: dict) -> dict:
                 raise GeminiHttpError(e.code, body) from e
             ra = _retry_after_seconds(e)
             base = min(120.0, (2.0**attempt) + random.uniform(0, 0.5))
-            sleep_s = max(ra or 0.0, base)
+            floor = _gemini_429_min_sleep_sec()
+            sleep_s = max(ra or 0.0, base, floor)
             print(
                 f"Gemini HTTP {e.code}; sleeping {sleep_s:.1f}s then retry "
                 f"({attempt + 1}/{max_retries + 1} attempts)",
