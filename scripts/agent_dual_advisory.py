@@ -45,10 +45,16 @@ DEFAULT_GGUF = Path.home() / ".cache" / "living-agent" / "qwen2.5-0.5b-instruct-
 def _runner_log(msg: str) -> None:
     """Lines show in GitHub Actions job logs for the non-cloud path."""
     print(f"[runner-advisory] {msg}", flush=True)
+
+
 DEFAULT_GGUF_URL = (
     "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF/resolve/main/"
     "qwen2.5-0.5b-instruct-q4_k_m.gguf"
 )
+
+# Qwen2.5 ChatML specials (HF tokenizer 151644 / 151645). Built with concat so literals are never mangled.
+_QWEN_IM_START = "<|" + "im_start" + "|>"
+_QWEN_IM_END = "<|" + "im_end" + "|>"
 
 
 def iso_week_suffix(utc_now: datetime | None = None) -> str:
@@ -284,6 +290,16 @@ def _ensure_gguf(path: Path) -> None:
     _runner_log(f"Download complete ({mb:.1f} MiB)")
 
 
+def _qwen25_chat_prompt(*, system: str, user: str) -> str:
+    """ChatML shape for Qwen2.x Instruct GGUFs (not Llama ``[INST]`` — wrong template → empty output)."""
+    s, e = _QWEN_IM_START, _QWEN_IM_END
+    return (
+        f"{s}system\n{system.strip()}{e}\n"
+        f"{s}user\n{user.strip()}{e}\n"
+        f"{s}assistant\n"
+    )
+
+
 def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
     out = REPORTS / f"agent-insight-{week}-{lane}-runner.md"
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -314,11 +330,15 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
         return out
 
     ctx_used = bundle[:RUNNER_BUNDLE_MAX_CHARS]
-    prompt = (
-        "[INST]You are a compact advisor for a YouTube ambient channel. Use only CONTEXT. "
-        "Output markdown: ## Summary, ## Risks, ## Ideas (bullets). Under 300 words.[/INST]\n"
-        f"CONTEXT:\n{ctx_used}"
+    system = (
+        "You are a compact advisor for a YouTube ambient music channel. "
+        "Use ONLY the user CONTEXT (markdown + JSON excerpts). "
+        "Output GitHub-flavored markdown with exactly these sections: "
+        "## Summary, ## Risks, ## Ideas (bullets). "
+        "Under 300 words. Do not invent numbers not present in CONTEXT."
     )
+    user = f"CONTEXT:\n{ctx_used}"
+    prompt = _qwen25_chat_prompt(system=system, user=user)
     prompt_chars = len(prompt)
     est_prompt_tokens = max(1, int(prompt_chars / 3.5))
     n_threads = int(os.environ.get("AGENT_LLAMA_THREADS", "4"))
@@ -346,13 +366,19 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
             prompt,
             max_tokens=MAX_RUNNER_TOKENS,
             temperature=0.25,
-            stop=["</s>", "[INST]"],
+            # Qwen2.5: stop at turn end and next role header (not Llama ``[/INST]`` / ``</s>``).
+            stop=[_QWEN_IM_END, _QWEN_IM_START],
         )
         t_done = time.perf_counter()
-        text = (result["choices"][0]["text"] or "").strip() or "(empty runner response)"
+        choice = (result.get("choices") or [{}])[0]
+        text = (choice.get("text") or "").strip()
+        fr = choice.get("finish_reason")
+        if not text:
+            _runner_log(f"empty completion finish_reason={fr!r} choice_keys={list(choice.keys())}")
+            text = "(empty runner response)"
         _runner_log(
             f"inference wall_s={t_done - t_load:.2f}s total_since_start_s={t_done - t0:.2f}s "
-            f"output_chars={len(text)}"
+            f"output_chars={len(text)} finish_reason={fr!r}"
         )
     except Exception as e:  # noqa: BLE001 — advisory path; always write markdown
         text = f"## Inference error\n\n`{type(e).__name__}`: {e}\n"
