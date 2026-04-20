@@ -1,7 +1,7 @@
 # Run next — personal advisory (2026-W17)
 
-Generated (report): 2026-04-20T15:01:52.607428+00:00
-**Correlate bundle `generated_at`:** 2026-04-20T15:01:51.963544Z
+Generated (report): 2026-04-20T16:17:05.893032+00:00
+**Correlate bundle `generated_at`:** 2026-04-20T16:17:05.640663Z
 
 ## How to read this
 
