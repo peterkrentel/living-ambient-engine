@@ -1,14 +1,14 @@
 # Personal channel — Analytics Report (2026-W17)
 
-Generated: 2026-04-20T04:58:00.120518+00:00
+Generated: 2026-04-20T12:56:42.139234+00:00
 
 > **Channel scope:** Personal YouTube only. Data file: `data/analytics_personal.json`. Brand metrics live in `data/analytics.json` (main Analytics Agent workflow).
 
 ## Summary
 
 - **Analytics window:** `2026-03-23` → `2026-04-19` (YouTube Analytics API range for metrics below. In Studio, pick the **same** custom dates when comparing totals — not e.g. “Last 28 days” unless `fetch_analytics` used `--days 28`.)
-- **Total videos tracked:** 102
-- **Videos with analytics:** 102
+- **Total videos tracked:** 108
+- **Videos with analytics:** 108
 
 ## Totals
 
@@ -40,20 +40,20 @@ Generated: 2026-04-20T04:58:00.120518+00:00
 
 | Mood | Videos | Total Views | Avg Retention |
 |------|--------|-------------|---------------|
-| deep_focus | 8 | 45 | 23.4% |
+| deep_focus | 9 | 45 | 23.4% |
 | rain_sleep | 4 | 22 | 2.1% |
-| piano_deep_calm | 10 | 16 | 21.1% |
+| piano_deep_calm | 12 | 16 | 21.1% |
 | warrior | 11 | 9 | 57.0% |
 | study | 6 | 5 | 20.2% |
 | unknown | 8 | 4 | 17.8% |
 | trance | 10 | 3 | 8.6% |
 | piano_ambient | 2 | 2 | 49.8% |
 | piano_relax | 2 | 2 | 9.4% |
-| ceremony | 8 | 1 | 0.2% |
+| ceremony | 10 | 1 | 0.2% |
 | piano_evening | 2 | 0 | 0.0% |
 | rain_piano | 2 | 0 | 0.0% |
 | piano_gentle | 2 | 0 | 0.0% |
-| energize | 7 | 0 | 0.0% |
+| energize | 8 | 0 | 0.0% |
 | chill | 4 | 0 | 0.0% |
 | sleep | 9 | 0 | 0.0% |
 | lofi_study | 2 | 0 | 0.0% |

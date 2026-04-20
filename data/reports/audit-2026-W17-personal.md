@@ -1,16 +1,16 @@
 # Channel coverage audit (2026-W17)
 
-Generated: 2026-04-20T04:58:00.213482+00:00
+Generated: 2026-04-20T12:56:42.231904+00:00
 **YouTube identity (this run):** `personal`
 **Analytics file:** `data/analytics_personal.json`
-Analytics `fetched_at`: 2026-04-20T04:57:59.935819+00:00
+Analytics `fetched_at`: 2026-04-20T12:56:41.986371+00:00
 Analytics window: `2026-03-23` → `2026-04-19`
 
 ## Overview
 
-- **Videos in analytics:** 102
-- **generations.json join (any ledger row):** 70 / 102 (68.6%)
-- **generations.json join (identity-aligned):** 24 / 102 (23.5%)
+- **Videos in analytics:** 108
+- **generations.json join (any ledger row):** 76 / 108 (70.4%)
+- **generations.json join (identity-aligned):** 30 / 108 (27.8%)
   - *Identity-aligned uses optional ledger `channel`, else infers from `workflow` (e.g. `Content Factory (Brand)`). Rows with neither still count only toward “any”.*
   - *Historic uploads may lack rows until logged by the upload pipeline.*
 
@@ -18,10 +18,10 @@ Analytics window: `2026-03-23` → `2026-04-19`
 
 | Mood | Videos | With views |
 |------|--------|------------|
-| `ceremony` | 8 | 1 |
+| `ceremony` | 10 | 1 |
 | `chill` | 4 | 0 |
-| `deep_focus` | 12 | 6 |
-| `energize` | 7 | 0 |
+| `deep_focus` | 13 | 6 |
+| `energize` | 8 | 0 |
 | `fireplace` | 3 | 0 |
 | `forest_morning` | 0 | 0 |
 | `lofi_study` | 2 | 0 |
@@ -46,7 +46,7 @@ Analytics window: `2026-03-23` → `2026-04-19`
 
 | Category | Videos |
 |----------|--------|
-| mood | 102 |
+| mood | 108 |
 
 ---
 *Produced by `scripts/audit_channel.py` (Analytics Agent or Analytics Agent Personal).*
