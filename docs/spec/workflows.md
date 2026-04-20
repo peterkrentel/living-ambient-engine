@@ -624,6 +624,8 @@ on:
 
 **Repository Variable (optional):** `GEMINI_MODEL` — set under *Settings → Secrets and variables → Actions → Variables*; both analytics workflows pass it as `env.GEMINI_MODEL`. When empty, [`agent_dual_advisory.py`](../../scripts/agent_dual_advisory.py) uses its built-in default.
 
+**Optional (script / workflow `env`):** `GEMINI_MIN_INTERVAL_SEC` (default `6`) and `GEMINI_MAX_RETRIES` (default `5`) — client-side spacing between Gemini calls in one process and backoff on HTTP 429/503; see [`agent_dual_advisory.py`](../../scripts/agent_dual_advisory.py) module docstring. Usually left unset in CI (one request per job).
+
 **Optional env (runner GGUF, workflow or runner config):** `AGENT_GGUF_PATH`, `AGENT_GGUF_URL` (default Hugging Face Qwen2.5-1.5B Instruct q4), `AGENT_LLAMA_THREADS`.
 
 ### Guardrails

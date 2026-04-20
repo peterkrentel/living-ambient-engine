@@ -32,3 +32,20 @@ def test_runner_bundle_stays_within_ctx_budget():
     """Lean runner bundle must stay under RUNNER_BUNDLE_MAX_CHARS (missing files = small)."""
     b = adv.build_runner_bundle("personal", "2099-W99")
     assert len(b) <= adv.RUNNER_BUNDLE_MAX_CHARS + 200
+
+
+def test_gemini_min_interval_sec_default(monkeypatch):
+    monkeypatch.delenv("GEMINI_MIN_INTERVAL_SEC", raising=False)
+    assert adv._gemini_min_interval_sec() == 6.0
+
+
+def test_gemini_min_interval_sec_env(monkeypatch):
+    monkeypatch.setenv("GEMINI_MIN_INTERVAL_SEC", "15")
+    assert adv._gemini_min_interval_sec() == 15.0
+    monkeypatch.setenv("GEMINI_MIN_INTERVAL_SEC", "0")
+    assert adv._gemini_min_interval_sec() == 0.0
+
+
+def test_gemini_max_retries_env(monkeypatch):
+    monkeypatch.setenv("GEMINI_MAX_RETRIES", "2")
+    assert adv._gemini_max_retries() == 2

@@ -13,6 +13,11 @@ Outputs (per lane ``brand`` | ``personal``):
   pip install llama-cpp-python   # runner path only; Gemini uses stdlib + REST
   GEMINI_API_KEY=... python scripts/agent_dual_advisory.py --lane brand --week 2026-W16
 
+**Gemini rate limits (optional env):** ``GEMINI_MIN_INTERVAL_SEC`` (default ``6``) — minimum
+seconds between completed Gemini HTTP calls in this process (reduces 429s when re-running locally).
+``GEMINI_MAX_RETRIES`` (default ``5``) — retries on HTTP 429 / 503 with backoff and
+``Retry-After`` when the API sends it. Set interval ``0`` to disable spacing only.
+
 Week label: ISO calendar (same as ``audit_channel`` / ``run_next_report``).
 """
 
@@ -21,7 +26,9 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import random
 import shutil
+import threading
 import time
 import urllib.error
 import urllib.request
@@ -213,6 +220,105 @@ def _gemini_url() -> str:
     return f"https://generativelanguage.googleapis.com/v1beta/models/{m}:generateContent"
 
 
+_gemini_spacing_lock = threading.Lock()
+_gemini_last_http_end = 0.0
+
+
+def _gemini_min_interval_sec() -> float:
+    raw = (os.environ.get("GEMINI_MIN_INTERVAL_SEC") or "").strip()
+    if not raw:
+        return 6.0
+    try:
+        return max(0.0, float(raw))
+    except ValueError:
+        return 6.0
+
+
+def _gemini_max_retries() -> int:
+    raw = (os.environ.get("GEMINI_MAX_RETRIES") or "").strip()
+    if not raw:
+        return 5
+    try:
+        return max(0, int(raw))
+    except ValueError:
+        return 5
+
+
+def _wait_gemini_spacing() -> None:
+    """Space out Gemini calls in this process (free-tier RPM / burst)."""
+    interval = _gemini_min_interval_sec()
+    if interval <= 0:
+        return
+    global _gemini_last_http_end
+    with _gemini_spacing_lock:
+        now = time.monotonic()
+        wait_s = _gemini_last_http_end + interval - now
+    if wait_s > 0:
+        time.sleep(wait_s)
+
+
+def _mark_gemini_http_done() -> None:
+    global _gemini_last_http_end
+    with _gemini_spacing_lock:
+        _gemini_last_http_end = time.monotonic()
+
+
+def _retry_after_seconds(err: urllib.error.HTTPError) -> float | None:
+    if err.headers is None:
+        return None
+    h = err.headers.get("Retry-After")
+    if not h:
+        return None
+    try:
+        return max(0.0, float(h))
+    except ValueError:
+        return None
+
+
+class GeminiHttpError(Exception):
+    """Non-retryable Gemini REST failure or exhausted 429/503 retries."""
+
+    def __init__(self, code: int, body: str):
+        self.code = code
+        self.body = body
+        super().__init__(f"Gemini HTTP {code}")
+
+
+def _gemini_generate_json(url: str, payload: dict) -> dict:
+    """POST generateContent; retries 429/503. Caller should call _wait_gemini_spacing() once first."""
+    data = json.dumps(payload).encode("utf-8")
+    max_retries = _gemini_max_retries()
+    for attempt in range(max_retries + 1):
+        req = urllib.request.Request(
+            url,
+            data=data,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=120) as resp:
+                raw = json.loads(resp.read().decode("utf-8"))
+            _mark_gemini_http_done()
+            return raw
+        except urllib.error.HTTPError as e:
+            _mark_gemini_http_done()
+            body = e.read().decode("utf-8", errors="replace")[:4000]
+            if e.code not in (429, 503) or attempt >= max_retries:
+                raise GeminiHttpError(e.code, body) from e
+            ra = _retry_after_seconds(e)
+            base = min(120.0, (2.0**attempt) + random.uniform(0, 0.5))
+            sleep_s = max(ra or 0.0, base)
+            print(
+                f"Gemini HTTP {e.code}; sleeping {sleep_s:.1f}s then retry "
+                f"({attempt + 1}/{max_retries + 1} attempts)",
+                flush=True,
+            )
+            time.sleep(sleep_s)
+        except OSError:
+            _mark_gemini_http_done()
+            raise
+
+
 def write_gemini(lane: str, week: str, bundle: str) -> Path:
     out = REPORTS / f"agent-insight-{week}-{lane}-gemini.md"
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -244,18 +350,11 @@ def write_gemini(lane: str, week: str, bundle: str) -> Path:
         "generationConfig": {"temperature": 0.35, "maxOutputTokens": 1024},
     }
     url = f"{_gemini_url()}?key={key}"
-    req = urllib.request.Request(
-        url,
-        data=json.dumps(payload).encode("utf-8"),
-        headers={"Content-Type": "application/json"},
-        method="POST",
-    )
+    _wait_gemini_spacing()
     try:
-        with urllib.request.urlopen(req, timeout=120) as resp:
-            raw = json.loads(resp.read().decode("utf-8"))
-    except urllib.error.HTTPError as e:
-        err_body = e.read().decode("utf-8", errors="replace")[:4000]
-        text = _header_gemini(lane, week) + f"## API error\n\n```\n{e.code}\n{err_body}\n```\n"
+        raw = _gemini_generate_json(url, payload)
+    except GeminiHttpError as e:
+        text = _header_gemini(lane, week) + f"## API error\n\n```\n{e.code}\n{e.body}\n```\n"
         out.write_text(text, encoding="utf-8")
         print(f"Gemini HTTP {e.code}; wrote {out}")
         return out
