@@ -1,6 +1,6 @@
 # Personal channel — Analytics Report (2026-W17)
 
-Generated: 2026-04-20T19:57:01.312020+00:00
+Generated: 2026-04-20T20:35:52.263016+00:00
 
 > **Channel scope:** Personal YouTube only. Data file: `data/analytics_personal.json`. Brand metrics live in `data/analytics.json` (main Analytics Agent workflow).
 
@@ -8,11 +8,11 @@ Generated: 2026-04-20T19:57:01.312020+00:00
 
 - **Analytics window:** `2026-03-23` → `2026-04-19` (YouTube Analytics API range for metrics below. In Studio, pick the **same** custom dates when comparing totals — not e.g. “Last 28 days” unless `fetch_analytics` used `--days 28`.)
 - **Total videos tracked:** 108
-- **Videos with analytics:** 108
+- **Videos with analytics:** 107
 
 ## Totals
 
-- **Total views:** 313
+- **Total views:** 312
 - **Total watch time:** 892 minutes
 - **Subscribers gained:** 4
 
@@ -43,7 +43,7 @@ Generated: 2026-04-20T19:57:01.312020+00:00
 | deep_focus | 9 | 172 | 19.5% |
 | piano_deep_calm | 12 | 69 | 9.8% |
 | rain_sleep | 4 | 23 | 2.0% |
-| ceremony | 10 | 17 | 1.0% |
+| ceremony | 10 | 16 | 1.8% |
 | warrior | 11 | 9 | 57.0% |
 | energize | 8 | 6 | 6.7% |
 | study | 6 | 5 | 20.2% |

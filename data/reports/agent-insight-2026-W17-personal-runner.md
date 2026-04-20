@@ -4,35 +4,18 @@
 
 ---
 ### What I reviewed
-- **Run next report:** Personal advisory for 2026-W17.
-- **Generated:** 2026-04-20T19:57:01.312020+00:00
-- **Data sources:** Suggestions from `data/suggestions_personal.json` and channel audit from `data/reports/audit-2026-W17-personal.md`.
+- **Run next report:** This file is generated from `data/suggestions_personal.json` and the personal channel audit (`audit-2026-W17-personal.md`). It is not causal advice — see *Packaging & confounders* below.
 
 ### Insights
-1. **Overall avg retention:** 16.25%
-2. **Overall avg watch min / video (window):** 31.857
-3. **Videos analyzed:** 28 with views / 108 total
-4. **Videos in analytics:** 108
-5. **generations.json join (any ledger row):** 76 / 108 (70.4%)
-6. **generations.json join (identity-aligned):** 30 / 108 (27.8%)
+1. **Overall avg retention:** 16.85%
+2. **Overall avg watch min / video (window):** 33.037
+3. **Videos analyzed:** 27 with views / 108 total
+4. **Suggestions:** `data/suggestions_personal.json`
+5. **Channel audit:** `data/reports/audit-2026-W17-personal.md`
 
 ### Risks
-- **CTR, impressions, and retention:** Often move due to title, thumbnail, traffic source, and seasonality.
-- **Personal snapshot:** No exploratory "increase" or "reduce" rows.
+- **CTR, impressions, and retention:** Often move due to title, thumbnail, traffic source, and seasonality — not because a mood or art-period label “caused” an outcome. Do not treat bucket-level correlation as proof that generation parameters drove a result when packaging differed across videos. Correlation addresses patterns in the data, not hidden causes.
 
 ### Next tries
-- **Audit:** Check for identity-aligned videos.
-- **Planner:** Block any plans that may conflict with the current mood.
-- **Batch strategy:** Before scaling, review mood vs algorithm batch intent in `piano-batch.yml`.
-
-### Personal snapshot
-- **Overall avg retention:** 16.25%
-- **Overall avg watch min / video (window):** 31.857
-- **Videos analyzed:** 28 with views / 108 total
-
-### Evidence
+- **Audit:** `data/reports/audit-2026-W17-personal.md`
 - **Suggestions:** `data/suggestions_personal.json`
-- **Channel audit:** `data/reports/audit-2026-W17-personal.md`
-
-### Actionable (correlate gates passed)
-- None this week — all rows are exploratory or below actionable thresholds.
