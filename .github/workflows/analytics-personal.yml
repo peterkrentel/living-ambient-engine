@@ -120,7 +120,8 @@ jobs:
 
       - name: Dual LLM advisory personal (Gemini + runner GGUF, parallel)
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          # Personal Google AI project key — separate secret name from brand (`GEMINI_API_KEY`).
+          GEMINI_API_KEY_PERSONAL: ${{ secrets.GEMINI_API_KEY_PERSONAL }}
           GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
         run: |
           set -euo pipefail

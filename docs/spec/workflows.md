@@ -672,7 +672,7 @@ on:
 8. Plan run intent (`scripts/plan_run_intent.py` with `--suggestions data/suggestions_personal.json`, `--channel personal`, `--intent-output data/run_intent_personal.json`, `--blocked-output data/reports/run-intent-blocked-personal.md`)
 9. Run-next advisory personal (`scripts/run_next_report.py --lane personal`)
 10. **Cache runner GGUF** — same cache key family as brand (`~/.cache/living-agent`)
-11. **Dual LLM advisory personal:** `pip install llama-cpp-python` + `scripts/agent_dual_advisory.py --lane personal` → `agent-insight-YYYY-WW-personal-gemini.md` and `agent-insight-YYYY-WW-personal-runner.md` (Gemini full bundle + runner lean bundle in parallel; logs **`[runner-advisory]`** in the folded **Dual advisory** group)
+11. **Dual LLM advisory personal:** `pip install llama-cpp-python` + `scripts/agent_dual_advisory.py --lane personal` → `agent-insight-YYYY-WW-personal-gemini.md` and `agent-insight-YYYY-WW-personal-runner.md` (Gemini full bundle + runner lean bundle in parallel; logs **`[runner-advisory]`** in the folded **Dual advisory** group). Secret **`GEMINI_API_KEY_PERSONAL`** → env `GEMINI_API_KEY_PERSONAL` (separate Google AI project from brand `GEMINI_API_KEY`).
 12. Commit + push (`git pull --rebase origin main` before `git push`; `git add` includes `agent-insight-*-personal-*.md` in addition to `*-personal.md`)
 
 ### Outputs
@@ -693,7 +693,7 @@ on:
 | Secret | Purpose |
 |--------|---------|
 | `YOUTUBE_TOKEN_PICKLE` | Personal channel OAuth (same as Content Factory personal) |
-| `GEMINI_API_KEY` | Optional — Gemini half of dual advisory; omit for Gemini stub |
+| `GEMINI_API_KEY_PERSONAL` | Optional — Gemini half of dual advisory on **this** workflow; [`agent_dual_advisory.py`](../../scripts/agent_dual_advisory.py) reads `GEMINI_API_KEY_PERSONAL` (or `GEMINI_API_KEY` for local override); omit for Gemini stub |
 
 **Repository Variable (optional):** `GEMINI_MODEL` — same as brand analytics (Actions Variables → `env.GEMINI_MODEL`).
 

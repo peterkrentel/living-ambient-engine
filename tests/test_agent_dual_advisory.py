@@ -49,3 +49,19 @@ def test_gemini_min_interval_sec_env(monkeypatch):
 def test_gemini_max_retries_env(monkeypatch):
     monkeypatch.setenv("GEMINI_MAX_RETRIES", "2")
     assert adv._gemini_max_retries() == 2
+
+
+def test_gemini_api_key_brand_only_generic(monkeypatch):
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+    monkeypatch.delenv("GEMINI_API_KEY_PERSONAL", raising=False)
+    assert adv._gemini_api_key("brand") == ""
+    monkeypatch.setenv("GEMINI_API_KEY", "brand-key")
+    assert adv._gemini_api_key("brand") == "brand-key"
+
+
+def test_gemini_api_key_personal_prefers_personal_secret(monkeypatch):
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+    monkeypatch.setenv("GEMINI_API_KEY_PERSONAL", "personal-key")
+    assert adv._gemini_api_key("personal") == "personal-key"
+    monkeypatch.setenv("GEMINI_API_KEY", "override")
+    assert adv._gemini_api_key("personal") == "override"
