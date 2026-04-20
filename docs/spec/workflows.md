@@ -622,7 +622,9 @@ on:
 | `YOUTUBE_TOKEN_PICKLE_BRAND` | YouTube API authentication (brand token pickle) |
 | `GEMINI_API_KEY` | Optional — enables Gemini half of dual advisory; omit for Gemini stub |
 
-**Optional env (runner half, set in workflow YAML or runner config):** `AGENT_GGUF_PATH`, `AGENT_GGUF_URL` (default Hugging Face Qwen2.5-1.5B Instruct q4), `AGENT_LLAMA_THREADS`, `GEMINI_MODEL`.
+**Repository Variable (optional):** `GEMINI_MODEL` — set under *Settings → Secrets and variables → Actions → Variables*; both analytics workflows pass it as `env.GEMINI_MODEL`. When empty, [`agent_dual_advisory.py`](../../scripts/agent_dual_advisory.py) uses its built-in default.
+
+**Optional env (runner GGUF, workflow or runner config):** `AGENT_GGUF_PATH`, `AGENT_GGUF_URL` (default Hugging Face Qwen2.5-1.5B Instruct q4), `AGENT_LLAMA_THREADS`.
 
 ### Guardrails
 
@@ -690,6 +692,8 @@ on:
 |--------|---------|
 | `YOUTUBE_TOKEN_PICKLE` | Personal channel OAuth (same as Content Factory personal) |
 | `GEMINI_API_KEY` | Optional — Gemini half of dual advisory; omit for Gemini stub |
+
+**Repository Variable (optional):** `GEMINI_MODEL` — same as brand analytics (Actions Variables → `env.GEMINI_MODEL`).
 
 **Guardrail:** This workflow must **not** set `YOUTUBE_TOKEN_PICKLE_BRAND`, so `fetch_analytics` never picks the brand token for personal runs.
 

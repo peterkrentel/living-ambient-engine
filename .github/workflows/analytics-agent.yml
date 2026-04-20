@@ -105,6 +105,7 @@ jobs:
       - name: Dual LLM advisory (Gemini + runner GGUF, parallel)
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
         run: |
           set -euo pipefail
           pip install 'llama-cpp-python>=0.2.90,<0.4'

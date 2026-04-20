@@ -198,6 +198,19 @@ Videos published **before** `generations.json` exists have **no** joined params 
 3. **Optional LLM prose** — only after (1)(2) are boring: model consumes **fixed JSON bundle** + prompt from git; output still schema-validated. **Preferred:** open-weight on **self-hosted** runner or hardware you control (**MLOps / AI-ops**, no third-party inference). **Optional prototype:** vendor API (e.g. Gemini free tier) for speed **only** until a local path exists; document in `workflows.md` + secrets policy.
 4. **Automation** — optional `workflow_run` / scheduled consumer, richer `run_intent`, etc., **only** after `run-next` is trusted; keep Phase 6 steps **2–3** (human dispatch → later caps).
 
+### Dual advisory refinement (runner + optional Gemini)
+
+**Shipped prototype:** [`scripts/agent_dual_advisory.py`](../scripts/agent_dual_advisory.py) in [`analytics-agent.yml`](../.github/workflows/analytics-agent.yml) / [`analytics-personal.yml`](../.github/workflows/analytics-personal.yml) — **Gemini** on the **full** weekly bundle (REST); **runner GGUF** on a **lean** bundle (run-next + compact suggestions/analytics + short reports). Outputs: `data/reports/agent-insight-*-gemini.md` and `*-runner.md` — **advisory only**, not `run_intent` / `batch_generate`.
+
+**Iteration order (cheap → expensive):**
+
+1. **Runner quality** — tighten **what goes in the lean bundle** (compacts: top actionable rows, deltas, *n*, views) and **prompt contracts** (no generic platitudes, required sections, **Speculative:** labels, lower temperature if needed). This is the main lever before trusting any LLM prose.
+2. **Compare** — same week + lane: read **`*-gemini.md`** vs **`*-runner.md`**. Keep Gemini only while it adds **grounded** nuance you care about; otherwise simplify (runner-only) to cut keys, egress, and vendor surface.
+3. **Grounding / trust** — align with step **2** above (*validators*): numeric parity and “numbers only if present in JSON” checks on advisory output **before** any automation consumes it.
+4. **Weights** — swap default GGUF via `AGENT_GGUF_URL` / `AGENT_GGUF_PATH` (documented in [`spec/workflows.md`](spec/workflows.md)); bump Actions **cache key** when the default filename changes.
+
+**Gemini CI:** repository **Secret** `GEMINI_API_KEY`; optional **Variable** `GEMINI_MODEL` (workflow passes it as `env` when set; script defaults if empty).
+
 ---
 
 ## Versioning this project

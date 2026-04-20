@@ -4,7 +4,7 @@
 
 ## Updated
 
-2026-04-17
+2026-04-22
 
 ## Branch / PR
 
@@ -46,7 +46,7 @@
 7. **Spec phases:** **`AGENT.md`** Phase **3** when volume **and** interpretation guardrails justify it; **`COHESION_ROADMAP.md`** Phase **6** only after joins/trust feel right.
 8. **Title / packaging (defer):** same **mood × duration × dual** matrix on **brand + personal** reuses templates → **identical `video_title` strings** on two channels (different `video_id`s). Fine for smoke; before **high volume** or sharp **channel positioning**, tweak metadata (e.g. per-channel suffix or description line), rotation policy, or later **run intent** rules so packs are not unintentional clones — [`START_HERE.md`](START_HERE.md) checklist.
 
-9. **`run-next` follow-ups:** **(1)** validators (cited indices, numeric parity with `suggestions.json`); **(2)** optional LLM prose on the fixed bundle (self-hosted preferred; Gemini prototyping allowed); **(3)** automation only when trustworthy — [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6.
+9. **`run-next` + dual-advisory follow-ups:** **(1)** validators (cited indices, numeric parity with `suggestions.json` / JSON excerpts); **(2)** LLM prose — **runner:** refine lean bundle + prompts (`agent_dual_advisory.py`); **Gemini:** optional API side-by-side compare, then keep or drop per marginal value — details under [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6 *Dual advisory refinement*; **(3)** automation only when trustworthy.
 
 ## Risks / open questions
 
