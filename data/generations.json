@@ -3287,6 +3287,130 @@
       "updated_at": "2026-04-19T11:01:27.811618+00:00",
       "commit_sha": "4b79333d10cb4b5e6c60284a4cde1ee90a54085d",
       "channel": "personal"
+    },
+    {
+      "generation_id": "7d343fec-1e01-4c99-ac0f-af326a4a4754",
+      "video_id": "TOE7cWCCHjY",
+      "workflow": "Content Factory Brand Micro Batch v1",
+      "mood": "micro_racing_cool",
+      "duration_seconds": 10,
+      "params": {
+        "seed": 39614776,
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "10 Seconds to Stop Racing Thoughts",
+        "video_title": "10 Seconds to Stop Racing Thoughts",
+        "description": "Brand micro: 10 Seconds to Stop Racing Thoughts",
+        "tags": [
+          "brand micro batch",
+          "micro ambient",
+          "short ambient",
+          "ambient music",
+          "sound design",
+          "binaural beats",
+          "racing thoughts",
+          "anxiety relief"
+        ]
+      },
+      "generated_at": "2026-04-20T09:57:42.745161",
+      "uploaded_at": "2026-04-20T09:58:16.437191+00:00",
+      "updated_at": "2026-04-20T09:58:16.437191+00:00",
+      "commit_sha": "e4bcef74c691f9e1963cc0e04c27daf113872641",
+      "channel": "brand"
+    },
+    {
+      "generation_id": "feb281eb-5dfc-46c6-ae75-af819475ea3b",
+      "video_id": "XjAt53w1pjA",
+      "workflow": "Content Factory Brand Micro Batch v1",
+      "mood": "micro_spiral_stop",
+      "duration_seconds": 5,
+      "params": {
+        "seed": 1617858787,
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "5 Seconds to Break the Spiral",
+        "video_title": "5 Seconds to Break the Spiral",
+        "description": "Brand micro: 5 Seconds to Break the Spiral",
+        "tags": [
+          "brand micro batch",
+          "micro ambient",
+          "short ambient",
+          "ambient music",
+          "sound design",
+          "binaural beats",
+          "break spiral",
+          "reset"
+        ]
+      },
+      "generated_at": "2026-04-20T09:57:42.745189",
+      "uploaded_at": "2026-04-20T09:58:17.779827+00:00",
+      "updated_at": "2026-04-20T09:58:17.779827+00:00",
+      "commit_sha": "e4bcef74c691f9e1963cc0e04c27daf113872641",
+      "channel": "brand"
+    },
+    {
+      "generation_id": "d3ef841e-d9b7-451f-a728-b05cfa10eff1",
+      "video_id": "U0-u_s16Lgg",
+      "workflow": "Content Factory Brand Micro Batch v1",
+      "mood": "micro_overthink_a",
+      "duration_seconds": 10,
+      "params": {
+        "seed": 848952510,
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "10 Seconds to Stop Overthinking",
+        "video_title": "10 Seconds to Stop Overthinking",
+        "description": "Brand micro: 10 Seconds to Stop Overthinking",
+        "tags": [
+          "brand micro batch",
+          "micro ambient",
+          "short ambient",
+          "ambient music",
+          "sound design",
+          "binaural beats",
+          "overthinking",
+          "mental noise"
+        ]
+      },
+      "generated_at": "2026-04-20T09:57:42.745223",
+      "uploaded_at": "2026-04-20T09:58:19.278398+00:00",
+      "updated_at": "2026-04-20T09:58:19.278398+00:00",
+      "commit_sha": "e4bcef74c691f9e1963cc0e04c27daf113872641",
+      "channel": "brand"
+    },
+    {
+      "generation_id": "1c3c0147-bf9f-4f52-98b0-27fcc46cc088",
+      "video_id": "Y0nN-Q_1eAI",
+      "workflow": "Content Factory Brand Micro Batch v1",
+      "mood": "micro_overthink_b",
+      "duration_seconds": 10,
+      "params": {
+        "seed": 1641762401,
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "10 Seconds to Clear Mental Noise",
+        "video_title": "10 Seconds to Clear Mental Noise",
+        "description": "Brand micro: 10 Seconds to Clear Mental Noise",
+        "tags": [
+          "brand micro batch",
+          "micro ambient",
+          "short ambient",
+          "ambient music",
+          "sound design",
+          "binaural beats",
+          "clear mind",
+          "mental clutter"
+        ]
+      },
+      "generated_at": "2026-04-20T09:57:42.745242",
+      "uploaded_at": "2026-04-20T09:58:20.384223+00:00",
+      "updated_at": "2026-04-20T09:58:20.384223+00:00",
+      "commit_sha": "e4bcef74c691f9e1963cc0e04c27daf113872641",
+      "channel": "brand"
     }
   ]
 }
