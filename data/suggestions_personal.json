@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-04-17T19:35:19.318245Z",
-  "overall_avg_retention": 24.95,
-  "overall_avg_watch_minutes_per_video": 40.833,
-  "videos_analyzed": 90,
-  "videos_with_views": 12,
+  "generated_at": "2026-04-20T04:58:00.269320Z",
+  "overall_avg_retention": 20.16,
+  "overall_avg_watch_minutes_per_video": 21.0,
+  "videos_analyzed": 102,
+  "videos_with_views": 22,
   "coverage": {
     "moods": {
       "deep_focus": {
-        "total": 10,
-        "with_views": 3
+        "total": 12,
+        "with_views": 6
       },
       "sleep": {
         "total": 6,
@@ -20,18 +20,18 @@
       },
       "study": {
         "total": 6,
-        "with_views": 0
+        "with_views": 2
       },
       "energize": {
-        "total": 6,
+        "total": 7,
         "with_views": 0
       },
       "trance": {
         "total": 10,
-        "with_views": 2
+        "with_views": 3
       },
       "ceremony": {
-        "total": 5,
+        "total": 8,
         "with_views": 1
       },
       "warrior": {
@@ -40,7 +40,7 @@
       },
       "rain_sleep": {
         "total": 7,
-        "with_views": 0
+        "with_views": 2
       },
       "fireplace": {
         "total": 3,
@@ -56,7 +56,7 @@
       },
       "piano_relax": {
         "total": 4,
-        "with_views": 1
+        "with_views": 3
       },
       "forest_morning": {
         "total": 0,
@@ -518,7 +518,7 @@
       "avg": 0,
       "delta": 0,
       "count": 0,
-      "total": 4,
+      "total": 10,
       "group_views": 0,
       "std_dev": 0,
       "metric": "average_view_percentage"
@@ -551,7 +551,7 @@
       "avg": 0,
       "delta": 0,
       "count": 0,
-      "total": 6,
+      "total": 7,
       "group_views": 0,
       "std_dev": 0,
       "metric": "average_view_percentage"
@@ -617,7 +617,7 @@
       "avg": 0,
       "delta": 0,
       "count": 0,
-      "total": 5,
+      "total": 8,
       "group_views": 0,
       "std_dev": 0,
       "metric": "average_view_percentage"
@@ -629,17 +629,6 @@
       "delta": 0,
       "count": 0,
       "total": 4,
-      "group_views": 0,
-      "std_dev": 0,
-      "metric": "average_view_percentage"
-    },
-    {
-      "type": "mood",
-      "name": "deep_focus",
-      "avg": 0,
-      "delta": 0,
-      "count": 0,
-      "total": 10,
       "group_views": 0,
       "std_dev": 0,
       "metric": "average_view_percentage"
@@ -663,6 +652,17 @@
       "count": 0,
       "total": 3,
       "group_views": 0,
+      "std_dev": 0,
+      "metric": "average_view_percentage"
+    },
+    {
+      "type": "mood",
+      "name": "deep_focus",
+      "avg": 0.7,
+      "delta": -19.46227272727272,
+      "count": 1,
+      "total": 12,
+      "group_views": 40,
       "std_dev": 0,
       "metric": "average_view_percentage"
     }
@@ -718,7 +718,7 @@
       "avg": 0,
       "delta": 0,
       "count": 0,
-      "total": 4,
+      "total": 10,
       "group_views": 0,
       "std_dev": 0,
       "metric": "watch_time_minutes"
@@ -751,7 +751,7 @@
       "avg": 0,
       "delta": 0,
       "count": 0,
-      "total": 6,
+      "total": 7,
       "group_views": 0,
       "std_dev": 0,
       "metric": "watch_time_minutes"
@@ -817,7 +817,7 @@
       "avg": 0,
       "delta": 0,
       "count": 0,
-      "total": 5,
+      "total": 8,
       "group_views": 0,
       "std_dev": 0,
       "metric": "watch_time_minutes"
@@ -829,17 +829,6 @@
       "delta": 0,
       "count": 0,
       "total": 4,
-      "group_views": 0,
-      "std_dev": 0,
-      "metric": "watch_time_minutes"
-    },
-    {
-      "type": "mood",
-      "name": "deep_focus",
-      "avg": 0,
-      "delta": 0,
-      "count": 0,
-      "total": 10,
       "group_views": 0,
       "std_dev": 0,
       "metric": "watch_time_minutes"
@@ -863,6 +852,17 @@
       "count": 0,
       "total": 3,
       "group_views": 0,
+      "std_dev": 0,
+      "metric": "watch_time_minutes"
+    },
+    {
+      "type": "mood",
+      "name": "deep_focus",
+      "avg": 16.0,
+      "delta": -5.0,
+      "count": 1,
+      "total": 12,
+      "group_views": 40,
       "std_dev": 0,
       "metric": "watch_time_minutes"
     }
