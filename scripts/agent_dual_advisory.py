@@ -24,6 +24,8 @@ seconds between completed Gemini HTTP calls in this process (reduces 429s when r
 
 **Runner output:** ``MAX_RUNNER_TOKENS`` (default ``1536``) — GGUF ``max_tokens``; raise if logs show ``finish_reason=length`` and markdown is cut off.
 
+**Gemini output:** ``GEMINI_MAX_OUTPUT_TOKENS`` (default ``4096``). For **2.5** models, ``thinkingConfig.thinkingBudget`` defaults to **0** so hidden reasoning does not eat the whole budget (see [Gemini thinking](https://ai.google.dev/gemini-api/docs/thinking)); set ``GEMINI_THINKING_BUDGET=omit`` to omit that block for older model ids.
+
 **CI log prefixes:** ``[runner-advisory]`` (GGUF), ``[gemini-advisory]`` (REST usage / ``finishReason`` / prose size).
 
 Week label: ISO calendar (same as ``audit_channel`` / ``run_next_report``).
@@ -298,6 +300,39 @@ def _gemini_url() -> str:
     return f"https://generativelanguage.googleapis.com/v1beta/models/{m}:generateContent"
 
 
+_DEFAULT_GEMINI_MAX_OUTPUT = 4096
+
+
+def _gemini_max_output_tokens() -> int:
+    """Cap on visible + internal tokens for ``generateContent`` (raise if prose truncates)."""
+    raw = (os.environ.get("GEMINI_MAX_OUTPUT_TOKENS") or "").strip()
+    if not raw:
+        return _DEFAULT_GEMINI_MAX_OUTPUT
+    try:
+        return max(256, min(8192, int(raw)))
+    except ValueError:
+        return _DEFAULT_GEMINI_MAX_OUTPUT
+
+
+def _gemini_thinking_config() -> dict | None:
+    """Return ``thinkingConfig`` dict for the REST payload, or ``None`` to omit.
+
+    Gemini **2.5** can use a large hidden thinking budget; ``thinkingBudget=0`` disables it
+    so ``maxOutputTokens`` remains available for markdown. Older ids (e.g. 2.0) omit this key.
+    Set ``GEMINI_THINKING_BUDGET=omit`` to never send ``thinkingConfig``.
+    """
+    if (os.environ.get("GEMINI_THINKING_BUDGET") or "").strip().lower() in ("omit", "none"):
+        return None
+    if "2.5" not in _gemini_model().lower():
+        return None
+    raw = (os.environ.get("GEMINI_THINKING_BUDGET") or "0").strip()
+    try:
+        n = int(raw)
+    except ValueError:
+        n = 0
+    return {"thinkingBudget": n}
+
+
 _gemini_spacing_lock = threading.Lock()
 _gemini_last_http_end = 0.0
 
@@ -448,9 +483,13 @@ def write_gemini(lane: str, week: str, bundle: str) -> Path:
         "Avoid large duplicate tables unless CONTEXT has no prose summary.\n\n"
         f"## CONTEXT\n\n{ctx_used}"
     )
+    gen_cfg: dict = {"temperature": 0.35, "maxOutputTokens": _gemini_max_output_tokens()}
+    th = _gemini_thinking_config()
+    if th is not None:
+        gen_cfg["thinkingConfig"] = th
     payload = {
         "contents": [{"role": "user", "parts": [{"text": prompt}]}],
-        "generationConfig": {"temperature": 0.35, "maxOutputTokens": 1024},
+        "generationConfig": gen_cfg,
     }
     url = f"{_gemini_url()}?key={key}"
     _wait_gemini_spacing()
