@@ -73,6 +73,22 @@ def test_max_runner_tokens_env(monkeypatch):
     assert adv.max_runner_tokens() == 2048
 
 
+def test_gemini_max_output_tokens_default(monkeypatch):
+    monkeypatch.delenv("GEMINI_MAX_OUTPUT_TOKENS", raising=False)
+    assert adv._gemini_max_output_tokens() == 4096
+
+
+def test_gemini_thinking_config_25_vs_20(monkeypatch):
+    monkeypatch.delenv("GEMINI_THINKING_BUDGET", raising=False)
+    monkeypatch.setenv("GEMINI_MODEL", "gemini-2.5-flash")
+    assert adv._gemini_thinking_config() == {"thinkingBudget": 0}
+    monkeypatch.setenv("GEMINI_MODEL", "gemini-2.0-flash")
+    assert adv._gemini_thinking_config() is None
+    monkeypatch.setenv("GEMINI_THINKING_BUDGET", "omit")
+    monkeypatch.setenv("GEMINI_MODEL", "gemini-2.5-flash")
+    assert adv._gemini_thinking_config() is None
+
+
 def test_log_gemini_response_smoke(capsys, monkeypatch):
     monkeypatch.delenv("GEMINI_MODEL", raising=False)
     raw = {
