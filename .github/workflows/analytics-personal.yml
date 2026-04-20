@@ -123,6 +123,11 @@ jobs:
           # Personal Google AI project key — separate secret name from brand (`GEMINI_API_KEY`).
           GEMINI_API_KEY_PERSONAL: ${{ secrets.GEMINI_API_KEY_PERSONAL }}
           GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
+          # Free tier on small AI Studio projects is often a few RPM / low RPD per model — space
+          # calls and cap retries so one job does not burn the whole daily bucket. See workflows.md.
+          GEMINI_MIN_INTERVAL_SEC: "15"
+          GEMINI_MAX_RETRIES: "2"
+          GEMINI_429_MIN_SLEEP_SEC: "20"
         run: |
           set -euo pipefail
           pip install 'llama-cpp-python>=0.2.90,<0.4'

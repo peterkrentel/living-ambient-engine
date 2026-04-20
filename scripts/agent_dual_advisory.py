@@ -18,6 +18,8 @@ Outputs (per lane ``brand`` | ``personal``):
 seconds between completed Gemini HTTP calls in this process (reduces 429s when re-running locally).
 ``GEMINI_MAX_RETRIES`` (default ``5``) — retries on HTTP 429 / 503 with backoff and
 ``Retry-After`` when the API sends it. Set interval ``0`` to disable spacing only.
+``GEMINI_429_MIN_SLEEP_SEC`` (default ``0``) — floor on **retry** sleep after 429/503 (use e.g. ``18``
+so each attempt stays under tight free-tier RPM; each retry still counts toward daily quotas).
 
 Week label: ISO calendar (same as ``audit_channel`` / ``run_next_report``).
 """
@@ -245,6 +247,17 @@ def _gemini_max_retries() -> int:
         return 5
 
 
+def _gemini_429_min_sleep_sec() -> float:
+    """Minimum seconds to sleep before retrying after HTTP 429 / 503 (free-tier RPM safety)."""
+    raw = (os.environ.get("GEMINI_429_MIN_SLEEP_SEC") or "").strip()
+    if not raw:
+        return 0.0
+    try:
+        return max(0.0, float(raw))
+    except ValueError:
+        return 0.0
+
+
 def _wait_gemini_spacing() -> None:
     """Space out Gemini calls in this process (free-tier RPM / burst)."""
     interval = _gemini_min_interval_sec()
@@ -308,7 +321,8 @@ def _gemini_generate_json(url: str, payload: dict) -> dict:
                 raise GeminiHttpError(e.code, body) from e
             ra = _retry_after_seconds(e)
             base = min(120.0, (2.0**attempt) + random.uniform(0, 0.5))
-            sleep_s = max(ra or 0.0, base)
+            floor = _gemini_429_min_sleep_sec()
+            sleep_s = max(ra or 0.0, base, floor)
             print(
                 f"Gemini HTTP {e.code}; sleeping {sleep_s:.1f}s then retry "
                 f"({attempt + 1}/{max_retries + 1} attempts)",

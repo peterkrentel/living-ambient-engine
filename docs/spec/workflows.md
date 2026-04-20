@@ -624,7 +624,7 @@ on:
 
 **Repository Variable (optional):** `GEMINI_MODEL` — set under *Settings → Secrets and variables → Actions → Variables*; both analytics workflows pass it as `env.GEMINI_MODEL`. When empty, [`agent_dual_advisory.py`](../../scripts/agent_dual_advisory.py) uses its built-in default.
 
-**Optional (script / workflow `env`):** `GEMINI_MIN_INTERVAL_SEC` (default `6`) and `GEMINI_MAX_RETRIES` (default `5`) — client-side spacing between Gemini calls in one process and backoff on HTTP 429/503; see [`agent_dual_advisory.py`](../../scripts/agent_dual_advisory.py) module docstring. Usually left unset in CI (one request per job).
+**Optional (script / workflow `env`):** `GEMINI_MIN_INTERVAL_SEC` (default `6`), `GEMINI_MAX_RETRIES` (default `5`), `GEMINI_429_MIN_SLEEP_SEC` (default `0`) — spacing between Gemini calls and **minimum** sleep before 429/503 retries; see [`agent_dual_advisory.py`](../../scripts/agent_dual_advisory.py). Brand analytics usually leaves these unset (one request per job). **Personal** workflow sets conservative defaults on the dual-advisory step for tight free-tier quotas.
 
 **Optional env (runner GGUF, workflow or runner config):** `AGENT_GGUF_PATH`, `AGENT_GGUF_URL` (default Hugging Face Qwen2.5-1.5B Instruct q4), `AGENT_LLAMA_THREADS`.
 
@@ -696,6 +696,8 @@ on:
 | `GEMINI_API_KEY_PERSONAL` | Optional — Gemini half of dual advisory on **this** workflow; [`agent_dual_advisory.py`](../../scripts/agent_dual_advisory.py) reads `GEMINI_API_KEY_PERSONAL` (or `GEMINI_API_KEY` for local override); omit for Gemini stub |
 
 **Repository Variable (optional):** `GEMINI_MODEL` — same as brand analytics (Actions Variables → `env.GEMINI_MODEL`).
+
+**Gemini free tier (personal project):** Google’s limits are **per API key / project** and **per model** (RPM, RPD, TPM); preview or newer models are often tighter than stable ones. Numbers change — use [Gemini API rate limits](https://ai.google.dev/gemini-api/docs/rate-limits) and your AI Studio **Usage** tab as source of truth. This workflow sets conservative **`GEMINI_MIN_INTERVAL_SEC`**, **`GEMINI_MAX_RETRIES`**, and **`GEMINI_429_MIN_SLEEP_SEC`** on the dual-advisory step so a single weekly job is less likely to burst past a **~5 RPM** class limit or burn a low **daily** request cap with aggressive retries. If you still see **429** in `agent-insight-*-personal-gemini.md`, treat it as **quota** (wait for reset, switch model via `GEMINI_MODEL`, use a second project/key, or enable billing per Google’s docs) — not a bug in the runner half.
 
 **Guardrail:** This workflow must **not** set `YOUTUBE_TOKEN_PICKLE_BRAND`, so `fetch_analytics` never picks the brand token for personal runs.
 

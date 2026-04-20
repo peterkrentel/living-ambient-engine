@@ -51,6 +51,13 @@ def test_gemini_max_retries_env(monkeypatch):
     assert adv._gemini_max_retries() == 2
 
 
+def test_gemini_429_min_sleep_sec(monkeypatch):
+    monkeypatch.delenv("GEMINI_429_MIN_SLEEP_SEC", raising=False)
+    assert adv._gemini_429_min_sleep_sec() == 0.0
+    monkeypatch.setenv("GEMINI_429_MIN_SLEEP_SEC", "20")
+    assert adv._gemini_429_min_sleep_sec() == 20.0
+
+
 def test_gemini_api_key_brand_only_generic(monkeypatch):
     monkeypatch.delenv("GEMINI_API_KEY", raising=False)
     monkeypatch.delenv("GEMINI_API_KEY_PERSONAL", raising=False)
