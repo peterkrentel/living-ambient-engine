@@ -24,6 +24,8 @@ seconds between completed Gemini HTTP calls in this process (reduces 429s when r
 
 **Runner output:** ``MAX_RUNNER_TOKENS`` (default ``1536``) — GGUF ``max_tokens``; raise if logs show ``finish_reason=length`` and markdown is cut off.
 
+**CI log prefixes:** ``[runner-advisory]`` (GGUF), ``[gemini-advisory]`` (REST usage / ``finishReason`` / prose size).
+
 Week label: ISO calendar (same as ``audit_channel`` / ``run_next_report``).
 """
 
@@ -74,6 +76,60 @@ DEFAULT_GGUF = Path.home() / ".cache" / "living-agent" / "qwen2.5-1.5b-instruct-
 def _runner_log(msg: str) -> None:
     """Lines show in GitHub Actions job logs for the non-cloud path."""
     print(f"[runner-advisory] {msg}", flush=True)
+
+
+def _gemini_log(msg: str) -> None:
+    """Gemini REST path — same job logs as ``[runner-advisory]``, distinct prefix."""
+    print(f"[gemini-advisory] {msg}", flush=True)
+
+
+def _log_gemini_response(
+    raw: dict,
+    prose: str,
+    *,
+    lane: str,
+    week: str,
+    prompt_chars: int,
+    context_chars: int,
+) -> None:
+    """One place for usage / finishReason logging after ``generateContent`` (diagnose short files)."""
+    _gemini_log(f"lane={lane} week={week}")
+    mid = _gemini_model()
+    mv = raw.get("modelVersion") or "(missing)"
+    _gemini_log(
+        f"REST model_id={mid!r} response.modelVersion={mv!r} "
+        f"prompt_chars={prompt_chars} context_chars={context_chars}"
+    )
+
+    um = raw.get("usageMetadata")
+    if isinstance(um, dict):
+        bits = [f"{k}={um[k]}" for k in ("promptTokenCount", "candidatesTokenCount", "totalTokenCount", "thoughtsTokenCount") if k in um]
+        _gemini_log("usageMetadata: " + (", ".join(bits) if bits else str(um)[:240]))
+    else:
+        _gemini_log("usageMetadata: (missing)")
+
+    cands = raw.get("candidates")
+    if isinstance(cands, list) and cands and isinstance(cands[0], dict):
+        fr = cands[0].get("finishReason", "(missing)")
+        _gemini_log(f"candidates[0].finishReason={fr!r} prose_chars={len(prose)}")
+        fru = str(fr).upper()
+        if fru in ("MAX_TOKENS", "OTHER", "FINISHREASON_UNSPECIFIED", "UNSPECIFIED", "MALFORMED_FUNCTION_CALL"):
+            _gemini_log(
+                "note: finishReason may indicate truncation or tool-shape issues — "
+                "consider raising generationConfig.maxOutputTokens or changing GEMINI_MODEL"
+            )
+    else:
+        _gemini_log("candidates: (missing or empty)")
+
+    pfb = raw.get("promptFeedback")
+    if isinstance(pfb, dict) and pfb.get("blockReason"):
+        _gemini_log(f"promptFeedback.blockReason={pfb.get('blockReason')!r}")
+
+    if "##" not in prose and len(prose) < 800:
+        _gemini_log(
+            "note: prose is short or has no '##' section headings — possible early stop or "
+            "reasoning/thought tokens using output budget (see thoughtsTokenCount if present)"
+        )
 
 
 DEFAULT_GGUF_URL = (
@@ -378,6 +434,7 @@ def write_gemini(lane: str, week: str, bundle: str) -> Path:
         print(f"Wrote {out} (Gemini skipped, no API key)")
         return out
 
+    ctx_used = bundle[:MAX_CONTEXT_GEMINI]
     prompt = (
         "You are a metrics-aware creative advisor for a YouTube ambient music channel.\n"
         "You ONLY read the CONTEXT block below (committed repo files / excerpts from the analytics pipeline). "
@@ -389,7 +446,7 @@ def write_gemini(lane: str, week: str, bundle: str) -> Path:
         "prefix **Speculative:** when not directly supported), ## Experiments or packaging ideas (bullets).\n"
         "Do not invent statistics; quote approximate values only if present in CONTEXT.\n"
         "Avoid large duplicate tables unless CONTEXT has no prose summary.\n\n"
-        f"## CONTEXT\n\n{bundle[:MAX_CONTEXT_GEMINI]}"
+        f"## CONTEXT\n\n{ctx_used}"
     )
     payload = {
         "contents": [{"role": "user", "parts": [{"text": prompt}]}],
@@ -415,6 +472,16 @@ def write_gemini(lane: str, week: str, bundle: str) -> Path:
         prose = "".join(p.get("text", "") for p in parts).strip() or "(empty model response)"
     except (KeyError, IndexError, TypeError):
         prose = f"```json\n{json.dumps(raw, indent=2)[:8000]}\n```"
+        _gemini_log("could not parse candidates[0].content.parts — writing raw JSON excerpt to report")
+
+    _log_gemini_response(
+        raw if isinstance(raw, dict) else {},
+        prose,
+        lane=lane,
+        week=week,
+        prompt_chars=len(prompt),
+        context_chars=len(ctx_used),
+    )
 
     out.write_text(_header_gemini(lane, week) + prose + "\n", encoding="utf-8")
     print(f"Wrote {out} (Gemini)")
