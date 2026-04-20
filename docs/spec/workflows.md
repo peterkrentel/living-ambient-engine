@@ -596,11 +596,11 @@ on:
 8. Plan run intent (`scripts/plan_run_intent.py`) — gated v0: writes `data/run_intent.json` when actionable **mood** increases exist, else `data/reports/run-intent-blocked.md`; **`upload` defaults false**; execution is **manual** via [`run-intent-consumer.yml`](../../.github/workflows/run-intent-consumer.yml); see [`contracts/production-run-intent.md`](./contracts/production-run-intent.md)
 9. Run channel coverage audit (`scripts/audit_channel.py`) — read-only markdown from committed analytics; summarizes 14-mood and 9×9 art×music grid coverage plus generations ledger join stats (no API calls)
 10. Write **`run-next`** advisory (`scripts/run_next_report.py`) — deterministic markdown from **`suggestions.json`** + **`audit-YYYY-WW.md`** + optional personal-lane pointers (**no** LLM, **no** `batch_generate` / upload); same ISO week label as the brand audit
-11. **Cache runner GGUF** — `actions/cache` on `~/.cache/living-agent` (default Qwen2.5-0.5B Instruct q4 GGUF path used by the script)
+11. **Cache runner GGUF** — `actions/cache` on `~/.cache/living-agent` (default Qwen2.5-1.5B Instruct q4 GGUF path used by the script; cache key bumps when the default model file changes)
 12. **Dual LLM advisory (optional v0):** `pip install llama-cpp-python`, then **`scripts/agent_dual_advisory.py --lane brand`** with the same ISO week as step 10. The script runs **Gemini (REST)** on the **full** bundle and **runner GGUF** on a **lean** bundle (run-next + compact suggestions/analytics + short reports) in **parallel threads**, writing `agent-insight-YYYY-WW-brand-gemini.md` and `agent-insight-YYYY-WW-brand-runner.md`. Job logs: expand the **Dual advisory** group; runner-side lines use prefix **`[runner-advisory]`** (bundle size estimate, `n_ctx`, load/inference timing). If `GEMINI_API_KEY` is unset, Gemini output is a short stub; if `llama-cpp-python` is missing, runner output is a stub (CI installs it).
 13. Commit and push data files — after `git commit`, run `git pull --rebase origin main` then `git push` so a concurrent push on `main` (e.g. the other analytics workflow) does not cause the job to fail
 
-**Roadmap (same week family):** **validators** (cited indices, numeric parity with JSON); richer **self-hosted** options later; **automation** only after outputs are trusted — [`COHESION_ROADMAP.md`](../COHESION_ROADMAP.md) Phase 6 · [`HANDOFF.md`](../HANDOFF.md). **Shipped (prototype):** dual advisory (Gemini API + small GGUF on the GitHub runner for comparison).
+**Roadmap (same week family):** **validators** (cited indices, numeric parity with JSON); richer **self-hosted** options later; **automation** only after outputs are trusted — [`COHESION_ROADMAP.md`](../COHESION_ROADMAP.md) Phase 6 · [`HANDOFF.md`](../HANDOFF.md). **Shipped (prototype):** dual advisory (Gemini API + runner GGUF on GitHub-hosted runners for comparison; default Qwen2.5-1.5B Instruct q4).
 
 ### Outputs
 
@@ -612,7 +612,7 @@ on:
 | Run intent (v0) | `data/run_intent.json` **or** `data/reports/run-intent-blocked.md` | Planner output; committed when present (intent often absent until gates pass) |
 | Run-next (v0) | `data/reports/run-next-YYYY-WW.md` | Advisory “what next” from correlate + brand audit + personal pointers; validators / LLM layers tracked in roadmap above |
 | Gemini advisory (v0) | `data/reports/agent-insight-YYYY-WW-brand-gemini.md` | API prose on the fixed bundle; stub if no `GEMINI_API_KEY` |
-| Runner GGUF advisory (v0) | `data/reports/agent-insight-YYYY-WW-brand-runner.md` | Small instruct GGUF on the workflow runner (default Qwen2.5-0.5B path); stub if `llama-cpp-python` / model missing |
+| Runner GGUF advisory (v0) | `data/reports/agent-insight-YYYY-WW-brand-runner.md` | Instruct GGUF on the workflow runner (default Qwen2.5-1.5B q4 path); stub if `llama-cpp-python` / model missing |
 | Channel audit | `data/reports/audit-YYYY-WW.md` | Coverage vs target grids + ledger join share (CI-generated) |
 
 ### Secrets Required
@@ -622,7 +622,7 @@ on:
 | `YOUTUBE_TOKEN_PICKLE_BRAND` | YouTube API authentication (brand token pickle) |
 | `GEMINI_API_KEY` | Optional — enables Gemini half of dual advisory; omit for Gemini stub |
 
-**Optional env (runner half, set in workflow YAML or runner config):** `AGENT_GGUF_PATH`, `AGENT_GGUF_URL` (default Hugging Face Qwen2.5-0.5B Instruct q4), `AGENT_LLAMA_THREADS`, `GEMINI_MODEL`.
+**Optional env (runner half, set in workflow YAML or runner config):** `AGENT_GGUF_PATH`, `AGENT_GGUF_URL` (default Hugging Face Qwen2.5-1.5B Instruct q4), `AGENT_LLAMA_THREADS`, `GEMINI_MODEL`.
 
 ### Guardrails
 
