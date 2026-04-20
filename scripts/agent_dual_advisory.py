@@ -22,6 +22,8 @@ seconds between completed Gemini HTTP calls in this process (reduces 429s when r
 
 **Default REST model** when ``GEMINI_MODEL`` is unset: ``gemini-2.5-flash`` (not 2.0). Override per project via env / Actions **Variable** ``GEMINI_MODEL`` if you need another tier.
 
+**Runner output:** ``MAX_RUNNER_TOKENS`` (default ``1536``) — GGUF ``max_tokens``; raise if logs show ``finish_reason=length`` and markdown is cut off.
+
 Week label: ISO calendar (same as ``audit_channel`` / ``run_next_report``).
 """
 
@@ -48,8 +50,24 @@ _DEFAULT_GEMINI = "gemini-2.5-flash"
 MAX_CONTEXT_GEMINI = 24_000
 # Runner GGUF: small n_ctx; char→token ratio ~3–4 for EN/JSON — keep prompt+context safely under n_ctx.
 RUNNER_BUNDLE_MAX_CHARS = 4200
-MAX_RUNNER_TOKENS = 512
+# Default output cap (was 512; logs showed finish_reason=length mid-markdown). Override: ``MAX_RUNNER_TOKENS`` env.
+_DEFAULT_MAX_RUNNER_TOKENS = 1536
 _LLAMA_N_CTX = 4096
+
+
+def max_runner_tokens() -> int:
+    """Effective GGUF ``max_tokens``; clamped so prompt + generation stays under ``n_ctx``."""
+    raw = (os.environ.get("MAX_RUNNER_TOKENS") or "").strip()
+    if raw:
+        try:
+            return max(128, min(3072, int(raw)))
+        except ValueError:
+            pass
+    return _DEFAULT_MAX_RUNNER_TOKENS
+
+
+# Backward-compatible name for docs/tests (effective cap is ``max_runner_tokens()``).
+MAX_RUNNER_TOKENS = _DEFAULT_MAX_RUNNER_TOKENS
 DEFAULT_GGUF = Path.home() / ".cache" / "living-agent" / "qwen2.5-1.5b-instruct-q4_k_m.gguf"
 
 
@@ -467,7 +485,7 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
         "You ONLY see the user CONTEXT (markdown + JSON excerpts from this repo’s analytics run). "
         "You did NOT call YouTube or the internet.\n"
         "Respond AS IF you finished reading that bundle, then give concise interpretation.\n"
-        "Required shape (GitHub-flavored markdown, under ~450 words, no outer ``` fences):\n"
+        "Required shape (GitHub-flavored markdown, stay concise—complete sections beat padding, no outer ``` fences):\n"
         "## What I reviewed — 2–3 sentences naming the kinds of inputs (e.g. run-next, suggestions excerpt, weekly report).\n"
         "## Insights — numbered 1–5. Each: one short paragraph. Prefer mood/style/packaging angles when CONTEXT supports them. "
         "If an item is not directly supported, start that paragraph with **Speculative:**.\n"
@@ -485,8 +503,9 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
         f"context: bundle_chars={len(ctx_used)} prompt_chars≈{prompt_chars} "
         f"est_input_tokens≈{est_prompt_tokens} (rough; model tokenizer may differ)"
     )
+    cap = max_runner_tokens()
     _runner_log(
-        f"llama: n_ctx={_LLAMA_N_CTX} max_output_tokens={MAX_RUNNER_TOKENS} "
+        f"llama: n_ctx={_LLAMA_N_CTX} max_output_tokens={cap} "
         f"n_threads={n_threads} n_gpu_layers=0"
     )
 
@@ -503,7 +522,7 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
         _runner_log(f"model load wall_s={t_load - t0:.2f}s")
         result = llm(
             prompt,
-            max_tokens=MAX_RUNNER_TOKENS,
+            max_tokens=cap,
             temperature=0.25,
             # Qwen2.5: stop at turn end and next role header (not Llama ``[/INST]`` / ``</s>``).
             stop=[_QWEN_IM_END, _QWEN_IM_START],
@@ -515,6 +534,11 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
         if not text:
             _runner_log(f"empty completion finish_reason={fr!r} choice_keys={list(choice.keys())}")
             text = "(empty runner response)"
+        elif fr == "length":
+            _runner_log(
+                "finish_reason=length: hit max_tokens — output may be truncated mid-sentence; "
+                "raise MAX_RUNNER_TOKENS env or shorten the runner system prompt / CONTEXT cap"
+            )
         _runner_log(
             f"inference wall_s={t_done - t_load:.2f}s total_since_start_s={t_done - t0:.2f}s "
             f"output_chars={len(text)} finish_reason={fr!r}"

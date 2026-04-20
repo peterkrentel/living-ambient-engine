@@ -63,6 +63,16 @@ def test_gemini_model_defaults_to_25_flash(monkeypatch):
     assert adv._gemini_model() == "gemini-2.5-flash"
 
 
+def test_max_runner_tokens_default(monkeypatch):
+    monkeypatch.delenv("MAX_RUNNER_TOKENS", raising=False)
+    assert adv.max_runner_tokens() == adv.MAX_RUNNER_TOKENS == 1536
+
+
+def test_max_runner_tokens_env(monkeypatch):
+    monkeypatch.setenv("MAX_RUNNER_TOKENS", "2048")
+    assert adv.max_runner_tokens() == 2048
+
+
 def test_gemini_api_key_brand_only_generic(monkeypatch):
     monkeypatch.delenv("GEMINI_API_KEY", raising=False)
     monkeypatch.delenv("GEMINI_API_KEY_PERSONAL", raising=False)
