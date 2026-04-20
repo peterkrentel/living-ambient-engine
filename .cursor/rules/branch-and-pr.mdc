@@ -1,0 +1,12 @@
+---
+description: Always a new feature branch from main + PR—never push hand-edited work to main
+alwaysApply: true
+---
+
+# Branch + pull request (always)
+
+- **Every** change set for code, docs, specs, contracts, or workflow YAML: **`git pull origin main`**, then **`git checkout -b feat/…` / `fix/…` / `docs/…`** (a **new** branch name per logical PR).
+- **Never** `git push origin main` for that work. Open a **PR** and merge after checks (or let the maintainer merge).
+- **Exception (unchanged):** GitHub Actions may commit **`data/`** or bot-owned catalog files on `main` with `GITHUB_TOKEN`—that is not a waiver for files you edit in the editor.
+
+If you already committed on `main` locally by mistake: **`git branch feat/…`**, **`git reset --hard origin/main`** on `main`, **`git checkout feat/…`** and continue—then push `feat/…` only.
