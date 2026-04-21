@@ -600,7 +600,7 @@ on:
 12. **Dual LLM advisory (optional v0):** `pip install llama-cpp-python`, then **`scripts/agent_dual_advisory.py --lane brand`** with the same ISO week as step 10. The script runs **Gemini (REST)** on the **full** bundle and **runner GGUF** on a **lean** bundle (run-next + compact suggestions with **`coverage_summary`** + compact analytics **views + retention** slices + short reports) in **parallel threads**, writing `agent-insight-YYYY-WW-brand-gemini.md` and `agent-insight-YYYY-WW-brand-runner.md`. Job logs: expand the **Dual advisory** group; **`[runner-advisory]`** (GGUF: bundle, `n_ctx`, timing, `finish_reason`); **`[gemini-advisory]`** (REST: `usageMetadata`, `finishReason`, prose size). If `GEMINI_API_KEY` is unset, Gemini output is a short stub; if `llama-cpp-python` is missing, runner output is a stub (CI installs it).
 13. Commit and push data files — after `git commit`, run `git pull --rebase origin main` then `git push` so a concurrent push on `main` (e.g. the other analytics workflow) does not cause the job to fail
 
-**Roadmap (same week family):** **validators** (cited indices, numeric parity with JSON); richer **self-hosted** options later; **automation** only after outputs are trusted — [`COHESION_ROADMAP.md`](../COHESION_ROADMAP.md) Phase 6 · [`HANDOFF.md`](../HANDOFF.md). **Shipped (prototype):** dual advisory (Gemini API + runner GGUF on GitHub-hosted runners for comparison; default Qwen2.5-1.5B Instruct q4). **Comparing** the two LLM markdown files is **manual** (no CI merge or auto-score); see [`START_HERE.md`](../START_HERE.md#plan-checklist-living--as-of-2026-04) (**Dual advisory comparison** row).
+**Roadmap (same week family):** **validators** (cited indices, numeric parity with JSON); richer **self-hosted** options later; **automation** only after outputs are trusted — [`COHESION_ROADMAP.md`](../COHESION_ROADMAP.md) Phase 6 · [`HANDOFF.md`](../HANDOFF.md). **Shipped (prototype):** dual advisory (Gemini API + runner GGUF on GitHub-hosted runners for comparison; default Qwen2.5-1.5B Instruct q4). **Comparing** the two LLM markdown files is **manual** (no CI merge or auto-score); playbook: [`spec/DUAL_ADVISORY_COMPARE.md`](./DUAL_ADVISORY_COMPARE.md); checklist row: [`START_HERE.md`](../START_HERE.md#plan-checklist-living--as-of-2026-04).
 
 ### Outputs
 
@@ -613,6 +613,7 @@ on:
 | Run-next (v0) | `data/reports/run-next-YYYY-WW.md` | Advisory “what next” from correlate + brand audit + personal pointers; validators / LLM layers tracked in roadmap above |
 | Gemini advisory (v0) | `data/reports/agent-insight-YYYY-WW-brand-gemini.md` | API prose on the fixed bundle; stub if no `GEMINI_API_KEY` |
 | Runner GGUF advisory (v0) | `data/reports/agent-insight-YYYY-WW-brand-runner.md` | Instruct GGUF on the workflow runner (default Qwen2.5-1.5B q4 path); stub if `llama-cpp-python` / model missing |
+| Dual advisory compare (human) | [`spec/DUAL_ADVISORY_COMPARE.md`](./DUAL_ADVISORY_COMPARE.md) | Read order, rubric, trust rules for `*-gemini.md` vs `*-runner.md` vs `run-next` / JSON |
 | Channel audit | `data/reports/audit-YYYY-WW.md` | Coverage vs target grids + ledger join share (CI-generated) |
 
 ### Secrets Required
@@ -689,6 +690,7 @@ on:
 | Run-next (personal v0) | `data/reports/run-next-YYYY-WW-personal.md` |
 | Gemini advisory (personal v0) | `data/reports/agent-insight-YYYY-WW-personal-gemini.md` |
 | Runner GGUF advisory (personal v0) | `data/reports/agent-insight-YYYY-WW-personal-runner.md` |
+| Dual advisory compare (human) | [`spec/DUAL_ADVISORY_COMPARE.md`](./DUAL_ADVISORY_COMPARE.md) — same read order / rubric as brand |
 
 ### Secrets
 
