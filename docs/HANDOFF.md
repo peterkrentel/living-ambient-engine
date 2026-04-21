@@ -9,7 +9,7 @@
 ## Branch / PR
 
 - **Policy:** All **code and docs** ship via **new feature branch (from pulled `main`) → pull request → merge to `main`** (humans + agents). **Exception:** Actions may commit **`data/`** (analytics) or **`content_catalog.json`** (upload bots) on `main`.
-- **Active branch / PR:** `docs/horizon-dual-advisory-compare` — horizon checklist + roadmap: dual-advisory **human** compare (**open PR**).
+- **Dual-advisory human compare (done):** merged on `main` — playbook [`spec/DUAL_ADVISORY_COMPARE.md`](spec/DUAL_ADVISORY_COMPARE.md) via **PR #90**; horizon checklist / roadmap commits (`fc4c211`, `1dc1117`) are ancestors of `main`. Remote branch `docs/horizon-dual-advisory-compare` may still exist but is **behind** `main`; safe to delete after you confirm on GitHub.
 
 ## Anchor
 
