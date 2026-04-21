@@ -11,6 +11,10 @@
 - **Policy:** All **code and docs** ship via **new feature branch (from pulled `main`) → pull request → merge to `main`** (humans + agents). **Exception:** Actions may commit **`data/`** (analytics) or **`content_catalog.json`** (upload bots) on `main`.
 - **Dual-advisory human compare (done):** merged on `main` — playbook [`spec/DUAL_ADVISORY_COMPARE.md`](spec/DUAL_ADVISORY_COMPARE.md) via **PR #90**; horizon checklist / roadmap commits (`fc4c211`, `1dc1117`) are ancestors of `main`. Remote branch `docs/horizon-dual-advisory-compare` may still exist but is **behind** `main`; safe to delete after you confirm on GitHub.
 
+## Parked backlog (preserved when taking a break)
+
+- **Cohesion readiness review (risk / readiness audit):** full findings, maturity verdict, release checklist, and **ordered execution queue** (`CR-1` …) — [`cohesion-readiness-review-todos.md`](cohesion-readiness-review-todos.md). Tackle **one `CR-*` item per PR**; check boxes there when done.
+
 ## Anchor
 
 - **Analytics (two lanes):** **Brand** — [`analytics-agent.yml`](../.github/workflows/analytics-agent.yml) → `data/analytics.json`, `data/reports/YYYY-WW.md`, `suggestions.json`, `audit-*.md`, `run_intent.json` / blocked, `run-next-*.md` (commit step uses `git pull --rebase` before push). **Personal** — [`analytics-personal.yml`](../.github/workflows/analytics-personal.yml) → `data/analytics_personal.json`, `*-personal.md`, `audit-*-personal.md`, `suggestions_personal.json`, `run_intent_personal.json` / blocked-personal, `run-next-*-personal.md`. Map: [`START_HERE`](START_HERE.md#two-channels-two-probes) · detail: [`PERSONAL_ANALYTICS`](PERSONAL_ANALYTICS.md).

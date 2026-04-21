@@ -29,7 +29,7 @@
 
 | Examples |
 |----------|
-| `GETTING_STARTED.md`, `QUICK_REFERENCE.md`, `ART_CREATOR*.md`, `CONTENT_LIBRARY*.md`, `EXECUTION.md`, `FAQ.md`, `COHESION_ROADMAP.md`, `master-plan.md`, `architecture.md`, `WORKFLOW_ARCHITECTURE.md`, `youtube-auth.md`, `USE_CASES.md`, `PIANO_BATCH_GUIDE.md`, `PERSONAL_ANALYTICS.md`, `decisions/*.md` |
+| `GETTING_STARTED.md`, `QUICK_REFERENCE.md`, `ART_CREATOR*.md`, `CONTENT_LIBRARY*.md`, `EXECUTION.md`, `FAQ.md`, `COHESION_ROADMAP.md`, `cohesion-readiness-review-todos.md` (parked audit + **CR-*** queue), `master-plan.md`, `architecture.md`, `WORKFLOW_ARCHITECTURE.md`, `youtube-auth.md`, `USE_CASES.md`, `PIANO_BATCH_GUIDE.md`, `PERSONAL_ANALYTICS.md`, `decisions/*.md` |
 
 ## CI / data outputs (generated or semi-generated — do not “archive”)
 
