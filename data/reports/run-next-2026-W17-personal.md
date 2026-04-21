@@ -1,7 +1,7 @@
 # Run next — personal advisory (2026-W17)
 
-Generated (report): 2026-04-20T21:26:35.967361+00:00
-**Correlate bundle `generated_at`:** 2026-04-20T21:26:35.728680Z
+Generated (report): 2026-04-21T14:04:13.471254+00:00
+**Correlate bundle `generated_at`:** 2026-04-21T14:04:13.221897Z
 
 ## How to read this
 
@@ -13,9 +13,9 @@ This file is **machine-assembled** from `data/suggestions_personal.json` and the
 
 ## Personal snapshot (this run)
 
-- **Overall avg retention:** 16.25%
-- **Overall avg watch min / video (window):** 31.857
-- **Videos analyzed:** 28 with views / 108 total
+- **Overall avg retention:** 16.36%
+- **Overall avg watch min / video (window):** 30.643
+- **Videos analyzed:** 28 with views / 114 total
 
 ## Evidence (paths)
 
@@ -36,15 +36,15 @@ _No exploratory "reduce" rows._
 
 ## Audit — overview excerpt (personal)
 
-- **Videos in analytics:** 108
-- **generations.json join (any ledger row):** 76 / 108 (70.4%)
-- **generations.json join (identity-aligned):** 30 / 108 (27.8%)
+- **Videos in analytics:** 114
+- **generations.json join (any ledger row):** 82 / 114 (71.9%)
+- **generations.json join (identity-aligned):** 36 / 114 (31.6%)
   - *Identity-aligned uses optional ledger `channel`, else infers from `workflow` (e.g. `Content Factory (Brand)`). Rows with neither still count only toward “any”.*
   - *Historic uploads may lack rows until logged by the upload pipeline.*
 
 ## Brand lane (cross-read only)
 
-- `data/analytics.json` — **338** videos in snapshot; `fetched_at`: 2026-04-19T02:31:56.644105+00:00
+- `data/analytics.json` — **346** videos in snapshot; `fetched_at`: 2026-04-20T23:40:08.898508+00:00
 - **Latest brand markdown report:** `data/reports/2026-W15.md`
 - **Not merged** into personal correlate — `data/suggestions.json` remains the **brand** bundle; compare lanes deliberately ([`docs/PERSONAL_ANALYTICS.md`](../../docs/PERSONAL_ANALYTICS.md)).
 

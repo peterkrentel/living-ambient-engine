@@ -1,13 +1,13 @@
 {
-  "generated_at": "2026-04-20T21:26:35.728680Z",
-  "overall_avg_retention": 16.25,
-  "overall_avg_watch_minutes_per_video": 31.857,
-  "videos_analyzed": 108,
+  "generated_at": "2026-04-21T14:04:13.221897Z",
+  "overall_avg_retention": 16.36,
+  "overall_avg_watch_minutes_per_video": 30.643,
+  "videos_analyzed": 114,
   "videos_with_views": 28,
   "coverage": {
     "moods": {
       "deep_focus": {
-        "total": 13,
+        "total": 14,
         "with_views": 7
       },
       "sleep": {
@@ -23,7 +23,7 @@
         "with_views": 2
       },
       "energize": {
-        "total": 8,
+        "total": 10,
         "with_views": 1
       },
       "trance": {
@@ -31,7 +31,7 @@
         "with_views": 3
       },
       "ceremony": {
-        "total": 10,
+        "total": 11,
         "with_views": 2
       },
       "warrior": {
@@ -540,7 +540,7 @@
       "avg": 0,
       "delta": 0,
       "count": 0,
-      "total": 8,
+      "total": 10,
       "group_views": 0,
       "std_dev": 0,
       "metric": "average_view_percentage"
@@ -606,7 +606,7 @@
       "avg": 0,
       "delta": 0,
       "count": 0,
-      "total": 10,
+      "total": 11,
       "group_views": 0,
       "std_dev": 0,
       "metric": "average_view_percentage"
@@ -648,9 +648,9 @@
       "type": "mood",
       "name": "piano_deep_calm",
       "avg": 3.375,
-      "delta": -12.879999999999999,
+      "delta": -12.986428571428569,
       "count": 2,
-      "total": 12,
+      "total": 14,
       "group_views": 51,
       "std_dev": 2.892066735052979,
       "metric": "average_view_percentage"
@@ -659,9 +659,9 @@
       "type": "mood",
       "name": "deep_focus",
       "avg": 2.39,
-      "delta": -13.864999999999998,
+      "delta": -13.971428571428568,
       "count": 2,
-      "total": 13,
+      "total": 14,
       "group_views": 166,
       "std_dev": 2.5031580054003784,
       "metric": "average_view_percentage"
@@ -672,9 +672,9 @@
       "type": "mood",
       "name": "deep_focus",
       "avg": 153.5,
-      "delta": 121.64285714285714,
+      "delta": 122.85714285714286,
       "count": 2,
-      "total": 13,
+      "total": 14,
       "group_views": 166,
       "std_dev": 191.6259377015544,
       "metric": "watch_time_minutes"
@@ -683,9 +683,9 @@
       "type": "mood",
       "name": "piano_deep_calm",
       "avg": 49.5,
-      "delta": 17.642857142857142,
+      "delta": 18.857142857142858,
       "count": 2,
-      "total": 12,
+      "total": 14,
       "group_views": 51,
       "std_dev": 40.30508652763321,
       "metric": "watch_time_minutes"
@@ -762,7 +762,7 @@
       "avg": 0,
       "delta": 0,
       "count": 0,
-      "total": 8,
+      "total": 10,
       "group_views": 0,
       "std_dev": 0,
       "metric": "watch_time_minutes"
@@ -828,7 +828,7 @@
       "avg": 0,
       "delta": 0,
       "count": 0,
-      "total": 10,
+      "total": 11,
       "group_views": 0,
       "std_dev": 0,
       "metric": "watch_time_minutes"

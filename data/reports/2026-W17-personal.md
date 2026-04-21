@@ -1,19 +1,19 @@
 # Personal channel — Analytics Report (2026-W17)
 
-Generated: 2026-04-20T21:26:35.584954+00:00
+Generated: 2026-04-21T14:04:13.081250+00:00
 
 > **Channel scope:** Personal YouTube only. Data file: `data/analytics_personal.json`. Brand metrics live in `data/analytics.json` (main Analytics Agent workflow).
 
 ## Summary
 
-- **Analytics window:** `2026-03-23` → `2026-04-19` (YouTube Analytics API range for metrics below. In Studio, pick the **same** custom dates when comparing totals — not e.g. “Last 28 days” unless `fetch_analytics` used `--days 28`.)
-- **Total videos tracked:** 108
-- **Videos with analytics:** 108
+- **Analytics window:** `2026-03-24` → `2026-04-20` (YouTube Analytics API range for metrics below. In Studio, pick the **same** custom dates when comparing totals — not e.g. “Last 28 days” unless `fetch_analytics` used `--days 28`.)
+- **Total videos tracked:** 114
+- **Videos with analytics:** 112
 
 ## Totals
 
-- **Total views:** 313
-- **Total watch time:** 892 minutes
+- **Total views:** 310
+- **Total watch time:** 858 minutes
 - **Subscribers gained:** 4
 
 ## Top 5 by Retention
@@ -23,7 +23,7 @@ Generated: 2026-04-20T21:26:35.584954+00:00
 | Let Go of Stress | 2 Hours Soft Piano Am | piano_ambient | 99.2% | 1 |
 | Sounds for an Overactive Mind | 30 Secon | deep_focus | 74.8% | 1 |
 | warrior_10s_20260124_160306 | warrior | 57.0% | 9 |
-| Let Go of Stress | Deep Calm Piano Atmos | piano_deep_calm | 41.8% | 11 |
+| Let Go of Stress | Deep Calm Piano Atmos | piano_deep_calm | 44.8% | 9 |
 | Let Go of Stress | 30 Seconds Soft Piano | None | 38.5% | 1 |
 
 ## Top 5 by Views
@@ -40,12 +40,12 @@ Generated: 2026-04-20T21:26:35.584954+00:00
 
 | Mood | Videos | Total Views | Avg Retention |
 |------|--------|-------------|---------------|
-| deep_focus | 9 | 172 | 19.5% |
-| piano_deep_calm | 12 | 69 | 9.8% |
+| deep_focus | 10 | 172 | 19.5% |
+| piano_deep_calm | 14 | 66 | 10.4% |
 | rain_sleep | 4 | 23 | 2.0% |
-| ceremony | 10 | 17 | 1.0% |
+| ceremony | 11 | 17 | 1.0% |
 | warrior | 11 | 9 | 57.0% |
-| energize | 8 | 6 | 6.7% |
+| energize | 10 | 6 | 6.7% |
 | study | 6 | 5 | 20.2% |
 | trance | 10 | 4 | 6.1% |
 | unknown | 8 | 4 | 17.8% |
