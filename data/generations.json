@@ -3762,6 +3762,232 @@
       "updated_at": "2026-04-21T09:25:59.200257+00:00",
       "commit_sha": "64186f80e24c7573e3ca9f057d58cc659c7402df",
       "channel": "brand"
+    },
+    {
+      "generation_id": "69a12e72-ca2b-4d8f-adca-86c968b655d7",
+      "video_id": "DPExNjyBEsk",
+      "workflow": "Content Factory Personal Long Batch (Pressure v1)",
+      "mood": "piano_deep_calm",
+      "duration_seconds": 3600,
+      "params": {
+        "seed": 141798548,
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Calm Anxiety Fast | 1 Hour Deep Piano Relief | No Loops",
+        "video_title": "Calm Anxiety Fast | 1 Hour Deep Piano Relief | No Loops",
+        "description": "Deep calm piano - Dark blue night starfield visual",
+        "tags": [
+          "ASMR",
+          "piano music",
+          "relaxing piano",
+          "deep calm",
+          "stress relief music",
+          "calm piano",
+          "soft piano",
+          "piano for sleep",
+          "meditation piano",
+          "piano ambient",
+          "piano atmosphere",
+          "soothing piano",
+          "theta waves"
+        ]
+      },
+      "generated_at": "2026-04-21T11:11:01.491656",
+      "uploaded_at": "2026-04-21T11:12:43.455012+00:00",
+      "updated_at": "2026-04-21T11:12:43.455012+00:00",
+      "commit_sha": "4f52c896b159a66bb56469f34c3ae192f3abe6e3",
+      "channel": "personal"
+    },
+    {
+      "generation_id": "313bb1a7-457c-47cd-a701-8ddf4dd5e05d",
+      "video_id": "rnv9RzEU6nU",
+      "workflow": "Content Factory Personal Long Batch (Pressure v1)",
+      "mood": "piano_deep_calm",
+      "duration_seconds": 3600,
+      "params": {
+        "seed": 1578926994,
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Calm Anxiety Fast | 1 Hour Deep Piano Relief | No Loops",
+        "video_title": "Calm Anxiety Fast | 1 Hour Deep Piano Relief | No Loops",
+        "description": "Deep calm piano - Dark blue night starfield visual",
+        "tags": [
+          "ASMR",
+          "piano music",
+          "relaxing piano",
+          "deep calm",
+          "stress relief music",
+          "calm piano",
+          "soft piano",
+          "piano for sleep",
+          "meditation piano",
+          "piano ambient",
+          "piano atmosphere",
+          "soothing piano",
+          "theta waves"
+        ]
+      },
+      "generated_at": "2026-04-21T11:11:01.491694",
+      "uploaded_at": "2026-04-21T11:13:02.143956+00:00",
+      "updated_at": "2026-04-21T11:13:02.143956+00:00",
+      "commit_sha": "4f52c896b159a66bb56469f34c3ae192f3abe6e3",
+      "channel": "personal"
+    },
+    {
+      "generation_id": "97a50cad-66a9-42a6-a2b4-cdacaed57bc7",
+      "video_id": "DZaPCS4r2Sw",
+      "workflow": "Content Factory Personal Long Batch (Pressure v1)",
+      "mood": "ceremony",
+      "duration_seconds": 3600,
+      "params": {
+        "seed": 2082777599,
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Ground Yourself Instantly | 1 Hour Deep Ritual Atmosphere | No Loops",
+        "video_title": "Ground Yourself Instantly | 1 Hour Deep Ritual Atmosphere | No Loops",
+        "description": "Ritual and ceremony - Candombl\u00e9 rhythm",
+        "tags": [
+          "ceremonial music",
+          "ritual music",
+          "sacred music",
+          "spiritual music",
+          "healing music",
+          "sacred geometry",
+          "candomble rhythm",
+          "brazilian drums",
+          "shamanic drums",
+          "intention music",
+          "meditation ritual",
+          "sacred space music",
+          "prayer music",
+          "solfeggio frequencies",
+          "285 hz healing",
+          "ASMR"
+        ]
+      },
+      "generated_at": "2026-04-21T11:11:01.491705",
+      "uploaded_at": "2026-04-21T11:13:23.879815+00:00",
+      "updated_at": "2026-04-21T11:13:23.879815+00:00",
+      "commit_sha": "4f52c896b159a66bb56469f34c3ae192f3abe6e3",
+      "channel": "personal"
+    },
+    {
+      "generation_id": "c9028eb7-625e-4e47-b6b5-bf52587d985a",
+      "video_id": "d7KBv_BaXQo",
+      "workflow": "Content Factory Personal Long Batch (Pressure v1)",
+      "mood": "energize",
+      "duration_seconds": 3600,
+      "params": {
+        "seed": 1385569048,
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Boost Your Energy | 1 Hour Smooth Activation | No Crash",
+        "video_title": "Boost Your Energy | 1 Hour Smooth Activation | No Crash",
+        "description": "Energized and motivated state - Kuku rhythm",
+        "tags": [
+          "energy music",
+          "motivation music",
+          "workout music",
+          "morning music",
+          "power music",
+          "uplifting music",
+          "energizing beats",
+          "beta waves",
+          "african drums",
+          "kuku rhythm",
+          "tribal drums energy",
+          "gym music",
+          "running music",
+          "pump up music",
+          "high energy ambient"
+        ]
+      },
+      "generated_at": "2026-04-21T11:11:01.491713",
+      "uploaded_at": "2026-04-21T11:13:53.470636+00:00",
+      "updated_at": "2026-04-21T11:13:53.470636+00:00",
+      "commit_sha": "4f52c896b159a66bb56469f34c3ae192f3abe6e3",
+      "channel": "personal"
+    },
+    {
+      "generation_id": "e01423d2-ae6d-4c3c-9329-72f91d349562",
+      "video_id": "YTiuAjXQLp0",
+      "workflow": "Content Factory Personal Long Batch (Pressure v1)",
+      "mood": "energize",
+      "duration_seconds": 3600,
+      "params": {
+        "seed": 187227317,
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Boost Your Energy | 1 Hour Smooth Activation | No Crash",
+        "video_title": "Boost Your Energy | 1 Hour Smooth Activation | No Crash",
+        "description": "Energized and motivated state - Kuku rhythm",
+        "tags": [
+          "energy music",
+          "motivation music",
+          "workout music",
+          "morning music",
+          "power music",
+          "uplifting music",
+          "energizing beats",
+          "beta waves",
+          "african drums",
+          "kuku rhythm",
+          "tribal drums energy",
+          "gym music",
+          "running music",
+          "pump up music",
+          "high energy ambient"
+        ]
+      },
+      "generated_at": "2026-04-21T11:11:01.491720",
+      "uploaded_at": "2026-04-21T11:14:22.764074+00:00",
+      "updated_at": "2026-04-21T11:14:22.764074+00:00",
+      "commit_sha": "4f52c896b159a66bb56469f34c3ae192f3abe6e3",
+      "channel": "personal"
+    },
+    {
+      "generation_id": "0536ec30-c7b5-4f12-8672-cb1095cfc6f9",
+      "video_id": "CtJEBKSL9Pc",
+      "workflow": "Content Factory Personal Long Batch (Pressure v1)",
+      "mood": "deep_focus",
+      "duration_seconds": 3600,
+      "params": {
+        "seed": 1150252435,
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "Enter Flow State | 1 Hour Zero Distraction Focus | Continuous",
+        "video_title": "Enter Flow State | 1 Hour Zero Distraction Focus | Continuous",
+        "description": "Deep concentration and flow state - Hypnotic fractal journey",
+        "tags": [
+          "focus music",
+          "deep work music",
+          "concentration music",
+          "binaural beats focus",
+          "study music",
+          "work music",
+          "ambient focus",
+          "coding music",
+          "flow state music",
+          "productivity music",
+          "background music for work",
+          "music for concentration",
+          "gnawa rhythm",
+          "tribal drums focus",
+          "432 hz music",
+          "ASMR"
+        ]
+      },
+      "generated_at": "2026-04-21T11:11:01.491729",
+      "uploaded_at": "2026-04-21T11:14:53.798614+00:00",
+      "updated_at": "2026-04-21T11:14:53.798614+00:00",
+      "commit_sha": "4f52c896b159a66bb56469f34c3ae192f3abe6e3",
+      "channel": "personal"
     }
   ]
 }
