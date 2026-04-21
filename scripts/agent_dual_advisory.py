@@ -12,6 +12,8 @@ Outputs (per lane ``brand`` | ``personal``):
 - ``data/reports/agent-insight-YYYY-WW-{lane}-gemini.md``
 - ``data/reports/agent-insight-YYYY-WW-{lane}-runner.md`` (GGUF; CPU on GitHub-hosted runners)
 
+**Human compare (read order + rubric):** ``docs/spec/DUAL_ADVISORY_COMPARE.md``.
+
   pip install llama-cpp-python   # runner path only; Gemini uses stdlib + REST
   GEMINI_API_KEY=... python scripts/agent_dual_advisory.py --lane brand --week 2026-W16
   GEMINI_API_KEY_PERSONAL=... python scripts/agent_dual_advisory.py --lane personal --week 2026-W16
