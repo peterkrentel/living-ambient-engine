@@ -3638,6 +3638,130 @@
       "updated_at": "2026-04-20T11:59:12.287668+00:00",
       "commit_sha": "d111e16e546b4da63642cbe590511409cae25d7d",
       "channel": "personal"
+    },
+    {
+      "generation_id": "484161c4-96b4-4937-95d9-8fedc1509489",
+      "video_id": "8H6q_ub3OjM",
+      "workflow": "Content Factory Brand Micro Batch v1",
+      "mood": "micro_thought_loop",
+      "duration_seconds": 10,
+      "params": {
+        "seed": 155695713,
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "10 Seconds to Break the Thought Loop",
+        "video_title": "10 Seconds to Break the Thought Loop",
+        "description": "Brand micro: 10 Seconds to Break the Thought Loop",
+        "tags": [
+          "brand micro batch",
+          "micro ambient",
+          "short ambient",
+          "ambient music",
+          "sound design",
+          "binaural beats",
+          "thought loop",
+          "interrupt"
+        ]
+      },
+      "generated_at": "2026-04-21T09:25:13.326411",
+      "uploaded_at": "2026-04-21T09:25:55.672199+00:00",
+      "updated_at": "2026-04-21T09:25:55.672199+00:00",
+      "commit_sha": "64186f80e24c7573e3ca9f057d58cc659c7402df",
+      "channel": "brand"
+    },
+    {
+      "generation_id": "8673d5ca-4d13-448c-b4cb-c2bfe1d88cf8",
+      "video_id": "ZZzKJJ-h0O0",
+      "workflow": "Content Factory Brand Micro Batch v1",
+      "mood": "micro_stuck_jolt",
+      "duration_seconds": 10,
+      "params": {
+        "seed": 902302596,
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "10 Seconds to Get Unstuck",
+        "video_title": "10 Seconds to Get Unstuck",
+        "description": "Brand micro: 10 Seconds to Get Unstuck",
+        "tags": [
+          "brand micro batch",
+          "micro ambient",
+          "short ambient",
+          "ambient music",
+          "sound design",
+          "binaural beats",
+          "get unstuck",
+          "motivation"
+        ]
+      },
+      "generated_at": "2026-04-21T09:25:13.326435",
+      "uploaded_at": "2026-04-21T09:25:56.801519+00:00",
+      "updated_at": "2026-04-21T09:25:56.801519+00:00",
+      "commit_sha": "64186f80e24c7573e3ca9f057d58cc659c7402df",
+      "channel": "brand"
+    },
+    {
+      "generation_id": "eda60cfd-6f86-4a88-af3a-9c3f346ef0da",
+      "video_id": "8slZvVgGYlc",
+      "workflow": "Content Factory Brand Micro Batch v1",
+      "mood": "micro_noise_hush",
+      "duration_seconds": 5,
+      "params": {
+        "seed": 114214847,
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "5 Seconds to Quiet Mental Noise",
+        "video_title": "5 Seconds to Quiet Mental Noise",
+        "description": "Brand micro: 5 Seconds to Quiet Mental Noise",
+        "tags": [
+          "brand micro batch",
+          "micro ambient",
+          "short ambient",
+          "ambient music",
+          "sound design",
+          "binaural beats",
+          "quiet mind",
+          "stillness"
+        ]
+      },
+      "generated_at": "2026-04-21T09:25:13.326446",
+      "uploaded_at": "2026-04-21T09:25:57.863249+00:00",
+      "updated_at": "2026-04-21T09:25:57.863249+00:00",
+      "commit_sha": "64186f80e24c7573e3ca9f057d58cc659c7402df",
+      "channel": "brand"
+    },
+    {
+      "generation_id": "93a79240-ac2f-4ec1-a8e1-3efe97368d9f",
+      "video_id": "mHrmOVv7tgc",
+      "workflow": "Content Factory Brand Micro Batch v1",
+      "mood": "micro_interrupt_snap",
+      "duration_seconds": 5,
+      "params": {
+        "seed": 1977950442,
+        "variant": "full"
+      },
+      "metadata": {
+        "title": "5 Seconds to Interrupt the Loop",
+        "video_title": "5 Seconds to Interrupt the Loop",
+        "description": "Brand micro: 5 Seconds to Interrupt the Loop",
+        "tags": [
+          "brand micro batch",
+          "micro ambient",
+          "short ambient",
+          "ambient music",
+          "sound design",
+          "binaural beats",
+          "interrupt loop",
+          "snap out"
+        ]
+      },
+      "generated_at": "2026-04-21T09:25:13.326459",
+      "uploaded_at": "2026-04-21T09:25:59.200257+00:00",
+      "updated_at": "2026-04-21T09:25:59.200257+00:00",
+      "commit_sha": "64186f80e24c7573e3ca9f057d58cc659c7402df",
+      "channel": "brand"
     }
   ]
 }
