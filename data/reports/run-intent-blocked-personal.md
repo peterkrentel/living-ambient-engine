@@ -1,6 +1,6 @@
 # Run intent — BLOCKED
 
-Generated: 2026-04-21T14:04:13.420884+00:00
+Generated: 2026-04-21T14:18:33.265081+00:00
 
 **No actionable mood increases** in `data/suggestions_personal.json` passed the planner gate.
 

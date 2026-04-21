@@ -1,6 +1,6 @@
 # Personal channel — Analytics Report (2026-W17)
 
-Generated: 2026-04-21T14:04:13.081250+00:00
+Generated: 2026-04-21T14:18:32.915124+00:00
 
 > **Channel scope:** Personal YouTube only. Data file: `data/analytics_personal.json`. Brand metrics live in `data/analytics.json` (main Analytics Agent workflow).
 
@@ -8,7 +8,7 @@ Generated: 2026-04-21T14:04:13.081250+00:00
 
 - **Analytics window:** `2026-03-24` → `2026-04-20` (YouTube Analytics API range for metrics below. In Studio, pick the **same** custom dates when comparing totals — not e.g. “Last 28 days” unless `fetch_analytics` used `--days 28`.)
 - **Total videos tracked:** 114
-- **Videos with analytics:** 112
+- **Videos with analytics:** 114
 
 ## Totals
 
