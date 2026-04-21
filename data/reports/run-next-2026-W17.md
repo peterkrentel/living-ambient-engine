@@ -1,7 +1,7 @@
 # Run next — advisory (2026-W17)
 
-Generated (report): 2026-04-20T23:40:09.377518+00:00
-**Correlate bundle `generated_at`:** 2026-04-20T23:40:09.076329Z
+Generated (report): 2026-04-21T14:04:29.873463+00:00
+**Correlate bundle `generated_at`:** 2026-04-21T14:04:29.563545Z
 
 ## How to read this
 
@@ -13,9 +13,9 @@ This file is **machine-assembled** from `data/suggestions.json` and the **brand*
 
 ## Brand snapshot (this run)
 
-- **Overall avg retention:** 17.82%
-- **Overall avg watch min / video (window):** 6.760
-- **Videos analyzed:** 121 with views / 346 total
+- **Overall avg retention:** 18.44%
+- **Overall avg watch min / video (window):** 6.780
+- **Videos analyzed:** 118 with views / 350 total
 
 ## Evidence (paths)
 
@@ -32,13 +32,13 @@ _No exploratory "increase" rows._
 
 ## Exploratory — tread carefully (underperformers)
 
-↓ `music_style` / `none` (retention %) — -9.5% vs channel avg (n=3, views=164, exploratory) — `suggestions[0]`
+↓ `music_style` / `none` (retention %) — -10.1% vs channel avg (n=3, views=156, exploratory) — `suggestions[0]`
 
 ## Audit — overview excerpt (brand)
 
-- **Videos in analytics:** 346
-- **generations.json join (any ledger row):** 54 / 346 (15.6%)
-- **generations.json join (identity-aligned):** 40 / 346 (11.6%)
+- **Videos in analytics:** 350
+- **generations.json join (any ledger row):** 58 / 350 (16.6%)
+- **generations.json join (identity-aligned):** 44 / 350 (12.6%)
   - *Identity-aligned uses optional ledger `channel`, else infers from `workflow` (e.g. `Content Factory (Brand)`). Rows with neither still count only toward “any”.*
   - *Historic uploads may lack rows until logged by the upload pipeline.*
 
