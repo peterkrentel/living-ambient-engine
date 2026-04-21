@@ -2,8 +2,9 @@
 """Dual advisory v0: Gemini (API) + GGUF on the workflow runner (default Qwen2.5-1.5B Instruct q4).
 
 Both run **in parallel** (threads) after deterministic ``run-next``. **Gemini** sees the full
-file bundle; **runner GGUF** uses a **lean** bundle (run-next + compact JSON + short reports +
-**coverage_summary** from correlate + two analytics slices) so small ``n_ctx`` still fits.
+file bundle; **runner GGUF** uses a **lean** bundle (``run-next`` **without** the human cross-lane
+section + compact JSON + short reports + **coverage_summary** from correlate + two analytics slices)
+so small ``n_ctx`` still fits and the small model does not blend brand vs personal numbers.
 Advisory only — not ``run_intent`` / ``batch_generate``.
 
 Outputs (per lane ``brand`` | ``personal``):
@@ -58,6 +59,14 @@ RUNNER_BUNDLE_MAX_CHARS = 5200
 # Default output cap (was 512; logs showed finish_reason=length mid-markdown). Override: ``MAX_RUNNER_TOKENS`` env.
 _DEFAULT_MAX_RUNNER_TOKENS = 1536
 _LLAMA_N_CTX = 4096
+
+# ``run_next_report.py`` appends a cross-lane section for humans; strip it from runner CONTEXT only
+# (``build_bundle`` for Gemini still includes the full run-next file).
+_RUN_NEXT_CROSS_READ_HEADER = {
+    "personal": "## Brand lane (cross-read only)",
+    "brand": "## Personal lane (context only)",
+}
+_RUN_NEXT_PRODUCTION_HOOKS = "## Production hooks (manual)"
 
 
 def max_runner_tokens() -> int:
@@ -160,6 +169,20 @@ def _read(path: Path, cap: int) -> str:
     if len(text) > cap:
         return text[:cap] + f"\n\n… truncated ({len(text)} chars total)"
     return text
+
+
+def _strip_run_next_cross_lane_section(body: str, lane: str) -> str:
+    """Drop ``run-next`` cross-lane block so runner GGUF stays single-lane (matches ``run_next_report.py`` headings)."""
+    if lane not in _RUN_NEXT_CROSS_READ_HEADER:
+        return body
+    start_h = _RUN_NEXT_CROSS_READ_HEADER[lane]
+    i0 = body.find(start_h)
+    if i0 == -1:
+        return body
+    i1 = body.find(_RUN_NEXT_PRODUCTION_HOOKS, i0 + len(start_h))
+    if i1 == -1:
+        return body
+    return body[:i0].rstrip() + "\n\n" + body[i1:].lstrip()
 
 
 def build_bundle(lane: str, week: str) -> str:
@@ -286,22 +309,35 @@ def _compact_analytics(path: Path, max_chars: int = 2400) -> str:
 
 
 def build_runner_bundle(lane: str, week: str) -> str:
-    """Lean context for small GGUF: run-next + compact JSON + short prose (fits ``n_ctx``)."""
+    """Lean context for small GGUF: run-next (single-lane) + compact JSON + short prose (fits ``n_ctx``)."""
     if lane == "personal":
         weekly = REPORTS / f"{week}-personal.md"
         run_next = REPORTS / f"run-next-{week}-personal.md"
         blocked = REPORTS / "run-intent-blocked-personal.md"
         sug_path = DATA / "suggestions_personal.json"
         ana_path = DATA / "analytics_personal.json"
+        scope_note = (
+            "**Advisory lane:** `personal` only — CONTEXT uses `*-personal.md`, "
+            "`suggestions_personal.json`, `analytics_personal.json`. "
+            "Do not cite brand-channel totals; cross-lane excerpts are omitted here."
+        )
     else:
         weekly = REPORTS / f"{week}.md"
         run_next = REPORTS / f"run-next-{week}.md"
         blocked = REPORTS / "run-intent-blocked.md"
         sug_path = DATA / "suggestions.json"
         ana_path = DATA / "analytics.json"
+        scope_note = (
+            "**Advisory lane:** `brand` only — CONTEXT uses `YYYY-WW.md` (brand), "
+            "`suggestions.json`, `analytics.json`. "
+            "Do not cite personal-channel totals; cross-lane excerpts are omitted here."
+        )
+
+    run_next_body = _strip_run_next_cross_lane_section(_read(run_next, 4500), lane)
 
     parts = [
-        "### run-next (priority)\n\n" + _read(run_next, 4500),
+        "### runner scope\n\n" + scope_note,
+        "### run-next (priority)\n\n" + run_next_body,
         "### weekly report\n\n" + _read(weekly, 2800),
         "### run-intent blocked\n\n" + _read(blocked, 1200),
         "### suggestions (compact)\n\n" + _compact_suggestions(sug_path),

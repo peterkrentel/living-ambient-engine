@@ -48,6 +48,65 @@ def test_dim_coverage_stats():
     }
 
 
+def test_strip_run_next_removes_brand_cross_read_for_personal():
+    body = """# Run next — personal
+
+## Personal snapshot (this run)
+
+- **Videos analyzed:** 10 with views / 108 total
+
+## Brand lane (cross-read only)
+
+- 338 videos — brand-only cross-read.
+
+## Production hooks (manual)
+
+- hook line
+"""
+    out = adv._strip_run_next_cross_lane_section(body, "personal")
+    assert "## Brand lane" not in out
+    assert "338" not in out
+    assert "Personal snapshot" in out
+    assert "## Production hooks (manual)" in out
+    assert "hook line" in out
+
+
+def test_strip_run_next_removes_personal_cross_read_for_brand():
+    body = """## Brand snapshot
+
+x
+
+## Personal lane (context only)
+
+- 108 personal-only.
+
+## Production hooks (manual)
+
+y
+"""
+    out = adv._strip_run_next_cross_lane_section(body, "brand")
+    assert "## Personal lane" not in out
+    assert "108 personal" not in out
+    assert "## Production hooks (manual)" in out
+    assert out.strip().endswith("y")
+
+
+def test_strip_run_next_noop_when_markers_absent():
+    assert adv._strip_run_next_cross_lane_section("plain", "personal") == "plain"
+
+
+def test_runner_bundle_includes_scope_and_strips_cross_lane_when_present():
+    rn = _REPO / "data" / "reports" / "run-next-2026-W17-personal.md"
+    if not rn.exists():
+        pytest.skip("no run-next personal fixture")
+    b = adv.build_runner_bundle("personal", "2026-W17")
+    assert "### runner scope" in b
+    assert "Advisory lane:" in b
+    assert "personal" in b
+    if "## Brand lane (cross-read only)" in rn.read_text(encoding="utf-8", errors="replace"):
+        assert "## Brand lane (cross-read only)" not in b
+
+
 def test_runner_bundle_stays_within_ctx_budget():
     """Lean runner bundle must stay under RUNNER_BUNDLE_MAX_CHARS (missing files = small)."""
     b = adv.build_runner_bundle("personal", "2099-W99")
