@@ -4,7 +4,7 @@
 
 ## Updated
 
-2026-04-24
+2026-04-25
 
 ## Branch / PR
 
@@ -47,6 +47,7 @@
 8. **Title / packaging (defer):** same **mood × duration × dual** matrix on **brand + personal** reuses templates → **identical `video_title` strings** on two channels (different `video_id`s). Fine for smoke; before **high volume** or sharp **channel positioning**, tweak metadata (e.g. per-channel suffix or description line), rotation policy, or later **run intent** rules so packs are not unintentional clones — [`START_HERE.md`](START_HERE.md) checklist.
 
 9. **`run-next` + dual-advisory (refinement phase):** **Plumbing shipped on `main`** — both analytics workflows invoke [`agent_dual_advisory.py`](../scripts/agent_dual_advisory.py) in parallel (Gemini REST on **full** bundle; runner GGUF on **lean** bundle with **`coverage_summary`**, expanded suggestion rows, analytics **views + retention** compacts, stricter runner prompt). Outputs commit as `data/reports/agent-insight-*-gemini.md` / `*-runner.md`. **Secrets:** brand repository **`GEMINI_API_KEY`**; personal **`GEMINI_API_KEY_PERSONAL`** (see [`spec/workflows.md`](spec/workflows.md)). If the key is missing or misnamed at job time, brand Gemini is a **short stub** in the markdown file until the next good run. **Next (quality, not wiring):** **(1)** validators (cited indices, numeric parity with `suggestions*.json` / analytics excerpts; block automation on drift); **(2)** inputs/outputs — lane-isolated lean CONTEXT (no cross-lane numbers in personal runner), optional repeatability (`temperature` / `seed`), optional larger GGUF + cache-key bump per CI budget; **(3)** **human** compare `*-gemini.md` vs `*-runner.md` vs `run-next` / JSON (no in-repo auto-merge); **(4)** automation only when trustworthy — [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6 · [`START_HERE.md` § Plan checklist](START_HERE.md#plan-checklist-living--as-of-2026-04).
+10. **Autonomy horizon (north star):** after trust gates, move from advisory prose toward **validated structured intent** → consumer → generate → publish → complete catalog/ledger feedback; supervised **Phase 3** models only when data justify them — [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6 **Autonomy horizon (post-trust north star)**.
 
 ## Risks / open questions
 

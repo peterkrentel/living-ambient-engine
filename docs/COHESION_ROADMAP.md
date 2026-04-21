@@ -211,6 +211,15 @@ Videos published **before** `generations.json` exists have **no** joined params 
 3. **Grounding / trust** — align with step **2** above (*validators*): numeric parity and “numbers only if present in JSON” checks on advisory output **before** any automation consumes it.
 4. **Weights** — swap default GGUF via `AGENT_GGUF_URL` / `AGENT_GGUF_PATH` (documented in [`spec/workflows.md`](spec/workflows.md)); bump Actions **cache key** when the default filename changes.
 
+### Autonomy horizon (post-trust north star)
+
+**Goal:** evolve from **measure → analyze → suggest → human → generate** toward **measure → analyze → validated plan → generate → publish → ledger**, without treating free-form LLM markdown as the only gate.
+
+- **Structured plan output** — A future actor (planner vN and/or LLM) reads committed artifacts (`suggestions*.json`, `analytics*.json`, [`data/generations.json`](../data/generations.json) / catalog, `config/moods.yaml`, [`spec/GUARDRAILS.md`](spec/GUARDRAILS.md), [`AGENT.md`](spec/AGENT.md)) and emits **machine-checkable** intent in the same family as [`spec/contracts/production-run-intent.md`](spec/contracts/production-run-intent.md); advisory prose stays optional, **schema + validators** are not.
+- **Validators before wider automation** — Numeric parity with correlate inputs, cited evidence, policy checks; optional consumer or schedules **only** after gates pass for **signal** reasons (volume, thresholds), not missing wiring or silent catalog gaps.
+- **Tight feedback loop** — Every publish path keeps catalog + ledger fields correlate and audit need (incl. catalog **`channel`** for multi-lane joins). Known friction: Art Creator **`--no-update-catalog`** skips catalog — see [`HANDOFF.md`](HANDOFF.md) *Risks / open questions*.
+- **Predictive modeling ([`AGENT.md`](spec/AGENT.md) Phase 3)** — When row counts and label quality justify it, supervised models on ledger-backed features; until then **group stats + Phase 2.5** (CIs / hygiene, confounder language) remain the inference spine—not a fixed video-count promise.
+
 **Gemini CI:** repository **Secrets** — brand analytics: `GEMINI_API_KEY`; personal analytics: `GEMINI_API_KEY_PERSONAL` (see [`analytics-personal.yml`](../.github/workflows/analytics-personal.yml)). Optional **Variable** `GEMINI_MODEL` (both workflows pass `env` when set; script defaults if empty).
 
 ---
