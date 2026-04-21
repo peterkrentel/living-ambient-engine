@@ -1,9 +1,9 @@
 # Channel coverage audit (2026-W17)
 
-Generated: 2026-04-21T14:18:33.006545+00:00
+Generated: 2026-04-21T14:39:48.994538+00:00
 **YouTube identity (this run):** `personal`
 **Analytics file:** `data/analytics_personal.json`
-Analytics `fetched_at`: 2026-04-21T14:18:32.753796+00:00
+Analytics `fetched_at`: 2026-04-21T14:39:48.723624+00:00
 Analytics window: `2026-03-24` → `2026-04-20`
 
 ## Overview
@@ -30,7 +30,7 @@ Analytics window: `2026-03-24` → `2026-04-20`
 | `rain_sleep` | 7 | 2 |
 | `sleep` | 6 | 0 |
 | `study` | 6 | 2 |
-| `trance` | 10 | 3 |
+| `trance` | 10 | 2 |
 | `warrior` | 11 | 1 |
 
 **Missing presets (0 videos):** `forest_morning`
