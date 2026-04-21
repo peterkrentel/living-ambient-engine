@@ -200,7 +200,9 @@ Videos published **before** `generations.json` exists have **no** joined params 
 
 ### Dual advisory refinement (runner + optional Gemini)
 
-**Shipped prototype:** [`scripts/agent_dual_advisory.py`](../scripts/agent_dual_advisory.py) in [`analytics-agent.yml`](../.github/workflows/analytics-agent.yml) / [`analytics-personal.yml`](../.github/workflows/analytics-personal.yml) — **Gemini** on the **full** weekly bundle (REST); **runner GGUF** on a **lean** bundle (run-next + compact suggestions/analytics + short reports). Outputs: `data/reports/agent-insight-*-gemini.md` and `*-runner.md` — **advisory only**, not `run_intent` / `batch_generate`.
+**Shipped prototype:** [`scripts/agent_dual_advisory.py`](../scripts/agent_dual_advisory.py) in [`analytics-agent.yml`](../.github/workflows/analytics-agent.yml) / [`analytics-personal.yml`](../.github/workflows/analytics-personal.yml) — **Gemini** on the **full** weekly bundle (REST); **runner GGUF** on a **lean** bundle (run-next + weekly/blocked reads + compact **`suggestions`** with correlate **`coverage_summary`** (aggregate mood / art / music / combo counts) + compact **analytics** top-by-views + retention slice; char-capped for `n_ctx`). Outputs: `data/reports/agent-insight-*-gemini.md` and `*-runner.md` — **advisory only**, not `run_intent` / `batch_generate`. **Gemini** writes a **stub** if the lane’s API key is unset or wrong in CI at run time.
+
+**Plumbing status:** Brand + personal **CI wiring** for dual advisory is **landed** on `main`; remaining Phase 6 effort here is **refinement and trust** (bundle composition, prompt adherence, validators, optional model swap)—not adding the workflow step itself.
 
 **Iteration order (cheap → expensive):**
 
