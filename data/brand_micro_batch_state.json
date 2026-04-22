@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "next_day": 5,
-  "completed": false,
+  "next_day": 6,
+  "completed": true,
   "slots_per_day": 4,
   "total_slots": 20
 }
