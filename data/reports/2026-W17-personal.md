@@ -1,64 +1,64 @@
 # Personal channel — Analytics Report (2026-W17)
 
-Generated: 2026-04-21T14:39:48.907484+00:00
+Generated: 2026-04-24T15:49:03.298057+00:00
 
 > **Channel scope:** Personal YouTube only. Data file: `data/analytics_personal.json`. Brand metrics live in `data/analytics.json` (main Analytics Agent workflow).
 
 ## Summary
 
-- **Analytics window:** `2026-03-24` → `2026-04-20` (YouTube Analytics API range for metrics below. In Studio, pick the **same** custom dates when comparing totals — not e.g. “Last 28 days” unless `fetch_analytics` used `--days 28`.)
+- **Analytics window:** `2026-03-27` → `2026-04-23` (YouTube Analytics API range for metrics below. In Studio, pick the **same** custom dates when comparing totals — not e.g. “Last 28 days” unless `fetch_analytics` used `--days 28`.)
 - **Total videos tracked:** 114
-- **Videos with analytics:** 113
+- **Videos with analytics:** 114
 
 ## Totals
 
-- **Total views:** 309
-- **Total watch time:** 858 minutes
-- **Subscribers gained:** 4
+- **Total views:** 650
+- **Total watch time:** 1,987 minutes
+- **Subscribers gained:** 6
 
 ## Top 5 by Retention
 
 | Video | Mood | Retention % | Views |
 |-------|------|-------------|-------|
-| Let Go of Stress | 2 Hours Soft Piano Am | piano_ambient | 99.2% | 1 |
+| Find Your Strength | 30 Seconds Power Dr | warrior | 96.8% | 1 |
+| sleep_30s_20260124_031441 | sleep | 83.6% | 1 |
+| trance_30s_20260124_055344 | trance | 78.3% | 1 |
 | Sounds for an Overactive Mind | 30 Secon | deep_focus | 74.8% | 1 |
 | warrior_10s_20260124_160306 | warrior | 57.0% | 9 |
-| Let Go of Stress | Deep Calm Piano Atmos | piano_deep_calm | 44.8% | 9 |
-| Let Go of Stress | 30 Seconds Soft Piano | None | 38.5% | 1 |
 
 ## Top 5 by Views
 
 | Video | Mood | Views | Watch Time (min) |
 |-------|------|-------|------------------|
-| Enter Flow State | 1 Hour Zero Distracti | deep_focus | 116 | 289 |
-| Sounds for an Overactive Mind | 1 Hour E | deep_focus | 50 | 18 |
-| Calm Anxiety Fast | 1 Hour Deep Piano Re | piano_deep_calm | 27 | 21 |
-| Calm Anxiety Fast | 1 Hour Deep Piano Re | piano_deep_calm | 24 | 78 |
-| Fall Asleep to Gentle Rain | 1 Hour | Ev | rain_sleep | 19 | 39 |
+| Enter Flow State | 1 Hour Zero Distracti | deep_focus | 124 | 334 |
+| Sounds for an Overactive Mind | 1 Hour E | deep_focus | 76 | 28 |
+| Ground Yourself Instantly | 1 Hour Deep  | ceremony | 54 | 20 |
+| Calm Anxiety Fast | 1 Hour Deep Piano Re | piano_deep_calm | 38 | 244 |
+| Calm Anxiety Fast | 1 Hour Deep Piano Re | piano_deep_calm | 29 | 145 |
 
 ## Performance by Mood
 
 | Mood | Videos | Total Views | Avg Retention |
 |------|--------|-------------|---------------|
-| deep_focus | 10 | 172 | 19.5% |
-| piano_deep_calm | 14 | 66 | 10.4% |
-| rain_sleep | 4 | 23 | 2.0% |
-| ceremony | 11 | 17 | 1.0% |
-| warrior | 11 | 9 | 57.0% |
-| energize | 10 | 6 | 6.7% |
+| deep_focus | 10 | 232 | 15.2% |
+| piano_deep_calm | 14 | 225 | 10.6% |
+| ceremony | 11 | 116 | 1.8% |
+| rain_sleep | 4 | 24 | 2.0% |
+| energize | 10 | 22 | 10.9% |
+| warrior | 11 | 10 | 76.9% |
+| unknown | 8 | 6 | 20.5% |
 | study | 6 | 5 | 20.2% |
-| unknown | 8 | 4 | 17.8% |
-| trance | 10 | 3 | 9.0% |
+| trance | 10 | 4 | 32.1% |
 | piano_ambient | 2 | 2 | 49.8% |
 | piano_relax | 2 | 2 | 9.4% |
+| sleep | 9 | 1 | 83.6% |
+| fireplace | 3 | 1 | 47.8% |
 | piano_evening | 2 | 0 | 0.0% |
 | rain_piano | 2 | 0 | 0.0% |
 | piano_gentle | 2 | 0 | 0.0% |
 | chill | 4 | 0 | 0.0% |
-| sleep | 9 | 0 | 0.0% |
 | lofi_study | 2 | 0 | 0.0% |
 | ocean_waves | 2 | 0 | 0.0% |
-| fireplace | 3 | 0 | 0.0% |
 
 ## Next steps (personal)
 

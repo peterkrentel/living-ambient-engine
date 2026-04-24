@@ -1,7 +1,7 @@
 # Run next — personal advisory (2026-W17)
 
-Generated (report): 2026-04-21T14:39:49.286777+00:00
-**Correlate bundle `generated_at`:** 2026-04-21T14:39:49.043624Z
+Generated (report): 2026-04-24T15:49:03.687771+00:00
+**Correlate bundle `generated_at`:** 2026-04-24T15:49:03.436592Z
 
 ## How to read this
 
@@ -13,9 +13,9 @@ This file is **machine-assembled** from `data/suggestions_personal.json` and the
 
 ## Personal snapshot (this run)
 
-- **Overall avg retention:** 16.96%
-- **Overall avg watch min / video (window):** 31.778
-- **Videos analyzed:** 27 with views / 114 total
+- **Overall avg retention:** 18.59%
+- **Overall avg watch min / video (window):** 43.196
+- **Videos analyzed:** 46 with views / 114 total
 
 ## Evidence (paths)
 
@@ -28,11 +28,11 @@ _None this week — all rows are exploratory or below actionable thresholds._
 
 ## Exploratory — lean in (low n / views)
 
-_No exploratory "increase" rows._
+↑ `mood` / `piano_deep_calm` (watch min / video (window)) — +83.1 min vs channel avg (n=6, views=171, exploratory) — `suggestions[1]`
 
 ## Exploratory — tread carefully (underperformers)
 
-_No exploratory "reduce" rows._
+↓ `mood` / `piano_deep_calm` (retention %) — -11.2% vs channel avg (n=6, views=171, exploratory) — `suggestions[0]`
 
 ## Audit — overview excerpt (personal)
 

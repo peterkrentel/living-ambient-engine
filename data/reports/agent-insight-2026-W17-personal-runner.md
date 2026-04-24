@@ -6,27 +6,28 @@
 ## What I reviewed — 2–3 bullets naming concrete CONTEXT blocks (e.g. run-next, weekly report, suggestions JSON incl. coverage_summary if present, analytics compact).
 
 - **Advisory lane:** `personal` only — CONTEXT uses `*-personal.md`, `suggestions_personal.json`, `analytics_personal.json`. Do not cite brand-channel totals; cross-lane excerpts are omitted here.
-- **Run next — personal advisory (2026-W17):** Generated (report): 2026-04-21T14:39:49.286777+00:00
-- **How to read this:** This file is **machine-assembled** from `data/suggestions_personal.json` and the **personal** channel audit (`audit-2026-W17-personal.md`). It is **not** causal advice — see *Packaging & confounders* below.
+- **Run next — personal advisory (2026-W17):** Generated (report): 2026-04-24T15:49:03.687771+00:00
+- **Evidence (paths):** Suggestions: `data/suggestions_personal.json`; Channel audit: `data/reports/audit-2026-W17-personal.md`
 
 ## Summary — 2–4 sentences: the main story the metrics tell (thin data is OK to name explicitly).
 
-This advisory focuses on personal videos, with an overall average retention of 16.96%, and an average watch time of 31.778 minutes per video. The videos analyzed include 27 videos with views and 114 total.
+This advisory report focuses on personal YouTube content, using specific metrics and insights from the personal channel audit and suggestions JSON. The retention and watch time data suggest improvements in mood and ambient music styles, with specific videos showing gains in watch time and retention.
 
 ## Insights — numbered 1–5. Each: one short paragraph. Use **at least three distinct numeric facts** copied from CONTEXT (counts, %, averages, views) across these items; every number must appear verbatim in CONTEXT (no rounding invented, no new totals). Prefer mood / art_period / music_style / packaging angles when CONTEXT supports them. If an item is not directly supported, start that paragraph with **Speculative:**.
 
-1. **Overall avg retention:** 16.96% — This indicates that on average, videos retain 16.96% of their audience over the course of the retention period.
-2. **Overall avg watch min / video (window):** 31.778 — This suggests that on average, videos are watched for 31.778 minutes per video.
-3. **Videos analyzed:** 27 with views / 114 total — This shows that out of the 114 videos analyzed, 27 have views, which is a significant portion of the total.
-4. **Videos analyzed:** 27 with views / 114 total — This shows that out of the 114 videos analyzed, 27 have views, which is a significant portion of the total.
-5. **Videos analyzed:** 27 with views / 114 total — This shows that out of the 114 videos analyzed, 27 have views, which is a significant portion of the total.
+1. **Mood and Ambient Music Styles:** The report identifies mood and ambient music styles that have improved, such as "piano_deep_calm" with an average retention of 18.59% and watch time of 43.196 minutes.
+2. **Videos Analyzed:** The report analyzes 46 videos with 114 total views, indicating a thorough examination of the channel's content.
+3. **Retention and Watch Time:** The average retention for videos is 18.59%, and the average watch time is 43.196 minutes, suggesting a positive impact on viewer engagement.
+4. **Mood and Ambient Music Styles:** The report identifies mood and ambient music styles that have improved, such as "piano_deep_calm" with an average retention of 18.59% and watch time of 43.196 minutes.
+5. **Videos Analyzed:** The report analyzes 46 videos with 114 total views, indicating a thorough examination of the channel's content.
 
 ## Risks — short bullets (thin data, confounders, contradictions inside CONTEXT).
 
-- **Confounders:** The retention and watch time metrics may be influenced by factors such as the title, thumbnail, traffic source, and seasonality.
-- **Contradictions:** There is no direct contradiction in the data provided, but the metrics may be influenced by various factors.
+- **Confounders:** The report does not account for external factors that may affect retention and watch time, such as traffic sources or seasonality.
+- **Confounders:** The report does not account for external factors that may affect retention and watch time, such as traffic sources or seasonality.
+- **Confounders:** The report does not account for external factors that may affect retention and watch time, such as traffic sources or seasonality.
 
 ## Next tries — bullets: concrete experiments grounded in what CONTEXT shows; no invented KPIs.
 
-- **Compare retention and watch time vs brand weekly reports:** This could help in understanding how personal videos perform compared to brand videos.
-- **Extend the personal fetcher (CTR, impressions):** This could improve the accuracy of the retention and watch time metrics for personal videos.
+- **Compare retention and watch time vs brand weekly reports:** Compare retention and watch time for personal videos with brand weekly reports to identify any discrepancies.
+- **Double down on topics and lengths that cluster:** Focus on topics and lengths that have shown improvement in the personal channel audit and suggestions JSON.
