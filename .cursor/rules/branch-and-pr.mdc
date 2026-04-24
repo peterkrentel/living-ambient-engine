@@ -10,3 +10,5 @@ alwaysApply: true
 - **Exception (unchanged):** GitHub Actions may commit **`data/`** or bot-owned catalog files on `main` with `GITHUB_TOKEN`—that is not a waiver for files you edit in the editor.
 
 If you already committed on `main` locally by mistake: **`git branch feat/…`**, **`git reset --hard origin/main`** on `main`, **`git checkout feat/…`** and continue—then push `feat/…` only.
+
+**Commit + PR narrative:** For rich **why / what / what not / how to verify** on commits and PR descriptions, follow `.cursor/rules/commit-and-pr-explanations.mdc`.

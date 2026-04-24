@@ -1,0 +1,48 @@
+---
+description: Rich commit messages and PR descriptions—why, what, what not, how to verify
+alwaysApply: true
+---
+
+# Commit and PR explanations (always)
+
+Goal: every **non-trivial** change ships with a story a future reader (or you) can follow **without** diff archaeology. Think **clear labels on a box**, not a mystery novel.
+
+## When this applies
+
+- **Use the full structure** below when the change touches **multiple files**, **behavior**, **docs/specs**, **workflows**, or **anything a reviewer could misunderstand**.
+- **Skip the long body** only for truly tiny edits (e.g. one typo, one-line rename): a **short subject line** + optional **one sentence** is enough.
+
+## Commit messages (Git)
+
+1. **Subject line (required):** conventional and scannable, e.g. `feat(advisory): …`, `fix(ci): …`, `docs: …` — under ~72 characters when practical.
+
+2. **Body (required for non-trivial work):** blank line after subject, then **plain-language sections**. Use a **horizontal rule** (`---` or `--------------------------------------`) between major sections if it helps scanability.
+
+   Suggested sections (include all that apply):
+
+   - **Why we changed this** — What problem or goal? Who cares? Avoid jargon unless the audience is only maintainers who expect it.
+   - **What we changed** — Bullets grouped by **area** (e.g. “Script”, “Tests”, “Docs”). Name **files by role** (“the dual-advisory runner”) not only paths when it reads better.
+   - **What we did not change** — Explicit **non-goals** and **blast radius** (“Gemini path untouched”, “no workflow YAML”). Stops wrong assumptions.
+   - **How to verify** — Prefer **GitHub Actions** and **what to open on github.com** for CI-integrated behavior (see `.cursor/rules/ci-only-verification.mdc`). Name the **workflow** and **log group / artifact / committed file** that proves success. Only mention local `pytest` / scripts when the maintainer asked for local debug or the change is **tests-only** with no Actions gate.
+
+3. **Voice:** Complete sentences, friendly precision—like a good internal blog post or handoff note, not telegraphic changelog fragments.
+
+## Pull request descriptions (GitHub)
+
+Mirror the commit story (or **paste and lightly expand** the commit body):
+
+- **Summary** — Same as “why” + one-line “what”.
+- **What changed** — Bullets; link to key files if useful.
+- **Out of scope** — Same as “what we did not change”.
+- **How to test / verify** — Actions-first per `ci-only-verification.mdc`; reviewer checklist optional.
+
+## Coordination with other rules
+
+- **Branch workflow:** `.cursor/rules/branch-and-pr.mdc` (new branch, PR to `main`, no direct push of hand-edited work).
+- **Verification copy for maintainers:** `.cursor/rules/ci-only-verification.mdc` (default to Actions + Studio in browser, not “run this on your laptop” unless asked).
+
+## Anti-patterns
+
+- Subject-only commits for multi-file behavioral changes.
+- PR body that only says “fixes stuff” or repeats the subject line with no **why** / **verify**.
+- Listing fifty file paths with no grouping or story.
