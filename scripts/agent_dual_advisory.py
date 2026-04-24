@@ -2,9 +2,10 @@
 """Dual advisory v0: Gemini (API) + GGUF on the workflow runner (default Qwen2.5-1.5B Instruct q4).
 
 Both run **in parallel** (threads) after deterministic ``run-next``. **Gemini** sees the full
-file bundle; **runner GGUF** uses a **lean** bundle (``run-next`` **without** the human cross-lane
-section + compact JSON + short reports + **coverage_summary** from correlate + two analytics slices)
-so small ``n_ctx`` still fits and the small model does not blend brand vs personal numbers.
+file bundle; **runner GGUF** uses a **lean** bundle: **deterministic facts** JSON, a **trimmed
+run-next** (snapshot digest + actionable tail, cross-lane stripped in the tail), compact JSON,
+short weekly/blocked caps, **coverage_summary** + compact analytics slices — so small ``n_ctx``
+fits and the small model does not blend brand vs personal numbers.
 Advisory only — not ``run_intent`` / ``batch_generate``.
 
 Outputs (per lane ``brand`` | ``personal``):
@@ -43,6 +44,7 @@ import argparse
 import json
 import os
 import random
+import re
 import shutil
 import threading
 import time
@@ -422,6 +424,76 @@ def _runner_facts_block(ana_path: Path, sug_path: Path) -> str:
     )
 
 
+def _runner_run_next_for_qwen(run_next: Path, lane: str) -> str:
+    """Smaller run-next CONTEXT: snapshot extract + tail from Actionable onward (cross-lane stripped).
+
+    Avoids feeding Qwen near-duplicate full run-next plus long weekly tables.
+    """
+    if not run_next.exists():
+        rel = run_next.relative_to(_REPO) if run_next.is_relative_to(_REPO) else run_next
+        return f"### run-next (trimmed)\n\n(missing: {rel})\n"
+    raw = run_next.read_text(encoding="utf-8", errors="replace")
+    body = _strip_run_next_cross_lane_section(raw, lane)
+    snap_h = "## Brand snapshot (this run)" if lane == "brand" else "## Personal snapshot (this run)"
+    ev_h = "## Evidence (paths)"
+    i0 = body.find(snap_h)
+    i1 = body.find(ev_h)
+    if i0 != -1 and i1 != -1 and i1 > i0:
+        digest = body[i0:i1].strip()
+        cap_d = 900
+        if len(digest) > cap_d:
+            digest = digest[:cap_d] + "\n…\n"
+    else:
+        digest = "(snapshot section not found)"
+
+    act_h = "## Actionable"
+    start_tail = body.find(act_h)
+    if start_tail != -1:
+        tail = body[start_tail:].strip()
+        # Tail can still include the human cross-lane block (e.g. personal pointers on brand run-next).
+        cross = _RUN_NEXT_CROSS_READ_HEADER.get("personal" if lane == "brand" else "brand", "")
+        if cross and cross in tail:
+            i0 = tail.find(cross)
+            i1 = tail.find(_RUN_NEXT_PRODUCTION_HOOKS, i0 + len(cross)) if i0 != -1 else -1
+            if i0 != -1 and i1 != -1:
+                tail = (tail[:i0].rstrip() + "\n\n" + tail[i1:].lstrip()).strip()
+        cap_t = 2400
+        if len(tail) > cap_t:
+            tail = tail[:cap_t] + "\n… truncated run-next tail\n"
+    else:
+        tail = "(no ## Actionable section found)"
+
+    return (
+        "### run-next digest (snapshot only)\n\n"
+        "Use this block for headline snapshot metrics; do not re-derive them.\n\n"
+        f"{digest}\n\n"
+        "### run-next tail (actionable → end)\n\n"
+        f"{tail}\n"
+    )
+
+
+def _sanitize_runner_prose(text: str) -> str:
+    """Remove tautology lines small models emit (e.g. same % compared to itself via 'slightly higher than')."""
+    out: list[str] = []
+    for line in text.splitlines():
+        low = line.lower()
+        if "slightly higher" in low or "slightly lower" in low:
+            decimals = re.findall(r"\d+\.\d+", line)
+            if len(decimals) >= 2 and len(set(decimals)) == 1:
+                continue
+            nums = re.findall(r"\d+\.\d+|\d+", line)
+            vals: list[float] = []
+            for n in nums:
+                try:
+                    vals.append(float(n))
+                except ValueError:
+                    continue
+            if len(vals) >= 2 and len({round(v, 5) for v in vals}) == 1:
+                continue
+        out.append(line)
+    return "\n".join(out)
+
+
 def build_runner_bundle(lane: str, week: str) -> str:
     """Lean context for small GGUF: run-next (single-lane) + compact JSON + short prose (fits ``n_ctx``)."""
     if lane == "personal":
@@ -448,14 +520,14 @@ def build_runner_bundle(lane: str, week: str) -> str:
         )
 
     facts = _runner_facts_block(ana_path, sug_path)
-    run_next_body = _strip_run_next_cross_lane_section(_read(run_next, 4000), lane)
+    run_next_trimmed = _runner_run_next_for_qwen(run_next, lane)
 
     parts = [
         "### runner scope\n\n" + scope_note,
         facts,
-        "### run-next (priority)\n\n" + run_next_body,
-        "### weekly report\n\n" + _read(weekly, 2400),
-        "### run-intent blocked\n\n" + _read(blocked, 1000),
+        run_next_trimmed,
+        "### weekly report\n\n" + _read(weekly, 1800),
+        "### run-intent blocked\n\n" + _read(blocked, 900),
         "### suggestions (compact)\n\n" + _compact_suggestions(sug_path),
         "### analytics (compact top videos + retention slice)\n\n" + _compact_analytics(ana_path),
     ]
@@ -794,17 +866,20 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
         "Do not reference files you did not read here; do not answer with pointers only (e.g. “see run-next”) — "
         "synthesize takeaways in your own words.\n"
         "Required shape (GitHub-flavored markdown, stay concise—complete sections beat padding, no outer ``` fences):\n"
-        "## What I reviewed — 2–3 bullets naming concrete CONTEXT blocks "
-        "(include deterministic facts + run-next + weekly + suggestions compact + analytics compact).\n"
-        "## Summary — 2–4 sentences: the main story the metrics tell (thin data is OK to name explicitly).\n"
-        "## Insights — numbered 1–5. Each: one short paragraph. "
-        "Use **at least three distinct numeric facts** from CONTEXT (prefer the deterministic JSON for totals). "
-        "Every number must appear verbatim in CONTEXT (no rounding invented, no new totals). "
-        "Prefer mood / art_period / music_style / packaging angles when CONTEXT supports them. "
+        "## What I reviewed — **exactly 3** short bullets: name deterministic facts, run-next digest/tail, "
+        "and one of (weekly / suggestions compact / analytics compact). No long pasted lists.\n"
+        "## Summary — **2–3** sentences only: main story from metrics (thin data is OK to name).\n"
+        "## Insights — numbered **1–5**. Each item: **at most 2 sentences**. "
+        "Each item must name at least one **concrete** label from CONTEXT: a **mood**, **music_style**, **art_period**, "
+        "or a **video title** from analytics compact / run-next tail — not generic praise like 'well-received'.\n"
+        "Use **at least three distinct numeric facts** across the five items (prefer deterministic JSON for channel totals). "
+        "Every number must appear verbatim in CONTEXT (no invented totals).\n"
+        "**Forbidden:** saying a metric is 'higher', 'lower', or 'slightly higher/lower than' **the same numeric value** "
+        "(e.g. '24.67% is slightly higher than 24.67%'). **Forbidden:** comparing a count to itself.\n"
         "If an item is not directly supported, start that paragraph with **Speculative:**.\n"
-        "Do **not** repeat the same bullet twice; do not reuse the same sentence in multiple insights.\n"
-        "## Risks — short bullets (thin data, confounders, contradictions inside CONTEXT).\n"
-        "## Next tries — bullets: concrete experiments grounded in what CONTEXT shows; no invented KPIs.\n"
+        "Do **not** repeat the same bullet twice; do **not** reuse the same sentence in multiple insights.\n"
+        "## Risks — **2–4** short bullets (thin data, confounders); **do not** duplicate the same risk sentence.\n"
+        "## Next tries — **2–5** bullets: concrete experiments tied to moods/styles named in CONTEXT.\n"
         "Do not paste large tables; at most one tiny 3-row markdown table if essential. "
         "If a metric is missing from CONTEXT, say **Not in CONTEXT** instead of guessing."
     )
@@ -862,6 +937,9 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
     except Exception as e:  # noqa: BLE001 — advisory path; always write markdown
         text = f"## Inference error\n\n`{type(e).__name__}`: {e}\n"
         _runner_log(f"inference error: {type(e).__name__}: {e}")
+
+    if not text.startswith("## Inference error"):
+        text = _sanitize_runner_prose(text)
 
     out.write_text(_header_runner(lane, week) + text + "\n", encoding="utf-8")
     _runner_log(f"wrote {out.relative_to(_REPO) if out.is_relative_to(_REPO) else out}")
