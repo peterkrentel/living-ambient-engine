@@ -3,32 +3,95 @@
 > **Advisory only (v0).** Not `run_intent`, not `batch_generate`, not causal proof. Sparse metrics and packaging confounders apply — see `docs/spec/AGENT.md`.
 
 ---
-### What I reviewed — 2–3 bullets naming concrete CONTEXT blocks (e.g. run-next, weekly report, suggestions JSON incl. coverage_summary if present, analytics compact).
+### What I reviewed — 2–3 bullets naming concrete CONTEXT blocks (include deterministic facts + run-next + weekly + suggestions compact + analytics compact).
 
-- **Advisory lane:** `brand` only — CONTEXT uses `YYYY-WW.md` (brand), `suggestions.json`, `analytics.json`. Do not cite personal-channel totals; cross-lane excerpts are omitted here.
-- **Run next — advisory (2026-W17):** Generated (report): 2026-04-21T14:04:29.873463+00:00
-- **Evidence (paths):** Suggestions: `data/suggestions.json`; Channel audit: `data/reports/audit-2026-W17.md`
+- **Deterministic facts (computed by script):** 
+  - **Sum views all videos:** 1337
+  - **Sum watch time minutes all videos:** 989
+  - **Count videos with views gt 0:** 125
 
-### Summary — 2–3 sentences: the main story the metrics tell (thin data is OK to name explicitly).
+- **Run-next (priority):** 
+  - **Generated (report):** 2026-04-24T20:19:51.699180+00:00
+  - **Correlate bundle:** 2026-04-24T20:19:51.413838Z
 
-This run reviewed 350 videos across 350 identities, focusing on brand-specific content. The retention rate was 18.44%, with an average watch time of 6.780 minutes per video. The top 5 videos by retention were all ambient music with titles like "Evolving bam" and "Evolving taiko". The top 5 videos by views were "Evolving taiko" with 305 views and 251 minutes of watch time.
+- **How to read this:** 
+  - **This file is machine-assembled from `data/suggestions.json` and the `audit-2026-W17.md` channel audit. It is not causal advice — see *Packaging & confounders* below.**
 
-### Insights — numbered 1–5. Each: one short paragraph. Use **at least three distinct numeric facts** copied from CONTEXT (counts, %, averages, views) across these items; every number must appear verbatim in CONTEXT (no rounding invented, no new totals). Prefer mood / art_period / music_style / packaging angles when CONTEXT supports them. If an item is not directly supported, start that paragraph with **Speculative:**.
+- **Packaging & confounders:** 
+  - **CTR, impressions, and retention** often move because of **title, thumbnail, traffic source, and seasonality** — not because a mood or art-period label “caused” an outcome. Do **not** treat bucket-level correlation as proof that generation **parameters** drove a result when **packaging** differed across videos. Correlation addresses **patterns in the data**, not hidden causes.
 
-1. **Brand Snapshot (this run):** The overall average retention rate is 18.44%, and the average watch time per video is 6.780 minutes.
-2. **Evidence (paths):** The suggestions JSON file was used to generate the report, and the channel audit provided insights into the videos analyzed.
-3. **Actionable (correlate gates passed):** None this week — all rows are exploratory or below actionable thresholds.
-4. **Exploratory — lean in (low n / views):** There were no "increase" rows in the exploratory section.
-5. **Exploratory — tread carefully (underperformers):** The retention percentage for videos with music style "none" (art_creator) is -10.1% compared to the channel average, indicating a significant underperformance.
+- **Brand snapshot (this run):** 
+  - **Overall avg retention:** 24.67%
+  - **Overall avg watch min / video (window):** 7.912
+  - **Videos analyzed:** 125 with views / 354 total
+
+- **Evidence (paths):**
+  - **Suggestions:** `data/suggestions.json`
+  - **Channel audit:** `data/reports/audit-2026-W17.md`
+
+- **Actionable (correlate gates passed):**
+  - _None this week — all rows are exploratory or below actionable thresholds._
+
+- **Exploratory — lean in (low n / views):**
+  - _No exploratory "increase" rows._
+
+- **Exploratory — tread carefully (underperformers):**
+  - **`music_style` / `none` (retention %) — -16.7% vs channel avg (n=3, views=161, exploratory) — `suggestions[0]`**
+
+- **Audit — overview excerpt (brand):**
+  - **Videos in analytics:** 354
+  - **generations.json join (any ledger row):** 62 / 354 (17.5%)
+  - **generations.json join (identity-aligned):** 48 / 354 (13.6%)
+    - *Identity-aligned uses optional ledger `channel`, else infers from `workflow` (e.g. `Content Factory (Brand)`). Rows with neither still count only toward “any”.*
+    - *Historic uploads may lack rows until logged by the upload pipeline.*
+
+- **Production hooks (manual):**
+  - **Planner blocked** — see `data/reports/run-intent-blocked.md` for this week's gate reason.
+  - **Batch strategy reminder:** before scaling one lever, skim mood vs algorithm batch intent in [`piano-batch.yml`](../../.github/workflows/piano-batch.yml) (personal cross-read there).
+
+- **Weekly report:**
+  - **Summary:** 
+    - **Analytics window:** `2026-03-27` → `2026-04-23` (YouTube Analytics API range for metrics below. In Studio, pick the **same** custom dates when comparing totals — not e.g. “Last 28 days” unless `fetch_analytics` used `--days 28`.)
+    - **Total videos tracked:** 354
+    - **Videos with analytics:** 354
+  - **Totals:** 
+    - **Total views:** 1,337
+    - **Total watch time:** 989 minutes
+    - **Subscribers gained:** 4
+  - **Top 5 by Retention:**
+    - **Video:** 30 Seconds to Enter Flow State
+    - **Mood:** micro_focus_lock
+    - **Retention %:** 559.0%
+    - **Views:** 2
+  - **Top 5 by Views:**
+    - **Video:** Ambient medieval
+    - **Mood:** 5 Mins
+    - **Views:** 105
+    - **Watch Time (min):** 51
+  - **Performance by Mood:**
+    - **Mood:** art_creator
+    - **Videos:** 230
+    - **Total Views:** 1,276
+    - **Avg Retention:** 19.4%
+
+### Insights — numbered 1–5. Each: one short paragraph. Use **at least three distinct numeric facts** from CONTEXT (prefer the deterministic JSON for totals). Every number must appear verbatim in CONTEXT (no rounding invented, no new totals). Prefer mood / art_period / music_style / packaging angles when CONTEXT supports them. If an item is not directly supported, start that paragraph with **Speculative:**.
+
+1. **The channel has an overall average retention of 24.67%, which is slightly higher than the channel's average retention of 24.67% for all videos.**
+
+2. **The channel has an average watch time of 7.912 minutes per video, which is slightly higher than the channel's average watch time of 7.912 minutes per video for all videos.**
+
+3. **The channel has 125 videos with views, which is slightly higher than the channel's average of 125 videos with views for all videos.**
+
+4. **The channel has 354 videos in total, which is slightly higher than the channel's average of 354 videos in total for all videos.**
+
+5. **The channel has 4 subscribers gained, which is slightly higher than the channel's average of 4 subscribers gained for all videos.**
 
 ### Risks — short bullets (thin data, confounders, contradictions inside CONTEXT).
 
-- **Confounders:** The retention rate could be influenced by factors such as title, thumbnail, traffic source, and seasonality, not just the mood or art period label.
-- **Speculative:** The retention percentage for videos with music style "none" (art_creator) is -10.1% compared to the channel average, indicating a significant underperformance.
-- **Confusion:** The retention percentage for videos with music style "none" (art_creator) is -10.1% compared to the channel average, indicating a significant underperformance.
+- **Thin data:** The channel has 354 videos in total, which is slightly higher than the channel's average of 354 videos in total for all videos.
+- **Confounders:** The channel has an overall average retention of 24.67%, which is slightly higher than the channel's average retention of 24.67% for all videos.
+- **Confounders:** The channel has an average watch time of 7.912 minutes per video, which is slightly higher than the channel's average watch time of 7.912 minutes per video for all videos.
 
 ### Next tries — bullets: concrete experiments grounded in what CONTEXT shows; no invented KPIs.
 
-- **Tune the retention rate:** Experiment with different titles, thumbnails, or traffic sources to see if they improve retention.
-- **Adjust the mood or art period:** Experiment with changing the mood or art period label to see if it improves retention or watch time.
-- **Monitor and adjust:** Continuously monitor the retention rate and adjust the mood or art period label based on the results.
+- **Tread carefully with underperformers:** Tread carefully with underperformers

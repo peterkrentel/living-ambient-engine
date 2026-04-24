@@ -1,7 +1,7 @@
 # Run next — advisory (2026-W17)
 
-Generated (report): 2026-04-21T14:04:29.873463+00:00
-**Correlate bundle `generated_at`:** 2026-04-21T14:04:29.563545Z
+Generated (report): 2026-04-24T20:19:51.699180+00:00
+**Correlate bundle `generated_at`:** 2026-04-24T20:19:51.413838Z
 
 ## How to read this
 
@@ -13,9 +13,9 @@ This file is **machine-assembled** from `data/suggestions.json` and the **brand*
 
 ## Brand snapshot (this run)
 
-- **Overall avg retention:** 18.44%
-- **Overall avg watch min / video (window):** 6.780
-- **Videos analyzed:** 118 with views / 350 total
+- **Overall avg retention:** 24.67%
+- **Overall avg watch min / video (window):** 7.912
+- **Videos analyzed:** 125 with views / 354 total
 
 ## Evidence (paths)
 
@@ -32,20 +32,20 @@ _No exploratory "increase" rows._
 
 ## Exploratory — tread carefully (underperformers)
 
-↓ `music_style` / `none` (retention %) — -10.1% vs channel avg (n=3, views=156, exploratory) — `suggestions[0]`
+↓ `music_style` / `none` (retention %) — -16.7% vs channel avg (n=3, views=161, exploratory) — `suggestions[0]`
 
 ## Audit — overview excerpt (brand)
 
-- **Videos in analytics:** 350
-- **generations.json join (any ledger row):** 58 / 350 (16.6%)
-- **generations.json join (identity-aligned):** 44 / 350 (12.6%)
+- **Videos in analytics:** 354
+- **generations.json join (any ledger row):** 62 / 354 (17.5%)
+- **generations.json join (identity-aligned):** 48 / 354 (13.6%)
   - *Identity-aligned uses optional ledger `channel`, else infers from `workflow` (e.g. `Content Factory (Brand)`). Rows with neither still count only toward “any”.*
   - *Historic uploads may lack rows until logged by the upload pipeline.*
 
 ## Personal lane (context only)
 
-- `data/analytics_personal.json` — **108** videos in snapshot; `fetched_at`: 2026-04-20T21:26:35.401678+00:00
-- **Latest personal markdown report:** `data/reports/audit-2026-W16-personal.md`
+- `data/analytics_personal.json` — **114** videos in snapshot; `fetched_at`: 2026-04-24T15:49:03.122278+00:00
+- **Latest personal markdown report:** `data/reports/run-next-2026-W17-personal.md`
 - **Not merged** into brand `suggestions.json` / correlate — use for cross-read only ([`docs/PERSONAL_ANALYTICS.md`](../../docs/PERSONAL_ANALYTICS.md)).
 
 ## Production hooks (manual)

@@ -3,48 +3,44 @@
 > **Advisory only (v0).** Not `run_intent`, not `batch_generate`, not causal proof. Sparse metrics and packaging confounders apply — see `docs/spec/AGENT.md`.
 
 ---
-I have reviewed the provided bundle of analytics reports and suggestions for 2026-W17. My analysis will focus on identifying patterns in video performance, highlighting potential areas for improvement, and suggesting experiments based on the available data.
+I have reviewed the provided bundle of analytics reports, suggestions, and raw analytics data for the 2026-W17 period. My analysis will focus on identifying patterns in video performance, highlighting key insights, and suggesting potential experiments based on the available metrics.
 
 ## What I reviewed
 
-*   `/home/runner/work/living-ambient-engine/living-ambient-engine/data/reports/2026-W17.md`: The primary analytics report for the week, detailing total views, watch time, subscribers, and top-performing videos by retention and views, as well as performance by mood.
-*   `/home/runner/work/living-ambient-engine/living-ambient-engine/data/reports/run-next-2026-W17.md`: The advisory report, including brand snapshot, exploratory suggestions, and a note on the planner being blocked.
-*   `/home/runner/work/living-ambient-engine/living-ambient-engine/data/reports/run-intent-blocked.md`: Confirmation that the planner was blocked due to a lack of actionable mood increases.
-*   `/home/runner/work/living-ambient-engine/living-ambient-engine/data/suggestions.json`: Detailed coverage data for moods, art periods, music styles, and their combinations.
-*   `/home/runner/work/living-ambient-engine/living-ambient-engine/data/analytics.json`: Raw analytics data for individual videos, including titles, descriptions, and metrics.
+*   `/home/runner/work/living-ambient-engine/living-ambient-engine/data/reports/2026-W17.md` (Analytics Report)
+*   `/home/runner/work/living-ambient-engine/living-ambient-engine/data/reports/run-next-2026-W17.md` (Run next — advisory)
+*   `/home/runner/work/living-ambient-engine/living-ambient-engine/data/reports/run-intent-blocked.md` (Run intent — BLOCKED)
+*   `/home/runner/work/living-ambient-engine/living-ambient-engine/data/suggestions.json` (Suggestions data)
+*   `/home/runner/work/living-ambient-engine/living-ambient-engine/data/analytics.json` (Raw analytics data)
 
 ## Summary
 
-The channel had a total of 1,260 views and 800 minutes of watch time, gaining 3 subscribers over the `2026-03-24` to `2026-04-20` period. The overall average retention is 18.44%. A significant portion of the channel's content (230 out of 350 videos) is categorized under the "art_creator" mood, which also accounts for the vast majority of views (1,235 out of 1,260). The planner for this week was blocked, indicating no mood suggestions met the criteria for actionable increases (n≥5, group_views≥200). There's an exploratory note about `music_style` / `none` having -10.1% retention vs channel average, but this is based on a small sample (n=3, views=156).
+The channel had a total of 1,337 views and 989 minutes of watch time, gaining 4 subscribers over the analytics window (March 27 - April 23, 2026). The `art_creator` mood category dominates in terms of video count (230) and total views (1,276), with an average retention of 19.4%. Several "micro" mood videos show exceptionally high retention percentages, albeit with very low view counts. The "Run intent" for this week was blocked due to a lack of qualifying mood suggestions passing the planner gate, indicating insufficient data or performance to warrant scaling specific mood categories.
 
 ## Risks / caveats
 
-*   **Thin Data:** Many moods and combinations have very low or zero views, making it difficult to draw statistically significant conclusions. For example, 28 out of 31 listed moods have 7 or fewer views, with many having 0 views.
-*   **Confounders:** The `run-next` report explicitly warns that CTR, impressions, and retention are often influenced by packaging (title, thumbnail, traffic source, seasonality) and not solely by generation parameters. This means observed correlations should not be treated as direct causation.
-*   **Limited "Actionable" Insights:** The planner was blocked, meaning no mood suggestions met the thresholds for immediate action. This limits the scope of data-driven recommendations for scaling specific content types.
-*   **"art_creator" Mood Dominance:** The "art_creator" mood heavily skews the overall metrics due to its large number of videos and views. This makes it challenging to assess the true performance of other, smaller mood categories without more granular data.
-*   **5-Minute Video Focus:** All top-performing videos by retention and views are 5 minutes long. While this indicates a potential sweet spot for engagement, it also means there's limited data on other durations.
+The `run-next-2026-W17.md` explicitly warns against treating bucket-level correlation as proof that generation parameters drove a result when packaging (title, thumbnail, traffic source, seasonality) differed. This is a crucial confounder, especially when observing high retention on videos with only 1 or 2 views. The low view counts for many "micro" mood videos make it difficult to draw statistically significant conclusions about their performance. The planner being blocked indicates that there isn't enough robust data to confidently recommend scaling any specific mood category at this time.
 
 ## Insights
 
-1.  **"art_creator" Mood is a Core Performer:** The "art_creator" mood dominates the channel's performance, accounting for 230 videos and 1,235 views, which is nearly all total views. Its average retention is 17.6%, close to the overall channel average of 18.44%. This suggests it's a foundational content type for the channel.
-2.  **High Retention for 5-Minute "Ambient" Videos:** The top 5 videos by retention all achieve an impressive 99.7% retention. These videos consistently follow a "Ambient [art period] | 5 Mins | Evolving [music style]" title pattern. This indicates that when users click on these specific 5-minute ambient pieces, they tend to watch them almost entirely.
-3.  **"Ancient" Art Period and "Taiko" Music Style Show Strong Viewership:** The "Ambient ancient | 5 Mins | Evolving taik" video is the top performer by views (305 views, 251 watch minutes). Another "Ambient ancient" video with "kuku" music style is also in the top 5 by views. The "taiko" music style also appears in the top 5 by views for "Ambient contemporary." This suggests a potential preference for the "ancient" art period and "taiko" music style among viewers.
-4.  **Speculative: "Evolving" and "Never Repeats" Messaging Resonates:** While not directly quantifiable, the descriptions of videos like "Unwind After a Long Day" and "Can't Sleep?" emphasize "Evolving" and "never repeats." Given the high retention of the top videos, it's **speculative** that this unique selling proposition of non-looping, evolving soundscapes might be a key factor in user engagement and satisfaction, leading to full watch-throughs for shorter content.
-5.  **Underperforming Moods and Music Styles:** Many moods like "trance," "sleep," "chill," and "study" have very few views despite having 10-14 videos each. The `music_style` / `none` is flagged as an exploratory underperformer with -10.1% retention compared to the channel average. This indicates that these categories either aren't attracting an audience or aren't retaining them effectively, though the data is too sparse for definitive conclusions.
+1.  **Micro-content shows extreme retention, but low reach:** Videos like "30 Seconds to Enter Flow State" (`micro_focus_lock`) and "10 Seconds to Drop Inward" (`micro_drop_inward`) exhibit remarkably high retention rates (559.0% and 91.8% respectively). However, these videos only have 1 or 2 views. This suggests that while they are highly engaging for the few who find them, their discoverability or initial appeal is very low.
+2.  **"Art Creator" mood is the primary driver of views:** The `art_creator` mood category accounts for the vast majority of views (1,276 out of 1,337 total views) and videos (230 out of 354 total videos). This indicates that content categorized under `art_creator` is currently the channel's main source of audience engagement, despite its average retention being 19.4%, which is below the overall average of 24.67%.
+3.  **"Ancient" art period and "Taiko" music style are top performers by views:** The video "Ambient ancient | 5 Mins | Evolving taik | art_creator" is the top-performing video by views (290 views, 241 min watch time). Another "Ambient ancient | 5 Mins | Evolving kuku | art_creator" also appears in the top 5 by views. This suggests that the "ancient" art period, particularly when combined with music styles like "taiko" or "kuku," resonates well with the current audience.
+4.  **Speculative: Short-form, highly specific content might have niche appeal:** The high retention on "micro" videos, despite low views, could indicate a strong, albeit small, demand for very short, targeted ambient experiences. This might be a signal for exploring short-form content strategies or specific calls-to-action for these types of videos.
+5.  **Data sparsity limits actionable insights for many moods:** Many mood categories, such as `ocean_waves`, `deep_focus`, `rain_sleep`, and numerous other "micro" moods, have 0 views or very few videos with views. This makes it impossible to draw conclusions about their performance or potential, as the planner correctly identified by blocking any actionable mood increases.
 
 ## Experiments or packaging ideas
 
-*   **Expand on Top-Performing Art Periods/Music Styles:**
-    *   Create more 5-minute "Ambient ancient" videos, experimenting with various "evolving" music styles, particularly those that have shown some traction like "taiko" and "kuku."
-    *   Explore other art periods that appear in top view counts, such as "contemporary" and "baroque," combined with successful music styles.
-*   **Replicate High-Retention Packaging:**
-    *   Analyze the titles, thumbnails (if available in a separate report), and descriptions of the top 5 retention videos (e.g., "Ambient medieval | 5 Mins | Evolving bam"). Apply similar clear, concise naming conventions and emphasize the "5 Mins" and "Evolving" aspects.
-*   **Test "Evolving" Messaging in Titles:**
-    *   For new videos, explicitly include "Evolving" or "Never Repeats" in the title or prominent thumbnail text to see if this unique selling proposition drives higher CTR and retention.
-*   **Targeted Promotion for Underperforming Moods:**
-    *   For moods like "sleep," "chill," and "study" that have low views but a decent number of videos, consider running small-scale experiments with different titles, thumbnails, or descriptions to see if discoverability or initial engagement can be improved.
-*   **Investigate "music_style / none" Performance:**
-    *   Given the exploratory flag for `music_style` / `none` underperforming in retention, review the specific videos in this category. Are they truly "none" or is there an implicit style? Consider adding a more descriptive music style or re-evaluating if "none" is a compelling offering.
-*   **Longer Form Content for High-Retention Themes:**
-    *   **Speculative:** If 5-minute videos are achieving near 100% retention, consider creating longer versions (e.g., 15-30 minutes) of the most successful "Ambient [art period] | Evolving [music style]" themes to capture more watch time from engaged viewers.
+*   **Experiment with packaging for "micro" content:**
+    *   Create dedicated playlists for "micro" mood videos (e.g., "Instant Focus Boosts," "Quick Calm Breaks").
+    *   **Speculative:** Test different titles and thumbnails for "micro" videos to improve CTR and discoverability, perhaps emphasizing their short duration and immediate benefit (e.g., "10-Second Flow State," "Quick Stress Relief").
+    *   Consider promoting these "micro" videos as YouTube Shorts, if applicable, to leverage short-form content trends.
+*   **Double down on successful `art_creator` combinations:**
+    *   Produce more videos in the "ancient" art period, especially those incorporating "taiko" or "kuku" music styles, given their strong view performance.
+    *   Analyze the specific visual and auditory characteristics of the top-performing `art_creator` videos to inform future generations.
+*   **Investigate low-performing `music_style` / `none`:**
+    *   The `music_style` / `none` category showed a -16.7% retention vs. channel average (n=3, views=161). Review these specific videos to understand if the "none" music style is genuinely underperforming or if other factors (e.g., packaging, specific art period combinations) are at play.
+*   **Gather more data for underrepresented moods:**
+    *   Systematically generate and publish a small batch of videos for moods with 0 or very few views (e.g., `deep_focus`, `sleep`, `chill`, `study`) to get initial performance data. This could be done with `--force-moods` as suggested in the `run-intent-blocked.md` report.
+*   **Review and refine mood definitions:**
+    *   As suggested in the "Next Steps" of the analytics report, review `moods.yaml` based on learnings. This might involve consolidating similar "micro" moods or clarifying their intended use to improve data clarity and generation strategy.
