@@ -28,6 +28,8 @@ seconds between completed Gemini HTTP calls in this process (reduces 429s when r
 
 **Runner output:** ``MAX_RUNNER_TOKENS`` (default ``1536``) — GGUF ``max_tokens``; raise if logs show ``finish_reason=length`` and markdown is cut off.
 
+**Runner bundle (env, optional):** ``RUNNER_BUNDLE_MAX_CHARS`` (default ``5200``) — hard cap on lean CONTEXT chars. ``AGENT_LLAMA_N_CTX`` (default ``4096``, clamp 2048–8192) — llama.cpp context. ``AGENT_RUNNER_TEMPERATURE`` (default ``0.15``) — GGUF sampling; lower = less repetitive prose.
+
 **Gemini output:** ``GEMINI_MAX_OUTPUT_TOKENS`` (default ``4096``). For **2.5** models, ``thinkingConfig.thinkingBudget`` defaults to **0** so hidden reasoning does not eat the whole budget (see [Gemini thinking](https://ai.google.dev/gemini-api/docs/thinking)); set ``GEMINI_THINKING_BUDGET=omit`` to omit that block for older model ids.
 
 **CI log prefixes:** ``[runner-advisory]`` (GGUF), ``[gemini-advisory]`` (REST usage / ``finishReason`` / prose size).
@@ -57,10 +59,11 @@ DATA = _REPO / "data"
 _DEFAULT_GEMINI = "gemini-2.5-flash"
 MAX_CONTEXT_GEMINI = 24_000
 # Runner GGUF: small n_ctx; char→token ratio ~3–4 for EN/JSON — keep prompt+context safely under n_ctx.
-RUNNER_BUNDLE_MAX_CHARS = 5200
+_DEFAULT_RUNNER_BUNDLE_MAX_CHARS = 5200
 # Default output cap (was 512; logs showed finish_reason=length mid-markdown). Override: ``MAX_RUNNER_TOKENS`` env.
 _DEFAULT_MAX_RUNNER_TOKENS = 1536
-_LLAMA_N_CTX = 4096
+_DEFAULT_LLAMA_N_CTX = 4096
+_DEFAULT_RUNNER_TEMPERATURE = 0.15
 
 # ``run_next_report.py`` appends a cross-lane section for humans; strip it from runner CONTEXT only
 # (``build_bundle`` for Gemini still includes the full run-next file).
@@ -85,6 +88,43 @@ def max_runner_tokens() -> int:
 # Backward-compatible name for docs/tests (effective cap is ``max_runner_tokens()``).
 MAX_RUNNER_TOKENS = _DEFAULT_MAX_RUNNER_TOKENS
 DEFAULT_GGUF = Path.home() / ".cache" / "living-agent" / "qwen2.5-1.5b-instruct-q4_k_m.gguf"
+
+
+def runner_bundle_max_chars() -> int:
+    """Lean CONTEXT cap (chars). Override: ``RUNNER_BUNDLE_MAX_CHARS``."""
+    raw = (os.environ.get("RUNNER_BUNDLE_MAX_CHARS") or "").strip()
+    if raw:
+        try:
+            return max(3000, min(14_000, int(raw)))
+        except ValueError:
+            pass
+    return _DEFAULT_RUNNER_BUNDLE_MAX_CHARS
+
+
+def llama_n_ctx() -> int:
+    """llama.cpp ``n_ctx``. Override: ``AGENT_LLAMA_N_CTX`` (2048–8192)."""
+    raw = (os.environ.get("AGENT_LLAMA_N_CTX") or "").strip()
+    if raw:
+        try:
+            return max(2048, min(8192, int(raw)))
+        except ValueError:
+            pass
+    return _DEFAULT_LLAMA_N_CTX
+
+
+def runner_temperature() -> float:
+    """GGUF sampling temperature. Override: ``AGENT_RUNNER_TEMPERATURE``."""
+    raw = (os.environ.get("AGENT_RUNNER_TEMPERATURE") or "").strip()
+    if raw:
+        try:
+            return max(0.0, min(0.9, float(raw)))
+        except ValueError:
+            pass
+    return _DEFAULT_RUNNER_TEMPERATURE
+
+
+# Backward-compatible alias (prefer ``runner_bundle_max_chars()``).
+RUNNER_BUNDLE_MAX_CHARS = _DEFAULT_RUNNER_BUNDLE_MAX_CHARS
 
 
 def _runner_log(msg: str) -> None:
@@ -310,6 +350,78 @@ def _compact_analytics(path: Path, max_chars: int = 2400) -> str:
     return text
 
 
+def _runner_facts_block(ana_path: Path, sug_path: Path) -> str:
+    """Small deterministic JSON so the small GGUF can cite channel totals without inventing them."""
+    ana_rel = ana_path.relative_to(_REPO) if ana_path.is_relative_to(_REPO) else ana_path
+    sug_rel = sug_path.relative_to(_REPO) if sug_path.is_relative_to(_REPO) else sug_path
+    ana_facts: dict[str, object] = {"analytics_path": str(ana_rel)}
+    if ana_path.exists():
+        try:
+            data = json.loads(ana_path.read_text(encoding="utf-8", errors="replace"))
+            videos = data.get("videos") or []
+            tot_views = 0
+            tot_watch_min = 0
+            with_views = 0
+            for v in videos:
+                if not isinstance(v, dict):
+                    continue
+                m = v.get("metrics") or {}
+                try:
+                    vi = int(m.get("views") or 0)
+                except (TypeError, ValueError):
+                    vi = 0
+                try:
+                    wm = int(m.get("watch_time_minutes") or 0)
+                except (TypeError, ValueError):
+                    wm = 0
+                tot_views += vi
+                tot_watch_min += wm
+                if vi > 0:
+                    with_views += 1
+            ana_facts.update(
+                {
+                    "date_range": data.get("date_range"),
+                    "fetched_at": data.get("fetched_at"),
+                    "n_videos_in_snapshot": len(videos),
+                    "sum_views_all_videos": tot_views,
+                    "sum_watch_time_minutes_all_videos": tot_watch_min,
+                    "count_videos_with_views_gt_0": with_views,
+                }
+            )
+        except (json.JSONDecodeError, OSError, TypeError) as e:
+            ana_facts["parse_error"] = str(e)
+    else:
+        ana_facts["missing"] = True
+
+    sug_facts: dict[str, object] = {"suggestions_path": str(sug_rel)}
+    if sug_path.exists():
+        try:
+            s = json.loads(sug_path.read_text(encoding="utf-8", errors="replace"))
+            sug_facts.update(
+                {
+                    "videos_analyzed": s.get("videos_analyzed"),
+                    "videos_with_views": s.get("videos_with_views"),
+                    "overall_avg_retention": s.get("overall_avg_retention"),
+                    "overall_avg_watch_minutes_per_video": s.get("overall_avg_watch_minutes_per_video"),
+                }
+            )
+        except (json.JSONDecodeError, OSError, TypeError) as e:
+            sug_facts["parse_error"] = str(e)
+    else:
+        sug_facts["missing"] = True
+
+    payload = {"analytics_totals": ana_facts, "suggestions_headline": sug_facts}
+    body = json.dumps(payload, indent=2, ensure_ascii=False)
+    if len(body) > 2200:
+        body = body[:2180] + "\n… truncated\n"
+    return (
+        "### deterministic facts (computed by script)\n\n"
+        "For **channel-wide** views and watch minutes, copy **only** the numbers inside "
+        "`analytics_totals` below. If weekly prose or run-next disagrees, **trust this JSON**.\n\n"
+        f"```json\n{body}\n```\n"
+    )
+
+
 def build_runner_bundle(lane: str, week: str) -> str:
     """Lean context for small GGUF: run-next (single-lane) + compact JSON + short prose (fits ``n_ctx``)."""
     if lane == "personal":
@@ -335,19 +447,22 @@ def build_runner_bundle(lane: str, week: str) -> str:
             "Do not cite personal-channel totals; cross-lane excerpts are omitted here."
         )
 
-    run_next_body = _strip_run_next_cross_lane_section(_read(run_next, 4500), lane)
+    facts = _runner_facts_block(ana_path, sug_path)
+    run_next_body = _strip_run_next_cross_lane_section(_read(run_next, 4000), lane)
 
     parts = [
         "### runner scope\n\n" + scope_note,
+        facts,
         "### run-next (priority)\n\n" + run_next_body,
-        "### weekly report\n\n" + _read(weekly, 2800),
-        "### run-intent blocked\n\n" + _read(blocked, 1200),
+        "### weekly report\n\n" + _read(weekly, 2400),
+        "### run-intent blocked\n\n" + _read(blocked, 1000),
         "### suggestions (compact)\n\n" + _compact_suggestions(sug_path),
         "### analytics (compact top videos + retention slice)\n\n" + _compact_analytics(ana_path),
     ]
     text = "\n\n".join(parts)
-    if len(text) > RUNNER_BUNDLE_MAX_CHARS:
-        return text[: RUNNER_BUNDLE_MAX_CHARS - 40] + "\n… hard-capped for runner ctx\n"
+    cap = runner_bundle_max_chars()
+    if len(text) > cap:
+        return text[: cap - 40] + "\n… hard-capped for runner ctx\n"
     return text
 
 
@@ -667,22 +782,27 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
         print(f"Runner GGUF download failed: {e}; wrote {out}")
         return out
 
-    ctx_used = bundle[:RUNNER_BUNDLE_MAX_CHARS]
+    ctx_used = bundle[: runner_bundle_max_chars()]
     system = (
         "You are a compact advisor for a YouTube ambient music channel. "
         "You ONLY see the user CONTEXT (markdown + JSON excerpts from this repo’s analytics run). "
         "You did NOT call YouTube or the internet.\n"
-        "Treat CONTEXT as the sole evidence. Do not reference files you did not read here; "
-        "do not answer with pointers only (e.g. “see run-next”) — synthesize takeaways in your own words.\n"
+        "The section **deterministic facts (computed by script)** has JSON built by Python: "
+        "for **sum_views_all_videos**, **sum_watch_time_minutes_all_videos**, and **count_videos_with_views_gt_0**, "
+        "you MUST copy those integers exactly when you mention channel totals. Never invent different totals.\n"
+        "Treat the rest of CONTEXT as evidence too, but if prose disagrees with that JSON, **follow the JSON**.\n"
+        "Do not reference files you did not read here; do not answer with pointers only (e.g. “see run-next”) — "
+        "synthesize takeaways in your own words.\n"
         "Required shape (GitHub-flavored markdown, stay concise—complete sections beat padding, no outer ``` fences):\n"
         "## What I reviewed — 2–3 bullets naming concrete CONTEXT blocks "
-        "(e.g. run-next, weekly report, suggestions JSON incl. coverage_summary if present, analytics compact).\n"
+        "(include deterministic facts + run-next + weekly + suggestions compact + analytics compact).\n"
         "## Summary — 2–4 sentences: the main story the metrics tell (thin data is OK to name explicitly).\n"
         "## Insights — numbered 1–5. Each: one short paragraph. "
-        "Use **at least three distinct numeric facts** copied from CONTEXT (counts, %, averages, views) across these items; "
-        "every number must appear verbatim in CONTEXT (no rounding invented, no new totals). "
+        "Use **at least three distinct numeric facts** from CONTEXT (prefer the deterministic JSON for totals). "
+        "Every number must appear verbatim in CONTEXT (no rounding invented, no new totals). "
         "Prefer mood / art_period / music_style / packaging angles when CONTEXT supports them. "
         "If an item is not directly supported, start that paragraph with **Speculative:**.\n"
+        "Do **not** repeat the same bullet twice; do not reuse the same sentence in multiple insights.\n"
         "## Risks — short bullets (thin data, confounders, contradictions inside CONTEXT).\n"
         "## Next tries — bullets: concrete experiments grounded in what CONTEXT shows; no invented KPIs.\n"
         "Do not paste large tables; at most one tiny 3-row markdown table if essential. "
@@ -698,16 +818,18 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
         f"est_input_tokens≈{est_prompt_tokens} (rough; model tokenizer may differ)"
     )
     cap = max_runner_tokens()
+    n_ctx_eff = llama_n_ctx()
+    temp = runner_temperature()
     _runner_log(
-        f"llama: n_ctx={_LLAMA_N_CTX} max_output_tokens={cap} "
-        f"n_threads={n_threads} n_gpu_layers=0"
+        f"llama: n_ctx={n_ctx_eff} max_output_tokens={cap} "
+        f"n_threads={n_threads} n_gpu_layers=0 temperature={temp}"
     )
 
     try:
         t0 = time.perf_counter()
         llm = Llama(
             model_path=str(gguf),
-            n_ctx=_LLAMA_N_CTX,
+            n_ctx=n_ctx_eff,
             n_threads=n_threads,
             n_gpu_layers=0,
             verbose=False,
@@ -717,7 +839,7 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
         result = llm(
             prompt,
             max_tokens=cap,
-            temperature=0.25,
+            temperature=temp,
             # Qwen2.5: stop at turn end and next role header (not Llama ``[/INST]`` / ``</s>``).
             stop=[_QWEN_IM_END, _QWEN_IM_START],
         )

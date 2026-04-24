@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 from pathlib import Path
 
 import pytest
@@ -103,14 +104,61 @@ def test_runner_bundle_includes_scope_and_strips_cross_lane_when_present():
     assert "### runner scope" in b
     assert "Advisory lane:" in b
     assert "personal" in b
+    assert "### deterministic facts (computed by script)" in b
+    assert "sum_views_all_videos" in b
     if "## Brand lane (cross-read only)" in rn.read_text(encoding="utf-8", errors="replace"):
         assert "## Brand lane (cross-read only)" not in b
 
 
 def test_runner_bundle_stays_within_ctx_budget():
-    """Lean runner bundle must stay under RUNNER_BUNDLE_MAX_CHARS (missing files = small)."""
+    """Lean runner bundle must stay under runner_bundle_max_chars() (missing files = small)."""
     b = adv.build_runner_bundle("personal", "2099-W99")
-    assert len(b) <= adv.RUNNER_BUNDLE_MAX_CHARS + 400
+    assert len(b) <= adv.runner_bundle_max_chars() + 400
+
+
+def test_runner_bundle_max_chars_env(monkeypatch):
+    monkeypatch.setenv("RUNNER_BUNDLE_MAX_CHARS", "6000")
+    assert adv.runner_bundle_max_chars() == 6000
+
+
+def test_llama_n_ctx_env(monkeypatch):
+    monkeypatch.setenv("AGENT_LLAMA_N_CTX", "6144")
+    assert adv.llama_n_ctx() == 6144
+
+
+def test_runner_temperature_env(monkeypatch):
+    monkeypatch.setenv("AGENT_RUNNER_TEMPERATURE", "0.2")
+    assert adv.runner_temperature() == 0.2
+
+
+def test_runner_facts_block_sums(tmp_path: Path):
+    ana = tmp_path / "analytics_personal.json"
+    ana.write_text(
+        json.dumps(
+            {
+                "date_range": {"start": "2026-03-27", "end": "2026-04-23"},
+                "videos": [
+                    {"title": "A", "metrics": {"views": 10, "watch_time_minutes": 5}},
+                    {"title": "B", "metrics": {"views": 0, "watch_time_minutes": 0}},
+                    {"title": "C", "metrics": {"views": 3, "watch_time_minutes": 12}},
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    sug = tmp_path / "suggestions_personal.json"
+    sug.write_text(
+        json.dumps({"videos_analyzed": 99, "videos_with_views": 2, "overall_avg_retention": 12.5}),
+        encoding="utf-8",
+    )
+    text = adv._runner_facts_block(ana, sug)
+    assert "deterministic facts" in text
+    assert "sum_views_all_videos" in text
+    data = json.loads(text.split("```json\n", 1)[1].split("\n```", 1)[0])
+    assert data["analytics_totals"]["sum_views_all_videos"] == 13
+    assert data["analytics_totals"]["sum_watch_time_minutes_all_videos"] == 17
+    assert data["analytics_totals"]["count_videos_with_views_gt_0"] == 2
+    assert data["suggestions_headline"]["videos_analyzed"] == 99
 
 
 def test_compact_suggestions_includes_coverage_summary_when_present():

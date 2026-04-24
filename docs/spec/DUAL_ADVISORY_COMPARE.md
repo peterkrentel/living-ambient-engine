@@ -31,10 +31,10 @@ Outputs:
 
 ### Runner (`*-runner.md`)
 
-- **Input:** **Lean** bundle — scope banner, `run-next` **without** cross-lane section, short weekly + blocked reads, **compact** suggestions (incl. `coverage_summary`) and analytics (top by views + retention slice), hard char cap for small `n_ctx`.
-- **Model:** Default **Qwen2.5-1.5B** GGUF on CPU (`temperature` > 0 → not byte-reproducible).
-- **Strength:** **Cheap**, always runs if `llama-cpp-python` + weights present; good **quick checksum** on headline stats and “nothing actionable.”
-- **Failure modes:** **Template drift** (`###` vs `##`), **repetition**, **generic** “next tries,” occasional **hallucinated** or sloppy rows — do not treat as authoritative.
+- **Input:** **Lean** bundle — scope banner, then a **deterministic facts** JSON block (Python-summed `sum_views_all_videos`, `sum_watch_time_minutes_all_videos`, `count_videos_with_views_gt_0` from `analytics*.json` plus headline fields from `suggestions*.json`), then `run-next` **without** cross-lane section, short weekly + blocked reads, **compact** suggestions (incl. `coverage_summary`) and analytics (top by views + retention slice), hard char cap for small `n_ctx`.
+- **Model:** Default **Qwen2.5-1.5B** GGUF on CPU (`temperature` > 0 → not byte-reproducible; default **0.15** in [`agent_dual_advisory.py`](../../scripts/agent_dual_advisory.py)).
+- **Strength:** **Cheap**, always runs if `llama-cpp-python` + weights present; good **quick checksum** on headline stats and “nothing actionable.” The facts block is the **authoritative** source inside the lean bundle for **channel-wide** view and watch-minute **sums** (per-video rows still come from the compact analytics slice).
+- **Failure modes:** **Template drift** (`###` vs `##`), **repetition**, **generic** “next tries,” occasional **hallucinated** or sloppy rows — do not treat as authoritative. If prose disagrees with the deterministic JSON, **trust the JSON**.
 
 ---
 
@@ -54,7 +54,7 @@ Use the same **dimensions** for brand and personal so weeks are comparable.
 
 | Dimension | What to check | If they disagree |
 |-----------|----------------|------------------|
-| **Headline totals** | Views, watch time, subs, window dates, `videos_analyzed` / with views | Prefer **weekly report** + **suggestions** JSON |
+| **Headline totals** | Views, watch time, subs, window dates, `videos_analyzed` / with views | Prefer **`deterministic facts`** JSON in runner CONTEXT, then **suggestions** / **weekly**; Gemini has no separate facts block — use **analytics** + weekly there |
 | **Planner / blocked** | “Blocked”, `n≥5`, `group_views≥200`, or intent present | Prefer **`run-next`** + **blocked** markdown |
 | **Dominant mood / skew** | e.g. `art_creator` share of catalog | Prefer **JSON** + weekly table |
 | **Top titles / patterns** | 5‑min “Ambient … Evolving …” etc. | Prefer **analytics** + weekly “top” lists |
