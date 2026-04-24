@@ -106,6 +106,8 @@ def test_runner_bundle_includes_scope_and_strips_cross_lane_when_present():
     assert "personal" in b
     assert "### deterministic facts (computed by script)" in b
     assert "sum_views_all_videos" in b
+    assert "### run-next digest (snapshot only)" in b
+    assert "### run-next tail (actionable → end)" in b
     if "## Brand lane (cross-read only)" in rn.read_text(encoding="utf-8", errors="replace"):
         assert "## Brand lane (cross-read only)" not in b
 
@@ -129,6 +131,29 @@ def test_llama_n_ctx_env(monkeypatch):
 def test_runner_temperature_env(monkeypatch):
     monkeypatch.setenv("AGENT_RUNNER_TEMPERATURE", "0.2")
     assert adv.runner_temperature() == 0.2
+
+
+def test_sanitize_runner_prose_drops_tautology():
+    raw = (
+        "1. **Retention:** The channel has 24.67%, which is slightly higher than the channel's average of 24.67%.\n"
+        "2. **OK:** Real line with 12 and 34 views.\n"
+    )
+    out = adv._sanitize_runner_prose(raw)
+    assert "slightly higher" not in out.lower()
+    assert "12" in out and "34" in out
+
+
+def test_runner_run_next_for_qwen_extracts_snapshot(tmp_path: Path):
+    p = tmp_path / "run-next.md"
+    p.write_text(
+        """# Run next\n\n## Brand snapshot (this run)\n\n- **Overall:** 10%\n\n## Evidence (paths)\n\nx\n\n## Actionable\n\n_None._\n\n## Personal lane (context only)\n\n- cross\n\n## Production hooks (manual)\n\n- hook\n""",
+        encoding="utf-8",
+    )
+    text = adv._runner_run_next_for_qwen(p, "brand")
+    assert "Brand snapshot" in text
+    assert "10%" in text
+    assert "Personal lane" not in text
+    assert "hook" in text
 
 
 def test_runner_facts_block_sums(tmp_path: Path):

@@ -204,12 +204,29 @@ Videos published **before** `generations.json` exists have **no** joined params 
 
 **Plumbing status:** Brand + personal **CI wiring** for dual advisory is **landed** on `main`; remaining Phase 6 effort here is **refinement and trust** (bundle composition, prompt adherence, validators, optional model swap)—not adding the workflow step itself.
 
-**Iteration order (cheap → expensive):**
+**Iteration order (cheap → expensive):** treat **runner (Qwen GGUF)** and **Gemini (API)** as **separate** backlogs — do not bundle their fixes in one PR unless unavoidable.
 
-1. **Runner quality** — tighten **what goes in the lean bundle** (compacts: top actionable rows, deltas, *n*, views) and **prompt contracts** (no generic platitudes, required sections, **Speculative:** labels, lower temperature if needed). This is the main lever before trusting any LLM prose. **Partially shipped:** deterministic facts JSON + default runner temperature **0.15** + optional env **`RUNNER_BUNDLE_MAX_CHARS`**, **`AGENT_LLAMA_N_CTX`**, **`AGENT_RUNNER_TEMPERATURE`** (see script docstring + [`spec/workflows.md`](spec/workflows.md)). **Next:** week-over-week human compare on `*-runner.md`; optional **validators** on that JSON vs re-sum in CI; optional **3B** GGUF via `AGENT_GGUF_URL` / path + cache key bump.
-2. **Compare** — same week + lane: read **`*-gemini.md`** vs **`*-runner.md`** using the human playbook [`spec/DUAL_ADVISORY_COMPARE.md`](spec/DUAL_ADVISORY_COMPARE.md) (read order, rubric, stubs/503). **There is no in-repo tool** that merges, scores, or diffs the two automatically today—this step is **human** review (optional later: structural checks / validators aligned with step **3**). Keep Gemini only while it adds **grounded** nuance you care about; otherwise simplify (runner-only) to cut keys, egress, and vendor surface.
-3. **Grounding / trust** — align with step **2** above (*validators*): numeric parity and “numbers only if present in JSON” checks on advisory output **before** any automation consumes it.
-4. **Weights** — swap default GGUF via `AGENT_GGUF_URL` / `AGENT_GGUF_PATH` (documented in [`spec/workflows.md`](spec/workflows.md)); bump Actions **cache key** when the default filename changes.
+#### Runner (Qwen GGUF) — isolated backlog
+
+| Status | Item |
+|--------|------|
+| Shipped | Deterministic **facts** JSON (views / watch minutes / count-with-views); default **temperature 0.15**; env **`RUNNER_BUNDLE_MAX_CHARS`**, **`AGENT_LLAMA_N_CTX`**, **`AGENT_RUNNER_TEMPERATURE`**. |
+| Shipped (runner PR) | **Lean bundle v2:** deterministic **run-next digest** (snapshot + actionable tail, cross-lane stripped in tail); **stricter Insights prompt**; **post-sanitize** tautology lines (`X` “slightly higher than” `X`). |
+| Next | Week-over-week **human** read of `*-runner.md`; **CI validators** (re-sum JSON vs facts block; optional banned phrases); optional **3B** GGUF (`AGENT_GGUF_URL` + new `AGENT_GGUF_PATH` + **cache key** bump) **after** prompt/bundle stable. |
+
+#### Gemini (API) — isolated backlog (do not block Qwen work)
+
+| Status | Item |
+|--------|------|
+| Shipped | Full bundle path; **stub** on missing key; personal workflow **rate-limit** envs; **thinkingBudget** default **0** for 2.5 models. |
+| Next (later) | **Grounding in long answers:** tighten `write_gemini` system instructions so **Insights** bullets cannot invent per-`video_id` stats; optional **second pass** or “quote only from CONTEXT” validator on `*-gemini.md`. |
+| Next (later) | **429 / quota** playbook already in [`spec/workflows.md`](spec/workflows.md); optional alternate **`GEMINI_MODEL`** or project. |
+
+**Human compare (both lanes):** read **`*-gemini.md`** vs **`*-runner.md`** using [`spec/DUAL_ADVISORY_COMPARE.md`](spec/DUAL_ADVISORY_COMPARE.md) — **no** in-repo auto-merge today.
+
+**Grounding / trust (automation gate):** numeric parity and “numbers only if present in JSON” on **any** advisory markdown **before** a consumer trusts it — applies to **both** models when you add validators.
+
+**Weights (runner only):** swap default GGUF via `AGENT_GGUF_URL` / `AGENT_GGUF_PATH` (documented in [`spec/workflows.md`](spec/workflows.md)); bump Actions **cache key** when the default filename changes.
 
 ### Autonomy horizon (post-trust north star)
 
