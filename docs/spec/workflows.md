@@ -489,7 +489,9 @@ pull_request:       # Auto-trigger on workflow/core code changes
     - 'render/**'
     - 'youtube_upload.py'
     - 'youtube/**'
+    - 'scripts/**'
     - 'tests/contracts/**'
+    - 'tests/test_agent_dual_advisory.py'
     - 'docs/spec/**'
 ```
 
@@ -500,7 +502,7 @@ spec-validation → contract-tests → call-art-creator (7 parallel jobs)
 ```
 
 1. **spec-validation** - Validates specs exist and are consistent
-2. **contract-tests** - Runs `tests/contracts/test_validation_contract.py`
+2. **contract-tests** - Runs `tests/contracts/test_validation_contract.py`, `tests/contracts/test_workflow_metadata_consistency.py`, and `tests/test_agent_dual_advisory.py` (dual-advisory runner/Gemini helpers; no heavy media deps)
 3. **call-art-creator** - Calls art-creator.yml 7 times with matrix inputs
 
 ### Test Matrix Coverage
