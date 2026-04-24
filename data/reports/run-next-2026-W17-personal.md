@@ -1,7 +1,7 @@
 # Run next — personal advisory (2026-W17)
 
-Generated (report): 2026-04-24T15:49:03.687771+00:00
-**Correlate bundle `generated_at`:** 2026-04-24T15:49:03.436592Z
+Generated (report): 2026-04-24T20:17:36.375082+00:00
+**Correlate bundle `generated_at`:** 2026-04-24T20:17:36.152369Z
 
 ## How to read this
 
@@ -13,8 +13,8 @@ This file is **machine-assembled** from `data/suggestions_personal.json` and the
 
 ## Personal snapshot (this run)
 
-- **Overall avg retention:** 18.59%
-- **Overall avg watch min / video (window):** 43.196
+- **Overall avg retention:** 18.87%
+- **Overall avg watch min / video (window):** 52.261
 - **Videos analyzed:** 46 with views / 114 total
 
 ## Evidence (paths)
@@ -28,11 +28,15 @@ _None this week — all rows are exploratory or below actionable thresholds._
 
 ## Exploratory — lean in (low n / views)
 
-↑ `mood` / `piano_deep_calm` (watch min / video (window)) — +83.1 min vs channel avg (n=6, views=171, exploratory) — `suggestions[1]`
+↑ `mood` / `deep_focus` (watch min / video (window)) — +103.4 min vs channel avg (n=3, views=223, exploratory) — `suggestions[4]`
+↑ `mood` / `piano_deep_calm` (watch min / video (window)) — +124.9 min vs channel avg (n=6, views=182, exploratory) — `suggestions[3]`
 
 ## Exploratory — tread carefully (underperformers)
 
-↓ `mood` / `piano_deep_calm` (retention %) — -11.2% vs channel avg (n=6, views=171, exploratory) — `suggestions[0]`
+↓ `mood` / `deep_focus` (retention %) — -14.5% vs channel avg (n=3, views=223, exploratory) — `suggestions[1]`
+↓ `mood` / `piano_deep_calm` (retention %) — -9.7% vs channel avg (n=6, views=182, exploratory) — `suggestions[0]`
+↓ `mood` / `ceremony` (retention %) — -16.6% vs channel avg (n=3, views=104, exploratory) — `suggestions[2]`
+↓ `mood` / `ceremony` (watch min / video (window)) — -12.3 min vs channel avg (n=3, views=104, exploratory) — `suggestions[5]`
 
 ## Audit — overview excerpt (personal)
 

@@ -3,49 +3,46 @@
 > **Advisory only (v0).** Not `run_intent`, not `batch_generate`, not causal proof. Sparse metrics and packaging confounders apply — see `docs/spec/AGENT.md`.
 
 ---
-I have reviewed the provided bundle of personal channel analytics reports and related data for 2026-W17. This response will summarize the key performance metrics, identify potential risks, and offer insights and experimental ideas based solely on the context provided.
+I have reviewed the provided bundle of personal channel analytics reports, run intent, and suggestions for Week 17, 2026. This analysis will summarize the channel's performance, identify potential risks, and extract insights to inform future content strategy, focusing on moods and watch time.
 
 ## What I reviewed
 
-*   `/home/runner/work/living-ambient-engine/living-ambient-engine/data/reports/2026-W17-personal.md` (Personal channel Analytics Report)
+*   `/home/runner/work/living-ambient-engine/living-ambient-engine/data/reports/2026-W17-personal.md` (Personal channel analytics report)
 *   `/home/runner/work/living-ambient-engine/living-ambient-engine/data/reports/run-next-2026-W17-personal.md` (Run next — personal advisory)
 *   `/home/runner/work/living-ambient-engine/living-ambient-engine/data/reports/run-intent-blocked-personal.md` (Run intent — BLOCKED)
-*   `/home/runner/work/living-ambient-engine/living-ambient-engine/data/suggestions_personal.json` (Personal suggestions data)
-*   `/home/runner/work/living-ambient-engine/living-ambient-engine/data/analytics_personal.json` (Raw personal analytics data)
+*   `/home/runner/work/living-ambient-engine/living-ambient-engine/data/suggestions_personal.json` (Personal channel suggestions)
+*   `/home/runner/work/living-ambient-engine/living-ambient-engine/data/analytics_personal.json` (Raw personal channel analytics data)
 
 ## Summary
 
-The personal channel, over the analytics window of March 27 to April 23, 2026, generated 650 total views and 1,987 minutes of watch time, gaining 6 subscribers. The overall average retention was 18.59%, with an average watch time of 43.196 minutes per video for the 46 videos with views. The planner for this week was blocked due to no actionable mood increases meeting the criteria (n≥5, group_views≥200). "Piano_deep_calm" was identified as an exploratory mood with high watch time per video but lower retention.
+The personal YouTube channel tracked 114 videos over the period of March 27 to April 23, 2026, accumulating 684 total views and 2,404 minutes of watch time, gaining 6 subscribers. The overall average retention for videos with views is 18.87%, and the average watch time per video is approximately 52.26 minutes. While no mood categories met the "actionable" threshold for an increase this week (requiring at least 5 videos and 200 group views), "deep_focus" and "piano_deep_calm" moods showed exploratory positive trends in watch time per video, despite also showing exploratory negative trends in retention percentage compared to the channel average. "Ceremony" mood showed exploratory negative trends in both retention and watch time.
 
 ## Risks / caveats
 
-*   **Low N for Top Retention:** The top retention videos ("Find Your Strength", "sleep_30s_20260124_031441", "trance_30s_20260124_055344", "Sounds for an Overactive Mind") each have only 1 view, making their high retention percentages unreliable indicators for future performance without more data. The "warrior_10s_20260124_160306" video has 9 views, which is still a small sample size.
-*   **Planner Blocked:** The system's planner was blocked because no mood passed the actionable threshold (n≥5 videos, group views≥200). This means there's no machine-generated "lean in" recommendation for immediate scaling, requiring manual interpretation of exploratory data.
-*   **Confounders:** The `run-next` report explicitly states that CTR, impressions, and retention are influenced by packaging (title, thumbnail, traffic source, seasonality), not solely by mood or art-period labels. Correlation does not imply causation.
-*   **Limited Data:** The personal channel data lacks metrics like CTR and impressions, which are crucial for understanding audience engagement and discovery. The report suggests extending the personal fetcher to include these.
-*   **Brand vs. Personal:** The report highlights that brand metrics are separate and not merged into personal correlate, requiring deliberate comparison between the two lanes.
+*   **Limited Actionable Insights:** The planner was blocked this week because no mood increases met the defined actionable thresholds (n≥5 videos, group_views≥200). This means current suggestions are exploratory and should be treated with caution.
+*   **Confounders & Packaging:** The `run-next` report explicitly states that CTR, impressions, and retention are often influenced by title, thumbnail, traffic source, and seasonality, not solely by mood or art-period labels. Correlations observed at the bucket level do not prove that generation parameters caused the outcome if packaging differed.
+*   **Thin Data for Some Moods:** Many mood categories have very few videos with views (e.g., "sleep" has 1 video with views out of 9 total, "trance" has 3 out of 10), making it difficult to draw robust conclusions from their performance.
+*   **Brand vs. Personal Data:** The report advises comparing retention and watch time against brand weekly reports when cross-analyzing, but the brand data (`data/suggestions.json`) is not merged into the personal correlate, requiring deliberate comparison.
 
 ## Insights
 
-1.  **Deep Focus and Piano Deep Calm Drive Views and Watch Time:** The "deep_focus" mood accounts for the highest total views (232) and includes the top-performing video by views, "Enter Flow State" (124 views, 334 watch minutes). "Piano_deep_calm" also performs strongly in total views (225) and watch time, with "Calm Anxiety Fast" generating significant watch time (244 minutes for 38 views, and 145 minutes for 29 views). These moods appear to resonate well with the audience for longer viewing sessions.
-2.  **Short-form Content Shows High Retention, but Low Views:** Videos with very high retention percentages (e.g., "Find Your Strength" at 96.8%, "sleep_30s_20260124_031441" at 83.6%) are predominantly short-form (30 seconds or 10 seconds) and have only 1 to 9 views. This suggests that while these short clips hold attention effectively for those who click, they are not currently driving significant overall viewership.
-3.  **"Piano_deep_calm" is a Mixed Signal:** While "piano_deep_calm" shows promising watch time per video (+83.1 min vs channel avg) in the exploratory "lean in" section, it simultaneously appears in the "tread carefully" section for having lower retention (-11.2% vs channel avg). This indicates that while viewers might watch these videos for a long duration, they might not be watching a large *percentage* of the video, suggesting potential issues with overall video length or initial engagement.
-4.  **Speculative: Warrior Mood Potential for Engagement:** The "warrior" mood, despite having only 10 total views across 11 videos, shows a very high average retention of 76.9%. One specific "warrior" video, "warrior_10s_20260124_160306", has 9 views and 57.0% retention. This suggests that while discovery is low, the content itself is highly engaging for those who find it.
-5.  **Lack of Diversity in Top Performers:** The top 5 videos by views are dominated by "deep_focus" and "piano_deep_calm" moods. While these are strong performers, relying too heavily on a few moods might limit channel growth if audience preferences shift or if these niches become saturated. The `suggestions_personal.json` also shows many moods with 0 views, indicating a broad content library with uneven performance.
+1.  **Deep Focus and Piano Deep Calm Drive Watch Time:** The moods "deep_focus" and "piano_deep_calm" are exploratory indicators of high watch time, exceeding the channel average by approximately 103.4 minutes and 124.9 minutes per video, respectively. This suggests that content designed for intense concentration or profound calm resonates well with viewers seeking longer engagement, despite potentially lower retention percentages.
+2.  **Retention vs. Watch Time Discrepancy:** While "deep_focus" and "piano_deep_calm" show strong watch time, they also exhibit exploratory lower retention percentages (down 14.5% and 9.7% respectively) compared to the channel average. This could imply that while these videos capture initial interest, some viewers might not complete them, but those who do watch for significant durations. This might be typical for longer-form ambient content where viewers drop in and out.
+3.  **Short-Form Content Shows High Retention:** The top 5 videos by retention are all very short (30 seconds or 10 seconds), with "Find Your Strength" (warrior mood) achieving 96.8% retention and "sleep_30s" achieving 83.6%. While these videos have only 1 view each (except for one warrior video with 9 views), they demonstrate that very short, targeted content can hold attention effectively.
+4.  **Ceremony Mood Underperforms:** The "ceremony" mood shows exploratory underperformance in both retention (down 16.6% vs. channel avg) and watch time (down 12.3 minutes per video vs. channel avg). This suggests that content categorized under "ceremony" might not be as engaging or relevant to the current audience.
+5.  **Speculative: Long-Form Deep Focus and Piano Calm are Key:** The top-performing videos by views, "Enter Flow State" (deep_focus, 347 views, 125 min watch time) and "Calm Anxiety Fast" (piano_deep_calm, 44 views, 427 min watch time; and another instance with 30 views, 173 min watch time), are both long-form (1 hour) and align with the "deep_focus" and "piano_deep_calm" moods. This reinforces the idea that these moods, when presented in longer formats, are effective at generating significant watch time, even if individual video retention percentages might not be the highest.
 
 ## Experiments or packaging ideas
 
-*   **Deep Focus & Piano Deep Calm Long-Form Optimization:**
-    *   Create more 1-hour or longer videos explicitly titled for "deep focus" and "calm anxiety" using piano-based ambient sounds, similar to "Enter Flow State" and "Calm Anxiety Fast."
-    *   Experiment with different thumbnail designs for these proven moods to potentially improve CTR.
-*   **Investigate "Piano_deep_calm" Retention:**
-    *   Analyze the specific videos within the "piano_deep_calm" mood that have high watch time but low retention. Are they too long? Is the intro too slow?
-    *   Test shorter versions of "piano_deep_calm" videos (e.g., 30-minute or 45-minute versions) to see if retention improves while maintaining watch time.
-*   **Short-Form Content Strategy Review:**
-    *   For high-retention short videos (e.g., "Find Your Strength" - warrior, "sleep_30s"), consider repurposing them as YouTube Shorts or as promotional snippets for longer videos.
-    *   Experiment with different titles and descriptions for these short videos to improve discoverability, as their current view counts are very low despite high retention.
-*   **Warrior Mood Exploration:**
-    *   Given the high average retention for "warrior" mood, consider producing a longer-form "warrior" ambient track (e.g., 30 minutes to 1 hour) to see if the high engagement translates to longer watch times and more views.
-    *   **Speculative:** Explore titles that explicitly target "strength," "focus," or "motivation" for the "warrior" mood.
-*   **Cross-Promote High-Retention, Low-View Content:**
-    *   Add end screens or cards to popular "deep_focus" or "piano_deep_calm" videos that link to the high-retention, low-view videos (e.g., "warrior" or "sleep" shorts) to drive internal traffic.
+*   **Focus on Long-Form Deep Focus & Piano Deep Calm:**
+    *   Create more 1-2 hour videos in the "deep_focus" and "piano_deep_calm" moods, leveraging titles that clearly communicate their purpose (e.g., "Zero Distraction," "Deep Piano Release").
+    *   Experiment with different titles and thumbnails for these moods to see if CTR and initial engagement can be improved, potentially boosting overall retention.
+*   **Analyze Short-Form High Retention:**
+    *   Investigate the specific characteristics (sound design, visual elements) of the short videos with extremely high retention (e.g., "Find Your Strength," "sleep_30s").
+    *   Consider if elements from these highly retained short clips could be incorporated into longer videos or used as promotional material.
+*   **Re-evaluate Ceremony Content:**
+    *   For future "ceremony" content, consider adjusting the mood's characteristics or packaging to improve engagement, or deprioritize this mood if performance doesn't improve.
+*   **A/B Test Titles for Watch Time vs. Retention:**
+    *   Run experiments with titles that emphasize either "deep focus" (for watch time) or "quick relief" (for retention on shorter videos) to understand audience intent better.
+*   **Cross-Reference with Brand Data:**
+    *   Manually compare the performance of "deep_focus" and "piano_deep_calm" on the personal channel with their performance on the brand channel (using `data/reports/2026-W15.md` and `data/suggestions.json`) to identify any consistent trends or divergences.

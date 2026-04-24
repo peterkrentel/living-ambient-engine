@@ -1,6 +1,6 @@
 # Personal channel — Analytics Report (2026-W17)
 
-Generated: 2026-04-24T15:49:03.298057+00:00
+Generated: 2026-04-24T20:17:36.027250+00:00
 
 > **Channel scope:** Personal YouTube only. Data file: `data/analytics_personal.json`. Brand metrics live in `data/analytics.json` (main Analytics Agent workflow).
 
@@ -12,8 +12,8 @@ Generated: 2026-04-24T15:49:03.298057+00:00
 
 ## Totals
 
-- **Total views:** 650
-- **Total watch time:** 1,987 minutes
+- **Total views:** 684
+- **Total watch time:** 2,404 minutes
 - **Subscribers gained:** 6
 
 ## Top 5 by Retention
@@ -30,21 +30,21 @@ Generated: 2026-04-24T15:49:03.298057+00:00
 
 | Video | Mood | Views | Watch Time (min) |
 |-------|------|-------|------------------|
-| Enter Flow State | 1 Hour Zero Distracti | deep_focus | 124 | 334 |
-| Sounds for an Overactive Mind | 1 Hour E | deep_focus | 76 | 28 |
-| Ground Yourself Instantly | 1 Hour Deep  | ceremony | 54 | 20 |
-| Calm Anxiety Fast | 1 Hour Deep Piano Re | piano_deep_calm | 38 | 244 |
-| Calm Anxiety Fast | 1 Hour Deep Piano Re | piano_deep_calm | 29 | 145 |
+| Enter Flow State | 1 Hour Zero Distracti | deep_focus | 125 | 347 |
+| Sounds for an Overactive Mind | 1 Hour E | deep_focus | 78 | 28 |
+| Ground Yourself Instantly | 1 Hour Deep  | ceremony | 55 | 28 |
+| Calm Anxiety Fast | 1 Hour Deep Piano Re | piano_deep_calm | 44 | 427 |
+| Calm Anxiety Fast | 1 Hour Deep Piano Re | piano_deep_calm | 30 | 173 |
 
 ## Performance by Mood
 
 | Mood | Videos | Total Views | Avg Retention |
 |------|--------|-------------|---------------|
-| deep_focus | 10 | 232 | 15.2% |
-| piano_deep_calm | 14 | 225 | 10.6% |
-| ceremony | 11 | 116 | 1.8% |
+| piano_deep_calm | 14 | 238 | 11.7% |
+| deep_focus | 10 | 238 | 15.7% |
+| ceremony | 11 | 130 | 1.5% |
 | rain_sleep | 4 | 24 | 2.0% |
-| energize | 10 | 22 | 10.9% |
+| energize | 10 | 23 | 10.3% |
 | warrior | 11 | 10 | 76.9% |
 | unknown | 8 | 6 | 20.5% |
 | study | 6 | 5 | 20.2% |
