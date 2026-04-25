@@ -214,6 +214,19 @@ Videos published **before** `generations.json` exists have **no** joined params 
 | Shipped (runner PR) | **Lean bundle v2:** deterministic **run-next digest** (snapshot + actionable tail, cross-lane stripped in tail); **stricter Insights prompt**; **post-sanitize** tautology lines (`X` “slightly higher than” `X`). |
 | Next | Week-over-week **human** read of `*-runner.md`; **CI validators** (re-sum JSON vs facts block; optional banned phrases); optional **3B** GGUF (`AGENT_GGUF_URL` + new `AGENT_GGUF_PATH` + **cache key** bump) **after** prompt/bundle stable. |
 
+#### Runner tuning notes (human — append as you learn)
+
+**Logs:** In the analytics job, expand the dual-advisory step and read **`[runner-advisory]`**. Set **`AGENT_RUNNER_VERBOSE=1`** on that step for extra lines (per-part bundle sizes, digest/tail head, prompt section sizes, `runner_output_shape` = counts of `#` / `##` / `###` line starts, sanitize lines removed) — see [`spec/workflows.md`](spec/workflows.md).
+
+**Committed reports (spot-check, same week):** read `data/reports/agent-insight-YYYY-WW-{lane}-runner.md` next to `suggestions*.json`, `analytics*.json`, and `run-next-*.md`.
+
+| Week / lane | Looked good | Fix next (one increment at a time) |
+|---------------|-------------|-------------------------------------|
+| **2026-W17 · brand** | `##` sections; headline totals matched `suggestions.json` / weekly; concrete video titles in Insights. | Often skips **`## What I reviewed`**; spot-check per-video **views vs watch minutes** in the compact analytics slice; tighten generic **Next tries**. |
+| **2026-W17 · personal** | Headline totals matched `suggestions_personal.json` + weekly; example top row (**Enter Flow State** 125 views / 347 watch minutes) matched one row in `analytics_personal.json`. | Output used **`###`** section titles (echoes bundle) while brand used **`##`** same week; only **two** Insights vs prompt 1–5; **Risks** used empty “slightly higher than channel average” wording — **sanitize does not catch** that (it only drops identical numerals on “slightly higher/lower” lines). |
+
+**Suggested Qwen-only increment order:** (1) Align **CONTEXT bundle heading level** with the **report** heading level you want so 1.5B stops mirroring the wrong `###`/`##`. (2) **Prompt or sanitize** vague self-comparisons in Risks unless two **different explicit** numbers appear. (3) **Keep or drop** `## What I reviewed` in the runner system prompt — enforce in a validator or remove from the spec. (4) **Validators / optional 3B GGUF** only after (1)–(3) look stable (same “Next” table row above).
+
 #### Gemini (API) — isolated backlog (do not block Qwen work)
 
 | Status | Item |
