@@ -1,18 +1,18 @@
 # Personal channel — Analytics Report (2026-W17)
 
-Generated: 2026-04-24T23:56:30.320218+00:00
+Generated: 2026-04-25T00:42:41.568845+00:00
 
 > **Channel scope:** Personal YouTube only. Data file: `data/analytics_personal.json`. Brand metrics live in `data/analytics.json` (main Analytics Agent workflow).
 
 ## Summary
 
-- **Analytics window:** `2026-03-27` → `2026-04-23` (YouTube Analytics API range for metrics below. In Studio, pick the **same** custom dates when comparing totals — not e.g. “Last 28 days” unless `fetch_analytics` used `--days 28`.)
+- **Analytics window:** `2026-03-28` → `2026-04-24` (YouTube Analytics API range for metrics below. In Studio, pick the **same** custom dates when comparing totals — not e.g. “Last 28 days” unless `fetch_analytics` used `--days 28`.)
 - **Total videos tracked:** 114
 - **Videos with analytics:** 114
 
 ## Totals
 
-- **Total views:** 684
+- **Total views:** 680
 - **Total watch time:** 2,404 minutes
 - **Subscribers gained:** 6
 
@@ -24,7 +24,7 @@ Generated: 2026-04-24T23:56:30.320218+00:00
 | sleep_30s_20260124_031441 | sleep | 83.6% | 1 |
 | trance_30s_20260124_055344 | trance | 78.3% | 1 |
 | Sounds for an Overactive Mind | 30 Secon | deep_focus | 74.8% | 1 |
-| warrior_10s_20260124_160306 | warrior | 57.0% | 9 |
+| warrior_10s_20260124_160306 | warrior | 59.4% | 7 |
 
 ## Top 5 by Views
 
@@ -40,12 +40,12 @@ Generated: 2026-04-24T23:56:30.320218+00:00
 
 | Mood | Videos | Total Views | Avg Retention |
 |------|--------|-------------|---------------|
-| piano_deep_calm | 14 | 238 | 11.7% |
 | deep_focus | 10 | 238 | 15.7% |
+| piano_deep_calm | 14 | 236 | 11.8% |
 | ceremony | 11 | 130 | 1.5% |
 | rain_sleep | 4 | 24 | 2.0% |
 | energize | 10 | 23 | 10.3% |
-| warrior | 11 | 10 | 76.9% |
+| warrior | 11 | 8 | 78.1% |
 | unknown | 8 | 6 | 20.5% |
 | study | 6 | 5 | 20.2% |
 | trance | 10 | 4 | 32.1% |

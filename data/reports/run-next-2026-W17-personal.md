@@ -1,7 +1,7 @@
 # Run next — personal advisory (2026-W17)
 
-Generated (report): 2026-04-24T23:56:30.773024+00:00
-**Correlate bundle `generated_at`:** 2026-04-24T23:56:30.462237Z
+Generated (report): 2026-04-25T00:42:41.964235+00:00
+**Correlate bundle `generated_at`:** 2026-04-25T00:42:41.709791Z
 
 ## How to read this
 
@@ -13,7 +13,7 @@ This file is **machine-assembled** from `data/suggestions_personal.json` and the
 
 ## Personal snapshot (this run)
 
-- **Overall avg retention:** 18.87%
+- **Overall avg retention:** 18.94%
 - **Overall avg watch min / video (window):** 52.261
 - **Videos analyzed:** 46 with views / 114 total
 
@@ -33,9 +33,9 @@ _None this week — all rows are exploratory or below actionable thresholds._
 
 ## Exploratory — tread carefully (underperformers)
 
-↓ `mood` / `deep_focus` (retention %) — -14.5% vs channel avg (n=3, views=223, exploratory) — `suggestions[1]`
-↓ `mood` / `piano_deep_calm` (retention %) — -9.7% vs channel avg (n=6, views=182, exploratory) — `suggestions[0]`
-↓ `mood` / `ceremony` (retention %) — -16.6% vs channel avg (n=3, views=104, exploratory) — `suggestions[2]`
+↓ `mood` / `deep_focus` (retention %) — -14.6% vs channel avg (n=3, views=223, exploratory) — `suggestions[1]`
+↓ `mood` / `piano_deep_calm` (retention %) — -9.8% vs channel avg (n=6, views=182, exploratory) — `suggestions[0]`
+↓ `mood` / `ceremony` (retention %) — -16.7% vs channel avg (n=3, views=104, exploratory) — `suggestions[2]`
 ↓ `mood` / `ceremony` (watch min / video (window)) — -12.3 min vs channel avg (n=3, views=104, exploratory) — `suggestions[5]`
 
 ## Audit — overview excerpt (personal)
@@ -48,7 +48,7 @@ _None this week — all rows are exploratory or below actionable thresholds._
 
 ## Brand lane (cross-read only)
 
-- `data/analytics.json` — **354** videos in snapshot; `fetched_at`: 2026-04-24T20:19:51.210305+00:00
+- `data/analytics.json` — **354** videos in snapshot; `fetched_at`: 2026-04-24T23:57:07.879804+00:00
 - **Latest brand markdown report:** `data/reports/2026-W15.md`
 - **Not merged** into personal correlate — `data/suggestions.json` remains the **brand** bundle; compare lanes deliberately ([`docs/PERSONAL_ANALYTICS.md`](../../docs/PERSONAL_ANALYTICS.md)).
 
