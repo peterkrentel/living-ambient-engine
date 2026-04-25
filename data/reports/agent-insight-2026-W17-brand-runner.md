@@ -3,18 +3,18 @@
 > **Advisory only (v0).** Not `run_intent`, not `batch_generate`, not causal proof. Sparse metrics and packaging confounders apply — see `docs/spec/AGENT.md`.
 
 ---
-### Summary
-The channel has tracked 354 videos over the past week, with 1,337 total views and 989 minutes of watch time. The average retention is 24.67%, and the average watch time per video is 7.912 minutes. The videos with analytics have 125 views, and the overall average retention is 19.4%.
+## Summary
+The analytics for the brand shows a total of 354 videos analyzed, with 123 videos having views. The overall average retention is 24.5%, and the average watch time per video is 7.756 minutes. The brand has gained 4 subscribers over the past week.
 
-### Insights
-3. **Videos with Analytics:** 125 videos have analytics data, with 1,337 total views and 989 minutes of watch time.
-4. **Top Videos by Retention:** The top videos by retention are "30 Seconds to Enter Flow State" with a retention of 559.0% and 2 views, and "Ambient medieval" with a retention of 99.7% and 1 view.
-5. **Top Videos by Views:** The top videos by views are "Ambient ancient" with a retention of 99.7% and 290 views, and "Ambient contemporary" with a retention of 99.7% and 105 views.
+## Insights
+1. **Retention Analysis**: The brand has a high average retention of 24.5%, indicating that the majority of videos are retained by viewers. The top 5 videos by retention are "30 Seconds to Enter Flow State" with a 559.0% retention and 2 views, and "Ambient medieval" with an 99.7% retention and 1 view.
+2. **View Analysis**: The brand has a high average watch time of 7.756 minutes per video, with the top 5 videos by views being "Ambient ancient" with 289 views and 240 minutes, and "Ambient contemporary" with 105 views and 51 minutes.
+3. **Mood Analysis**: The brand has a high average retention of 19.0% for videos created by the "art_creator" mood, indicating that this mood is well-received. The "trance" mood has an average retention of 4.9%, and the "sleep" mood has an average retention of 18.6%.
 
-### Risks
-1. **Retention:** The channel's average retention is slightly higher than the overall average retention, which could indicate a slight improvement in user engagement.
-2. **Watch Time:** The channel's average watch time is slightly lower than the overall average watch time, which could suggest that users are spending less time watching videos.
+## Risks
+1. **Insufficient Mood Suggestions**: There were no qualifying mood suggestion rows at all, which may indicate that the brand is not generating enough mood suggestions to meet the planner gate requirements.
+2. **Insufficient Video Views**: The brand has gained only 4 subscribers, which may indicate that the brand is not reaching a sufficient number of viewers to generate meaningful mood suggestions.
 
-### Next Tries
-1. **Reduce Retention:** Investigate videos with high retention to see if there are any that could be reduced without losing too many views.
-2. **Increase Views:** Look for videos with low views to see if there are any that could be boosted to increase overall engagement.
+## Next Tries
+1. **Increase Mood Suggestions**: To increase the number of mood suggestions, the brand should focus on generating mood suggestions for the "art_creator" mood, which has a high average retention.
+2. **Increase Video Views**: To increase the number of views, the brand should focus on generating mood suggestions for the "trance" and "sleep" moods, which have lower average retention but still have a high average watch time per video.
