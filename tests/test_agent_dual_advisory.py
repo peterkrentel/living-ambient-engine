@@ -133,12 +133,27 @@ def test_runner_temperature_env(monkeypatch):
     assert adv.runner_temperature() == 0.2
 
 
+def test_runner_verbose_logs_env(monkeypatch):
+    assert adv.runner_verbose_logs() is False
+    monkeypatch.setenv("AGENT_RUNNER_VERBOSE", "1")
+    assert adv.runner_verbose_logs() is True
+    monkeypatch.setenv("AGENT_RUNNER_VERBOSE", "false")
+    assert adv.runner_verbose_logs() is False
+
+
+def test_sanitize_runner_prose_noop():
+    t, n = adv._sanitize_runner_prose("hello\nworld")
+    assert n == 0
+    assert t == "hello\nworld"
+
+
 def test_sanitize_runner_prose_drops_tautology():
     raw = (
         "1. **Retention:** The channel has 24.67%, which is slightly higher than the channel's average of 24.67%.\n"
         "2. **OK:** Real line with 12 and 34 views.\n"
     )
-    out = adv._sanitize_runner_prose(raw)
+    out, removed = adv._sanitize_runner_prose(raw)
+    assert removed == 1
     assert "slightly higher" not in out.lower()
     assert "12" in out and "34" in out
 

@@ -30,6 +30,7 @@ seconds between completed Gemini HTTP calls in this process (reduces 429s when r
 **Runner output:** ``MAX_RUNNER_TOKENS`` (default ``1536``) — GGUF ``max_tokens``; raise if logs show ``finish_reason=length`` and markdown is cut off.
 
 **Runner bundle (env, optional):** ``RUNNER_BUNDLE_MAX_CHARS`` (default ``5200``) — hard cap on lean CONTEXT chars. ``AGENT_LLAMA_N_CTX`` (default ``4096``, clamp 2048–8192) — llama.cpp context. ``AGENT_RUNNER_TEMPERATURE`` (default ``0.15``) — GGUF sampling; lower = less repetitive prose.
+**Runner debug logs (optional):** set ``AGENT_RUNNER_VERBOSE=1`` (or ``true`` / ``yes``) for extra ``[runner-advisory]`` lines: per-part bundle sizes, run-next digest/tail lengths, prompt/section sizes, completion preview, markdown heading counts, and how many lines sanitize dropped.
 
 **Gemini output:** ``GEMINI_MAX_OUTPUT_TOKENS`` (default ``4096``). For **2.5** models, ``thinkingConfig.thinkingBudget`` defaults to **0** so hidden reasoning does not eat the whole budget (see [Gemini thinking](https://ai.google.dev/gemini-api/docs/thinking)); set ``GEMINI_THINKING_BUDGET=omit`` to omit that block for older model ids.
 
@@ -123,6 +124,12 @@ def runner_temperature() -> float:
         except ValueError:
             pass
     return _DEFAULT_RUNNER_TEMPERATURE
+
+
+def runner_verbose_logs() -> bool:
+    """Extra ``[runner-advisory]`` detail for CI/local tuning. Override: ``AGENT_RUNNER_VERBOSE``."""
+    v = (os.environ.get("AGENT_RUNNER_VERBOSE") or "").strip().lower()
+    return v in ("1", "true", "yes", "on", "debug")
 
 
 # Backward-compatible alias (prefer ``runner_bundle_max_chars()``).
@@ -431,6 +438,7 @@ def _runner_run_next_for_qwen(run_next: Path, lane: str) -> str:
     """
     if not run_next.exists():
         rel = run_next.relative_to(_REPO) if run_next.is_relative_to(_REPO) else run_next
+        _runner_log(f"run_next_for_qwen: missing file lane={lane} path={rel}")
         return f"### run-next (trimmed)\n\n(missing: {rel})\n"
     raw = run_next.read_text(encoding="utf-8", errors="replace")
     body = _strip_run_next_cross_lane_section(raw, lane)
@@ -463,23 +471,36 @@ def _runner_run_next_for_qwen(run_next: Path, lane: str) -> str:
     else:
         tail = "(no ## Actionable section found)"
 
-    return (
+    block = (
         "### run-next digest (snapshot only)\n\n"
         "Use this block for headline snapshot metrics; do not re-derive them.\n\n"
         f"{digest}\n\n"
         "### run-next tail (actionable → end)\n\n"
         f"{tail}\n"
     )
+    _runner_log(
+        f"run_next_for_qwen: lane={lane} digest_chars={len(digest)} tail_chars={len(tail)} "
+        f"digest_ok={digest != '(snapshot section not found)'} actionable_ok={tail != '(no ## Actionable section found)'}"
+    )
+    if runner_verbose_logs():
+        _runner_log(f"run_next_for_qwen verbose: digest_preview={digest[:240]!r}")
+        _runner_log(f"run_next_for_qwen verbose: tail_head={tail[:320]!r}")
+    return block
 
 
-def _sanitize_runner_prose(text: str) -> str:
-    """Remove tautology lines small models emit (e.g. same % compared to itself via 'slightly higher than')."""
+def _sanitize_runner_prose(text: str) -> tuple[str, int]:
+    """Remove tautology lines small models emit (e.g. same % compared to itself via 'slightly higher than').
+
+    Returns ``(cleaned_text, lines_removed)``.
+    """
     out: list[str] = []
+    removed = 0
     for line in text.splitlines():
         low = line.lower()
         if "slightly higher" in low or "slightly lower" in low:
             decimals = re.findall(r"\d+\.\d+", line)
             if len(decimals) >= 2 and len(set(decimals)) == 1:
+                removed += 1
                 continue
             nums = re.findall(r"\d+\.\d+|\d+", line)
             vals: list[float] = []
@@ -489,9 +510,10 @@ def _sanitize_runner_prose(text: str) -> str:
                 except ValueError:
                     continue
             if len(vals) >= 2 and len({round(v, 5) for v in vals}) == 1:
+                removed += 1
                 continue
         out.append(line)
-    return "\n".join(out)
+    return "\n".join(out), removed
 
 
 def build_runner_bundle(lane: str, week: str) -> str:
@@ -521,20 +543,43 @@ def build_runner_bundle(lane: str, week: str) -> str:
 
     facts = _runner_facts_block(ana_path, sug_path)
     run_next_trimmed = _runner_run_next_for_qwen(run_next, lane)
+    weekly_body = _read(weekly, 1800)
+    blocked_body = _read(blocked, 900)
+    sug_compact = _compact_suggestions(sug_path)
+    ana_compact = _compact_analytics(ana_path)
 
+    labels = (
+        "runner_scope",
+        "deterministic_facts",
+        "run_next_digest_tail",
+        "weekly",
+        "blocked",
+        "suggestions_compact",
+        "analytics_compact",
+    )
     parts = [
         "### runner scope\n\n" + scope_note,
         facts,
         run_next_trimmed,
-        "### weekly report\n\n" + _read(weekly, 1800),
-        "### run-intent blocked\n\n" + _read(blocked, 900),
-        "### suggestions (compact)\n\n" + _compact_suggestions(sug_path),
-        "### analytics (compact top videos + retention slice)\n\n" + _compact_analytics(ana_path),
+        "### weekly report\n\n" + weekly_body,
+        "### run-intent blocked\n\n" + blocked_body,
+        "### suggestions (compact)\n\n" + sug_compact,
+        "### analytics (compact top videos + retention slice)\n\n" + ana_compact,
     ]
     text = "\n\n".join(parts)
     cap = runner_bundle_max_chars()
-    if len(text) > cap:
-        return text[: cap - 40] + "\n… hard-capped for runner ctx\n"
+    hard_capped = len(text) > cap
+    if hard_capped:
+        text = text[: cap - 40] + "\n… hard-capped for runner ctx\n"
+    sizes = ", ".join(f"{lb}={len(p)}" for lb, p in zip(labels, parts))
+    _runner_log(
+        f"build_runner_bundle: lane={lane} week={week} total_chars={len(text)} cap={cap} "
+        f"hard_capped={hard_capped} ({sizes})"
+    )
+    if runner_verbose_logs():
+        for lb, p in zip(labels, parts):
+            head = p.replace("\n", "\\n")[:200]
+            _runner_log(f"build_runner_bundle verbose part {lb}: chars={len(p)} head={head!r}")
     return text
 
 
@@ -825,6 +870,28 @@ def _qwen25_chat_prompt(*, system: str, user: str) -> str:
     )
 
 
+def _runner_log_output_shape(prose: str) -> None:
+    """Log markdown heading patterns in model output (tuning ``###`` vs ``##`` drift)."""
+    lines = prose.splitlines()
+    n_h2 = n_h3 = n_h1 = 0
+    for line in lines:
+        t = line.lstrip()
+        if t.startswith("# ") and not t.startswith("##"):
+            n_h1 += 1
+        elif t.startswith("## ") and not t.startswith("###"):
+            n_h2 += 1
+        elif t.startswith("### "):
+            n_h3 += 1
+    first = lines[0][:160] if lines else ""
+    _runner_log(
+        f"runner_output_shape: lines={len(lines)} h1={n_h1} h2={n_h2} h3={n_h3} "
+        f"first_line={first!r}"
+    )
+    if runner_verbose_logs() and prose:
+        prev = min(700, len(prose))
+        _runner_log(f"runner_output_shape verbose: prose_head={prose[:prev]!r}")
+
+
 def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
     out = REPORTS / f"agent-insight-{week}-{lane}-runner.md"
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -855,6 +922,10 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
         return out
 
     ctx_used = bundle[: runner_bundle_max_chars()]
+    _runner_log(
+        f"runner_prompt_budget: ctx_used_chars={len(ctx_used)} bundle_in_chars={len(bundle)} "
+        f"runner_bundle_max_chars={runner_bundle_max_chars()} verbose={runner_verbose_logs()}"
+    )
     system = (
         "You are a compact advisor for a YouTube ambient music channel. "
         "You ONLY see the user CONTEXT (markdown + JSON excerpts from this repo’s analytics run). "
@@ -886,12 +957,20 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
     user = f"CONTEXT:\n{ctx_used}"
     prompt = _qwen25_chat_prompt(system=system, user=user)
     prompt_chars = len(prompt)
+    sys_chars = len(system)
+    usr_chars = len(user)
     est_prompt_tokens = max(1, int(prompt_chars / 3.5))
     n_threads = int(os.environ.get("AGENT_LLAMA_THREADS", "4"))
     _runner_log(
-        f"context: bundle_chars={len(ctx_used)} prompt_chars≈{prompt_chars} "
+        f"context: bundle_chars={len(ctx_used)} prompt_chars={prompt_chars} "
+        f"system_chars={sys_chars} user_chars={usr_chars} "
         f"est_input_tokens≈{est_prompt_tokens} (rough; model tokenizer may differ)"
     )
+    if runner_verbose_logs():
+        sh = system.replace("\n", "\\n")[:500]
+        uh = user.replace("\n", "\\n")[:500]
+        _runner_log(f"runner_prompt verbose system_head={sh!r}")
+        _runner_log(f"runner_prompt verbose user_head={uh!r}")
     cap = max_runner_tokens()
     n_ctx_eff = llama_n_ctx()
     temp = runner_temperature()
@@ -934,12 +1013,18 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
             f"inference wall_s={t_done - t_load:.2f}s total_since_start_s={t_done - t0:.2f}s "
             f"output_chars={len(text)} finish_reason={fr!r}"
         )
+        _runner_log_output_shape(text)
     except Exception as e:  # noqa: BLE001 — advisory path; always write markdown
         text = f"## Inference error\n\n`{type(e).__name__}`: {e}\n"
         _runner_log(f"inference error: {type(e).__name__}: {e}")
 
     if not text.startswith("## Inference error"):
-        text = _sanitize_runner_prose(text)
+        before_san = text
+        text, san_removed = _sanitize_runner_prose(text)
+        _runner_log(
+            f"sanitize: tautology_lines_removed={san_removed} "
+            f"chars_before_after={len(before_san)}->{len(text)}"
+        )
 
     out.write_text(_header_runner(lane, week) + text + "\n", encoding="utf-8")
     _runner_log(f"wrote {out.relative_to(_REPO) if out.is_relative_to(_REPO) else out}")
