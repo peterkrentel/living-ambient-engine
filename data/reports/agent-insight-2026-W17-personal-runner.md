@@ -3,34 +3,18 @@
 > **Advisory only (v0).** Not `run_intent`, not `batch_generate`, not causal proof. Sparse metrics and packaging confounders apply — see `docs/spec/AGENT.md`.
 
 ---
-### What I reviewed — 2–3 bullets naming concrete CONTEXT blocks (include deterministic facts + run-next + weekly + suggestions compact + analytics compact).
+### Summary
+The personal YouTube channel has seen 684 total views across 114 videos, with a total watch time of 2,404 minutes. The channel has gained 6 subscribers over the past week. The analytics window covers the period from March 27 to April 23, 2026.
 
-- **Deterministic facts (computed by script):** The channel-wide views and watch time for all videos are 684 and 2404, respectively. There are 46 videos with views greater than zero.
-- **Run-next:** The run-next report is for personal YouTube, focusing on the 2026-W17 snapshot. It includes 114 videos analyzed, with an overall average retention of 18.87% and an average watch time per video of 52.261 minutes.
-- **Weekly report:** The weekly report covers the analytics window from 2026-03-27 to 2026-04-23. It shows 684 total views and 2,404 total watch time for all videos.
-- **Suggestions:** The suggestions report includes 46 videos with views greater than zero, with an overall average retention of 18.87% and an average watch time per video of 52.261 minutes.
-- **Analytics:** The analytics report covers the same analytics window as the weekly report, showing 684 total views and 2,404 total watch time for all videos.
+### Insights
+1. **Top Videos by Retention**: The top videos by retention include "Find Your Strength" with a retention of 96.8%, "sleep_30s_20260124_031441" with 83.6%, and "trance_30s_20260124_055344" with 78.3%. These videos have 1, 1, and 1 view respectively.
+2. **Top Videos by Views**: The top videos by views include "Enter Flow State" with 125 views and 347 minutes of watch time, "Sounds for an Overactive Mind" with 78 views and 28 minutes, "Ground Yourself Instantly" with 55 views and 28 minutes, "Calm Anxiety Fast" with 44 views and 427 minutes, and "Calm Anxiety Fast" with 30 views and 173 minutes. These videos have 125, 78, 55, 44, and 30 views respectively.
+3. **Performance by Mood**: The videos with the highest retention are "piano_deep_calm" with 14 videos, "deep_focus" with 10 videos, and "ceremony" with 11 videos. The average retention is 11.7% for "piano_deep_calm", 15.7% for "deep_focus", and 1.5% for "ceremony".
 
-### Summary — 2–4 sentences: the main story the metrics tell (thin data is OK to name explicitly).
+### Risks
+1. **Retention**: The retention of "piano_deep_calm" is 11.7%, which is slightly lower than the channel average of 18.87%.
+2. **Views**: The views of "ceremony" are 130, which is slightly higher than the channel average of 182 views.
 
-The channel-wide analytics for the 2026-W17 snapshot shows 684 total views and 2,404 total watch time for all videos. There are 46 videos with views greater than zero, indicating a high retention rate of 18.87% and an average watch time per video of 52.261 minutes. This suggests that the videos are engaging and well-received by the audience.
-
-### Insights — numbered 1–5. Each: one short paragraph. Use **at least three distinct numeric facts** from CONTEXT (prefer the deterministic JSON for totals). Every number must appear verbatim in CONTEXT (no rounding invented, no new totals). Prefer mood / art_period / music_style / packaging angles when CONTEXT supports them. If an item is not directly supported, start that paragraph with **Speculative:**.
-
-1. **Overall avg retention:** 18.87% suggests that the videos are engaging and well-received by the audience.
-2. **Overall avg watch min / video (window):** 52.261 indicates that the videos are long enough to keep the audience engaged.
-3. **Videos analyzed:** 46 with views / 114 total suggests that the channel has a good mix of videos with and without views.
-4. **Videos with views:** 46 out of 114 videos indicates that the channel has a good number of videos with views, which is important for monetization and engagement.
-5. **Retention and watch time:** The high retention rate and average watch time per video suggest that the videos are well-received and engaging, which is crucial for the channel's success.
-
-### Risks — short bullets (thin data, confounders, contradictions inside CONTEXT).
-
-- **Thin data:** The data is thin, as it only covers a short period (2026-03-27 to 2026-04-23).
-- **Confounders:** The retention rate and watch time could be influenced by factors such as the mood of the videos, the thumbnail, the traffic source, and seasonality.
-- **Contradictions:** There are no contradictions in the data, as the retention rate and watch time are consistent with the overall engagement of the videos.
-
-### Next tries — bullets: concrete experiments grounded in what CONTEXT shows; no invented KPIs.
-
-- **Generate more videos with views:** The channel could generate more videos with views to increase engagement and monetization.
-- **Optimize retention and watch time:** The channel could optimize the retention and watch time of existing videos to improve overall engagement.
-- **Adjust mood and packaging:** The channel could adjust the mood and packaging of videos to better match the audience's preferences and increase engagement.
+### Next Tries
+1. **"piano_deep_calm"**: Increase retention by focusing on videos with high retention.
+2. **"ceremony"**: Increase views by creating more engaging content that resonates with the target audience.

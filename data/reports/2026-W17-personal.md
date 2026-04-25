@@ -1,6 +1,6 @@
 # Personal channel — Analytics Report (2026-W17)
 
-Generated: 2026-04-24T20:17:36.027250+00:00
+Generated: 2026-04-24T23:56:30.320218+00:00
 
 > **Channel scope:** Personal YouTube only. Data file: `data/analytics_personal.json`. Brand metrics live in `data/analytics.json` (main Analytics Agent workflow).
 
