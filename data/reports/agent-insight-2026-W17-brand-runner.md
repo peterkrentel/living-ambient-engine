@@ -3,18 +3,30 @@
 > **Advisory only (v0).** Not `run_intent`, not `batch_generate`, not causal proof. Sparse metrics and packaging confounders apply — see `docs/spec/AGENT.md`.
 
 ---
-## Summary
-The analytics for the brand shows a total of 354 videos analyzed, with 123 videos having views. The overall average retention is 24.5%, and the average watch time per video is 7.756 minutes. The brand has gained 4 subscribers over the past week.
+### Summary
 
-## Insights
-1. **Retention Analysis**: The brand has a high average retention of 24.5%, indicating that the majority of videos are retained by viewers. The top 5 videos by retention are "30 Seconds to Enter Flow State" with a 559.0% retention and 2 views, and "Ambient medieval" with an 99.7% retention and 1 view.
-2. **View Analysis**: The brand has a high average watch time of 7.756 minutes per video, with the top 5 videos by views being "Ambient ancient" with 289 views and 240 minutes, and "Ambient contemporary" with 105 views and 51 minutes.
-3. **Mood Analysis**: The brand has a high average retention of 19.0% for videos created by the "art_creator" mood, indicating that this mood is well-received. The "trance" mood has an average retention of 4.9%, and the "sleep" mood has an average retention of 18.6%.
+The analytics report for the week shows a total of 354 videos analyzed, with 121 videos having analytics data. The overall average retention is 25.05%, and the average watch time per video is 7.876 minutes. The total views for all videos combined is 1,297, and the total watch time is 953 minutes.
 
-## Risks
-1. **Insufficient Mood Suggestions**: There were no qualifying mood suggestion rows at all, which may indicate that the brand is not generating enough mood suggestions to meet the planner gate requirements.
-2. **Insufficient Video Views**: The brand has gained only 4 subscribers, which may indicate that the brand is not reaching a sufficient number of viewers to generate meaningful mood suggestions.
+### Insights
 
-## Next Tries
-1. **Increase Mood Suggestions**: To increase the number of mood suggestions, the brand should focus on generating mood suggestions for the "art_creator" mood, which has a high average retention.
-2. **Increase Video Views**: To increase the number of views, the brand should focus on generating mood suggestions for the "trance" and "sleep" moods, which have lower average retention but still have a high average watch time per video.
+1. **Top Retention Videos:** The top videos with the highest retention are "30 Seconds to Enter Flow State" with a retention of 559.0% and 2 views, and "Ambient medieval" with an evolving mood and 99.7% retention, having 105 views.
+
+2. **Top View Videos:** The top videos with the highest number of views are "Ambient ancient" with 287 views and 239 minutes of watch time, and "Ambient contemporary" with 105 views and 51 minutes of watch time.
+
+3. **Performance by Mood:** The mood "art_creator" has the highest retention with 19.1%, followed by "trance" with 4.9%, "sleep" with 18.6%, "chill" with 55.6%, "micro_relief_exhale" with 14.2%, "forest_morning" with 17.0%, "study" with 36.1%, and "micro_wake_spark" with 47.1%.
+
+4. **Actionable Actions:** There were no actionable mood increases in the suggestions.json file, requiring re-running with specific mood suggestions to increase retention.
+
+### Risks
+
+1. **Insufficient Data:** The lack of actionable mood increases in the suggestions.json file may indicate that the current mood suggestions are not effective in increasing retention.
+
+2. **Batch Strategy:** The batch strategy reminder suggests that before scaling one lever, it's important to skim the mood vs. algorithm batch intent in `piano-batch.yml` to ensure that the batch strategy aligns with the intended mood.
+
+### Next Tries
+
+1. **Re-run with Specific Mood Suggestions:** Re-run the run intent with specific mood suggestions to increase retention.
+
+2. **Batch Strategy Review:** Review the batch strategy in `piano-batch.yml` to ensure it aligns with the intended mood and batch intent.
+
+3. **Monitor Retention:** Monitor the retention of videos with specific moods to identify any patterns or issues that may require further investigation.
