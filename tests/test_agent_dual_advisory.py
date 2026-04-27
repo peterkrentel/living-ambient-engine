@@ -184,6 +184,24 @@ def test_runner_output_is_template_echo_false_when_has_bullets():
     assert adv._runner_output_is_template_echo(raw) is False
 
 
+def test_instruction_scaffold_echo_first_line_only():
+    raw = (
+        "## What I reviewed — **exactly 3** short bullets: name deterministic facts, run-next digest/tail, "
+        "and one of (weekly / suggestions compact / analytics compact). No long pasted lists.\n"
+        "## Summary — **2–3** sentences only: main story from metrics (thin data is OK to name).\n"
+    )
+    assert adv._runner_output_is_instruction_scaffold_echo(raw) is True
+
+
+def test_context_dump_detects_run_next_paste():
+    raw = "### Personal snapshot (this run)\n\n- **Overall avg retention:** 20%\n"
+    assert adv._runner_output_is_context_dump(raw) is True
+    raw2 = "Good advisory.\n\n*Produced by `scripts/run_next_report.py`*\n"
+    assert adv._runner_output_is_context_dump(raw2) is True
+    assert adv._runner_output_is_context_dump("## Actionable (correlate gates passed)\n\n↓ mood") is True
+    assert adv._runner_output_is_context_dump("## Summary\n\nFine prose.") is False
+
+
 def test_runner_run_next_for_qwen_extracts_snapshot(tmp_path: Path):
     p = tmp_path / "run-next.md"
     p.write_text(

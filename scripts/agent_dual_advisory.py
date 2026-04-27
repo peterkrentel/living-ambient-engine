@@ -926,10 +926,48 @@ def _runner_log_output_shape(prose: str) -> None:
         _runner_log(f"runner_output_shape verbose: prose_head={prose[:prev]!r}")
 
 
+def _runner_output_is_instruction_scaffold_echo(prose: str) -> bool:
+    """First line copies a long system-prompt rule line (common 1.5B failure).
+
+    If the model uses the old long \"## What I reviewed — **exactly 3** …\" line but then
+    real ``-`` bullets, treat as OK (see tests).
+    """
+    raw_lines = (prose or "").splitlines()
+    nonempty = [ln.strip() for ln in raw_lines if ln.strip()]
+    if not nonempty:
+        return False
+    first = nonempty[0]
+    if first.startswith("## Summary — **2–3** sentences only"):
+        return True
+    if first.startswith("## Insights — numbered **1–5**"):
+        return True
+    if first.startswith("## What I reviewed — **exactly 3** short bullets"):
+        for ln in raw_lines[1:10]:
+            if ln.lstrip().startswith(("-", "*")):
+                return False
+        return True
+    return False
+
+
+def _runner_output_is_context_dump(prose: str) -> bool:
+    """Detect outputs that paste run-next / machine bundle instead of synthesizing."""
+    t = prose or ""
+    markers = (
+        "Produced by `scripts/run_next_report.py`",
+        "### Personal snapshot (this run)",
+        "### Brand snapshot (this run)",
+        "## Actionable (correlate gates passed)",
+        "### run-next tail (actionable",
+    )
+    return any(m in t for m in markers)
+
+
 def _runner_output_is_template_echo(prose: str) -> bool:
     """Detect runner outputs that simply repeat the instructions (no filled content)."""
     t = (prose or "").strip()
     if not t:
+        return True
+    if _runner_output_is_instruction_scaffold_echo(prose):
         return True
     # Strong signature: the model repeats the exact instruction scaffolding.
     needle = "## What I reviewed — **exactly 3** short bullets"
@@ -954,7 +992,10 @@ def _runner_retry_skeleton() -> str:
     """Fill-in template for the retry path (small models follow this better than rule prose)."""
     return (
         "Fill the markdown below using ONLY numbers/labels found in CONTEXT. "
-        "Do not repeat these instructions.\n\n"
+        "Do not repeat these instructions.\n"
+        "**Forbidden:** pasting run-next tables or CONTEXT headings such as "
+        "'### Personal snapshot', '## Actionable (correlate gates passed)', or the "
+        "'Produced by scripts/run_next_report.py' footer — synthesize in your own words.\n\n"
         "## What I reviewed\n"
         "- deterministic facts (computed by script)\n"
         "- run-next digest + tail\n"
@@ -1018,11 +1059,20 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
         "Treat the rest of CONTEXT as evidence too, but if prose disagrees with that JSON, **follow the JSON**.\n"
         "Do not reference files you did not read here; do not answer with pointers only (e.g. “see run-next”) — "
         "synthesize takeaways in your own words.\n"
-        "Required shape (GitHub-flavored markdown, stay concise—complete sections beat padding, no outer ``` fences):\n"
-        "## What I reviewed — **exactly 3** short bullets: name deterministic facts, run-next digest/tail, "
-        "and one of (weekly / suggestions compact / analytics compact). No long pasted lists.\n"
-        "## Summary — **2–3** sentences only: main story from metrics (thin data is OK to name).\n"
-        "## Insights — numbered **1–5**. Each item: **at most 2 sentences**. "
+        "**Forbidden in your output:** copying run-next machine text — no "
+        "'### Personal snapshot', '### Brand snapshot', '## Actionable (correlate gates passed)', "
+        "'### run-next tail', or the footer line mentioning `run_next_report.py`. "
+        "Those exist only inside CONTEXT; your job is a short human advisory, not a paste.\n"
+        "Required shape (GitHub-flavored markdown, use `##` section headings only; stay concise; "
+        "no outer ``` fences). Do **not** begin your answer by repeating these rule lines verbatim.\n"
+        "## What I reviewed\n"
+        "Three short `-` bullets: name **deterministic facts**, **run-next digest/tail**, "
+        "and one other CONTEXT block you used (weekly, suggestions compact, or analytics compact). "
+        "No pasted tables.\n"
+        "## Summary\n"
+        "**2–3** sentences: main story from metrics (thin data is OK to name).\n"
+        "## Insights\n"
+        "Numbered **1–5**. Each item: **at most 2 sentences**. "
         "Each item must name at least one **concrete** label from CONTEXT: a **mood**, **music_style**, **art_period**, "
         "or a **video title** from analytics compact / run-next tail — not generic praise like 'well-received'.\n"
         "Use **at least three distinct numeric facts** across the five items (prefer deterministic JSON for channel totals). "
@@ -1031,8 +1081,10 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
         "(e.g. '24.67% is slightly higher than 24.67%'). **Forbidden:** comparing a count to itself.\n"
         "If an item is not directly supported, start that paragraph with **Speculative:**.\n"
         "Do **not** repeat the same bullet twice; do **not** reuse the same sentence in multiple insights.\n"
-        "## Risks — **2–4** short bullets (thin data, confounders); **do not** duplicate the same risk sentence.\n"
-        "## Next tries — **2–5** bullets: concrete experiments tied to moods/styles named in CONTEXT.\n"
+        "## Risks\n"
+        "**2–4** short `-` bullets (thin data, confounders); **do not** duplicate the same risk sentence.\n"
+        "## Next tries\n"
+        "**2–5** `-` bullets: concrete experiments tied to moods/styles named in CONTEXT.\n"
         "Do not paste large tables; at most one tiny 3-row markdown table if essential. "
         "If a metric is missing from CONTEXT, say **Not in CONTEXT** instead of guessing."
     )
@@ -1111,13 +1163,14 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
             f"chars_before_after={len(before_san)}->{len(text)}"
         )
 
-    # Guardrail: small models sometimes echo the template instructions verbatim.
-    if _runner_output_is_template_echo(text):
-        _runner_log("runner_guardrail: detected template-echo output; retrying once")
+    # Guardrail: small models echo instructions or paste run-next CONTEXT verbatim.
+    if _runner_output_is_template_echo(text) or _runner_output_is_context_dump(text):
+        _runner_log("runner_guardrail: detected template-echo or context-dump; retrying once")
         try:
             retry_system = (
                 "You are a compact advisor for a YouTube ambient music channel. "
-                "Use ONLY the provided CONTEXT. Do not repeat instructions."
+                "Use ONLY the provided CONTEXT. Do not repeat instructions. "
+                "Never paste run-next snapshot/actionable headings or the run_next_report.py footer."
             )
             retry_user = _runner_retry_skeleton() + "\n\nCONTEXT:\n" + ctx_used
             retry_prompt = _qwen25_chat_prompt(system=retry_system, user=retry_user)
@@ -1145,12 +1198,17 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
                     f"sanitize(retry): tautology_lines_removed={san_removed2} "
                     f"chars_before_after={len(before_san2)}->{len(text2)}"
                 )
-            if not _runner_output_is_template_echo(text2) and text2:
+            if (
+                text2
+                and not _runner_output_is_template_echo(text2)
+                and not _runner_output_is_context_dump(text2)
+            ):
                 text = text2
             else:
                 text = (
                     "## Inference error\n\n"
-                    "Runner echoed the instruction template instead of producing an advisory.\n"
+                    "Runner repeated instructions or pasted run-next / CONTEXT machine text "
+                    "instead of a synthesized advisory.\n"
                 )
         except Exception as e:  # noqa: BLE001 — guardrail; keep workflow running
             _runner_log(f"runner_guardrail retry failed: {type(e).__name__}: {e}")
