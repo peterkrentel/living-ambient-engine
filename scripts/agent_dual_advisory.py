@@ -1072,8 +1072,12 @@ def _runner_slice_wir_summary(prose: str) -> str:
 
 
 def _runner_int_in_text_as_token(text: str, n: int) -> bool:
-    """True if integer ``n`` appears with digit boundaries (avoids matching ``46`` inside ``146``)."""
-    return re.search(rf"(?<!\d){re.escape(str(n))}(?!\d)", text) is not None
+    """True if integer ``n`` appears with digit boundaries (avoids ``46`` inside ``146``).
+
+    Thousands separators (commas) are ignored so ``4,224`` matches ``4224``.
+    """
+    t = text.replace(",", "")
+    return re.search(rf"(?<!\d){re.escape(str(n))}(?!\d)", t) is not None
 
 
 def _runner_prose_quotes_channel_totals(slice_text: str, totals: tuple[int, int, int]) -> bool:
