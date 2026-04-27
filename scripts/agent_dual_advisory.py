@@ -27,7 +27,10 @@ seconds between completed Gemini HTTP calls in this process (reduces 429s when r
 
 **Default REST model** when ``GEMINI_MODEL`` is unset: ``gemini-2.5-flash`` (not 2.0). Override per project via env / Actions **Variable** ``GEMINI_MODEL`` if you need another tier.
 
-**Runner output:** ``MAX_RUNNER_TOKENS`` (default ``1536``) — GGUF ``max_tokens``; raise if logs show ``finish_reason=length`` and markdown is cut off.
+**Runner output:** ``MAX_RUNNER_TOKENS`` (default ``1536``, ceiling **6144**) — GGUF ``max_tokens`` request; after
+``Llama`` loads, the script **clamps** to ``n_ctx - tokenize(prompt) - margin`` so prompt + generation fit. If logs
+still show ``finish_reason=length``, raise the env cap or shorten system/CONTEXT; if you see ``runner_output_cap_clamped``,
+raise ``AGENT_LLAMA_N_CTX`` or trim the bundle.
 
 **Runner bundle (env, optional):** ``RUNNER_BUNDLE_MAX_CHARS`` (default ``5200``) — hard cap on lean CONTEXT chars. ``AGENT_LLAMA_N_CTX`` (default ``4096``, clamp 2048–8192) — llama.cpp context. ``AGENT_RUNNER_TEMPERATURE`` (default ``0.15``) — GGUF sampling; lower = less repetitive prose.
 **Runner debug logs (optional):** set ``AGENT_RUNNER_VERBOSE=1`` (or ``true`` / ``yes``) for extra ``[runner-advisory]`` lines: per-part bundle sizes, run-next digest/tail lengths, prompt/section sizes, completion preview, markdown heading counts, and how many lines sanitize dropped.
@@ -65,6 +68,10 @@ MAX_CONTEXT_GEMINI = 24_000
 _DEFAULT_RUNNER_BUNDLE_MAX_CHARS = 5200
 # Default output cap (was 512; logs showed finish_reason=length mid-markdown). Override: ``MAX_RUNNER_TOKENS`` env.
 _DEFAULT_MAX_RUNNER_TOKENS = 1536
+# Upper bound for env ``MAX_RUNNER_TOKENS`` (actual generation may be lower — see ``_runner_effective_max_tokens``).
+_RUNNER_MAX_OUTPUT_TOKENS_CEILING = 6144
+# llama.cpp slack: BOS/special + completion buffer (keep prompt + max_tokens strictly under ``n_ctx``).
+_RUNNER_N_CTX_GENERATION_MARGIN = 24
 _DEFAULT_LLAMA_N_CTX = 4096
 _DEFAULT_RUNNER_TEMPERATURE = 0.15
 
@@ -78,14 +85,41 @@ _RUN_NEXT_PRODUCTION_HOOKS = "## Production hooks (manual)"
 
 
 def max_runner_tokens() -> int:
-    """Effective GGUF ``max_tokens``; clamped so prompt + generation stays under ``n_ctx``."""
+    """Requested GGUF ``max_tokens`` upper bound from env (before ``n_ctx`` tokenize clamp in ``write_runner_gguf``)."""
     raw = (os.environ.get("MAX_RUNNER_TOKENS") or "").strip()
     if raw:
         try:
-            return max(128, min(3072, int(raw)))
+            return max(128, min(_RUNNER_MAX_OUTPUT_TOKENS_CEILING, int(raw)))
         except ValueError:
             pass
     return _DEFAULT_MAX_RUNNER_TOKENS
+
+
+def _runner_effective_max_tokens(llm: object, *, prompt: str, n_ctx_eff: int, requested: int) -> int:
+    """Clamp ``max_tokens`` so ``tokenize(prompt) + generation + margin`` fits ``n_ctx``."""
+    margin = _RUNNER_N_CTX_GENERATION_MARGIN
+    try:
+        tokenize = getattr(llm, "tokenize", None)
+        if not callable(tokenize):
+            return requested
+        ids = tokenize(prompt.encode("utf-8"))  # type: ignore[operator]
+        n_prompt = len(ids)
+    except Exception:  # noqa: BLE001 — advisory path; fall back to requested
+        _runner_log("runner_tokenize: failed; using MAX_RUNNER_TOKENS without n_ctx clamp")
+        return requested
+    room = n_ctx_eff - n_prompt - margin
+    effective = min(requested, max(1, room))
+    if room < 64:
+        _runner_log(
+            f"runner_ctx_warn: prompt_tokens={n_prompt} n_ctx={n_ctx_eff} margin={margin} "
+            f"room={room} effective_max_tokens={effective}"
+        )
+    if effective < requested:
+        _runner_log(
+            f"runner_output_cap_clamped: requested={requested} effective={effective} "
+            f"prompt_tokens={n_prompt} n_ctx={n_ctx_eff} margin={margin}"
+        )
+    return max(1, effective)
 
 
 # Backward-compatible name for docs/tests (effective cap is ``max_runner_tokens()``).
@@ -1019,13 +1053,9 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
         uh = user.replace("\n", "\\n")[:500]
         _runner_log(f"runner_prompt verbose system_head={sh!r}")
         _runner_log(f"runner_prompt verbose user_head={uh!r}")
-    cap = max_runner_tokens()
+    cap_requested = max_runner_tokens()
     n_ctx_eff = llama_n_ctx()
     temp = runner_temperature()
-    _runner_log(
-        f"llama: n_ctx={n_ctx_eff} max_output_tokens={cap} "
-        f"n_threads={n_threads} n_gpu_layers=0 temperature={temp}"
-    )
 
     try:
         t0 = time.perf_counter()
@@ -1038,9 +1068,16 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
         )
         t_load = time.perf_counter()
         _runner_log(f"model load wall_s={t_load - t0:.2f}s")
+        cap_eff = _runner_effective_max_tokens(
+            llm, prompt=prompt, n_ctx_eff=n_ctx_eff, requested=cap_requested
+        )
+        _runner_log(
+            f"llama: n_ctx={n_ctx_eff} max_output_tokens_requested={cap_requested} "
+            f"max_output_tokens_effective={cap_eff} n_threads={n_threads} n_gpu_layers=0 temperature={temp}"
+        )
         result = llm(
             prompt,
-            max_tokens=cap,
+            max_tokens=cap_eff,
             temperature=temp,
             # Qwen2.5: stop at turn end and next role header (not Llama ``[/INST]`` / ``</s>``).
             stop=[_QWEN_IM_END, _QWEN_IM_START],
@@ -1085,9 +1122,12 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
             retry_user = _runner_retry_skeleton() + "\n\nCONTEXT:\n" + ctx_used
             retry_prompt = _qwen25_chat_prompt(system=retry_system, user=retry_user)
             retry_temp = min(temp, 0.1)
+            cap_retry = _runner_effective_max_tokens(
+                llm, prompt=retry_prompt, n_ctx_eff=n_ctx_eff, requested=cap_requested
+            )
             result2 = llm(
                 retry_prompt,
-                max_tokens=cap,
+                max_tokens=cap_retry,
                 temperature=retry_temp,
                 stop=[_QWEN_IM_END, _QWEN_IM_START],
             )

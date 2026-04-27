@@ -283,6 +283,35 @@ def test_max_runner_tokens_env(monkeypatch):
     assert adv.max_runner_tokens() == 2048
 
 
+def test_max_runner_tokens_env_ceiling(monkeypatch):
+    monkeypatch.setenv("MAX_RUNNER_TOKENS", "99999")
+    assert adv.max_runner_tokens() == adv._RUNNER_MAX_OUTPUT_TOKENS_CEILING
+
+
+class _FakeLlamaTokenize:
+    def __init__(self, n_prompt: int) -> None:
+        self._n_prompt = n_prompt
+
+    def tokenize(self, data: bytes, add_bos: bool = True, special: bool = False) -> list[int]:
+        return [0] * self._n_prompt
+
+
+def test_runner_effective_max_tokens_uses_room(monkeypatch):
+    monkeypatch.setenv("MAX_RUNNER_TOKENS", "4096")
+    requested = adv.max_runner_tokens()
+    fake = _FakeLlamaTokenize(3400)
+    eff = adv._runner_effective_max_tokens(
+        fake, prompt="irrelevant", n_ctx_eff=8192, requested=requested
+    )
+    assert eff == min(requested, 8192 - 3400 - adv._RUNNER_N_CTX_GENERATION_MARGIN)
+
+
+def test_runner_effective_max_tokens_no_tokenize_returns_requested(monkeypatch):
+    monkeypatch.setenv("MAX_RUNNER_TOKENS", "2048")
+    requested = adv.max_runner_tokens()
+    assert adv._runner_effective_max_tokens(object(), prompt="x", n_ctx_eff=8192, requested=requested) == requested
+
+
 def test_gemini_max_output_tokens_default(monkeypatch):
     monkeypatch.delenv("GEMINI_MAX_OUTPUT_TOKENS", raising=False)
     assert adv._gemini_max_output_tokens() == 4096
