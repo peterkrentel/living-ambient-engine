@@ -5,5 +5,5 @@
 ---
 ## Inference error
 
-Runner output did not include required `##` sections in order: ## What I reviewed → ## Summary → ## Insights → ## Risks → ## Next tries.
+Runner output must quote **sum_views_all_videos**, **sum_watch_time_minutes_all_videos**, and **count_videos_with_views_gt_0** from deterministic JSON verbatim in ## What I reviewed and/or ## Summary.
 
