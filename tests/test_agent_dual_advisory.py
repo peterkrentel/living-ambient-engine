@@ -265,6 +265,52 @@ def test_runner_output_schema_inference_error_body_ok():
     assert adv._runner_output_schema_valid("## Inference error\n\noops.\n") is True
 
 
+def test_runner_schema_failure_label_ok():
+    prose = (
+        "## What I reviewed\n"
+        "- a\n"
+        "## Summary\n"
+        "Two sentences here.\n"
+        "## Insights\n"
+        "1. One\n"
+        "## Risks\n"
+        "- r\n"
+        "## Next tries\n"
+        "- n\n"
+    )
+    assert adv._runner_schema_failure_label(prose) == "ok"
+
+
+def test_runner_schema_failure_label_missing_next_tries():
+    prose = (
+        "## What I reviewed\n"
+        "- a\n"
+        "## Summary\n"
+        "s\n"
+        "## Insights\n"
+        "1.\n"
+        "## Risks\n"
+        "- r\n"
+    )
+    assert adv._runner_schema_failure_label(prose) == "missing:## Next tries"
+
+
+def test_runner_schema_failure_label_wrong_order_reports_first_gap():
+    prose = (
+        "## Summary\n"
+        "s\n"
+        "## What I reviewed\n"
+        "- a\n"
+        "## Insights\n"
+        "1.\n"
+        "## Risks\n"
+        "-\n"
+        "## Next tries\n"
+        "-\n"
+    )
+    assert adv._runner_schema_failure_label(prose) == "missing:## Summary"
+
+
 def test_runner_prose_quotes_channel_totals_ok():
     totals = (755, 4224, 46)
     slice_ok = (
