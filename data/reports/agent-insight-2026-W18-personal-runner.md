@@ -3,145 +3,41 @@
 > **Advisory only (v0).** Not `run_intent`, not `batch_generate`, not causal proof. Sparse metrics and packaging confounders apply — see `docs/spec/AGENT.md`.
 
 ---
-### Summary
+### Personal snapshot (this run)
 
-- **Total views:** 728
-- **Total watch time:** 3,730 minutes
+- **Overall avg retention:** 20.22%
+- **Overall avg watch min / video (window):** 82.889
 - **Videos analyzed:** 45 with views / 114 total
 
-### Insights
+### run-next tail (actionable → end)
 
-1. **Mood Analysis:**
-   - **Piano Deep Calm:** Videos with this mood have an average retention of 16.9% and watch time of 82.889 minutes. This is slightly higher than the overall average retention of 20.22% and watch time of 82.889 minutes.
-   - **Deep Focus:** Videos with this mood have an average retention of 15.7% and watch time of 82.889 minutes. This is slightly higher than the overall average retention of 20.22% and watch time of 82.889 minutes.
-   - **Ceremony:** Videos with this mood have an average retention of 1.5% and watch time of 82.889 minutes. This is lower than the overall average retention of 20.22% and watch time of 82.889 minutes.
+## Actionable (correlate gates passed)
 
-2. **Top Videos by Retention:**
-   - **Find Your Strength:** Retention is 96.8% with 1 view.
-   - **sleep_30s_20260124_031441:** Retention is 83.6% with 1 view.
-   - **trance_30s_20260124_055344:** Retention is 78.3% with 1 view.
-   - **Sounds for an Overactive Mind:** Retention is 74.8% with 1 view.
-   - **Journey Inward:** Retention is 62.4% with 2 views.
+↓ **`mood` / `piano_deep_calm`** (retention %) — -4.7% vs channel avg (n=7, views=239) — `medium` — evidence index **`data/suggestions_personal.json` → `suggestions[0]`
+↑ **`mood` / `piano_deep_calm`** (watch min / video (window)) — +270.5 min vs channel avg (n=7, views=239) — `medium` — evidence index **`data/suggestions_personal.json` → `suggestions[2]`
 
-3. **Top Videos by Views:**
-   - **Enter Flow State:** Retention is 4.18% with 119 views.
-   - **Sounds for an Overactive Mind:** Retention is 1.70% with 81 views.
-   - **Ground Yourself Instantly:** Retention is 0.86% with 55 views.
-   - **Calm Anxiety Fast:** Retention is 25.36% with 53 views.
-   - **Calm Anxiety Fast:** Retention is 28.139999999999997% with 47 views.
-   - **Calm Anxiety Fast:** Retention is 806 minutes with 30 views.
+## Exploratory — lean in (low n / views)
 
-4. **Top Videos by Watch Time (min):**
-   - **Enter Flow State:** Watch time is 298 minutes with 119 views.
-   - **Sounds for an Overactive Mind:** Watch time is 82 minutes with 81 views.
-   - **Ground Yourself Instantly:** Watch time is 28 minutes with 55 views.
-   - **Calm Anxiety Fast:** Watch time is 806 minutes with 53 views.
-   - **Calm Anxiety Fast:** Watch time is 793 minutes with 47 views.
-   - **Calm Anxiety Fast:** Watch time is 291 minutes with 23 views.
+_No exploratory "increase" rows._
 
-5. **Top Videos by Average View Percentage:**
-   - **Journey Inward:** Average view percentage is 62.35% with 2 views.
-   - **warrior_10s_20260124_160306:** Average view percentage is 59.09% with 4 views.
-   - **Let Go of Stress:** Average view percentage is 33.72% with 3 views.
-   - **Calm Anxiety Fast:** Average view percentage is 25.36% with 53 views.
-   - **Calm Anxiety Fast:** Average view percentage is 28.139999999999997% with 47 views.
-   - **Calm Anxiety Fast:** Average view percentage is 11.01% with 30 views.
+## Exploratory — tread carefully (underperformers)
 
-6. **Top Videos by Watch Time (min) with 2 views:**
-   - **Journey Inward:** Watch time is 298 minutes with 2 views.
-   - **warrior_10s_20260124_160306:** Watch time is 60 minutes with 3 views.
-   - **Let Go of Stress:** Watch time is 60 minutes with 3 views.
-   - **Calm Anxiety Fast:** Watch time is 806 minutes with 47 views.
-   - **Calm Anxiety Fast:** Watch time is 793 minutes with 47 views.
-   - **Calm Anxiety Fast:** Watch time is 291 minutes with 23 views.
+↓ `mood` / `ceremony` (retention %) — -17.9% vs channel avg (n=3, views=104, exploratory) — `suggestions[1]`
+↓ `mood` / `ceremony` (watch min / video (window)) — -42.6 min vs channel avg (n=3, views=104, exploratory) — `suggestions[3]`
 
-7. **Top Videos by Average View Percentage with 2 views:**
-   - **Journey Inward:** Average view percentage is 62.35% with 2 views.
-   - **warrior_10s_20260124_160306:** Average view percentage is 59.09% with 4 views.
-   - **Let Go of Stress:** Average view percentage is 33.72% with 3 views.
-   - **Calm Anxiety Fast:** Average view percentage is 25.36% with 53 views.
-   - **Calm Anxiety Fast:** Average view percentage is 28.139999999999997% with 47 views.
-   - **Calm Anxiety Fast:** Average view percentage is 11.01% with 30 views.
+## Audit — overview excerpt (personal)
 
-8. **Top Videos by Watch Time (min) with 3 views:**
-   - **Journey Inward:** Watch time is 298 minutes with 2 views.
-   - **warrior_10s_20260124_160306:** Watch time is 60 minutes with 3 views.
-   - **Let Go of Stress:** Watch time is 60 minutes with 3 views.
-   - **Calm Anxiety Fast:** Watch time is 806 minutes with 47 views.
-   - **Calm Anxiety Fast:** Watch time is 793 minutes with 47 views.
-   - **Calm Anxiety Fast:** Watch time is 291 minutes with 23 views.
+- **Videos in analytics:** 114
+- **generations.json join (any ledger row):** 82 / 114 (71.9%)
+- **generations.json join (identity-aligned):** 36 / 114 (31.6%)
+  - *Identity-aligned uses optional ledger `channel`, else infers from `workflow` (e.g. `Content Factory (Brand)`). Rows with neither still count only toward “any”.*
+  - *Historic uploads may lack rows until logged by the upload pipeline.*
 
-9. **Top Videos by Average View Percentage with 3 views:**
-   - **Journey Inward:** Average view percentage is 62.35% with 2 views.
-   - **warrior_10s_20260124_160306:** Average view percentage is 59.09% with 4 views.
-   - **Let Go of Stress:** Average view percentage is 33.72% with 3 views.
-   - **Calm Anxiety Fast:** Average view percentage is 25.36% with 53 views.
-   - **Calm Anxiety Fast:** Average view percentage is 28.139999999999997% with 47 views.
-   - **Calm Anxiety Fast:** Average view percentage is 11.01% with 30 views.
+## Production hooks (manual)
 
-10. **Top Videos by Watch Time (min) with 4 views:**
-    - **Journey Inward:** Watch time is 298 minutes with 2 views.
-    - **warrior_10s_20260124_160306:** Watch time is 60 minutes with 3 views.
-    - **Let Go of Stress:** Watch time is 60 minutes with 3 views.
-    - **Calm Anxiety Fast:** Watch time is 806 minutes with 47 views.
-    - **Calm Anxiety Fast:** Watch time is 793 minutes with 47 views.
-    - **Calm Anxiety Fast:** Watch time is 291 minutes with 23 views.
+- **`data/run_intent_personal.json` present** — validate and run via [`run-intent-consumer.yml`](../../.github/workflows/run-intent-consumer.yml) (still **manual** / gated). Set workflow inputs **`intent_path`** = `data/run_intent_personal.json` and **`blocked_report_path`** = `data/reports/run-intent-blocked-personal.md` when dispatching the consumer.
+- **Batch strategy reminder:** before scaling one lever, skim mood vs algorithm batch intent in [`piano-batch.yml`](../../.github/workflows/piano-batch.yml) (personal cross-read there).
 
-11. **Top Videos by Average View Percentage with 4 views:**
-    - **Journey Inward:** Average view percentage is 62.35% with 2 views.
-    - **warrior_10s_20260124_160306:** Average view percentage is 59.09% with 4 views.
-    - **Let Go of Stress:** Average view percentage is 33.72% with 3 views.
-    - **Calm Anxiety Fast:** Average view percentage is 25.36% with 53 views.
-    - **Calm Anxiety Fast:** Average view percentage is 28.139999999999997% with 47 views.
-    - **Calm Anxiety Fast:** Average view percentage is 11.01% with 30 views.
+---
 
-12. **Top Videos by Watch Time (min) with 5 views:**
-    - **Journey Inward:** Watch time is 298 minutes with 2 views.
-    - **warrior_10s_20260124_160306:** Watch time is 60 minutes with 3 views.
-    - **Let Go of Stress:** Watch time is 60 minutes with 3 views.
-    - **Calm Anxiety Fast:** Watch time is 806 minutes with 47 views.
-    - **Calm Anxiety Fast:** Watch time is 793 minutes with 47 views.
-    - **Calm Anxiety Fast:** Watch time is 291 minutes with 23 views.
-
-13. **Top Videos by Average View Percentage with 5 views:**
-    - **Journey Inward:** Average view percentage is 62.35% with 2 views.
-    - **warrior_10s_20260124_160306:** Average view percentage is 59.09% with 4 views.
-    - **Let Go of Stress:** Average view percentage is 33.72% with 3 views.
-    - **Calm Anxiety Fast:** Average view percentage is 25.36% with 53 views.
-    - **Calm Anxiety Fast:** Average view percentage is 28.139999999999997% with 47 views.
-    - **Calm Anxiety Fast:** Average view percentage is 11.01% with 30 views.
-
-14. **Top Videos by Watch Time (min) with 6 views:**
-    - **Journey Inward:** Watch time is 298 minutes with 2 views.
-    - **warrior_10s_20260124_160306:** Watch time is 60 minutes with 3 views.
-    - **Let Go of Stress:** Watch time is 60 minutes with 3 views.
-    - **Calm Anxiety Fast:** Watch time is 806 minutes with 47 views.
-    - **Calm Anxiety Fast:** Watch time is 793 minutes with 47 views.
-    - **Calm Anxiety Fast:** Watch time is 291 minutes with 23 views.
-
-15. **Top Videos by Average View Percentage with 6 views:**
-    - **Journey Inward:** Average view percentage is 62.35% with 2 views.
-    - **warrior_10s_20260124_160306:** Average view percentage is 59.09% with 4 views.
-    - **Let Go of Stress:** Average view percentage is 33.72% with 3 views.
-    - **Calm Anxiety Fast:** Average view percentage is 25.36% with 53 views.
-    - **Calm Anxiety Fast:** Average view percentage is 28.139999999999997% with 47 views.
-    - **Calm Anxiety Fast:** Average view percentage is 11.01% with 30 views.
-
-16. **Top Videos by Watch Time (min) with 7 views:**
-    - **Journey Inward:** Watch time is 298 minutes with 2 views.
-    - **warrior_10s_20260124_160306:** Watch time is 60 minutes with 3 views.
-    - **Let Go of Stress:** Watch time is 60 minutes with 3 views.
-    - **Calm Anxiety Fast:** Watch time is 806 minutes with 47 views.
-    - **Calm Anxiety Fast:** Watch time is 793 minutes with 47 views.
-    - **Calm Anxiety Fast:** Watch time is 291 minutes with 23 views.
-
-17. **Top Videos by Average View Percentage with 7 views:**
-    - **Journey Inward:** Average view percentage is 62.35% with 2 views.
-    - **warrior_10s_20260124_160306:** Average view percentage is 59.09% with 4 views.
-    - **Let Go of Stress:** Average view percentage is 33.72% with 3 views.
-    - **Calm Anxiety Fast:** Average view percentage is 25.36% with 53 views.
-    - **Calm Anxiety Fast:** Average view percentage is 28.139999999999997% with 47 views.
-    - **Calm Anxiety Fast:** Average view percentage is 11.01% with 30 views.
-
-18. **Top Videos by Watch Time (min) with 8 views:**
-    - **Journey Inward:** Watch time is 298
+*Produced by `scripts/run_next_report.py` (deterministic v0; no LLM, no `batch_generate`).*
