@@ -949,6 +949,53 @@ def _runner_output_is_instruction_scaffold_echo(prose: str) -> bool:
     return False
 
 
+# Runner advisory body must use these ``##`` headings in order (first heading in output = first here).
+_RUNNER_REQUIRED_H2_ORDER = (
+    "## What I reviewed",
+    "## Summary",
+    "## Insights",
+    "## Risks",
+    "## Next tries",
+)
+
+
+def _runner_line_matches_h2(s: str, head: str) -> bool:
+    """True if stripped line is ``head`` or ``head`` plus title suffix (not ``###``)."""
+    if not s.startswith("## ") or s.startswith("###"):
+        return False
+    if not s.startswith(head):
+        return False
+    if len(s) == len(head):
+        return True
+    nxt = s[len(head)]
+    # space, colon, hyphen, en dash, em dash — not a third `#`
+    return nxt in (" \t:#-—\u2013\u2014") and nxt != "#"
+
+
+def _runner_output_schema_valid(prose: str) -> bool:
+    """True if prose has required ``##`` section headings in order (each starts a line, not ``###``)."""
+    t = (prose or "").strip()
+    if not t:
+        return False
+    if t.startswith("## Inference error"):
+        return True
+    lines = t.splitlines()
+    min_line = -1
+    for head in _RUNNER_REQUIRED_H2_ORDER:
+        found_at = None
+        for i, raw in enumerate(lines):
+            if i <= min_line:
+                continue
+            s = raw.lstrip()
+            if _runner_line_matches_h2(s, head):
+                found_at = i
+                break
+        if found_at is None:
+            return False
+        min_line = found_at
+    return True
+
+
 def _runner_output_is_context_dump(prose: str) -> bool:
     """Detect outputs that paste run-next / machine bundle instead of synthesizing."""
     t = prose or ""
@@ -1065,6 +1112,11 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
         "Those exist only inside CONTEXT; your job is a short human advisory, not a paste.\n"
         "Required shape (GitHub-flavored markdown, use `##` section headings only; stay concise; "
         "no outer ``` fences). Do **not** begin your answer by repeating these rule lines verbatim.\n"
+        "**Critical:** Your reply body MUST use exactly these five headings as the **first** markdown "
+        "headings in your answer, in this **exact order** — each on its own line starting with `## ` "
+        "(two `#` only, not `###`): "
+        "`## What I reviewed`, `## Summary`, `## Insights`, `## Risks`, `## Next tries`. "
+        "Do not put `### Insights` or any other heading before `## What I reviewed`.\n"
         "## What I reviewed\n"
         "Three short `-` bullets: name **deterministic facts**, **run-next digest/tail**, "
         "and one other CONTEXT block you used (weekly, suggestions compact, or analytics compact). "
@@ -1170,7 +1222,9 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
             retry_system = (
                 "You are a compact advisor for a YouTube ambient music channel. "
                 "Use ONLY the provided CONTEXT. Do not repeat instructions. "
-                "Never paste run-next snapshot/actionable headings or the run_next_report.py footer."
+                "Never paste run-next snapshot/actionable headings or the run_next_report.py footer. "
+                "Output MUST use `## What I reviewed`, `## Summary`, `## Insights`, `## Risks`, "
+                "`## Next tries` as lines (in that order) before any other `##` headings."
             )
             retry_user = _runner_retry_skeleton() + "\n\nCONTEXT:\n" + ctx_used
             retry_prompt = _qwen25_chat_prompt(system=retry_system, user=retry_user)
@@ -1213,6 +1267,14 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
         except Exception as e:  # noqa: BLE001 — guardrail; keep workflow running
             _runner_log(f"runner_guardrail retry failed: {type(e).__name__}: {e}")
             text = "## Inference error\n\nRunner guardrail retry failed.\n"
+
+    if not text.startswith("## Inference error") and not _runner_output_schema_valid(text):
+        _runner_log("runner_schema_reject: missing or out-of-order required ## sections")
+        text = (
+            "## Inference error\n\n"
+            "Runner output did not include required `##` sections in order: "
+            "## What I reviewed → ## Summary → ## Insights → ## Risks → ## Next tries.\n"
+        )
 
     out.write_text(_header_runner(lane, week) + text + "\n", encoding="utf-8")
     _runner_log(f"wrote {out.relative_to(_REPO) if out.is_relative_to(_REPO) else out}")

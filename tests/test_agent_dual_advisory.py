@@ -193,6 +193,46 @@ def test_instruction_scaffold_echo_first_line_only():
     assert adv._runner_output_is_instruction_scaffold_echo(raw) is True
 
 
+def test_runner_output_schema_valid_minimal():
+    prose = (
+        "## What I reviewed\n"
+        "- a\n"
+        "## Summary\n"
+        "Two sentences here.\n"
+        "## Insights\n"
+        "1. One\n"
+        "## Risks\n"
+        "- r\n"
+        "## Next tries\n"
+        "- n\n"
+    )
+    assert adv._runner_output_schema_valid(prose) is True
+
+
+def test_runner_output_schema_invalid_only_h3_insights():
+    assert adv._runner_output_schema_valid("### Insights\n\n- x\n") is False
+
+
+def test_runner_output_schema_invalid_wrong_order():
+    prose = (
+        "## Summary\n"
+        "s\n"
+        "## What I reviewed\n"
+        "- a\n"
+        "## Insights\n"
+        "1.\n"
+        "## Risks\n"
+        "-\n"
+        "## Next tries\n"
+        "-\n"
+    )
+    assert adv._runner_output_schema_valid(prose) is False
+
+
+def test_runner_output_schema_inference_error_body_ok():
+    assert adv._runner_output_schema_valid("## Inference error\n\noops.\n") is True
+
+
 def test_context_dump_detects_run_next_paste():
     raw = "### Personal snapshot (this run)\n\n- **Overall avg retention:** 20%\n"
     assert adv._runner_output_is_context_dump(raw) is True
