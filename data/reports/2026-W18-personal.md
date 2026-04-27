@@ -1,6 +1,6 @@
 # Personal channel — Analytics Report (2026-W18)
 
-Generated: 2026-04-27T18:30:59.812661+00:00
+Generated: 2026-04-27T19:10:07.713768+00:00
 
 > **Channel scope:** Personal YouTube only. Data file: `data/analytics_personal.json`. Brand metrics live in `data/analytics.json` (main Analytics Agent workflow).
 
@@ -12,8 +12,8 @@ Generated: 2026-04-27T18:30:59.812661+00:00
 
 ## Totals
 
-- **Total views:** 728
-- **Total watch time:** 3,730 minutes
+- **Total views:** 755
+- **Total watch time:** 4,224 minutes
 - **Subscribers gained:** 4
 
 ## Top 5 by Retention
@@ -21,31 +21,31 @@ Generated: 2026-04-27T18:30:59.812661+00:00
 | Video | Mood | Retention % | Views |
 |-------|------|-------------|-------|
 | Find Your Strength | 30 Seconds Power Dr | warrior | 96.8% | 1 |
+| Sounds for an Overactive Mind | 30 Secon | deep_focus | 96.8% | 1 |
 | sleep_30s_20260124_031441 | sleep | 83.6% | 1 |
 | trance_30s_20260124_055344 | trance | 78.3% | 1 |
 | Sounds for an Overactive Mind | 30 Secon | deep_focus | 74.8% | 1 |
-| Journey Inward | 30 Seconds Hypnotic Tra | trance | 62.4% | 2 |
 
 ## Top 5 by Views
 
 | Video | Mood | Views | Watch Time (min) |
 |-------|------|-------|------------------|
-| Enter Flow State | 1 Hour Zero Distracti | deep_focus | 119 | 298 |
+| Enter Flow State | 1 Hour Zero Distracti | deep_focus | 120 | 299 |
 | Sounds for an Overactive Mind | 1 Hour E | deep_focus | 81 | 82 |
-| Ground Yourself Instantly | 1 Hour Deep  | ceremony | 55 | 28 |
-| Calm Anxiety Fast | 1 Hour Deep Piano Re | piano_deep_calm | 53 | 806 |
-| Calm Anxiety Fast | 1 Hour Deep Piano Re | piano_deep_calm | 47 | 793 |
+| Ground Yourself Instantly | 1 Hour Deep  | ceremony | 56 | 28 |
+| Calm Anxiety Fast | 1 Hour Deep Piano Re | piano_deep_calm | 55 | 867 |
+| Calm Anxiety Fast | 1 Hour Deep Piano Re | piano_deep_calm | 49 | 854 |
 
 ## Performance by Mood
 
 | Mood | Videos | Total Views | Avg Retention |
 |------|--------|-------------|---------------|
-| piano_deep_calm | 14 | 287 | 16.9% |
-| deep_focus | 10 | 239 | 15.7% |
-| ceremony | 11 | 129 | 1.5% |
+| piano_deep_calm | 14 | 306 | 18.5% |
+| deep_focus | 10 | 243 | 25.8% |
+| ceremony | 11 | 131 | 1.5% |
+| energize | 10 | 24 | 7.4% |
 | rain_sleep | 4 | 24 | 2.0% |
-| energize | 10 | 23 | 7.4% |
-| trance | 10 | 6 | 39.7% |
+| trance | 10 | 7 | 40.5% |
 | warrior | 11 | 5 | 78.0% |
 | study | 6 | 5 | 20.2% |
 | unknown | 8 | 5 | 25.2% |

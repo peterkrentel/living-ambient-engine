@@ -1,7 +1,7 @@
 # Run next — personal advisory (2026-W18)
 
-Generated (report): 2026-04-27T18:31:00.195026+00:00
-**Correlate bundle `generated_at`:** 2026-04-27T18:30:59.950150Z
+Generated (report): 2026-04-27T19:10:08.100211+00:00
+**Correlate bundle `generated_at`:** 2026-04-27T19:10:07.852978Z
 
 ## How to read this
 
@@ -13,9 +13,9 @@ This file is **machine-assembled** from `data/suggestions_personal.json` and the
 
 ## Personal snapshot (this run)
 
-- **Overall avg retention:** 20.22%
-- **Overall avg watch min / video (window):** 82.889
-- **Videos analyzed:** 45 with views / 114 total
+- **Overall avg retention:** 22.33%
+- **Overall avg watch min / video (window):** 91.826
+- **Videos analyzed:** 46 with views / 114 total
 
 ## Evidence (paths)
 
@@ -24,8 +24,8 @@ This file is **machine-assembled** from `data/suggestions_personal.json` and the
 
 ## Actionable (correlate gates passed)
 
-↓ **`mood` / `piano_deep_calm`** (retention %) — -4.7% vs channel avg (n=7, views=239) — `medium` — evidence index **`data/suggestions_personal.json` → `suggestions[0]`**
-↑ **`mood` / `piano_deep_calm`** (watch min / video (window)) — +270.5 min vs channel avg (n=7, views=239) — `medium` — evidence index **`data/suggestions_personal.json` → `suggestions[2]`**
+↓ **`mood` / `piano_deep_calm`** (retention %) — -5.0% vs channel avg (n=7, views=255) — `medium` — evidence index **`data/suggestions_personal.json` → `suggestions[0]`**
+↑ **`mood` / `piano_deep_calm`** (watch min / video (window)) — +323.2 min vs channel avg (n=7, views=255) — `medium` — evidence index **`data/suggestions_personal.json` → `suggestions[2]`**
 
 ## Exploratory — lean in (low n / views)
 
@@ -33,8 +33,8 @@ _No exploratory "increase" rows._
 
 ## Exploratory — tread carefully (underperformers)
 
-↓ `mood` / `ceremony` (retention %) — -17.9% vs channel avg (n=3, views=104, exploratory) — `suggestions[1]`
-↓ `mood` / `ceremony` (watch min / video (window)) — -42.6 min vs channel avg (n=3, views=104, exploratory) — `suggestions[3]`
+↓ `mood` / `ceremony` (retention %) — -20.0% vs channel avg (n=3, views=105, exploratory) — `suggestions[1]`
+↓ `mood` / `ceremony` (watch min / video (window)) — -51.5 min vs channel avg (n=3, views=105, exploratory) — `suggestions[3]`
 
 ## Audit — overview excerpt (personal)
 

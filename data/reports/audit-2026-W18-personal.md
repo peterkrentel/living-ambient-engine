@@ -1,9 +1,9 @@
 # Channel coverage audit (2026-W18)
 
-Generated: 2026-04-27T18:30:59.899905+00:00
+Generated: 2026-04-27T19:10:07.803330+00:00
 **YouTube identity (this run):** `personal`
 **Analytics file:** `data/analytics_personal.json`
-Analytics `fetched_at`: 2026-04-27T18:30:59.659481+00:00
+Analytics `fetched_at`: 2026-04-27T19:10:07.513166+00:00
 Analytics window: `2026-03-30` → `2026-04-26`
 
 ## Overview
@@ -20,7 +20,7 @@ Analytics window: `2026-03-30` → `2026-04-26`
 |------|--------|------------|
 | `ceremony` | 11 | 6 |
 | `chill` | 4 | 0 |
-| `deep_focus` | 14 | 8 |
+| `deep_focus` | 14 | 9 |
 | `energize` | 10 | 4 |
 | `fireplace` | 3 | 1 |
 | `forest_morning` | 0 | 0 |
