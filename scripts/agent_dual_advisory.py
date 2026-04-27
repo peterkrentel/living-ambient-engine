@@ -916,6 +916,30 @@ def _runner_retry_system_prefix() -> str:
     )
 
 
+def _runner_retry_skeleton() -> str:
+    """Fill-in template for the retry path (small models follow this better than rule prose)."""
+    return (
+        "Fill the markdown below using ONLY numbers/labels found in CONTEXT. "
+        "Do not repeat these instructions.\n\n"
+        "## What I reviewed\n"
+        "- deterministic facts (computed by script)\n"
+        "- run-next digest + tail\n"
+        "- one other CONTEXT section you used\n\n"
+        "## Summary\n"
+        "(2–3 sentences)\n\n"
+        "## Insights\n"
+        "1. ...\n"
+        "2. ...\n"
+        "3. ...\n\n"
+        "## Risks\n"
+        "- ...\n"
+        "- ...\n\n"
+        "## Next tries\n"
+        "- ...\n"
+        "- ...\n"
+    )
+
+
 def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
     out = REPORTS / f"agent-insight-{week}-{lane}-runner.md"
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -1054,8 +1078,12 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
     if _runner_output_is_template_echo(text):
         _runner_log("runner_guardrail: detected template-echo output; retrying once")
         try:
-            retry_system = _runner_retry_system_prefix() + system
-            retry_prompt = _qwen25_chat_prompt(system=retry_system, user=user)
+            retry_system = (
+                "You are a compact advisor for a YouTube ambient music channel. "
+                "Use ONLY the provided CONTEXT. Do not repeat instructions."
+            )
+            retry_user = _runner_retry_skeleton() + "\n\nCONTEXT:\n" + ctx_used
+            retry_prompt = _qwen25_chat_prompt(system=retry_system, user=retry_user)
             retry_temp = min(temp, 0.1)
             result2 = llm(
                 retry_prompt,
