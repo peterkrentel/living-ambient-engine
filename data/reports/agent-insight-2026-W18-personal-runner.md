@@ -3,41 +3,9 @@
 > **Advisory only (v0).** Not `run_intent`, not `batch_generate`, not causal proof. Sparse metrics and packaging confounders apply — see `docs/spec/AGENT.md`.
 
 ---
-### Personal snapshot (this run)
+### Insights
 
-- **Overall avg retention:** 20.22%
-- **Overall avg watch min / video (window):** 82.889
-- **Videos analyzed:** 45 with views / 114 total
+- **Overall avg retention:** 20.22% (n=7, views=239) — Evidence index `data/suggestions_personal.json` → `suggestions[0]`
+- **Overall avg watch time per video:** 82.889 minutes (n=7, views=239) — Evidence index `data/suggestions_personal.json` → `suggestions[2]`
 
-### run-next tail (actionable → end)
-
-## Actionable (correlate gates passed)
-
-↓ **`mood` / `piano_deep_calm`** (retention %) — -4.7% vs channel avg (n=7, views=239) — `medium` — evidence index **`data/suggestions_personal.json` → `suggestions[0]`
-↑ **`mood` / `piano_deep_calm`** (watch min / video (window)) — +270.5 min vs channel avg (n=7, views=239) — `medium` — evidence index **`data/suggestions_personal.json` → `suggestions[2]`
-
-## Exploratory — lean in (low n / views)
-
-_No exploratory "increase" rows._
-
-## Exploratory — tread carefully (underperformers)
-
-↓ `mood` / `ceremony` (retention %) — -17.9% vs channel avg (n=3, views=104, exploratory) — `suggestions[1]`
-↓ `mood` / `ceremony` (watch min / video (window)) — -42.6 min vs channel avg (n=3, views=104, exploratory) — `suggestions[3]`
-
-## Audit — overview excerpt (personal)
-
-- **Videos in analytics:** 114
-- **generations.json join (any ledger row):** 82 / 114 (71.9%)
-- **generations.json join (identity-aligned):** 36 / 114 (31.6%)
-  - *Identity-aligned uses optional ledger `channel`, else infers from `workflow` (e.g. `Content Factory (Brand)`). Rows with neither still count only toward “any”.*
-  - *Historic uploads may lack rows until logged by the upload pipeline.*
-
-## Production hooks (manual)
-
-- **`data/run_intent_personal.json` present** — validate and run via [`run-intent-consumer.yml`](../../.github/workflows/run-intent-consumer.yml) (still **manual** / gated). Set workflow inputs **`intent_path`** = `data/run_intent_personal.json` and **`blocked_report_path`** = `data/reports/run-intent-blocked-personal.md` when dispatching the consumer.
-- **Batch strategy reminder:** before scaling one lever, skim mood vs algorithm batch intent in [`piano-batch.yml`](../../.github/workflows/piano-batch.yml) (personal cross-read there).
-
----
-
-*Produced by `scripts/run_next_report.py` (deterministic v0; no LLM, no `batch_generate`).*
+These insights suggest that the channel has a strong retention rate and average watch time, with a moderate retention rate and average watch time for individual videos. The channel is also gaining subscribers, indicating a positive engagement and growth trend.
