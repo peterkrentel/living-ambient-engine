@@ -393,6 +393,44 @@ def _compact_analytics(path: Path, max_chars: int = 2400) -> str:
     return text
 
 
+def _analytics_channel_totals_from_videos(videos: object) -> tuple[int, int, int]:
+    """Sum views / watch minutes / count-with-views from an analytics ``videos`` list."""
+    tot_views = 0
+    tot_watch_min = 0
+    with_views = 0
+    if not isinstance(videos, list):
+        return (0, 0, 0)
+    for v in videos:
+        if not isinstance(v, dict):
+            continue
+        m = v.get("metrics") or {}
+        try:
+            vi = int(m.get("views") or 0)
+        except (TypeError, ValueError):
+            vi = 0
+        try:
+            wm = int(m.get("watch_time_minutes") or 0)
+        except (TypeError, ValueError):
+            wm = 0
+        tot_views += vi
+        tot_watch_min += wm
+        if vi > 0:
+            with_views += 1
+    return (tot_views, tot_watch_min, with_views)
+
+
+def _analytics_channel_totals_from_file(ana_path: Path) -> tuple[int, int, int] | None:
+    """Return ``(sum_views_all_videos, sum_watch_time_minutes_all_videos, count_videos_with_views_gt_0)``."""
+    if not ana_path.exists():
+        return None
+    try:
+        data = json.loads(ana_path.read_text(encoding="utf-8", errors="replace"))
+    except (json.JSONDecodeError, OSError, TypeError):
+        return None
+    videos = data.get("videos") or []
+    return _analytics_channel_totals_from_videos(videos)
+
+
 def _runner_facts_block(ana_path: Path, sug_path: Path) -> str:
     """Small deterministic JSON so the small GGUF can cite channel totals without inventing them."""
     ana_rel = ana_path.relative_to(_REPO) if ana_path.is_relative_to(_REPO) else ana_path
@@ -402,25 +440,7 @@ def _runner_facts_block(ana_path: Path, sug_path: Path) -> str:
         try:
             data = json.loads(ana_path.read_text(encoding="utf-8", errors="replace"))
             videos = data.get("videos") or []
-            tot_views = 0
-            tot_watch_min = 0
-            with_views = 0
-            for v in videos:
-                if not isinstance(v, dict):
-                    continue
-                m = v.get("metrics") or {}
-                try:
-                    vi = int(m.get("views") or 0)
-                except (TypeError, ValueError):
-                    vi = 0
-                try:
-                    wm = int(m.get("watch_time_minutes") or 0)
-                except (TypeError, ValueError):
-                    wm = 0
-                tot_views += vi
-                tot_watch_min += wm
-                if vi > 0:
-                    with_views += 1
+            tot_views, tot_watch_min, with_views = _analytics_channel_totals_from_videos(videos)
             ana_facts.update(
                 {
                     "date_range": data.get("date_range"),
@@ -1036,6 +1056,89 @@ def _runner_output_schema_valid(prose: str) -> bool:
     return True
 
 
+def _runner_analytics_path_for_lane(lane: str) -> Path:
+    if lane == "personal":
+        return DATA / "analytics_personal.json"
+    return DATA / "analytics.json"
+
+
+def _runner_slice_wir_summary(prose: str) -> str:
+    """Body from ``## What I reviewed`` through just before ``## Insights`` (for grounding checks)."""
+    a = prose.find("## What I reviewed")
+    b = prose.find("## Insights")
+    if a == -1 or b == -1 or b <= a:
+        return ""
+    return prose[a:b]
+
+
+def _runner_int_in_text_as_token(text: str, n: int) -> bool:
+    """True if integer ``n`` appears with digit boundaries (avoids matching ``46`` inside ``146``)."""
+    return re.search(rf"(?<!\d){re.escape(str(n))}(?!\d)", text) is not None
+
+
+def _runner_prose_quotes_channel_totals(slice_text: str, totals: tuple[int, int, int]) -> bool:
+    """Require all three analytics channel totals to appear verbatim in WIR+Summary slice."""
+    sv, sw, cv = totals
+    return (
+        _runner_int_in_text_as_token(slice_text, sv)
+        and _runner_int_in_text_as_token(slice_text, sw)
+        and _runner_int_in_text_as_token(slice_text, cv)
+    )
+
+
+def _runner_insights_section(prose: str) -> str:
+    a = prose.find("## Insights")
+    b = prose.find("## Risks")
+    if a == -1 or b == -1 or b <= a:
+        return ""
+    return prose[a:b]
+
+
+def _runner_insight_item_starts(line_stripped: str) -> bool:
+    if re.match(r"^\d+\.\s+", line_stripped):
+        return True
+    return bool(re.match(r"^\*{1,2}\d+\.\*{1,2}\s+", line_stripped))
+
+
+def _runner_insights_numbered_bodies(prose: str) -> list[str]:
+    """Split ``## Insights`` into one string per leading ``1.`` / ``2.`` / … item."""
+    body = _runner_insights_section(prose)
+    if not body:
+        return []
+    items: list[str] = []
+    buf: list[str] = []
+    started = False
+    for line in body.splitlines()[1:]:
+        stripped = line.strip()
+        if _runner_insight_item_starts(stripped):
+            if buf:
+                items.append("\n".join(buf).strip())
+            buf = [line]
+            started = True
+        elif started:
+            buf.append(line)
+    if buf:
+        items.append("\n".join(buf).strip())
+    return items
+
+
+def _runner_insight_norm(blob: str) -> str:
+    t = (blob or "").strip()
+    t = re.sub(r"^\d+\.\s+", "", t)
+    t = re.sub(r"^\*{1,2}\d+\.\*{1,2}\s+", "", t)
+    t = re.sub(r"\s+", " ", t.lower()).strip()
+    return t[:220]
+
+
+def _runner_insights_nonduplicate(prose: str) -> bool:
+    """Reject obvious copy-paste duplicates among numbered insights (needs ≥4 items)."""
+    items = _runner_insights_numbered_bodies(prose)
+    if len(items) < 4:
+        return True
+    norms = [_runner_insight_norm(x) for x in items]
+    return len(norms) == len(set(norms))
+
+
 def _runner_output_is_context_dump(prose: str) -> bool:
     """Detect outputs that paste run-next / machine bundle instead of synthesizing."""
     t = prose or ""
@@ -1143,6 +1246,11 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
         "The section **deterministic facts (computed by script)** has JSON built by Python: "
         "for **sum_views_all_videos**, **sum_watch_time_minutes_all_videos**, and **count_videos_with_views_gt_0**, "
         "you MUST copy those integers exactly when you mention channel totals. Never invent different totals.\n"
+        "In **## What I reviewed**, the deterministic-facts bullet must include those **three integers** verbatim. "
+        "In **## Summary**, the prose must also include the **same three integers** at least once each (no rounding, "
+        "no recomputing from per-video rows).\n"
+        "In **## Insights**, each numbered item must be **distinct** — do not reuse the same titles/stats "
+        "in another numbered item.\n"
         "Treat the rest of CONTEXT as evidence too, but if prose disagrees with that JSON, **follow the JSON**.\n"
         "Do not reference files you did not read here; do not answer with pointers only (e.g. “see run-next”) — "
         "synthesize takeaways in your own words.\n"
@@ -1322,6 +1430,28 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
                 "Runner output did not include required `##` sections in order: "
                 "## What I reviewed → ## Summary → ## Insights → ## Risks → ## Next tries.\n"
             )
+
+    if not text.startswith("## Inference error"):
+        ch_totals = _analytics_channel_totals_from_file(_runner_analytics_path_for_lane(lane))
+        if ch_totals is not None:
+            head_slice = _runner_slice_wir_summary(text)
+            if head_slice and not _runner_prose_quotes_channel_totals(head_slice, ch_totals):
+                _runner_log(
+                    "runner_grounding_reject: channel totals not quoted verbatim in "
+                    "## What I reviewed + ## Summary slice"
+                )
+                text = (
+                    "## Inference error\n\n"
+                    "Runner output must quote **sum_views_all_videos**, **sum_watch_time_minutes_all_videos**, "
+                    "and **count_videos_with_views_gt_0** from deterministic JSON verbatim in "
+                    "## What I reviewed and/or ## Summary.\n"
+                )
+            elif not _runner_insights_nonduplicate(text):
+                _runner_log("runner_insights_dedup_reject: duplicate numbered insights")
+                text = (
+                    "## Inference error\n\n"
+                    "Runner output repeated the same insight text for multiple numbered items.\n"
+                )
 
     out.write_text(_header_runner(lane, week) + text + "\n", encoding="utf-8")
     _runner_log(f"wrote {out.relative_to(_REPO) if out.is_relative_to(_REPO) else out}")
