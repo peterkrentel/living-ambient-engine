@@ -158,6 +158,32 @@ def test_sanitize_runner_prose_drops_tautology():
     assert "12" in out and "34" in out
 
 
+def test_runner_output_is_template_echo_detects_instruction_only():
+    raw = (
+        "## What I reviewed — **exactly 3** short bullets: name deterministic facts, run-next digest/tail, "
+        "and one of (weekly / suggestions compact / analytics compact). No long pasted lists.\n"
+        "## Summary — **2–3** sentences only: main story from metrics (thin data is OK to name).\n"
+        "## Insights — numbered **1–5**. Each item: **at most 2 sentences**.\n"
+        "## Risks — **2–4** short bullets (thin data, confounders); **do not** duplicate the same risk sentence.\n"
+        "## Next tries — **2–5** bullets: concrete experiments tied to moods/styles named in CONTEXT.\n"
+    )
+    assert adv._runner_output_is_template_echo(raw) is True
+
+
+def test_runner_output_is_template_echo_false_when_has_bullets():
+    raw = (
+        "## What I reviewed — **exactly 3** short bullets: name deterministic facts, run-next digest/tail, "
+        "and one of (weekly / suggestions compact / analytics compact).\n"
+        "- deterministic facts\n"
+        "- run-next digest/tail\n"
+        "- weekly report\n"
+        "\n"
+        "## Summary\n"
+        "Two sentences.\n"
+    )
+    assert adv._runner_output_is_template_echo(raw) is False
+
+
 def test_runner_run_next_for_qwen_extracts_snapshot(tmp_path: Path):
     p = tmp_path / "run-next.md"
     p.write_text(
