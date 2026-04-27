@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "channel": "personal",
+  "moods": [
+    "piano_deep_calm"
+  ],
+  "duration": "10min",
+  "dual": true,
+  "upload": false,
+  "max_videos": null
+}
