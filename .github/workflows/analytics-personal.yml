@@ -125,8 +125,11 @@ jobs:
           GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
           # Runner GGUF: lean bundle + long system can fill n_ctx; default 1536 max output caused
           # finish_reason=length mid-markdown (see [runner-advisory] logs). Gemini path unchanged.
-          AGENT_LLAMA_N_CTX: "6144"
+          # Bundle default 5200 hard_capped ~9.5k raw personal CONTEXT — raised so paths/tail are not
+          # cut mid-string (n_ctx max 8192 per script clamp).
+          AGENT_LLAMA_N_CTX: "8192"
           MAX_RUNNER_TOKENS: "3072"
+          RUNNER_BUNDLE_MAX_CHARS: "10000"
           # Free tier on small AI Studio projects is often ~5 RPM / low RPD for Flash — pace requests
           # and cap retries (see docs/spec/workflows.md § analytics-personal).
           GEMINI_MIN_INTERVAL_SEC: "15"
