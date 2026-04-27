@@ -892,6 +892,30 @@ def _runner_log_output_shape(prose: str) -> None:
         _runner_log(f"runner_output_shape verbose: prose_head={prose[:prev]!r}")
 
 
+def _runner_output_is_template_echo(prose: str) -> bool:
+    """Detect runner outputs that simply repeat the instructions (no filled content)."""
+    t = (prose or "").strip()
+    if not t:
+        return True
+    # Strong signature: the model repeats the exact instruction scaffolding.
+    needle = "## What I reviewed — **exactly 3** short bullets"
+    if needle not in t:
+        return False
+    # If it contains the other instruction lines and no actual bullets/numbers, treat as echo.
+    has_other = "## Next tries — **2–5** bullets" in t and "## Risks — **2–4** short bullets" in t
+    has_bullets = any(line.lstrip().startswith(("-", "*")) for line in t.splitlines())
+    has_numbers = any(ch.isdigit() for ch in t)
+    # The template includes digits (2–5, etc). We require bullets or something beyond the header lines.
+    return bool(has_other) and (not has_bullets) and has_numbers and len(t.splitlines()) <= 20
+
+
+def _runner_retry_system_prefix() -> str:
+    return (
+        "Do NOT repeat the instructions. Write an actual advisory using only CONTEXT. "
+        "If you cannot comply, write '## Inference error' and one sentence why.\n"
+    )
+
+
 def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
     out = REPORTS / f"agent-insight-{week}-{lane}-runner.md"
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -1025,6 +1049,44 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
             f"sanitize: tautology_lines_removed={san_removed} "
             f"chars_before_after={len(before_san)}->{len(text)}"
         )
+
+    # Guardrail: small models sometimes echo the template instructions verbatim.
+    if _runner_output_is_template_echo(text):
+        _runner_log("runner_guardrail: detected template-echo output; retrying once")
+        try:
+            retry_system = _runner_retry_system_prefix() + system
+            retry_prompt = _qwen25_chat_prompt(system=retry_system, user=user)
+            retry_temp = min(temp, 0.1)
+            result2 = llm(
+                retry_prompt,
+                max_tokens=cap,
+                temperature=retry_temp,
+                stop=[_QWEN_IM_END, _QWEN_IM_START],
+            )
+            choice2 = (result2.get("choices") or [{}])[0]
+            text2 = (choice2.get("text") or "").strip()
+            fr2 = choice2.get("finish_reason")
+            _runner_log(
+                f"runner_guardrail retry: output_chars={len(text2)} finish_reason={fr2!r} temperature={retry_temp}"
+            )
+            _runner_log_output_shape(text2)
+            if text2 and not text2.startswith("## Inference error"):
+                before_san2 = text2
+                text2, san_removed2 = _sanitize_runner_prose(text2)
+                _runner_log(
+                    f"sanitize(retry): tautology_lines_removed={san_removed2} "
+                    f"chars_before_after={len(before_san2)}->{len(text2)}"
+                )
+            if not _runner_output_is_template_echo(text2) and text2:
+                text = text2
+            else:
+                text = (
+                    "## Inference error\n\n"
+                    "Runner echoed the instruction template instead of producing an advisory.\n"
+                )
+        except Exception as e:  # noqa: BLE001 — guardrail; keep workflow running
+            _runner_log(f"runner_guardrail retry failed: {type(e).__name__}: {e}")
+            text = "## Inference error\n\nRunner guardrail retry failed.\n"
 
     out.write_text(_header_runner(lane, week) + text + "\n", encoding="utf-8")
     _runner_log(f"wrote {out.relative_to(_REPO) if out.is_relative_to(_REPO) else out}")
