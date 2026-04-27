@@ -158,6 +158,20 @@ def test_sanitize_runner_prose_drops_tautology():
     assert "12" in out and "34" in out
 
 
+def test_sanitize_runner_prose_keeps_channel_totals_with_retention_tautology():
+    """Regression: one line can cite 755/4224/46 and also repeat 22.33 vs 22.33 — must not drop whole line."""
+    raw = (
+        "## Summary\n"
+        "Totals 755 views, 4224 watch minutes, 46 videos; retention 22.33% is slightly lower than 22.33%.\n"
+        "## Insights\n"
+        "1. ok\n"
+    )
+    out, removed = adv._sanitize_runner_prose(raw)
+    assert removed == 0
+    assert "755" in out and "4224" in out and "46" in out
+    assert "slightly lower" in out.lower()
+
+
 def test_runner_output_is_template_echo_detects_instruction_only():
     raw = (
         "## What I reviewed — **exactly 3** short bullets: name deterministic facts, run-next digest/tail, "
