@@ -5,42 +5,9 @@
 ---
 ### Insights
 
-1. **Mood: Deep Calm** — The channel has a high retention rate of 16.9% and an average watch time of 82.889 minutes per video, indicating a calm and focused mood. This is slightly higher than the channel's overall average retention of 20.22% and watch time of 82.889 minutes per video.
-
-2. **Mood: Deep Focus** — The channel has a high retention rate of 15.7% and an average watch time of 82.889 minutes per video, indicating a focused and deep mood. This is slightly higher than the channel's overall average retention of 20.22% and watch time of 82.889 minutes per video.
-
-3. **Mood: Ceremony** — The channel has a low retention rate of 1.5% and an average watch time of 1.5 minutes per video, indicating a ceremony mood. This is significantly lower than the channel's overall average retention of 20.22% and watch time of 82.889 minutes per video.
-
-4. **Mood: Rain Sleep** — The channel has a low retention rate of 2.0% and an average watch time of 24 minutes per video, indicating a rain sleep mood. This is significantly lower than the channel's overall average retention of 20.22% and watch time of 82.889 minutes per video.
-
-5. **Mood: En** — The channel has a low retention rate of 2.0% and an average watch time of 24 minutes per video, indicating an en mood. This is significantly lower than the channel's overall average retention of 20.22% and watch time of 82.889 minutes per video.
-
-6. **Mood: Deep Focus** — The channel has a high retention rate of 15.7% and an average watch time of 82.889 minutes per video, indicating a focused and deep mood. This is slightly higher than the channel's overall average retention of 20.22% and watch time of 82.889 minutes per video.
-
-7. **Mood: Deep Calm** — The channel has a high retention rate of 16.9% and an average watch time of 82.889 minutes per video, indicating a calm and focused mood. This is slightly higher than the channel's overall average retention of 20.22% and watch time of 82.889 minutes per video.
-
-8. **Mood: Rain Sleep** — The channel has a low retention rate of 2.0% and an average watch time of 24 minutes per video, indicating a rain sleep mood. This is significantly lower than the channel's overall average retention of 20.22% and watch time of 82.889 minutes per video.
-
-9. **Mood: Ceremony** — The channel has a low retention rate of 1.5% and an average watch time of 1.5 minutes per video, indicating a ceremony mood. This is significantly lower than the channel's overall average retention of 20.22% and watch time of 82.889 minutes per video.
-
-10. **Mood: En** — The channel has a low retention rate of 2.0% and an average watch time of 24 minutes per video, indicating an en mood. This is significantly lower than the channel's overall average retention of 20.22% and watch time of 82.889 minutes per video.
-
-11. **Mood: Deep Focus** — The channel has a high retention rate of 15.7% and an average watch time of 82.889 minutes per video, indicating a focused and deep mood. This is slightly higher than the channel's overall average retention of 20.22% and watch time of 82.889 minutes per video.
-
-12. **Mood: Deep Calm** — The channel has a high retention rate of 16.9% and an average watch time of 82.889 minutes per video, indicating a calm and focused mood. This is slightly higher than the channel's overall average retention of 20.22% and watch time of 82.889 minutes per video.
-
-13. **Mood: Rain Sleep** — The channel has a low retention rate of 2.0% and an average watch time of 24 minutes per video, indicating a rain sleep mood. This is significantly lower than the channel's overall average retention of 20.22% and watch time of 82.889 minutes per video.
-
-14. **Mood: Ceremony** — The channel has a low retention rate of 1.5% and an average watch time of 1.5 minutes per video, indicating a ceremony mood. This is significantly lower than the channel's overall average retention of 20.22% and watch time of 82.889 minutes per video.
-
-15. **Mood: En** — The channel has a low retention rate of 2.0% and an average watch time of 24 minutes per video, indicating an en mood. This is significantly lower than the channel's overall average retention of 20.22% and watch time of 82.889 minutes per video.
-
-16. **Mood: Deep Focus** — The channel has a high retention rate of 15.7% and an average watch time of 82.889 minutes per video, indicating a focused and deep mood. This is slightly higher than the channel's overall average retention of 20.22% and watch time of 82.889 minutes per video.
-
-17. **Mood: Deep Calm** — The channel has a high retention rate of 16.9% and an average watch time of 82.889 minutes per video, indicating a calm and focused mood. This is slightly higher than the channel's overall average retention of 20.22% and watch time of 82.889 minutes per video.
-
-18. **Mood: Rain Sleep** — The channel has a low retention rate of 2.0% and an average watch time of 24 minutes per video, indicating a rain sleep mood. This is significantly lower than the channel's overall average retention of 20.22% and watch time of 82.889 minutes per video.
-
-19. **Mood: Ceremony** — The channel has a low retention rate of 1.5% and an average watch time of 1.5 minutes per video, indicating a ceremony mood. This is significantly lower than the channel's overall average retention of 20.22% and watch time of 82.889 minutes per video.
-
-20. **Mood: En** — The channel has a low retention rate of 2.0% and an average watch time of 24 minutes per video, indicating
+1. **Mood: Deep Calm** — Videos with the mood "piano_deep_calm" have an average retention of 16.9%, which is 4.7% lower than the channel average of 21.2% (n=7, views=239). This suggests that the channel may benefit from more content with this mood.
+2. **Mood: Deep Focus** — Videos with the mood "deep_focus" have an average retention of 15.7%, which is 4.7% lower than the channel average of 20.22% (n=7, views=239). This indicates that the channel could improve its retention rate by adding more content with this mood.
+3. **Mood: Ceremony** — Videos with the mood "ceremony" have an average retention of 1.5%, which is 17.7% lower than the channel average of 20.22% (n=7, views=239). This suggests that the channel may need to focus on increasing the retention of content with this mood.
+4. **Mood: Rain Sleep** — Videos with the mood "rain_sleep" have an average retention of 2.0%, which is 17.7% lower than the channel average of 20.22% (n=7, views=239). This indicates that the channel may need to improve the retention of content with this mood.
+5. **Mood: En** (missing: data/reports/run-intent-bloc
+… hard-capped for runner ctx)
