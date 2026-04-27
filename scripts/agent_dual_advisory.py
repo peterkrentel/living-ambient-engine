@@ -542,11 +542,25 @@ def _runner_run_next_for_qwen(run_next: Path, lane: str) -> str:
     return block
 
 
-def _sanitize_runner_prose(text: str) -> tuple[str, int]:
+def _runner_int_in_text_as_token(text: str, n: int) -> bool:
+    """True if integer ``n`` appears with digit boundaries (avoids ``46`` inside ``146``).
+
+    Thousands separators (commas) are ignored so ``4,224`` matches ``4224``.
+    """
+    t = text.replace(",", "")
+    return re.search(rf"(?<!\d){re.escape(str(n))}(?!\d)", t) is not None
+
+
+def _sanitize_runner_prose(
+    text: str, channel_totals: tuple[int, int, int] | None = None
+) -> tuple[str, int]:
     """Remove tautology lines small models emit (e.g. same % compared to itself via 'slightly higher than').
 
     Lines that also carry **several distinct numeric facts** (e.g. channel views + minutes + counts plus a
     redundant retention comparison) are **kept** — dropping the whole line would remove grounding totals.
+
+    When ``channel_totals`` is set, lines that mention **any** of those three integers (same token rules as
+    grounding) are never dropped — so a line with only ``46`` plus a duplicated ``22.33`` tautology is kept.
 
     Returns ``(cleaned_text, lines_removed)``.
     """
@@ -569,6 +583,15 @@ def _sanitize_runner_prose(text: str) -> tuple[str, int]:
             if len(uniq_vals) >= 3:
                 out.append(line)
                 continue
+            if channel_totals is not None:
+                sv, sw, cv = channel_totals
+                if (
+                    _runner_int_in_text_as_token(line, sv)
+                    or _runner_int_in_text_as_token(line, sw)
+                    or _runner_int_in_text_as_token(line, cv)
+                ):
+                    out.append(line)
+                    continue
             if len(decimals) >= 2 and len(set(decimals)) == 1:
                 removed += 1
                 continue
@@ -1101,15 +1124,6 @@ def _runner_slice_wir_summary(prose: str) -> str:
     return prose[a:b]
 
 
-def _runner_int_in_text_as_token(text: str, n: int) -> bool:
-    """True if integer ``n`` appears with digit boundaries (avoids ``46`` inside ``146``).
-
-    Thousands separators (commas) are ignored so ``4,224`` matches ``4224``.
-    """
-    t = text.replace(",", "")
-    return re.search(rf"(?<!\d){re.escape(str(n))}(?!\d)", t) is not None
-
-
 def _runner_prose_quotes_channel_totals(slice_text: str, totals: tuple[int, int, int]) -> bool:
     """Require all three analytics channel totals to appear verbatim in WIR+Summary slice."""
     sv, sw, cv = totals
@@ -1285,6 +1299,7 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
         return out
 
     ctx_used = bundle[: runner_bundle_max_chars()]
+    ch_totals = _analytics_channel_totals_from_file(_runner_analytics_path_for_lane(lane))
     _runner_log(
         f"runner_prompt_budget: ctx_used_chars={len(ctx_used)} bundle_in_chars={len(bundle)} "
         f"runner_bundle_max_chars={runner_bundle_max_chars()} verbose={runner_verbose_logs()}"
@@ -1415,7 +1430,7 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
 
     if not text.startswith("## Inference error"):
         before_san = text
-        text, san_removed = _sanitize_runner_prose(text)
+        text, san_removed = _sanitize_runner_prose(text, ch_totals)
         _runner_log(
             f"sanitize: tautology_lines_removed={san_removed} "
             f"chars_before_after={len(before_san)}->{len(text)}"
@@ -1456,7 +1471,7 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
             _runner_log_output_shape(text2)
             if text2 and not text2.startswith("## Inference error"):
                 before_san2 = text2
-                text2, san_removed2 = _sanitize_runner_prose(text2)
+                text2, san_removed2 = _sanitize_runner_prose(text2, ch_totals)
                 _runner_log(
                     f"sanitize(retry): tautology_lines_removed={san_removed2} "
                     f"chars_before_after={len(before_san2)}->{len(text2)}"
@@ -1513,7 +1528,7 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
                     )
                     _runner_log_output_shape(text_s)
                     if text_s and not text_s.startswith("## Inference error"):
-                        text_s, san_rs = _sanitize_runner_prose(text_s)
+                        text_s, san_rs = _sanitize_runner_prose(text_s, ch_totals)
                         _runner_log(
                             f"sanitize(schema_retry): tautology_lines_removed={san_rs} "
                             f"chars_after={len(text_s)}"
@@ -1549,7 +1564,6 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
                 )
 
     if not text.startswith("## Inference error"):
-        ch_totals = _analytics_channel_totals_from_file(_runner_analytics_path_for_lane(lane))
         if ch_totals is not None:
             head_slice = _runner_slice_wir_summary(text)
             if head_slice and not _runner_prose_quotes_channel_totals(head_slice, ch_totals):
