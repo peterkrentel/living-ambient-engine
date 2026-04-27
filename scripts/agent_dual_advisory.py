@@ -1056,6 +1056,27 @@ def _runner_output_schema_valid(prose: str) -> bool:
     return True
 
 
+def _runner_schema_failure_label(prose: str) -> str:
+    """Short log label for the first required heading not found in order (``ok`` if valid)."""
+    if _runner_output_schema_valid(prose):
+        return "ok"
+    lines = (prose or "").strip().splitlines()
+    min_line = -1
+    for head in _RUNNER_REQUIRED_H2_ORDER:
+        found_at = None
+        for i, raw in enumerate(lines):
+            if i <= min_line:
+                continue
+            s = raw.lstrip()
+            if _runner_line_matches_h2(s, head):
+                found_at = i
+                break
+        if found_at is None:
+            return f"missing:{head}"
+        min_line = found_at
+    return "ok"
+
+
 def _runner_analytics_path_for_lane(lane: str) -> Path:
     if lane == "personal":
         return DATA / "analytics_personal.json"
@@ -1209,6 +1230,22 @@ def _runner_retry_skeleton() -> str:
     )
 
 
+def _runner_schema_retry_system() -> str:
+    """Short system prompt for the one-shot schema completion retry (after primary output too short / wrong)."""
+    return (
+        "You are a compact advisor for a YouTube ambient music channel. Use ONLY the CONTEXT below. "
+        "Do not repeat these instructions.\n"
+        "The user message is a **fill-in template**: it already lists the five required `##` headings. "
+        "**Keep every one of those five `##` lines** (two `#` only — not `###`) in the **same order**. "
+        "Replace placeholders with real prose from CONTEXT.\n"
+        "In **## What I reviewed** and **## Summary**, copy **sum_views_all_videos**, "
+        "**sum_watch_time_minutes_all_videos**, and **count_videos_with_views_gt_0** from deterministic "
+        "facts JSON **verbatim** (same digits).\n"
+        "Never paste run-next snapshot/actionable blocks or the `run_next_report.py` footer.\n"
+        "Do not output `## Inference error` unless CONTEXT is unusable."
+    )
+
+
 def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
     out = REPORTS / f"agent-insight-{week}-{lane}-runner.md"
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -1293,7 +1330,13 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
         "Do not paste large tables; at most one tiny 3-row markdown table if essential. "
         "If a metric is missing from CONTEXT, say **Not in CONTEXT** instead of guessing."
     )
-    user = f"CONTEXT:\n{ctx_used}"
+    user = (
+        "Your reply must include **all five** section headings in order, each its own line starting "
+        "with exactly `## ` (two `#` characters, not `###`): "
+        "`## What I reviewed`, `## Summary`, `## Insights`, `## Risks`, `## Next tries`. "
+        "Do not stop after three sections.\n\n"
+        f"CONTEXT:\n{ctx_used}"
+    )
     prompt = _qwen25_chat_prompt(system=system, user=user)
     prompt_chars = len(prompt)
     sys_chars = len(system)
@@ -1314,6 +1357,7 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
     n_ctx_eff = llama_n_ctx()
     temp = runner_temperature()
 
+    llm = None
     try:
         t0 = time.perf_counter()
         llm = Llama(
@@ -1369,7 +1413,9 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
         )
 
     # Guardrail: small models echo instructions or paste run-next CONTEXT verbatim.
-    if _runner_output_is_template_echo(text) or _runner_output_is_context_dump(text):
+    if llm is not None and (
+        _runner_output_is_template_echo(text) or _runner_output_is_context_dump(text)
+    ):
         _runner_log("runner_guardrail: detected template-echo or context-dump; retrying once")
         try:
             retry_system = (
@@ -1428,12 +1474,70 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
             _runner_log("runner_heading_normalize: promoted ### → ## for known advisory section titles")
             text = text_norm
         if not _runner_output_schema_valid(text):
-            _runner_log("runner_schema_reject: missing or out-of-order required ## sections")
-            text = (
-                "## Inference error\n\n"
-                "Runner output did not include required `##` sections in order: "
-                "## What I reviewed → ## Summary → ## Insights → ## Risks → ## Next tries.\n"
+            _runner_log(
+                f"runner_schema_reject: missing or out-of-order required ## sections "
+                f"(first_issue={_runner_schema_failure_label(text)!r})"
             )
+            if llm is not None:
+                _runner_log("runner_schema_retry: one completion with fill-in template")
+                try:
+                    schema_user = _runner_retry_skeleton() + "\n\nCONTEXT:\n" + ctx_used
+                    schema_prompt = _qwen25_chat_prompt(
+                        system=_runner_schema_retry_system(), user=schema_user
+                    )
+                    schema_temp = min(temp, 0.1)
+                    cap_schema = _runner_effective_max_tokens(
+                        llm, prompt=schema_prompt, n_ctx_eff=n_ctx_eff, requested=cap_requested
+                    )
+                    result_s = llm(
+                        schema_prompt,
+                        max_tokens=cap_schema,
+                        temperature=schema_temp,
+                        stop=[_QWEN_IM_END, _QWEN_IM_START],
+                    )
+                    choice_s = (result_s.get("choices") or [{}])[0]
+                    text_s = (choice_s.get("text") or "").strip()
+                    fr_s = choice_s.get("finish_reason")
+                    _runner_log(
+                        f"runner_schema_retry: output_chars={len(text_s)} finish_reason={fr_s!r} "
+                        f"temperature={schema_temp}"
+                    )
+                    _runner_log_output_shape(text_s)
+                    if text_s and not text_s.startswith("## Inference error"):
+                        text_s, san_rs = _sanitize_runner_prose(text_s)
+                        _runner_log(
+                            f"sanitize(schema_retry): tautology_lines_removed={san_rs} "
+                            f"chars_after={len(text_s)}"
+                        )
+                    text_s, norm_s = _runner_normalize_known_h3_heads_to_h2(text_s)
+                    if norm_s:
+                        _runner_log(
+                            "runner_heading_normalize(schema_retry): promoted ### → ## "
+                            "for known advisory section titles"
+                        )
+                    if (
+                        text_s
+                        and not text_s.startswith("## Inference error")
+                        and not _runner_output_is_template_echo(text_s)
+                        and not _runner_output_is_context_dump(text_s)
+                        and _runner_output_schema_valid(text_s)
+                    ):
+                        text = text_s
+                        _runner_log("runner_schema_retry: accepted")
+                    else:
+                        _runner_log(
+                            "runner_schema_retry: rejected "
+                            f"(schema_ok={_runner_output_schema_valid(text_s)}, "
+                            f"first_issue={_runner_schema_failure_label(text_s)!r})"
+                        )
+                except Exception as e:  # noqa: BLE001
+                    _runner_log(f"runner_schema_retry failed: {type(e).__name__}: {e}")
+            if not _runner_output_schema_valid(text):
+                text = (
+                    "## Inference error\n\n"
+                    "Runner output did not include required `##` sections in order: "
+                    "## What I reviewed → ## Summary → ## Insights → ## Risks → ## Next tries.\n"
+                )
 
     if not text.startswith("## Inference error"):
         ch_totals = _analytics_channel_totals_from_file(_runner_analytics_path_for_lane(lane))
