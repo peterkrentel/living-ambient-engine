@@ -1134,6 +1134,14 @@ def _runner_prose_quotes_channel_totals(slice_text: str, totals: tuple[int, int,
     )
 
 
+def _runner_grounding_slice_ok(prose: str, totals: tuple[int, int, int]) -> bool:
+    """True if ``## What I reviewed`` … ``## Summary`` slice exists and quotes all three channel totals."""
+    sl = _runner_slice_wir_summary(prose)
+    if not (sl or "").strip():
+        return False
+    return _runner_prose_quotes_channel_totals(sl, totals)
+
+
 def _runner_insights_section(prose: str) -> str:
     a = prose.find("## Insights")
     b = prose.find("## Risks")
@@ -1266,6 +1274,28 @@ def _runner_schema_retry_system() -> str:
         "facts JSON **verbatim** (same digits).\n"
         "Never paste run-next snapshot/actionable blocks or the `run_next_report.py` footer.\n"
         "Do not output `## Inference error` unless CONTEXT is unusable."
+    )
+
+
+def _runner_grounding_retry_system() -> str:
+    """Short system prompt for the one-shot grounding retry (totals missing from WIR+Summary)."""
+    return (
+        "You are a compact advisor for a YouTube ambient music channel. Use ONLY the CONTEXT in the user message. "
+        "The user lists three integers that MUST appear as digit tokens in both **## What I reviewed** "
+        "and **## Summary** (exact values). Output a complete advisory: five `##` sections in order — "
+        "**## What I reviewed**, **## Summary**, **## Insights**, **## Risks**, **## Next tries** — "
+        "two `#` characters per heading, not `###`. "
+        "Do not paste run-next snapshot/actionable blocks or the `run_next_report.py` footer."
+    )
+
+
+def _runner_grounding_retry_user(*, draft: str, totals: tuple[int, int, int], ctx_used: str) -> str:
+    sv, sw, cv = totals
+    return (
+        f"REQUIRED verbatim integers (each must appear in ## What I reviewed AND ## Summary): "
+        f"{sv}, {sw}, {cv}\n\n"
+        f"Previous draft (rewrite into a valid full advisory):\n\n{draft}\n\n"
+        f"CONTEXT:\n{ctx_used}"
     )
 
 
@@ -1565,19 +1595,84 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
 
     if not text.startswith("## Inference error"):
         if ch_totals is not None:
-            head_slice = _runner_slice_wir_summary(text)
-            if head_slice and not _runner_prose_quotes_channel_totals(head_slice, ch_totals):
+            if not _runner_grounding_slice_ok(text, ch_totals):
+                sl = _runner_slice_wir_summary(text)
+                sv, sw, cv = ch_totals
                 _runner_log(
                     "runner_grounding_reject: channel totals not quoted verbatim in "
-                    "## What I reviewed + ## Summary slice"
+                    "## What I reviewed + ## Summary slice "
+                    f"slice_len={len(sl)} has_sv={bool(sl and _runner_int_in_text_as_token(sl, sv))} "
+                    f"has_sw={bool(sl and _runner_int_in_text_as_token(sl, sw))} "
+                    f"has_cv={bool(sl and _runner_int_in_text_as_token(sl, cv))}"
                 )
+                if llm is not None:
+                    _runner_log("runner_grounding_retry: one completion")
+                    try:
+                        gr_sys = _runner_grounding_retry_system()
+                        gr_user = _runner_grounding_retry_user(
+                            draft=text, totals=ch_totals, ctx_used=ctx_used
+                        )
+                        gr_prompt = _qwen25_chat_prompt(system=gr_sys, user=gr_user)
+                        gr_temp = min(temp, 0.1)
+                        cap_gr = _runner_effective_max_tokens(
+                            llm, prompt=gr_prompt, n_ctx_eff=n_ctx_eff, requested=cap_requested
+                        )
+                        res_gr = llm(
+                            gr_prompt,
+                            max_tokens=cap_gr,
+                            temperature=gr_temp,
+                            stop=[_QWEN_IM_END, _QWEN_IM_START],
+                        )
+                        ch_gr = (res_gr.get("choices") or [{}])[0]
+                        text_gr = (ch_gr.get("text") or "").strip()
+                        fr_gr = ch_gr.get("finish_reason")
+                        _runner_log(
+                            f"runner_grounding_retry: output_chars={len(text_gr)} "
+                            f"finish_reason={fr_gr!r} temperature={gr_temp}"
+                        )
+                        if text_gr and not text_gr.startswith("## Inference error"):
+                            text_gr, san_gr = _sanitize_runner_prose(text_gr, ch_totals)
+                            _runner_log(
+                                f"sanitize(grounding_retry): tautology_lines_removed={san_gr} "
+                                f"chars_after={len(text_gr)}"
+                            )
+                        text_gr, norm_gr = _runner_normalize_known_h3_heads_to_h2(text_gr)
+                        if norm_gr:
+                            _runner_log(
+                                "runner_heading_normalize(grounding_retry): promoted ### → ## "
+                                "for known advisory section titles"
+                            )
+                        gr_ok = (
+                            text_gr
+                            and not text_gr.startswith("## Inference error")
+                            and not _runner_output_is_template_echo(text_gr)
+                            and not _runner_output_is_context_dump(text_gr)
+                            and _runner_output_schema_valid(text_gr)
+                            and _runner_grounding_slice_ok(text_gr, ch_totals)
+                            and _runner_insights_nonduplicate(text_gr)
+                        )
+                        if gr_ok:
+                            text = text_gr
+                            _runner_log("runner_grounding_retry: accepted")
+                        else:
+                            _runner_log(
+                                "runner_grounding_retry: rejected "
+                                f"(schema_ok={_runner_output_schema_valid(text_gr)}, "
+                                f"grounding_ok={_runner_grounding_slice_ok(text_gr, ch_totals) if text_gr else False}, "
+                                f"dedup_ok={_runner_insights_nonduplicate(text_gr) if text_gr else False})"
+                            )
+                    except Exception as e:  # noqa: BLE001
+                        _runner_log(f"runner_grounding_retry failed: {type(e).__name__}: {e}")
+            if not text.startswith("## Inference error") and not _runner_grounding_slice_ok(
+                text, ch_totals
+            ):
                 text = (
                     "## Inference error\n\n"
                     "Runner output must quote **sum_views_all_videos**, **sum_watch_time_minutes_all_videos**, "
                     "and **count_videos_with_views_gt_0** from deterministic JSON verbatim in "
                     "## What I reviewed and/or ## Summary.\n"
                 )
-            elif not _runner_insights_nonduplicate(text):
+            elif not text.startswith("## Inference error") and not _runner_insights_nonduplicate(text):
                 _runner_log("runner_insights_dedup_reject: duplicate numbered insights")
                 text = (
                     "## Inference error\n\n"
