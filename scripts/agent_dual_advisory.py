@@ -957,6 +957,46 @@ _RUNNER_REQUIRED_H2_ORDER = (
     "## Risks",
     "## Next tries",
 )
+# Titles that may appear as erroneous ``###`` (CONTEXT uses ``###``; small models mirror it).
+_RUNNER_H3_PROMOTABLE_TITLES = (
+    "What I reviewed",
+    "Summary",
+    "Insights",
+    "Risks",
+    "Next tries",
+)
+
+
+def _runner_rest_allows_h3_promotion_to_h2(rest: str, title: str) -> bool:
+    """True if ``rest`` after ``###`` is exactly ``title`` or ``title`` + allowed continuation (not e.g. ``Summary of``)."""
+    if rest == title:
+        return True
+    if not rest.startswith(title):
+        return False
+    suffix = rest[len(title) :].lstrip()
+    if not suffix:
+        return True
+    fc = suffix[0]
+    # markdown / list / numbering — not a bogus word continuation like ``Summary of``
+    return fc in (":", "—", "-", "*", "\u2013", "\u2014") or fc.isdigit()
+
+
+def _runner_normalize_known_h3_heads_to_h2(prose: str) -> tuple[str, bool]:
+    """Promote ``###`` → ``##`` only for the five required section titles (CI drift from CONTEXT)."""
+    changed = False
+    out_lines: list[str] = []
+    for line in (prose or "").splitlines():
+        s = line.lstrip()
+        indent = line[: len(line) - len(s)]
+        if s.startswith("### ") and not s.startswith("####"):
+            rest = s[4:].lstrip()
+            for title in _RUNNER_H3_PROMOTABLE_TITLES:
+                if _runner_rest_allows_h3_promotion_to_h2(rest, title):
+                    line = f"{indent}## {rest}"
+                    changed = True
+                    break
+        out_lines.append(line)
+    return "\n".join(out_lines), changed
 
 
 def _runner_line_matches_h2(s: str, head: str) -> bool:
@@ -1114,9 +1154,10 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
         "no outer ``` fences). Do **not** begin your answer by repeating these rule lines verbatim.\n"
         "**Critical:** Your reply body MUST use exactly these five headings as the **first** markdown "
         "headings in your answer, in this **exact order** — each on its own line starting with `## ` "
-        "(two `#` only, not `###`): "
-        "`## What I reviewed`, `## Summary`, `## Insights`, `## Risks`, `## Next tries`. "
-        "Do not put `### Insights` or any other heading before `## What I reviewed`.\n"
+        "(**exactly two** `#` characters, then a space — **not** `###` three hashes). CONTEXT uses `###` "
+        "for its own blocks; your advisory sections must still use `##` only. "
+        "Headings in order: `## What I reviewed`, `## Summary`, `## Insights`, `## Risks`, `## Next tries`. "
+        "Do not put `### …` section titles before `## What I reviewed`.\n"
         "## What I reviewed\n"
         "Three short `-` bullets: name **deterministic facts**, **run-next digest/tail**, "
         "and one other CONTEXT block you used (weekly, suggestions compact, or analytics compact). "
@@ -1224,7 +1265,8 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
                 "Use ONLY the provided CONTEXT. Do not repeat instructions. "
                 "Never paste run-next snapshot/actionable headings or the run_next_report.py footer. "
                 "Output MUST use `## What I reviewed`, `## Summary`, `## Insights`, `## Risks`, "
-                "`## Next tries` as lines (in that order) before any other `##` headings."
+                "`## Next tries` as lines (in that order) before any other `##` headings — "
+                "exactly two `#` characters per heading, not `###`."
             )
             retry_user = _runner_retry_skeleton() + "\n\nCONTEXT:\n" + ctx_used
             retry_prompt = _qwen25_chat_prompt(system=retry_system, user=retry_user)
@@ -1268,13 +1310,18 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
             _runner_log(f"runner_guardrail retry failed: {type(e).__name__}: {e}")
             text = "## Inference error\n\nRunner guardrail retry failed.\n"
 
-    if not text.startswith("## Inference error") and not _runner_output_schema_valid(text):
-        _runner_log("runner_schema_reject: missing or out-of-order required ## sections")
-        text = (
-            "## Inference error\n\n"
-            "Runner output did not include required `##` sections in order: "
-            "## What I reviewed → ## Summary → ## Insights → ## Risks → ## Next tries.\n"
-        )
+    if not text.startswith("## Inference error"):
+        text_norm, norm_changed = _runner_normalize_known_h3_heads_to_h2(text)
+        if norm_changed:
+            _runner_log("runner_heading_normalize: promoted ### → ## for known advisory section titles")
+            text = text_norm
+        if not _runner_output_schema_valid(text):
+            _runner_log("runner_schema_reject: missing or out-of-order required ## sections")
+            text = (
+                "## Inference error\n\n"
+                "Runner output did not include required `##` sections in order: "
+                "## What I reviewed → ## Summary → ## Insights → ## Risks → ## Next tries.\n"
+            )
 
     out.write_text(_header_runner(lane, week) + text + "\n", encoding="utf-8")
     _runner_log(f"wrote {out.relative_to(_REPO) if out.is_relative_to(_REPO) else out}")

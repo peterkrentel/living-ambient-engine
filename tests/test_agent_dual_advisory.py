@@ -193,6 +193,38 @@ def test_instruction_scaffold_echo_first_line_only():
     assert adv._runner_output_is_instruction_scaffold_echo(raw) is True
 
 
+def test_runner_normalize_h3_to_h2_known_sections():
+    raw = (
+        "### What I reviewed\n"
+        "- a\n"
+        "### Summary\n"
+        "S.\n"
+        "### Insights\n"
+        "1. x\n"
+        "### Risks\n"
+        "- r\n"
+        "### Next tries\n"
+        "- n\n"
+    )
+    out, ch = adv._runner_normalize_known_h3_heads_to_h2(raw)
+    assert ch is True
+    assert "## What I reviewed" in out and "### What I reviewed" not in out
+    assert adv._runner_output_schema_valid(out) is True
+
+
+def test_runner_normalize_h3_does_not_touch_summary_of():
+    raw = "### Summary of the week\n\nx\n"
+    out, ch = adv._runner_normalize_known_h3_heads_to_h2(raw)
+    assert ch is False
+    assert out.splitlines() == raw.splitlines()
+
+
+def test_runner_normalize_h3_does_not_touch_personal_snapshot():
+    raw = "### Personal snapshot (this run)\n\n- x\n"
+    out, ch = adv._runner_normalize_known_h3_heads_to_h2(raw)
+    assert ch is False
+
+
 def test_runner_output_schema_valid_minimal():
     prose = (
         "## What I reviewed\n"
