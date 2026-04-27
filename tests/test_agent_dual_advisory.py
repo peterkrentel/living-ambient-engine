@@ -172,6 +172,22 @@ def test_sanitize_runner_prose_keeps_channel_totals_with_retention_tautology():
     assert "slightly lower" in out.lower()
 
 
+def test_sanitize_runner_prose_keeps_line_when_channel_total_plus_two_uniques():
+    """<3 distinct parsed numbers but line mentions a deterministic total — do not strip (CI grounding)."""
+    raw = "46 videos with views; retention 22.33% is slightly lower than 22.33%.\n"
+    totals = (755, 4224, 46)
+    out, removed = adv._sanitize_runner_prose(raw, totals)
+    assert removed == 0
+    assert "46" in out and "slightly lower" in out.lower()
+
+
+def test_sanitize_runner_prose_drops_two_uniques_tautology_when_no_channel_totals():
+    raw = "46 other meaning; retention 22.33% is slightly lower than 22.33%.\n"
+    out, removed = adv._sanitize_runner_prose(raw, (999, 8888, 99))
+    assert removed == 1
+    assert "slightly lower" not in out.lower()
+
+
 def test_runner_output_is_template_echo_detects_instruction_only():
     raw = (
         "## What I reviewed — **exactly 3** short bullets: name deterministic facts, run-next digest/tail, "
