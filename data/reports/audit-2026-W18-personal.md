@@ -1,9 +1,9 @@
 # Channel coverage audit (2026-W18)
 
-Generated: 2026-04-27T14:03:36.688880+00:00
+Generated: 2026-04-27T14:40:54.138459+00:00
 **YouTube identity (this run):** `personal`
 **Analytics file:** `data/analytics_personal.json`
-Analytics `fetched_at`: 2026-04-27T14:03:36.431849+00:00
+Analytics `fetched_at`: 2026-04-27T14:40:53.924545+00:00
 Analytics window: `2026-03-30` → `2026-04-26`
 
 ## Overview
