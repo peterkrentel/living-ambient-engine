@@ -109,7 +109,7 @@ jobs:
           # Runner GGUF: same caps as personal — avoid finish_reason=length and bundle hard-cap
           # truncating CONTEXT mid-path in *-runner.md (see RUNNER_BUNDLE_MAX_CHARS in agent_dual_advisory).
           AGENT_LLAMA_N_CTX: "8192"
-          MAX_RUNNER_TOKENS: "3072"
+          MAX_RUNNER_TOKENS: "4096"
           RUNNER_BUNDLE_MAX_CHARS: "10000"
         run: |
           set -euo pipefail
