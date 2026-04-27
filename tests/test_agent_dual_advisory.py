@@ -265,6 +265,48 @@ def test_runner_output_schema_inference_error_body_ok():
     assert adv._runner_output_schema_valid("## Inference error\n\noops.\n") is True
 
 
+def test_runner_prose_quotes_channel_totals_ok():
+    totals = (755, 4224, 46)
+    slice_ok = (
+        "## What I reviewed\n"
+        "- facts: 755 views, 4224 watch minutes, 46 with views.\n"
+        "## Summary\n"
+        "Channel totals 755 / 4224 / 46.\n"
+    )
+    assert adv._runner_prose_quotes_channel_totals(slice_ok, totals) is True
+
+
+def test_runner_prose_quotes_channel_totals_rejects_wrong_views():
+    totals = (755, 4224, 46)
+    slice_bad = (
+        "## What I reviewed\n"
+        "- facts: 754 views, 4224 watch minutes, 46 with views.\n"
+        "## Summary\n"
+        "x\n"
+    )
+    assert adv._runner_prose_quotes_channel_totals(slice_bad, totals) is False
+
+
+def test_runner_insights_nonduplicate_rejects_copy_paste():
+    prose = (
+        "## What I reviewed\n"
+        "- a\n"
+        "## Summary\n"
+        "S.\n"
+        "## Insights\n"
+        "1. Find Your Strength high retention.\n"
+        "2. Other.\n"
+        "3. Third.\n"
+        "4. Find Your Strength high retention.\n"
+        "5. Fifth.\n"
+        "## Risks\n"
+        "- r\n"
+        "## Next tries\n"
+        "- n\n"
+    )
+    assert adv._runner_insights_nonduplicate(prose) is False
+
+
 def test_context_dump_detects_run_next_paste():
     raw = "### Personal snapshot (this run)\n\n- **Overall avg retention:** 20%\n"
     assert adv._runner_output_is_context_dump(raw) is True
