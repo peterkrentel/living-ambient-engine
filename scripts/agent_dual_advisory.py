@@ -545,6 +545,9 @@ def _runner_run_next_for_qwen(run_next: Path, lane: str) -> str:
 def _sanitize_runner_prose(text: str) -> tuple[str, int]:
     """Remove tautology lines small models emit (e.g. same % compared to itself via 'slightly higher than').
 
+    Lines that also carry **several distinct numeric facts** (e.g. channel views + minutes + counts plus a
+    redundant retention comparison) are **kept** — dropping the whole line would remove grounding totals.
+
     Returns ``(cleaned_text, lines_removed)``.
     """
     out: list[str] = []
@@ -553,9 +556,6 @@ def _sanitize_runner_prose(text: str) -> tuple[str, int]:
         low = line.lower()
         if "slightly higher" in low or "slightly lower" in low:
             decimals = re.findall(r"\d+\.\d+", line)
-            if len(decimals) >= 2 and len(set(decimals)) == 1:
-                removed += 1
-                continue
             nums = re.findall(r"\d+\.\d+|\d+", line)
             vals: list[float] = []
             for n in nums:
@@ -563,7 +563,16 @@ def _sanitize_runner_prose(text: str) -> tuple[str, int]:
                     vals.append(float(n))
                 except ValueError:
                     continue
-            if len(vals) >= 2 and len({round(v, 5) for v in vals}) == 1:
+            uniq_vals = {round(v, 5) for v in vals}
+            # Tautology-only lines repeat one number (e.g. 24.67 vs 24.67). Summary lines often mix
+            # channel totals (755, 4224, 46) with one bad comparison — do not strip the entire line.
+            if len(uniq_vals) >= 3:
+                out.append(line)
+                continue
+            if len(decimals) >= 2 and len(set(decimals)) == 1:
+                removed += 1
+                continue
+            if len(vals) >= 2 and len(uniq_vals) == 1:
                 removed += 1
                 continue
         out.append(line)
