@@ -276,6 +276,17 @@ def test_runner_prose_quotes_channel_totals_ok():
     assert adv._runner_prose_quotes_channel_totals(slice_ok, totals) is True
 
 
+def test_runner_prose_quotes_channel_totals_accepts_comma_thousands():
+    totals = (755, 4224, 46)
+    slice_ok = (
+        "## What I reviewed\n"
+        "- facts: 755 views, 4,224 watch minutes, 46 with views.\n"
+        "## Summary\n"
+        "Totals 755 / 4,224 / 46.\n"
+    )
+    assert adv._runner_prose_quotes_channel_totals(slice_ok, totals) is True
+
+
 def test_runner_prose_quotes_channel_totals_rejects_wrong_views():
     totals = (755, 4224, 46)
     slice_bad = (
