@@ -142,27 +142,16 @@ jobs:
           git config user.name "Analytics Agent (Personal)"
           git config user.email "actions@github.com"
 
-          git add data/analytics_personal.json
-          if [ -f data/suggestions_personal.json ]; then
-            git add data/suggestions_personal.json
-          fi
-          if [ -f data/run_intent_personal.json ]; then
-            git add data/run_intent_personal.json
-          fi
-          if compgen -G "data/reports/*-personal.md" > /dev/null; then
-            git add data/reports/*-personal.md
-          fi
-          if compgen -G "data/reports/agent-insight-*-personal-*.md" > /dev/null; then
-            git add data/reports/agent-insight-*-personal-*.md
-          fi
+          # Stage all generated artifacts so git pull --rebase never fails due to a dirty tree.
+          git add data/ data/reports/ || true
 
           if git diff --staged --quiet; then
             echo "📊 No personal analytics changes to commit"
           else
             WEEK=$(date +%Y-W%V)
             git commit -m "📊 Personal analytics ${WEEK} [skip ci]"
-            git pull --rebase origin main
-            git push
+            # main may advance during this job (e.g. brand analytics); merge + union-resolve data conflicts.
+            bash scripts/ci_merge_main_after_data_commit.sh
             echo "✅ Personal analytics committed and pushed"
           fi
 
