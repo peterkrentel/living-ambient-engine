@@ -106,6 +106,9 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
+          # Runner GGUF: same caps as personal — avoid finish_reason=length truncating *-runner.md.
+          AGENT_LLAMA_N_CTX: "6144"
+          MAX_RUNNER_TOKENS: "3072"
         run: |
           set -euo pipefail
           pip install 'llama-cpp-python>=0.2.90,<0.4'
