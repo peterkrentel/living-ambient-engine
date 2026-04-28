@@ -4,18 +4,23 @@
 
 ---
 ## What I reviewed
+- deterministic facts (computed by script)
+- run-next digest + tail
+- one other CONTEXT section you used
+
 - deterministic facts (computed by script): 753 views, 4164 watch minutes, 46 videos with views
-Three short `-` bullets: name **deterministic facts**, **run-next digest/tail**, and one other CONTEXT block you used (weekly, suggestions compact, or analytics compact). No pasted tables.
 ## Summary
 Channel totals: 753 views, 4164 watch minutes, 46 videos with views.
-**2–3** sentences: main story from metrics (thin data is OK to name).
+The channel has tracked 114 videos over the period from 2026-03-31 to 2026-04-27. The total views are 753 and the total watch time is 4,164 minutes. The overall average retention is 21.63% and the average watch time per video is 90.522 minutes.
+
 ## Insights
-Numbered **1–5**. Each item: **at most 2 sentences**. Each item must name at least one **concrete** label from CONTEXT: a **mood**, **music_style**, **art_period**, or a **video title** from analytics compact / run-next tail — not generic praise like 'well-received'.
-Use **at least three distinct numeric facts** across the five items (prefer deterministic JSON for channel totals). Every number must appear verbatim in CONTEXT (no invented totals).
-If an item is not directly supported, start that paragraph with **Speculative:**.
-Do **not** repeat the same bullet twice; do **not** reuse the same sentence in multiple insights.
+1. The videos with the highest retention are "Find Your Strength" and "Sounds for an Overactive Mind" with retention percentages of 96.8% and 96.8% respectively.
+2. The videos with the highest views are "Enter Flow State" with 120 views and 299 minutes of watch time, and "Sounds for an Overactive Mind" with 81 views and 82 minutes of watch time.
+
 ## Risks
-**2–4** short `-` bullets (thin data, confounders); **do not** duplicate the same risk sentence.
+- The channel may not have enough data to make accurate predictions or recommendations.
+- The retention and watch time metrics may not be representative of the overall audience.
+
 ## Next tries
-**2–5** `-` bullets: concrete experiments tied to moods/styles named in CONTEXT.
-Do not paste large tables; at most one tiny 3-row markdown table if essential. If a metric is missing from CONTEXT, say **Not in CONTEXT** instead of guessing.
+- Increase the sample size for the retention and watch time metrics to get a more accurate picture of the audience.
+- Analyze the videos with the lowest retention and watch time to identify areas for improvement.
