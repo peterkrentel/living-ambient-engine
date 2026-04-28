@@ -392,6 +392,47 @@ def test_runner_prose_quotes_channel_totals_rejects_wrong_views():
     assert adv._runner_prose_quotes_channel_totals(slice_bad, totals) is False
 
 
+def test_runner_inject_channel_totals_into_wir_summary_makes_grounding_ok():
+    totals = (755, 4224, 46)
+    prose = (
+        "## What I reviewed\n"
+        "- deterministic facts (computed by script)\n"
+        "## Summary\n"
+        "Two sentences here.\n"
+        "## Insights\n"
+        "1. One\n"
+        "## Risks\n"
+        "- r\n"
+        "## Next tries\n"
+        "- n\n"
+    )
+    assert adv._runner_output_schema_valid(prose) is True
+    assert adv._runner_grounding_slice_ok(prose, totals) is False
+    out, changed = adv._runner_inject_channel_totals_into_wir_summary(prose, totals)
+    assert changed is True
+    assert adv._runner_output_schema_valid(out) is True
+    assert adv._runner_grounding_slice_ok(out, totals) is True
+
+
+def test_runner_inject_channel_totals_is_idempotent_when_present():
+    totals = (755, 4224, 46)
+    prose = (
+        "## What I reviewed\n"
+        "- deterministic facts: 755 4224 46\n"
+        "## Summary\n"
+        "Channel totals: 755 views, 4224 watch minutes, 46 videos with views.\n"
+        "## Insights\n"
+        "1. One\n"
+        "## Risks\n"
+        "- r\n"
+        "## Next tries\n"
+        "- n\n"
+    )
+    out, changed = adv._runner_inject_channel_totals_into_wir_summary(prose, totals)
+    assert changed is False
+    assert out.rstrip() == prose.rstrip()
+
+
 def test_runner_insights_nonduplicate_rejects_copy_paste():
     prose = (
         "## What I reviewed\n"
