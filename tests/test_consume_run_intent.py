@@ -27,8 +27,11 @@ def _minimal_moods_yaml(tmp_path: Path) -> Path:
 def test_validate_ok(tmp_path: Path):
     moods_yaml = _minimal_moods_yaml(tmp_path)
     data = {
-        "schema_version": 1,
+        "schema_version": 2,
         "channel": "brand",
+        "week": "2030-W05",
+        "generated_at": "2030-01-01T00:00:00Z",
+        "suggestions_generated_at": "2030-01-01T00:00:00Z",
         "moods": ["trance", "sleep"],
         "duration": "10min",
         "dual": True,
@@ -43,8 +46,10 @@ def test_validate_ok(tmp_path: Path):
 def test_max_videos_truncates(tmp_path: Path):
     moods_yaml = _minimal_moods_yaml(tmp_path)
     data = {
-        "schema_version": 1,
+        "schema_version": 2,
         "channel": "personal",
+        "week": "2030-W07",
+        "generated_at": "2030-02-01T00:00:00Z",
         "moods": ["trance", "sleep"],
         "duration": "30s",
         "dual": False,
@@ -58,8 +63,10 @@ def test_max_videos_truncates(tmp_path: Path):
 def test_unknown_mood(tmp_path: Path):
     moods_yaml = _minimal_moods_yaml(tmp_path)
     data = {
-        "schema_version": 1,
+        "schema_version": 2,
         "channel": "brand",
+        "week": "2030-W05",
+        "generated_at": "2030-01-01T00:00:00Z",
         "moods": ["not_a_mood"],
         "duration": "1h",
         "dual": False,
@@ -73,8 +80,10 @@ def test_unknown_mood(tmp_path: Path):
 def test_bad_duration(tmp_path: Path):
     moods_yaml = _minimal_moods_yaml(tmp_path)
     data = {
-        "schema_version": 1,
+        "schema_version": 2,
         "channel": "brand",
+        "week": "2030-W05",
+        "generated_at": "2030-01-01T00:00:00Z",
         "moods": ["trance"],
         "duration": "999h",
         "dual": False,
@@ -88,8 +97,10 @@ def test_bad_duration(tmp_path: Path):
 def test_upload_must_be_bool(tmp_path: Path):
     moods_yaml = _minimal_moods_yaml(tmp_path)
     data = {
-        "schema_version": 1,
+        "schema_version": 2,
         "channel": "brand",
+        "week": "2030-W05",
+        "generated_at": "2030-01-01T00:00:00Z",
         "moods": ["trance"],
         "duration": "1h",
         "dual": False,
@@ -99,6 +110,37 @@ def test_upload_must_be_bool(tmp_path: Path):
     with pytest.raises(ValueError, match="upload must be a JSON boolean"):
         cr.validate_and_normalize(data, moods_yaml=moods_yaml)
 
+
+def test_week_required_for_v2(tmp_path: Path):
+    moods_yaml = _minimal_moods_yaml(tmp_path)
+    data = {
+        "schema_version": 2,
+        "channel": "brand",
+        "generated_at": "2030-01-01T00:00:00Z",
+        "moods": ["trance"],
+        "duration": "10min",
+        "dual": False,
+        "upload": False,
+        "max_videos": None,
+    }
+    with pytest.raises(ValueError, match="week must be a non-empty string"):
+        cr.validate_and_normalize(data, moods_yaml=moods_yaml)
+
+
+def test_v1_still_supported(tmp_path: Path):
+    moods_yaml = _minimal_moods_yaml(tmp_path)
+    data = {
+        "schema_version": 1,
+        "channel": "brand",
+        "moods": ["trance"],
+        "duration": "10min",
+        "dual": False,
+        "upload": False,
+        "max_videos": None,
+    }
+    out = cr.validate_and_normalize(data, moods_yaml=moods_yaml)
+    assert out["schema_version"] == 1
+    assert out["week"] is None
 
 def test_cli_missing_file(tmp_path: Path):
     missing = tmp_path / "nope.json"

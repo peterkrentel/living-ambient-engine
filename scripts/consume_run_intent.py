@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate ``data/run_intent.json`` (production-run-intent v1) for CI consumers.
+"""Validate ``data/run_intent.json`` (production-run-intent v1/v2) for CI consumers.
 
 Exits **1** on invalid JSON or contract violations (no downstream generate/upload).
 
@@ -18,6 +18,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 from pathlib import Path
 
@@ -49,16 +50,45 @@ def validate_and_normalize(
     *,
     moods_yaml: Path | None = None,
 ) -> dict:
-    """Return normalized intent dict (``moods`` possibly truncated). Raises ValueError."""
+    """Return normalized intent dict (``moods`` possibly truncated). Raises ValueError.
+
+    Supports schema versions:
+    - v1: legacy shape (no provenance fields). Normalized output includes v2 fields with ``week``/``generated_at`` as ``None``.
+    - v2: adds provenance fields for autonomy (week + generated_at; optional suggestions_generated_at).
+    """
     if not isinstance(data, dict):
         raise ValueError("Intent root must be a JSON object")
 
-    if data.get("schema_version") != 1:
-        raise ValueError(f"schema_version must be 1, got {data.get('schema_version')!r}")
+    sv = data.get("schema_version")
+    if sv not in (1, 2):
+        raise ValueError(f"schema_version must be 1 or 2, got {sv!r}")
 
     channel = data.get("channel")
     if channel not in ("brand", "personal"):
         raise ValueError(f"channel must be 'brand' or 'personal', got {channel!r}")
+
+    week = None
+    generated_at = None
+    suggestions_generated_at = None
+    if sv == 2:
+        week = data.get("week")
+        if not isinstance(week, str) or not week.strip():
+            raise ValueError("week must be a non-empty string (e.g. 2026-W18)")
+        week = week.strip()
+        if not re.match(r"^\d{4}-W\d{2}$", week):
+            raise ValueError(f"week must match YYYY-Www, got {week!r}")
+
+        generated_at = data.get("generated_at")
+        if not isinstance(generated_at, str) or not generated_at.strip():
+            raise ValueError("generated_at must be a non-empty ISO8601 string")
+        generated_at = generated_at.strip()
+
+        # Optional provenance: correlate bundle timestamp.
+        sgen = data.get("suggestions_generated_at")
+        if sgen is not None:
+            if not isinstance(sgen, str) or not sgen.strip():
+                raise ValueError("suggestions_generated_at must be a non-empty string when present")
+            suggestions_generated_at = sgen.strip()
 
     moods = data.get("moods")
     if not isinstance(moods, list) or not moods:
@@ -100,8 +130,11 @@ def validate_and_normalize(
         raise ValueError("After max_videos cap, moods list is empty")
 
     return {
-        "schema_version": 1,
+        "schema_version": int(sv),
         "channel": channel,
+        "week": week,
+        "generated_at": generated_at,
+        "suggestions_generated_at": suggestions_generated_at,
         "moods": out_moods,
         "duration": duration,
         "dual": dual,
