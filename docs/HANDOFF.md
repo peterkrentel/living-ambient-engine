@@ -4,7 +4,7 @@
 
 ## Updated
 
-2026-04-26
+2026-04-28
 
 ## Branch / PR
 
@@ -31,6 +31,7 @@
 
 - **Catalog / channel:** **`channel`** on new rows + ADR are **landed**; remaining work is optional **backfill** and **consumers** (audit, tooling) that filter by channel.
 - **Iron out cross-read:** brand vs personal reports + same `date_range` as Studio when sanity-checking totals.
+- **Dual advisory runner (Qwen) contract (done):** both lanes now reliably emit a **non-stub** `agent-insight-*-runner.md` with the five required `##` sections and deterministic totals anchored to JSON (guardrail retry + grounding retry + deterministic totals injection when needed).
 
 ## Facts
 
@@ -50,8 +51,9 @@
 7. **Spec phases:** **`AGENT.md`** Phase **3** when volume **and** interpretation guardrails justify it; **`COHESION_ROADMAP.md`** Phase **6** only after joins/trust feel right.
 8. **Title / packaging (defer):** same **mood × duration × dual** matrix on **brand + personal** reuses templates → **identical `video_title` strings** on two channels (different `video_id`s). Fine for smoke; before **high volume** or sharp **channel positioning**, tweak metadata (e.g. per-channel suffix or description line), rotation policy, or later **run intent** rules so packs are not unintentional clones — [`START_HERE.md`](START_HERE.md) checklist.
 
-9. **`run-next` + dual-advisory (refinement phase):** **Plumbing shipped on `main`** — both analytics workflows invoke [`agent_dual_advisory.py`](../scripts/agent_dual_advisory.py) in parallel (Gemini REST on **full** bundle; runner GGUF on **lean** bundle with **deterministic facts** JSON, **run-next digest + tail** instead of full run-next paste, tighter weekly/blocked caps, **stricter runner Insights prompt**, **post-sanitize** for tautology lines, plus earlier env knobs **`RUNNER_BUNDLE_MAX_CHARS`**, **`AGENT_LLAMA_N_CTX`**, **`AGENT_RUNNER_TEMPERATURE`** / default **temperature 0.15**). Outputs commit as `data/reports/agent-insight-*-gemini.md` / `*-runner.md`. **Gemini backlog** (grounding / long-answer fixes) is **separate** from runner — see [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6 tables. **Secrets:** brand **`GEMINI_API_KEY`**; personal **`GEMINI_API_KEY_PERSONAL`** (see [`spec/workflows.md`](spec/workflows.md)). If the key is missing or misnamed at job time, brand Gemini is a **short stub** in the markdown file until the next good run. **Human compare playbook:** [`spec/DUAL_ADVISORY_COMPARE.md`](spec/DUAL_ADVISORY_COMPARE.md) (read order, rubric, trust hierarchy). **Next (quality, not wiring):** **(1)** validators (numeric parity with deterministic JSON + `suggestions*.json`); **(2)** optional larger GGUF + cache-key bump per CI budget; **(3)** **human** compare `*-gemini.md` vs `*-runner.md` vs `run-next` / JSON (no in-repo auto-merge); **(4)** automation only when trustworthy — [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6 · [`START_HERE.md` § Plan checklist](START_HERE.md#plan-checklist-living--as-of-2026-04).
-10. **Autonomy horizon (north star):** after trust gates, move from advisory prose toward **validated structured intent** → consumer → generate → publish → complete catalog/ledger feedback; supervised **Phase 3** models only when data justify them — [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6 **Autonomy horizon (post-trust north star)**.
+9. **Autonomy next step (recommended):** move from advisory prose toward **validated structured intent**: add **validators** for `run-next` / inputs (numbers match JSON; cited evidence), then expand/strengthen the **`run_intent*.json`** door (contract + consumer) so it can safely drive **generation/upload** with caps — see [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6 *Two doors* and *Autonomy horizon*.
+10. **`run-next` + dual-advisory (quality phase):** wiring is shipped; next is **quality + validators**, not more plumbing: remove runner WIR placeholder residue, enforce minimum Insight count / concreteness, and add numeric parity validators before anything consumes prose.
+11. **Autonomy horizon (north star):** after trust gates, move from advisory prose toward **validated structured intent** → consumer → generate → publish → complete catalog/ledger feedback; supervised **Phase 3** models only when data justify them — [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6 **Autonomy horizon (post-trust north star)**.
 
 ## Risks / open questions
 
