@@ -1,19 +1,19 @@
 # Personal channel — Analytics Report (2026-W18)
 
-Generated: 2026-04-27T21:36:51.828467+00:00
+Generated: 2026-04-28T13:28:17.710235+00:00
 
 > **Channel scope:** Personal YouTube only. Data file: `data/analytics_personal.json`. Brand metrics live in `data/analytics.json` (main Analytics Agent workflow).
 
 ## Summary
 
-- **Analytics window:** `2026-03-30` → `2026-04-26` (YouTube Analytics API range for metrics below. In Studio, pick the **same** custom dates when comparing totals — not e.g. “Last 28 days” unless `fetch_analytics` used `--days 28`.)
+- **Analytics window:** `2026-03-31` → `2026-04-27` (YouTube Analytics API range for metrics below. In Studio, pick the **same** custom dates when comparing totals — not e.g. “Last 28 days” unless `fetch_analytics` used `--days 28`.)
 - **Total videos tracked:** 114
 - **Videos with analytics:** 114
 
 ## Totals
 
-- **Total views:** 755
-- **Total watch time:** 4,224 minutes
+- **Total views:** 753
+- **Total watch time:** 4,164 minutes
 - **Subscribers gained:** 4
 
 ## Top 5 by Retention
@@ -40,7 +40,7 @@ Generated: 2026-04-27T21:36:51.828467+00:00
 
 | Mood | Videos | Total Views | Avg Retention |
 |------|--------|-------------|---------------|
-| piano_deep_calm | 14 | 306 | 18.5% |
+| piano_deep_calm | 14 | 304 | 15.5% |
 | deep_focus | 10 | 243 | 25.8% |
 | ceremony | 11 | 131 | 1.5% |
 | energize | 10 | 24 | 7.4% |

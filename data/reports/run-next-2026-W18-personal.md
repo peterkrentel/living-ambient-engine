@@ -1,7 +1,7 @@
 # Run next — personal advisory (2026-W18)
 
-Generated (report): 2026-04-27T21:36:52.206688+00:00
-**Correlate bundle `generated_at`:** 2026-04-27T21:36:51.975320Z
+Generated (report): 2026-04-28T13:28:18.133601+00:00
+**Correlate bundle `generated_at`:** 2026-04-28T13:28:17.870618Z
 
 ## How to read this
 
@@ -13,8 +13,8 @@ This file is **machine-assembled** from `data/suggestions_personal.json` and the
 
 ## Personal snapshot (this run)
 
-- **Overall avg retention:** 22.33%
-- **Overall avg watch min / video (window):** 91.826
+- **Overall avg retention:** 21.63%
+- **Overall avg watch min / video (window):** 90.522
 - **Videos analyzed:** 46 with views / 114 total
 
 ## Evidence (paths)
@@ -24,8 +24,8 @@ This file is **machine-assembled** from `data/suggestions_personal.json` and the
 
 ## Actionable (correlate gates passed)
 
-↓ **`mood` / `piano_deep_calm`** (retention %) — -5.0% vs channel avg (n=7, views=255) — `medium` — evidence index **`data/suggestions_personal.json` → `suggestions[0]`**
-↑ **`mood` / `piano_deep_calm`** (watch min / video (window)) — +323.2 min vs channel avg (n=7, views=255) — `medium` — evidence index **`data/suggestions_personal.json` → `suggestions[2]`**
+↓ **`mood` / `piano_deep_calm`** (retention %) — -4.3% vs channel avg (n=7, views=255) — `medium` — evidence index **`data/suggestions_personal.json` → `suggestions[0]`**
+↑ **`mood` / `piano_deep_calm`** (watch min / video (window)) — +324.5 min vs channel avg (n=7, views=255) — `medium` — evidence index **`data/suggestions_personal.json` → `suggestions[2]`**
 
 ## Exploratory — lean in (low n / views)
 
@@ -33,8 +33,8 @@ _No exploratory "increase" rows._
 
 ## Exploratory — tread carefully (underperformers)
 
-↓ `mood` / `ceremony` (retention %) — -20.0% vs channel avg (n=3, views=105, exploratory) — `suggestions[1]`
-↓ `mood` / `ceremony` (watch min / video (window)) — -51.5 min vs channel avg (n=3, views=105, exploratory) — `suggestions[3]`
+↓ `mood` / `ceremony` (retention %) — -19.3% vs channel avg (n=3, views=105, exploratory) — `suggestions[1]`
+↓ `mood` / `ceremony` (watch min / video (window)) — -50.2 min vs channel avg (n=3, views=105, exploratory) — `suggestions[3]`
 
 ## Audit — overview excerpt (personal)
 
@@ -47,7 +47,7 @@ _No exploratory "increase" rows._
 ## Brand lane (cross-read only)
 
 - `data/analytics.json` — **354** videos in snapshot; `fetched_at`: 2026-04-26T02:34:23.221118+00:00
-- **Latest brand markdown report:** `data/reports/2026-W15.md`
+- **Latest brand markdown report:** `data/reports/2026-W14.md`
 - **Not merged** into personal correlate — `data/suggestions.json` remains the **brand** bundle; compare lanes deliberately ([`docs/PERSONAL_ANALYTICS.md`](../../docs/PERSONAL_ANALYTICS.md)).
 
 ## Production hooks (manual)
