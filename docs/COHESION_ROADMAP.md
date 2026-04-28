@@ -212,7 +212,7 @@ Videos published **before** `generations.json` exists have **no** joined params 
 |--------|------|
 | Shipped | Deterministic **facts** JSON (views / watch minutes / count-with-views); default **temperature 0.15**; env **`RUNNER_BUNDLE_MAX_CHARS`**, **`AGENT_LLAMA_N_CTX`**, **`AGENT_RUNNER_TEMPERATURE`**. |
 | Shipped (runner PR) | **Lean bundle v2:** deterministic **run-next digest** (snapshot + actionable tail, cross-lane stripped in tail); **stricter Insights prompt**; **post-sanitize** tautology lines (`X` “slightly higher than” `X`). |
-| Next | Week-over-week **human** read of `*-runner.md`; **CI validators** (re-sum JSON vs facts block; optional banned phrases); optional **3B** GGUF (`AGENT_GGUF_URL` + new `AGENT_GGUF_PATH` + **cache key** bump) **after** prompt/bundle stable. |
+| Next | Week-over-week **human** read of `*-runner.md`; **CI:** [`validate_agent_insight_runner.py`](../scripts/validate_agent_insight_runner.py) after dual advisory (totals vs `analytics*.json`); optional banned phrases / Gemini checks; optional **3B** GGUF (`AGENT_GGUF_URL` + new `AGENT_GGUF_PATH` + **cache key** bump) **after** prompt/bundle stable. |
 
 #### Runner tuning notes (human — append as you learn)
 
