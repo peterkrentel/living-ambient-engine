@@ -56,7 +56,7 @@ def _validate_week_label(week: str) -> str:
     s = (week or "").strip()
     if not s:
         raise SystemExit("week must be non-empty")
-    if not re.match(r"^\\d{4}-W\\d{2}$", s):
+    if not re.match(r"^\d{4}-W\d{2}$", s):
         raise SystemExit(f"week must match YYYY-Www, got {s!r}")
     return s
 
