@@ -8,19 +8,17 @@
 - run-next digest + tail
 - one other CONTEXT section you used
 
-- deterministic facts (computed by script): 1201 views, 827 watch minutes, 123 videos with views
 ## Summary
-Channel totals: 1201 views, 827 watch minutes, 123 videos with views.
-The analytics report for the brand covers the period from March 31 to April 27, 2026. It includes total views and watch time, as well as insights into the retention and views of videos. The retention rate is 24.52%, and the average watch time per video is 6.724 minutes. The report also highlights the top videos by retention and views, and provides a breakdown of the videos by mood.
+The analytics report for the brand covers 354 videos analyzed with 123 videos having views. The total views are 1,201 and total watch time is 827 minutes. The overall average retention is 24.52% and the average watch time per video is 6.724 minutes.
 
 ## Insights
-1. The overall average retention is 24.52%, indicating that videos are retained for an average of 24.52% of the time.
-2. The average watch time per video is 6.724 minutes, suggesting that videos are watched for an average of 6.724 minutes.
+1. The brand has a high overall average retention of 24.52%, indicating that the majority of videos are retained for a significant period.
+2. The average watch time per video is 6.724 minutes, suggesting that the average user watches videos for about 6.724 minutes.
 
 ## Risks
-- The retention rate of 24.52% may not be sustainable over time, as it indicates that videos are not retained for a significant portion of their duration.
-- The average watch time of 6.724 minutes may not be sufficient to keep viewers engaged, as it suggests that videos are not watched for a significant portion of their duration.
+- The high average retention suggests that the brand has a good user retention strategy.
+- However, the low average watch time per video indicates that the brand may need to improve the engagement of its videos to increase watch time.
 
 ## Next tries
-- To improve retention, the brand should focus on creating videos that are more engaging and have a longer average watch time.
-- To increase the average watch time, the brand should consider optimizing the content for longer viewing sessions, such as by incorporating more elements that keep viewers engaged for longer periods.
+- To improve the average watch time, the brand should focus on creating more engaging content that keeps users interested for longer periods.
+- Additionally, the brand should consider analyzing user behavior and preferences to tailor future content to better meet user needs and increase watch time.
