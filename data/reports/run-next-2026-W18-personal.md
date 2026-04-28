@@ -1,7 +1,7 @@
 # Run next — personal advisory (2026-W18)
 
-Generated (report): 2026-04-28T14:08:48.123659+00:00
-**Correlate bundle `generated_at`:** 2026-04-28T14:08:47.841824Z
+Generated (report): 2026-04-28T15:43:55.351428+00:00
+**Correlate bundle `generated_at`:** 2026-04-28T15:43:55.077891Z
 
 ## How to read this
 
@@ -46,8 +46,8 @@ _No exploratory "increase" rows._
 
 ## Brand lane (cross-read only)
 
-- `data/analytics.json` — **354** videos in snapshot; `fetched_at`: 2026-04-26T02:34:23.221118+00:00
-- **Latest brand markdown report:** `data/reports/2026-W15.md`
+- `data/analytics.json` — **354** videos in snapshot; `fetched_at`: 2026-04-28T14:33:53.121053+00:00
+- **Latest brand markdown report:** `data/reports/2026-W18.md`
 - **Not merged** into personal correlate — `data/suggestions.json` remains the **brand** bundle; compare lanes deliberately ([`docs/PERSONAL_ANALYTICS.md`](../../docs/PERSONAL_ANALYTICS.md)).
 
 ## Production hooks (manual)
