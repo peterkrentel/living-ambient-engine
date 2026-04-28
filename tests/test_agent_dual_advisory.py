@@ -341,6 +341,24 @@ def test_runner_schema_failure_label_wrong_order_reports_first_gap():
     assert adv._runner_schema_failure_label(prose) == "missing:## Summary"
 
 
+def test_runner_grounding_slice_ok_requires_nonempty_slice_and_totals():
+    totals = (755, 4224, 46)
+    assert adv._runner_grounding_slice_ok("## Insights\n\n1. x\n", totals) is False
+    minimal = (
+        "## What I reviewed\n"
+        "- 755 4224 46\n"
+        "## Summary\n"
+        "Channel 755 views 4224 min 46 vids.\n"
+        "## Insights\n"
+        "1. a\n"
+        "## Risks\n"
+        "- r\n"
+        "## Next tries\n"
+        "- n\n"
+    )
+    assert adv._runner_grounding_slice_ok(minimal, totals) is True
+
+
 def test_runner_prose_quotes_channel_totals_ok():
     totals = (755, 4224, 46)
     slice_ok = (
