@@ -89,6 +89,7 @@ Use this as a **checklist**, not a new doc layer. **Done** items stay for histor
 
 | Status | Item |
 |--------|------|
+| Done | **Weekly markdown tables:** [`agent/report.py`](../agent/report.py) sanitizes **`|`** and newlines in pipe-table cells (Top 5 by Retention / Top 5 by Views / Performance by Mood) so GitHub renders columns correctly. |
 | Done | **Ledger on `main`:** upload workflows commit **`data/generations.json`**; smoke + **Analytics Agent** re-run. |
 | Done | **Catalog → ledger backfill:** [`scripts/backfill_generations_from_catalog.py`](../scripts/backfill_generations_from_catalog.py) + optional **`uploaded_at`** on historic rows ([`AGENT.md`](spec/AGENT.md) § ledger). |
 | Done | **Dual-metrics correlate** on `main` (retention + watch minutes → **`suggestions.json`**). |
