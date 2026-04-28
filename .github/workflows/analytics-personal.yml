@@ -4,6 +4,10 @@
 
 name: Analytics Agent (Personal)
 
+concurrency:
+  group: analytics-dual-lane
+  cancel-in-progress: false
+
 on:
   schedule:
     # Monday 02:00 UTC — offset from brand Sunday run to avoid accidental coupling
