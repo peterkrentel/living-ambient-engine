@@ -125,6 +125,8 @@ jobs:
           echo "::group::Dual advisory (brand week=$WEEK)"
           echo "Runner logs are prefixed with [runner-advisory] in script output below."
           python scripts/agent_dual_advisory.py --lane brand --week "$WEEK"
+          echo "🔎 Validating runner advisory channel totals vs data/analytics.json..."
+          python scripts/validate_agent_insight_runner.py --lane brand --week "$WEEK"
           echo "::endgroup::"
 
       - name: Commit Data
