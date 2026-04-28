@@ -10,7 +10,7 @@ Requires those three integers to appear as distinct digit-tokens in the markdown
 runner script uses before injection).
 
 Also checks **structure / rubric hygiene**: no placeholder ``What I reviewed`` bullets, and at
-least **two** numbered ``## Insights`` items.
+least **two** insight lines under ``## Insights`` (numbered lists, ``-`` bullets, or ``###`` subheads).
 
 Skip (exit 0): runner file documents LLM skip (no GGUF). Fail: missing sections, inference
 error body, totals not quoted, or quality checks.
@@ -106,8 +106,12 @@ _WIR_FORBIDDEN_EXACT = frozenset(
 )
 
 
-def _count_numbered_insights(prose: str) -> int:
-    """Count ``## Insights`` lines that start a numbered item (``1.`` …)."""
+def _count_insights_items(prose: str) -> int:
+    """Count insight carriers under ``## Insights`` (before ``## Risks``).
+
+    Qwen often emits ``###`` subheads or ``1.Text`` (no space after the dot). Count those so
+    validation matches real runner output, not only strict ``1. `` GitHub list lines.
+    """
     a = prose.find("## Insights")
     b = prose.find("## Risks")
     if a == -1 or b == -1 or b <= a:
@@ -115,8 +119,18 @@ def _count_numbered_insights(prose: str) -> int:
     block = prose[a:b]
     n = 0
     for line in block.splitlines():
-        if re.match(r"^\s*\d+\.\s", line):
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if stripped.startswith("###") and len(stripped) > 4:
             n += 1
+            continue
+        if re.match(r"^\d+\.\s*\S", stripped):
+            n += 1
+            continue
+        if re.match(r"^[-*]\s+\S", stripped):
+            n += 1
+            continue
     return n
 
 
@@ -137,9 +151,11 @@ def validate_runner_wir_insights_quality(runner_text: str) -> list[str]:
             if s in _WIR_FORBIDDEN_EXACT:
                 errs.append(f"What I reviewed: forbidden placeholder bullet ({s!r})")
 
-    n_ins = _count_numbered_insights(t)
+    n_ins = _count_insights_items(t)
     if n_ins < 2:
-        errs.append(f"Insights: need at least 2 numbered items (## 1. …); found {n_ins}")
+        errs.append(
+            f"Insights: need at least 2 items (numbered, `-` bullets, or `###` subheads); found {n_ins}"
+        )
 
     return errs
 
