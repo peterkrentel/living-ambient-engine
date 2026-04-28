@@ -95,6 +95,8 @@ jobs:
         run: |
           echo "🧭 Writing run-next markdown (suggestions + audit)..."
           python scripts/run_next_report.py
+          echo "🔎 Validating run-next snapshot vs suggestions.json..."
+          python scripts/validate_run_next.py --lane brand --week "$(date +%Y-W%V)" --suggestions data/suggestions.json
 
       - name: Cache runner GGUF (dual advisory)
         uses: actions/cache@v4
