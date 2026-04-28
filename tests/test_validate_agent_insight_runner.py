@@ -29,13 +29,17 @@ def test_validate_runner_ok_when_totals_in_summary() -> None:
     md = """# Agent advisory — Runner GGUF (CPU) (brand, 2026-W18)
 ---
 ## What I reviewed
-- digest
+- Channel totals JSON and run-next digest
 
 ## Summary
 Channel totals: 100 views, 50 watch minutes, 3 videos with views.
 
 ## Insights
-1. x
+1. First insight names **sleep** mood from CONTEXT.
+2. Second insight names **trance** mood from CONTEXT.
+
+## Risks
+- r
 """
     errs = var.validate_runner_advisory(runner_text=md, totals=(100, 50, 3))
     assert errs == []
@@ -52,10 +56,13 @@ No numbers here.
 
 ## Insights
 1. x
+2. y
+
+## Risks
+- r
 """
     errs = var.validate_runner_advisory(runner_text=md, totals=(100, 50, 3))
-    assert len(errs) == 1
-    assert "not all present" in errs[0]
+    assert any("not all present" in e for e in errs)
 
 
 def test_validate_runner_skip_when_llm_skipped() -> None:
@@ -65,6 +72,66 @@ _Runner LLM skipped:_ `llama-cpp-python` not installed.
     errs = var.validate_runner_advisory(runner_text=md, totals=(1, 2, 3))
     assert len(errs) == 1
     assert errs[0].startswith("SKIP:")
+
+
+def test_validate_runner_rejects_wir_placeholders() -> None:
+    md = """# x
+---
+## What I reviewed
+- deterministic facts (computed by script)
+- run-next digest + tail
+
+## Summary
+Channel totals: 1 views, 2 watch minutes, 3 videos with views.
+
+## Insights
+1. a
+2. b
+
+## Risks
+- r
+"""
+    errs = var.validate_runner_advisory(runner_text=md, totals=(1, 2, 3))
+    assert any("forbidden placeholder" in e for e in errs)
+
+
+def test_validate_runner_rejects_one_other_context_phrase() -> None:
+    md = """# x
+---
+## What I reviewed
+- one other CONTEXT section you used
+
+## Summary
+Channel totals: 1 views, 2 watch minutes, 3 videos with views.
+
+## Insights
+1. a
+2. b
+
+## Risks
+- r
+"""
+    errs = var.validate_runner_advisory(runner_text=md, totals=(1, 2, 3))
+    assert any("one other CONTEXT" in e for e in errs)
+
+
+def test_validate_runner_requires_two_numbered_insights() -> None:
+    md = """# x
+---
+## What I reviewed
+- ok
+
+## Summary
+Channel totals: 10 views, 5 watch minutes, 1 videos with views.
+
+## Insights
+1. only one
+
+## Risks
+- r
+"""
+    errs = var.validate_runner_advisory(runner_text=md, totals=(10, 5, 1))
+    assert any("at least 2 numbered" in e for e in errs)
 
 
 def test_validate_runner_inference_error_returns_single_err() -> None:
@@ -101,7 +168,8 @@ def test_main_integration_tmp(tmp_path: Path) -> None:
         encoding="utf-8",
     )
     runner.write_text(
-        "# Agent advisory\n---\n## What I reviewed\n- a\n## Summary\n10 views and 5 minutes and 1 videos with views.\n## Insights\n1. z\n",
+        "# Agent advisory\n---\n## What I reviewed\n- a\n## Summary\n10 views and 5 minutes and 1 videos with views.\n"
+        "## Insights\n1. z\n2. y\n## Risks\n- r\n",
         encoding="utf-8",
     )
     assert (

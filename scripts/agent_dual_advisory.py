@@ -1137,6 +1137,47 @@ def _runner_schema_failure_label(prose: str) -> str:
     return "ok"
 
 
+def _strip_wir_placeholder_bullets(text: str) -> tuple[str, int]:
+    """Remove rubric-echo bullets under ``## What I reviewed`` (keep totals line with ``:`` + digits).
+
+    Small models often paste the instruction template literally; stripping keeps the committed
+    file readable without weakening grounding (totals line is preserved).
+    """
+    if not text or text.startswith("## Inference error"):
+        return text, 0
+    lines = text.splitlines()
+    wir = "## What I reviewed"
+    summ = "## Summary"
+    try:
+        i_wir = next(i for i, ln in enumerate(lines) if ln.lstrip().startswith(wir))
+        i_sum = next(i for i, ln in enumerate(lines) if i > i_wir and ln.lstrip().startswith(summ))
+    except StopIteration:
+        return text, 0
+    removed = 0
+    out_mid: list[str] = []
+    for idx in range(i_wir + 1, i_sum):
+        ln = lines[idx]
+        stripped = ln.strip()
+        low = stripped.lower()
+        if stripped == "- deterministic facts (computed by script)":
+            removed += 1
+            continue
+        if stripped == "- run-next digest + tail":
+            removed += 1
+            continue
+        if "one other context" in low:
+            removed += 1
+            continue
+        out_mid.append(ln)
+    if removed == 0:
+        return text, 0
+    new_lines = lines[: i_wir + 1] + out_mid + lines[i_sum:]
+    body = "\n".join(new_lines)
+    if text.endswith("\n") and not body.endswith("\n"):
+        body += "\n"
+    return body, removed
+
+
 def _runner_analytics_path_for_lane(lane: str) -> Path:
     if lane == "personal":
         return DATA / "analytics_personal.json"
@@ -1459,8 +1500,12 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
         "Headings in order: `## What I reviewed`, `## Summary`, `## Insights`, `## Risks`, `## Next tries`. "
         "Do not put `### …` section titles before `## What I reviewed`.\n"
         "## What I reviewed\n"
-        "Three short `-` bullets: name **deterministic facts**, **run-next digest/tail**, "
-        "and one other CONTEXT block you used (weekly, suggestions compact, or analytics compact). "
+        "Use **2–4** short `-` bullets naming which CONTEXT parts you actually used, in plain words "
+        "(e.g. **Channel totals JSON**, **run-next snapshot + actionable tail**, **weekly report excerpt**). "
+        "Do **not** paste rubric placeholders as bullets: never use the literal line "
+        "`- deterministic facts (computed by script)` with nothing after it, never "
+        "`- run-next digest + tail` alone, and never the phrase **one other CONTEXT**. "
+        "One bullet **must** include the three channel integers with a colon (same as Summary). "
         "No pasted tables.\n"
         "## Summary\n"
         "**2–3** sentences: main story from metrics (thin data is OK to name).\n"
@@ -1781,6 +1826,11 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
                     "## Inference error\n\n"
                     "Runner output repeated the same insight text for multiple numbered items.\n"
                 )
+
+    if not text.startswith("## Inference error"):
+        text, strip_n = _strip_wir_placeholder_bullets(text)
+        if strip_n:
+            _runner_log(f"runner_wir_strip: removed_placeholder_lines={strip_n}")
 
     out.write_text(_header_runner(lane, week) + text + "\n", encoding="utf-8")
     _runner_log(f"wrote {out.relative_to(_REPO) if out.is_relative_to(_REPO) else out}")
