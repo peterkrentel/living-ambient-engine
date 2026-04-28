@@ -8,17 +8,19 @@
 - run-next digest + tail
 - one other CONTEXT section you used
 
+- deterministic facts (computed by script): 753 views, 4164 watch minutes, 46 videos with views
 ## Summary
-The channel has tracked 114 videos over the period from March 31 to April 27, 2026. The total views are 753 and the total watch time is 4,164 minutes. The overall average retention is 21.63% and the average watch time per video is 90.522 minutes. Out of the 46 videos with analytics, 14 videos have been analyzed.
+Channel totals: 753 views, 4164 watch minutes, 46 videos with views.
+The channel has tracked 114 videos over the period from 2026-03-31 to 2026-04-27. The total views are 753 and the total watch time is 4,164 minutes. The videos with analytics are 114.
 
 ## Insights
-1. The videos with the highest retention are "Find Your Strength" and "Sounds for an Overactive Mind", both with 96.8% retention.
-2. The videos with the highest views are "Enter Flow State" and "Sounds for an Overactive Mind", both with 120 views and 81 views respectively.
+1. The videos with analytics are 114.
+2. The videos with views are 46.
 
 ## Risks
-- The retention rate for videos with views is lower than the channel average.
-- The watch time per video is lower than the channel average.
+- The retention and watch time metrics may not be accurate due to the limited sample size (n=7).
+- The videos with views may not be representative of the overall audience.
 
 ## Next tries
-1. Increase the retention rate for videos with views by reducing the "ceremony" mood.
-2. Increase the watch time per video by increasing the "piano_deep_calm" mood.
+- Increase the sample size for the retention and watch time metrics.
+- Analyze the videos with views to ensure they are representative of the overall audience.

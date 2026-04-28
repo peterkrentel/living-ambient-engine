@@ -1,6 +1,6 @@
 # Personal channel — Analytics Report (2026-W18)
 
-Generated: 2026-04-28T16:35:00.046694+00:00
+Generated: 2026-04-28T17:26:55.071607+00:00
 
 > **Channel scope:** Personal YouTube only. Data file: `data/analytics_personal.json`. Brand metrics live in `data/analytics.json` (main Analytics Agent workflow).
 
@@ -20,21 +20,21 @@ Generated: 2026-04-28T16:35:00.046694+00:00
 
 | Video | Mood | Retention % | Views |
 |-------|------|-------------|-------|
-| Find Your Strength | 30 Seconds Power Dr | warrior | 96.8% | 1 |
-| Sounds for an Overactive Mind | 30 Secon | deep_focus | 96.8% | 1 |
+| Find Your Strength · 30 Seconds Power Dr | warrior | 96.8% | 1 |
+| Sounds for an Overactive Mind · 30 Secon | deep_focus | 96.8% | 1 |
 | sleep_30s_20260124_031441 | sleep | 83.6% | 1 |
 | trance_30s_20260124_055344 | trance | 78.3% | 1 |
-| Sounds for an Overactive Mind | 30 Secon | deep_focus | 74.8% | 1 |
+| Sounds for an Overactive Mind · 30 Secon | deep_focus | 74.8% | 1 |
 
 ## Top 5 by Views
 
 | Video | Mood | Views | Watch Time (min) |
 |-------|------|-------|------------------|
-| Enter Flow State | 1 Hour Zero Distracti | deep_focus | 120 | 299 |
-| Sounds for an Overactive Mind | 1 Hour E | deep_focus | 81 | 82 |
-| Ground Yourself Instantly | 1 Hour Deep  | ceremony | 56 | 28 |
-| Calm Anxiety Fast | 1 Hour Deep Piano Re | piano_deep_calm | 55 | 867 |
-| Calm Anxiety Fast | 1 Hour Deep Piano Re | piano_deep_calm | 49 | 854 |
+| Enter Flow State · 1 Hour Zero Distracti | deep_focus | 120 | 299 |
+| Sounds for an Overactive Mind · 1 Hour E | deep_focus | 81 | 82 |
+| Ground Yourself Instantly · 1 Hour Deep | ceremony | 56 | 28 |
+| Calm Anxiety Fast · 1 Hour Deep Piano Re | piano_deep_calm | 55 | 867 |
+| Calm Anxiety Fast · 1 Hour Deep Piano Re | piano_deep_calm | 49 | 854 |
 
 ## Performance by Mood
 
