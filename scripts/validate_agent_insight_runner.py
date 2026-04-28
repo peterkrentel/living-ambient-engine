@@ -9,8 +9,11 @@ Requires those three integers to appear as distinct digit-tokens in the markdown
 ``## What I reviewed`` through the line before ``## Insights`` (same grounding window the
 runner script uses before injection).
 
+Also checks **structure / rubric hygiene**: no placeholder ``What I reviewed`` bullets, and at
+least **two** numbered ``## Insights`` items.
+
 Skip (exit 0): runner file documents LLM skip (no GGUF). Fail: missing sections, inference
-error body, or totals not quoted.
+error body, totals not quoted, or quality checks.
 """
 
 from __future__ import annotations
@@ -86,10 +89,64 @@ def _slice_wir_through_before_insights(prose: str) -> str:
     return prose[a:b]
 
 
+def _slice_wir_before_summary(prose: str) -> str:
+    """Body from ``## What I reviewed`` heading through line before ``## Summary``."""
+    a = prose.find("## What I reviewed")
+    b = prose.find("## Summary")
+    if a == -1 or b == -1 or b <= a:
+        return ""
+    return prose[a:b]
+
+
+_WIR_FORBIDDEN_EXACT = frozenset(
+    {
+        "- deterministic facts (computed by script)",
+        "- run-next digest + tail",
+    }
+)
+
+
+def _count_numbered_insights(prose: str) -> int:
+    """Count ``## Insights`` lines that start a numbered item (``1.`` …)."""
+    a = prose.find("## Insights")
+    b = prose.find("## Risks")
+    if a == -1 or b == -1 or b <= a:
+        return 0
+    block = prose[a:b]
+    n = 0
+    for line in block.splitlines():
+        if re.match(r"^\s*\d+\.\s", line):
+            n += 1
+    return n
+
+
+def validate_runner_wir_insights_quality(runner_text: str) -> list[str]:
+    """Return errors for rubric-echo WIR bullets or too-thin Insights (empty list = OK)."""
+    errs: list[str] = []
+    t = runner_text or ""
+    wir_pre = _slice_wir_before_summary(t)
+    if wir_pre.strip():
+        low = wir_pre.lower()
+        if "one other context" in low:
+            errs.append(
+                "What I reviewed: forbidden rubric phrase 'one other CONTEXT' — "
+                "use plain words for sources or re-run dual advisory"
+            )
+        for line in wir_pre.splitlines():
+            s = line.strip()
+            if s in _WIR_FORBIDDEN_EXACT:
+                errs.append(f"What I reviewed: forbidden placeholder bullet ({s!r})")
+
+    n_ins = _count_numbered_insights(t)
+    if n_ins < 2:
+        errs.append(f"Insights: need at least 2 numbered items (## 1. …); found {n_ins}")
+
+    return errs
+
+
 def validate_runner_advisory(
     *, runner_text: str, totals: tuple[int, int, int]
 ) -> list[str]:
-    errs: list[str] = []
     t = runner_text or ""
     if "_Runner LLM skipped_" in t or "_Runner LLM skipped:" in t:
         return ["SKIP: runner GGUF not executed; no totals contract to validate"]
@@ -97,6 +154,7 @@ def validate_runner_advisory(
     if "## Inference error" in t[:1200]:
         return ["runner markdown contains ## Inference error — fix CONTEXT or re-run dual advisory"]
 
+    errs: list[str] = []
     sl = _slice_wir_through_before_insights(t)
     if not sl.strip():
         errs.append("missing ## What I reviewed … ## Insights slice (required headings)")
@@ -107,6 +165,7 @@ def validate_runner_advisory(
             f"(expected views={sv}, watch_minutes={sw}, videos_with_views={cv}); "
             "re-run dual advisory or check analytics JSON vs runner prose"
         )
+    errs.extend(validate_runner_wir_insights_quality(t))
     return errs
 
 

@@ -662,3 +662,24 @@ def test_gemini_api_key_personal_prefers_personal_secret(monkeypatch):
     assert adv._gemini_api_key("personal") == "personal-key"
     monkeypatch.setenv("GEMINI_API_KEY", "override")
     assert adv._gemini_api_key("personal") == "override"
+
+
+def test_strip_wir_placeholder_bullets_removes_rubric_echo():
+    text = """## What I reviewed
+- deterministic facts (computed by script)
+- run-next digest + tail
+- one other CONTEXT section you used
+
+- deterministic facts (computed by script): 1 views, 2 watch minutes, 3 videos with views
+## Summary
+Channel totals: 1 views, 2 watch minutes, 3 videos with views.
+
+## Insights
+1. A
+2. B
+"""
+    new, n = adv._strip_wir_placeholder_bullets(text)
+    assert n == 3
+    assert "one other CONTEXT" not in new
+    assert "- run-next digest + tail" not in new
+    assert "1 views, 2 watch minutes, 3 videos with views" in new

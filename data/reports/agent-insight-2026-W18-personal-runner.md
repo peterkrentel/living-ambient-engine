@@ -4,9 +4,6 @@
 
 ---
 ## What I reviewed
-- deterministic facts (computed by script)
-- run-next digest + tail
-- one other CONTEXT section you used
 
 - deterministic facts (computed by script): 753 views, 4164 watch minutes, 46 videos with views
 ## Summary
