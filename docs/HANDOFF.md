@@ -24,7 +24,7 @@
 
 - **Personal analytics v1** in CI (token scopes, `analytics_personal.json`, `*-personal.md`, Studio cross-read).
 - **Brand + personal push race** fixed (`git pull --rebase origin main` before `git push` in both analytics workflows).
-- **Weekly reports** include **Analytics window** line ([`agent/report.py`](../agent/report.py)); merge on `main`.
+- **Weekly reports** include **Analytics window** line ([`agent/report.py`](../agent/report.py)); pipe-table cells sanitize **`|`** / newlines so Top 5 and mood tables render on GitHub; merge on `main`.
 - **`run-next` v0:** [`scripts/run_next_report.py`](../scripts/run_next_report.py) on **brand + personal** workflows → `run-next-YYYY-WW.md` / `run-next-YYYY-WW-personal.md` (deterministic; **actionable** vs **exploratory**; packaging caveat). **Next:** validators → optional LLM → automation — [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6.
 
 ## Goal (this phase — in flight)

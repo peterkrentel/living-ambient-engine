@@ -39,6 +39,20 @@ def is_personal_report_scope() -> bool:
     return os.environ.get("ANALYTICS_CHANNEL", "").strip().lower() == "personal"
 
 
+def _md_table_cell(value: Any, *, max_chars: int = 40) -> str:
+    """Make a value safe inside a pipe-markdown table cell (GitHub-flavored).
+
+    YouTube titles often contain ``|`` as a separator; unescaped pipes break
+    column alignment. Newlines would break the table row.
+    """
+    s = "" if value is None else str(value)
+    s = s.replace("\r\n", "\n").replace("\r", "\n").replace("\n", " ").replace("|", "\u00b7")
+    s = " ".join(s.split()).strip()
+    if max_chars > 0 and len(s) > max_chars:
+        s = s[:max_chars].rstrip()
+    return s
+
+
 def load_generations() -> Dict[str, Any]:
     """Load generations data."""
     if GENERATIONS_FILE.exists():
@@ -229,8 +243,11 @@ def generate_report(data: List[Dict[str, Any]], week: Optional[str] = None) -> s
             "|-------|------|-------------|-------|",
         ])
         for v in top_retention:
-            title = (v.get("title") or v.get("metadata", {}).get("title") or v["video_id"])[:40]
-            mood = v.get("mood", "N/A")
+            title = _md_table_cell(
+                v.get("title") or v.get("metadata", {}).get("title") or v["video_id"],
+                max_chars=40,
+            )
+            mood = _md_table_cell(v.get("mood", "N/A"), max_chars=64)
             ret = v["metrics"]["average_view_percentage"]
             views = v["metrics"].get("views", 0)
             lines.append(f"| {title} | {mood} | {ret:.1f}% | {views:,} |")
@@ -248,8 +265,11 @@ def generate_report(data: List[Dict[str, Any]], week: Optional[str] = None) -> s
             "|-------|------|-------|------------------|",
         ])
         for v in top_views:
-            title = (v.get("title") or v.get("metadata", {}).get("title") or v["video_id"])[:40]
-            mood = v.get("mood", "N/A")
+            title = _md_table_cell(
+                v.get("title") or v.get("metadata", {}).get("title") or v["video_id"],
+                max_chars=40,
+            )
+            mood = _md_table_cell(v.get("mood", "N/A"), max_chars=64)
             views = v["metrics"]["views"]
             wt = v["metrics"].get("watch_time_minutes", 0)
             lines.append(f"| {title} | {mood} | {views:,} | {wt:,.0f} |")
@@ -277,7 +297,8 @@ def generate_report(data: List[Dict[str, Any]], week: Optional[str] = None) -> s
         ])
         for mood, stats in sorted(mood_stats.items(), key=lambda x: x[1]["views"], reverse=True):
             avg_ret = stats["retention_sum"] / stats["retention_count"] if stats["retention_count"] > 0 else 0
-            lines.append(f"| {mood} | {stats['count']} | {stats['views']:,} | {avg_ret:.1f}% |")
+            mood_cell = _md_table_cell(mood, max_chars=64)
+            lines.append(f"| {mood_cell} | {stats['count']} | {stats['views']:,} | {avg_ret:.1f}% |")
         lines.append("")
 
     if is_personal_report_scope():
