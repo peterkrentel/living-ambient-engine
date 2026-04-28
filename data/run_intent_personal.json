@@ -1,6 +1,9 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "channel": "personal",
+  "week": "2026-W18",
+  "generated_at": "2026-04-28T16:35:00.459895+00:00",
+  "suggestions_generated_at": "2026-04-28T16:35:00.225642Z",
   "moods": [
     "piano_deep_calm"
   ],
