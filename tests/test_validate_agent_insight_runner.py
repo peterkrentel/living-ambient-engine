@@ -131,7 +131,49 @@ Channel totals: 10 views, 5 watch minutes, 1 videos with views.
 - r
 """
     errs = var.validate_runner_advisory(runner_text=md, totals=(10, 5, 1))
-    assert any("at least 2 numbered" in e for e in errs)
+    assert any("at least 2 items" in e for e in errs)
+
+
+def test_validate_runner_accepts_h3_insight_heads() -> None:
+    md = """# x
+---
+## What I reviewed
+- ok
+
+## Summary
+Channel totals: 10 views, 5 watch minutes, 1 videos with views.
+
+## Insights
+### First insight
+Body.
+### Second insight
+More.
+
+## Risks
+- r
+"""
+    errs = var.validate_runner_advisory(runner_text=md, totals=(10, 5, 1))
+    assert errs == []
+
+
+def test_validate_runner_accepts_tight_numbered_insight() -> None:
+    md = """# x
+---
+## What I reviewed
+- ok
+
+## Summary
+Channel totals: 10 views, 5 watch minutes, 1 videos with views.
+
+## Insights
+1.First
+2.Second
+
+## Risks
+- r
+"""
+    errs = var.validate_runner_advisory(runner_text=md, totals=(10, 5, 1))
+    assert errs == []
 
 
 def test_validate_runner_inference_error_returns_single_err() -> None:
