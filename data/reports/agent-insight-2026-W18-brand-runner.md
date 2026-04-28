@@ -8,17 +8,17 @@
 - run-next digest + tail
 - one other CONTEXT section you used
 
+- deterministic facts (computed by script): 1201 views, 827 watch minutes, 123 videos with views
 ## Summary
-The analytics report for the brand covers 354 videos analyzed with 123 videos having views. The total views are 1,201 and total watch time is 827 minutes. The overall average retention is 24.52% and the average watch time per video is 6.724 minutes.
+Channel totals: 1201 views, 827 watch minutes, 123 videos with views.
+The analytics report covers the period from 2026-03-31 to 2026-04-27. It includes total views and watch time, as well as insights into video retention and views. The top videos by retention and views are provided, along with a breakdown of performance by mood.
 
 ## Insights
-1. The brand has a high overall average retention of 24.52%, indicating that the majority of videos are retained for a significant period.
-2. The average watch time per video is 6.724 minutes, suggesting that the average user watches videos for about 6.724 minutes.
+1. The overall average retention is 24.52%, and the average watch time per video is 6.724 minutes.
+2. The videos with analytics are 354, and the videos with views are 123.
 
 ## Risks
-- The high average retention suggests that the brand has a good user retention strategy.
-- However, the low average watch time per video indicates that the brand may need to improve the engagement of its videos to increase watch time.
+- There are no actionable mood increases in the suggestions.json file, which may require re-running with specific mood suggestions.
 
 ## Next tries
-- To improve the average watch time, the brand should focus on creating more engaging content that keeps users interested for longer periods.
-- Additionally, the brand should consider analyzing user behavior and preferences to tailor future content to better meet user needs and increase watch time.
+- Re-run the planner with `--force-moods trance,sleep` to emit `data/run_intent.json` without using suggestions.
