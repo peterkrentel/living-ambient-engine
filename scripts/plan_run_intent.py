@@ -22,6 +22,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -42,6 +43,22 @@ MIN_GROUP_VIEWS = 200
 ALLOWED_DURATIONS = frozenset(
     {"5s", "10s", "30s", "1min", "5min", "10min", "30m", "1h", "2h", "3h", "4h", "1.5h"}
 )
+
+
+def iso_week_suffix(utc_now: datetime | None = None) -> str:
+    """YYYY-Www (UTC ISO week) for filenames and intent provenance."""
+    now = utc_now or datetime.now(timezone.utc)
+    y, w, _ = now.isocalendar()
+    return f"{y}-W{w:02d}"
+
+
+def _validate_week_label(week: str) -> str:
+    s = (week or "").strip()
+    if not s:
+        raise SystemExit("week must be non-empty")
+    if not re.match(r"^\\d{4}-W\\d{2}$", s):
+        raise SystemExit(f"week must match YYYY-Www, got {s!r}")
+    return s
 
 
 def load_factory_moods() -> list[str]:
@@ -116,6 +133,8 @@ def write_intent(
     *,
     moods: list[str],
     channel: str,
+    week: str,
+    suggestions_generated_at: str | None,
     duration: str,
     dual: bool,
     upload: bool,
@@ -127,8 +146,11 @@ def write_intent(
     blocked_path = _resolve_repo_path(blocked_path)
     blocked_path.unlink(missing_ok=True)
     intent = {
-        "schema_version": 1,
+        "schema_version": 2,
         "channel": channel,
+        "week": week,
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "suggestions_generated_at": suggestions_generated_at,
         "moods": moods,
         "duration": duration,
         "dual": dual,
@@ -191,6 +213,11 @@ def main() -> int:
         default=Path("data/reports/run-intent-blocked.md"),
         help="Path for BLOCKED markdown when no intent is emitted.",
     )
+    parser.add_argument(
+        "--week",
+        default=os.environ.get("RUN_INTENT_WEEK", ""),
+        help="ISO week label e.g. 2026-W18 (default: current UTC ISO week)",
+    )
     args = parser.parse_args()
 
     intent_out = _resolve_repo_path(args.intent_output)
@@ -207,6 +234,11 @@ def main() -> int:
 
     try:
         duration = validate_duration(args.duration)
+    except SystemExit as e:
+        print(e, file=sys.stderr)
+        return 1
+    try:
+        week = _validate_week_label(args.week.strip() or iso_week_suffix())
     except SystemExit as e:
         print(e, file=sys.stderr)
         return 1
@@ -234,6 +266,8 @@ def main() -> int:
         write_intent(
             moods=moods[: args.max_moods],
             channel=args.channel,
+            week=week,
+            suggestions_generated_at=None,
             duration=duration,
             dual=args.dual,
             upload=args.upload,
@@ -283,6 +317,8 @@ def main() -> int:
     write_intent(
         moods=moods,
         channel=args.channel,
+        week=week,
+        suggestions_generated_at=(data.get("generated_at") if isinstance(data, dict) else None),
         duration=duration,
         dual=args.dual,
         upload=args.upload,
