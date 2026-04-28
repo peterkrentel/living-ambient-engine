@@ -1001,6 +1001,34 @@ def _runner_output_is_instruction_scaffold_echo(prose: str) -> bool:
     return False
 
 
+def _runner_output_is_system_rubric_echo(prose: str) -> bool:
+    """Detect outputs that paste the system prompt's rubric sentences verbatim.
+
+    Newer prompts include plain-English rubric lines like "Three short `-` bullets:" under headings.
+    If the model outputs those rubric lines instead of actual bullets/sentences, treat as template echo.
+    """
+    t = (prose or "").strip()
+    if not t:
+        return True
+    needles = (
+        "Three short `-` bullets:",
+        "**2–3** sentences: main story from metrics",
+        "Numbered **1–5**.",
+        "**2–4** short `-` bullets",
+        "**2–5** `-` bullets:",
+        "Do not paste large tables;",
+    )
+    hits = sum(1 for n in needles if n in t)
+    if hits >= 2:
+        return True
+    # One rubric line is still bad if there is no real filled content.
+    has_any_bullet = any(ln.lstrip().startswith(("-", "*")) for ln in t.splitlines())
+    has_any_numbered = any(re.match(r"^\s*\d+\.\s+", ln) for ln in t.splitlines())
+    if hits >= 1 and (not has_any_bullet) and (not has_any_numbered):
+        return True
+    return False
+
+
 # Runner advisory body must use these ``##`` headings in order (first heading in output = first here).
 _RUNNER_REQUIRED_H2_ORDER = (
     "## What I reviewed",
@@ -1281,6 +1309,8 @@ def _runner_output_is_template_echo(prose: str) -> bool:
     if not t:
         return True
     if _runner_output_is_instruction_scaffold_echo(prose):
+        return True
+    if _runner_output_is_system_rubric_echo(prose):
         return True
     # Strong signature: the model repeats the exact instruction scaffolding.
     needle = "## What I reviewed — **exactly 3** short bullets"

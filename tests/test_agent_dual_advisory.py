@@ -214,6 +214,22 @@ def test_runner_output_is_template_echo_false_when_has_bullets():
     assert adv._runner_output_is_template_echo(raw) is False
 
 
+def test_runner_output_is_template_echo_detects_system_rubric_echo():
+    raw = (
+        "## What I reviewed\n"
+        "Three short `-` bullets: name **deterministic facts**, **run-next digest/tail**, and one other CONTEXT block.\n"
+        "## Summary\n"
+        "**2–3** sentences: main story from metrics (thin data is OK to name).\n"
+        "## Insights\n"
+        "Numbered **1–5**. Each item: **at most 2 sentences**.\n"
+        "## Risks\n"
+        "**2–4** short `-` bullets (thin data, confounders); **do not** duplicate the same risk sentence.\n"
+        "## Next tries\n"
+        "**2–5** `-` bullets: concrete experiments tied to moods/styles named in CONTEXT.\n"
+    )
+    assert adv._runner_output_is_template_echo(raw) is True
+
+
 def test_instruction_scaffold_echo_first_line_only():
     raw = (
         "## What I reviewed — **exactly 3** short bullets: name deterministic facts, run-next digest/tail, "
