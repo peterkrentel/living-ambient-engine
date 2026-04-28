@@ -1142,6 +1142,73 @@ def _runner_grounding_slice_ok(prose: str, totals: tuple[int, int, int]) -> bool
     return _runner_prose_quotes_channel_totals(sl, totals)
 
 
+def _runner_inject_channel_totals_into_wir_summary(
+    prose: str, totals: tuple[int, int, int]
+) -> tuple[str, bool]:
+    """Ensure channel totals appear in ``## What I reviewed`` and ``## Summary``.
+
+    Small models can ignore grounding instructions even when we spoon-feed the integers. When schema is valid,
+    it is safer to inject the deterministic totals in the two required sections and keep the rest of the prose.
+
+    Returns ``(new_prose, changed)``.
+    """
+    if not prose or prose.startswith("## Inference error"):
+        return prose, False
+    if not _runner_output_schema_valid(prose):
+        return prose, False
+
+    sv, sw, cv = totals
+    lines = prose.splitlines()
+    wir = "## What I reviewed"
+    summ = "## Summary"
+    insights = "## Insights"
+
+    try:
+        i_wir = next(i for i, ln in enumerate(lines) if ln.lstrip().startswith(wir))
+        i_sum = next(i for i, ln in enumerate(lines) if i > i_wir and ln.lstrip().startswith(summ))
+        i_ins = next(i for i, ln in enumerate(lines) if i > i_sum and ln.lstrip().startswith(insights))
+    except StopIteration:
+        return prose, False
+
+    changed = False
+
+    # Inject a deterministic-facts bullet into What I reviewed if needed.
+    wir_block = "\n".join(lines[i_wir:i_sum])
+    if not (
+        _runner_int_in_text_as_token(wir_block, sv)
+        and _runner_int_in_text_as_token(wir_block, sw)
+        and _runner_int_in_text_as_token(wir_block, cv)
+    ):
+        bullet = (
+            f"- deterministic facts (computed by script): {sv} views, {sw} watch minutes, "
+            f"{cv} videos with views\n"
+        )
+        insert_at = i_sum
+        # Keep bullets near the top of WIR; insert after the heading line if that seems cleaner.
+        if i_wir + 1 < i_sum and not lines[i_wir + 1].lstrip().startswith(("-", "*")):
+            insert_at = i_wir + 1
+        lines.insert(insert_at, bullet.rstrip("\n"))
+        # Adjust indices after insertion if it occurred before Summary.
+        if insert_at <= i_sum:
+            i_sum += 1
+            i_ins += 1
+        changed = True
+
+    # Inject a totals sentence into Summary if needed.
+    sum_block = "\n".join(lines[i_sum:i_ins])
+    if not (
+        _runner_int_in_text_as_token(sum_block, sv)
+        and _runner_int_in_text_as_token(sum_block, sw)
+        and _runner_int_in_text_as_token(sum_block, cv)
+    ):
+        sent = f"Channel totals: {sv} views, {sw} watch minutes, {cv} videos with views.\n"
+        insert_at = i_sum + 1
+        lines.insert(insert_at, sent.rstrip("\n"))
+        changed = True
+
+    return "\n".join(lines), changed
+
+
 def _runner_insights_section(prose: str) -> str:
     a = prose.find("## Insights")
     b = prose.find("## Risks")
@@ -1663,6 +1730,12 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
                             )
                     except Exception as e:  # noqa: BLE001
                         _runner_log(f"runner_grounding_retry failed: {type(e).__name__}: {e}")
+            # Deterministic injection: if schema is valid but grounding still fails, insert totals in WIR+Summary.
+            if not text.startswith("## Inference error") and not _runner_grounding_slice_ok(text, ch_totals):
+                text_inj, inj_changed = _runner_inject_channel_totals_into_wir_summary(text, ch_totals)
+                if inj_changed:
+                    _runner_log("runner_grounding_inject: inserted deterministic totals into WIR+Summary")
+                    text = text_inj
             if not text.startswith("## Inference error") and not _runner_grounding_slice_ok(
                 text, ch_totals
             ):
