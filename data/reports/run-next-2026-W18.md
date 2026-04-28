@@ -1,7 +1,7 @@
 # Run next — advisory (2026-W18)
 
-Generated (report): 2026-04-28T18:15:56.123371+00:00
-**Correlate bundle `generated_at`:** 2026-04-28T18:15:55.769612Z
+Generated (report): 2026-04-28T19:11:25.759209+00:00
+**Correlate bundle `generated_at`:** 2026-04-28T19:11:25.414150Z
 
 ## How to read this
 
@@ -13,9 +13,9 @@ This file is **machine-assembled** from `data/suggestions.json` and the **brand*
 
 ## Brand snapshot (this run)
 
-- **Overall avg retention:** 24.52%
-- **Overall avg watch min / video (window):** 6.724
-- **Videos analyzed:** 123 with views / 354 total
+- **Overall avg retention:** 24.84%
+- **Overall avg watch min / video (window):** 6.895
+- **Videos analyzed:** 124 with views / 354 total
 
 ## Evidence (paths)
 
