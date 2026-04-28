@@ -1,7 +1,7 @@
 # Run next — advisory (2026-W18)
 
-Generated (report): 2026-04-28T14:33:53.681844+00:00
-**Correlate bundle `generated_at`:** 2026-04-28T14:33:53.342593Z
+Generated (report): 2026-04-28T15:43:52.561929+00:00
+**Correlate bundle `generated_at`:** 2026-04-28T15:43:52.220950Z
 
 ## How to read this
 
