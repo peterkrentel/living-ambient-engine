@@ -212,7 +212,7 @@ Videos published **before** `generations.json` exists have **no** joined params 
 |--------|------|
 | Shipped | Deterministic **facts** JSON (views / watch minutes / count-with-views); default **temperature 0.15**; env **`RUNNER_BUNDLE_MAX_CHARS`**, **`AGENT_LLAMA_N_CTX`**, **`AGENT_RUNNER_TEMPERATURE`**. |
 | Shipped (runner PR) | **Lean bundle v2:** deterministic **run-next digest** (snapshot + actionable tail, cross-lane stripped in tail); **stricter Insights prompt**; **post-sanitize** tautology lines (`X` “slightly higher than” `X`). |
-| Next | Week-over-week **human** read of `*-runner.md`; **CI:** [`validate_agent_insight_runner.py`](../scripts/validate_agent_insight_runner.py) after dual advisory (totals vs `analytics*.json`); optional banned phrases / Gemini checks; optional **3B** GGUF (`AGENT_GGUF_URL` + new `AGENT_GGUF_PATH` + **cache key** bump) **after** prompt/bundle stable. |
+| Next | Week-over-week **human** read of `*-runner.md`; **CI:** [`validate_agent_insight_runner.py`](../scripts/validate_agent_insight_runner.py) after dual advisory (totals vs `analytics*.json`; ≥2 **Insights** items — numbered, bullets, or `###`); **runner** avoid routine **`finish_reason=length`** (bundle / prompt / env); optional banned phrases / Gemini checks; optional **3B** GGUF (`AGENT_GGUF_URL` + new `AGENT_GGUF_PATH` + **cache key** bump) **after** prompt/bundle stable. |
 
 #### Runner tuning notes (human — append as you learn)
 
@@ -240,6 +240,22 @@ Videos published **before** `generations.json` exists have **no** joined params 
 **Grounding / trust (automation gate):** numeric parity and “numbers only if present in JSON” on **any** advisory markdown **before** a consumer trusts it — applies to **both** models when you add validators.
 
 **Weights (runner only):** swap default GGUF via `AGENT_GGUF_URL` / `AGENT_GGUF_PATH` (documented in [`spec/workflows.md`](spec/workflows.md)); bump Actions **cache key** when the default filename changes.
+
+### LLM advisory → production (contract bridge)
+
+**Today (explicit):** `data/reports/agent-insight-*-gemini.md` and `*-runner.md` **do not** trigger [`run-intent-consumer.yml`](../.github/workflows/run-intent-consumer.yml), Content Factory workflows, or `batch_generate`. No job reads those markdown files for factory flags. **Dual advisory** stays **advisory only** — repeated here so the boundary with automation is obvious.
+
+**Intended path when automating:** Scheduled or hands-off generation still flows through **versioned** [`spec/contracts/production-run-intent.md`](spec/contracts/production-run-intent.md) JSON (or the paired **BLOCKED** report). Today **[`scripts/plan_run_intent.py`](../scripts/plan_run_intent.py)** (v0) writes that intent from **correlate `suggestions*.json`** after gates. A **future planner vN** or **LLM-backed step** may **write or update** the same JSON shape — **only** that committed artifact plus [`scripts/consume_run_intent.py`](../scripts/consume_run_intent.py) validation gates **`batch_generate`** / **`youtube_upload`**. LLM prose may **inform** a human or planner; it is **not** the execution contract by itself.
+
+**Open decisions (record here or in an ADR when chosen):**
+
+| Topic | TBD |
+|-------|-----|
+| **Who owns `moods` / `duration` / `dual`** | Keep **planner-from-suggestions** as source of truth with dual MD as **hints only**, vs **LLM-derived draft** merged into intent (and **who approves** before consumer). |
+| **Gemini vs runner when they disagree** | e.g. require **agreement**, prefer one model, or **human** picks — today there is **no** in-repo auto-merge ([`spec/DUAL_ADVISORY_COMPARE.md`](spec/DUAL_ADVISORY_COMPARE.md)). |
+| **Consumer trigger** | Stay **manual** `workflow_dispatch` on [`run-intent-consumer.yml`](../.github/workflows/run-intent-consumer.yml) until validators are boring; only then **`workflow_run`** / schedules — with **caps** (Phase 6 order above). |
+
+**Prerequisite before unattended consumer:** Runner **completion reliability** — avoid routine **`finish_reason=length`** (truncated prose). Tighten **runner bundle** / prompts / env (`RUNNER_BUNDLE_MAX_CHARS`, `AGENT_LLAMA_N_CTX`, `MAX_RUNNER_TOKENS` — see [`spec/workflows.md`](spec/workflows.md)); keep intent + **`run-next`** validators about **signal**, not wiring gaps.
 
 ### Autonomy horizon (post-trust north star)
 

@@ -48,4 +48,5 @@
 
 - **Human smoke:** keep using small **`workflow_dispatch`** inputs on [`content-factory-brand.yml`](../../.github/workflows/content-factory-brand.yml) / personal — no need to author JSON for one-off checks.
 - **Roadmap:** [`COHESION_ROADMAP.md`](../../COHESION_ROADMAP.md) Phase 6 — agent / planner steps emit this artifact under gates.
+- **LLM advisory vs this contract:** `agent-insight-*-gemini.md` / `*-runner.md` are **advisory only**; they **do not** trigger the consumer. Any future **Gemini + Qwen → production** path must still land as **validated intent JSON** (or blocked report), not raw markdown → `batch_generate` — see Phase 6 **LLM advisory → production (contract bridge)** in [`COHESION_ROADMAP.md`](../../COHESION_ROADMAP.md).
 - **Analytics loop:** [`AGENT.md`](../AGENT.md) — suggestions inform the planner; they do not bypass this contract once automation consumes intent.
