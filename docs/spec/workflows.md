@@ -631,6 +631,8 @@ on:
 
 **Optional env (runner GGUF, workflow or runner config):** `AGENT_GGUF_PATH`, `AGENT_GGUF_URL` (default Hugging Face Qwen2.5-1.5B Instruct q4), `AGENT_LLAMA_THREADS`, `MAX_RUNNER_TOKENS` (default `1536`, env ceiling **6144** — raise if `finish_reason=length`; CI sets **4096**; effective `max_tokens` is also clamped to `n_ctx − tokenize(prompt) − margin` after model load), **`RUNNER_BUNDLE_MAX_CHARS`** (default `5200` — lean CONTEXT cap), **`AGENT_LLAMA_N_CTX`** (default `4096`, clamp 2048–8192), **`AGENT_RUNNER_TEMPERATURE`** (default `0.15`), **`AGENT_RUNNER_VERBOSE`** (`1` / `true` / `yes` — extra `[runner-advisory]` bundle and completion detail in job logs) — all in [`agent_dual_advisory.py`](../../scripts/agent_dual_advisory.py).
 
+**Lean bundle vs `n_ctx`:** `build_runner_bundle` caps run-next digest/tail, weekly/blocked excerpts, and compact `suggestions` / `analytics` JSON so prompt size stays smaller under CI **`AGENT_LLAMA_N_CTX` 8192** — fewer routine **`finish_reason=length`** completions than an uncapped bundle.
+
 **Optional larger runner model (CI time trade-off):** To try **Qwen2.5-3B Instruct q4** instead of 1.5B, set workflow `env` **`AGENT_GGUF_URL`** to `https://huggingface.co/Qwen/Qwen2.5-3B-Instruct-GGUF/resolve/main/qwen2.5-3b-instruct-q4_k_m.gguf` and point **`AGENT_GGUF_PATH`** at a matching filename under `~/.cache/living-agent/`, then **bump** the `actions/cache` key in the analytics workflows so the cache does not serve the wrong weight file. Re-measure job duration on `ubuntu-latest` before making that the default.
 
 ### Guardrails
