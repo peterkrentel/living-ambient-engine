@@ -1,14 +1,14 @@
 {
-  "generated_at": "2026-04-28T18:01:32.682154Z",
+  "generated_at": "2026-04-29T10:33:48.547255Z",
   "overall_avg_retention": 21.63,
-  "overall_avg_watch_minutes_per_video": 90.522,
+  "overall_avg_watch_minutes_per_video": 113.432,
   "videos_analyzed": 114,
-  "videos_with_views": 46,
+  "videos_with_views": 44,
   "coverage": {
     "moods": {
       "deep_focus": {
         "total": 14,
-        "with_views": 9
+        "with_views": 8
       },
       "sleep": {
         "total": 6,
@@ -471,44 +471,44 @@
       "action": "reduce",
       "type": "mood",
       "name": "piano_deep_calm",
-      "reason": "-4.3% vs channel avg (n=7, views=255)",
+      "reason": "-2.4% vs channel avg (n=8, views=295)",
       "confidence": "medium",
       "actionable": true,
-      "sample_size": 7,
-      "group_views": 255,
+      "sample_size": 8,
+      "group_views": 295,
       "metric": "average_view_percentage"
     },
     {
       "action": "reduce",
       "type": "mood",
       "name": "ceremony",
-      "reason": "-19.3% vs channel avg (n=3, views=105, exploratory)",
+      "reason": "-19.3% vs channel avg (n=3, views=110, exploratory)",
       "confidence": "low",
       "actionable": false,
       "sample_size": 3,
-      "group_views": 105,
+      "group_views": 110,
       "metric": "average_view_percentage"
     },
     {
       "action": "increase",
       "type": "mood",
       "name": "piano_deep_calm",
-      "reason": "+324.5 min vs channel avg (n=7, views=255)",
+      "reason": "+360.2 min vs channel avg (n=8, views=295)",
       "confidence": "medium",
       "actionable": true,
-      "sample_size": 7,
-      "group_views": 255,
+      "sample_size": 8,
+      "group_views": 295,
       "metric": "watch_time_minutes"
     },
     {
       "action": "reduce",
       "type": "mood",
       "name": "ceremony",
-      "reason": "-50.2 min vs channel avg (n=3, views=105, exploratory)",
+      "reason": "-71.1 min vs channel avg (n=3, views=110, exploratory)",
       "confidence": "low",
       "actionable": false,
       "sample_size": 3,
-      "group_views": 105,
+      "group_views": 110,
       "metric": "watch_time_minutes"
     }
   ],
@@ -681,34 +681,34 @@
     {
       "type": "mood",
       "name": "piano_deep_calm",
-      "avg": 17.362857142857145,
-      "delta": -4.262360248447202,
-      "count": 7,
+      "avg": 19.265,
+      "delta": -2.362045454545452,
+      "count": 8,
       "total": 14,
-      "group_views": 255,
-      "std_dev": 11.369770906935218,
+      "group_views": 295,
+      "std_dev": 10.82336361765602,
       "metric": "average_view_percentage"
     },
     {
       "type": "mood",
       "name": "deep_focus",
-      "avg": 2.93,
-      "delta": -18.695217391304347,
+      "avg": 2.91,
+      "delta": -18.717045454545453,
       "count": 2,
       "total": 14,
-      "group_views": 201,
-      "std_dev": 1.7394826817189069,
+      "group_views": 202,
+      "std_dev": 1.711198410471445,
       "metric": "average_view_percentage"
     },
     {
       "type": "mood",
       "name": "ceremony",
-      "avg": 2.29,
-      "delta": -19.335217391304347,
+      "avg": 2.32,
+      "delta": -19.307045454545452,
       "count": 3,
       "total": 11,
-      "group_views": 105,
-      "std_dev": 2.068260138377182,
+      "group_views": 110,
+      "std_dev": 2.0373512215619574,
       "metric": "average_view_percentage"
     }
   ],
@@ -716,22 +716,22 @@
     {
       "type": "mood",
       "name": "piano_deep_calm",
-      "avg": 415.0,
-      "delta": 324.47826086956525,
-      "count": 7,
+      "avg": 473.625,
+      "delta": 360.1931818181818,
+      "count": 8,
       "total": 14,
-      "group_views": 255,
-      "std_dev": 341.4864565396408,
+      "group_views": 295,
+      "std_dev": 382.27213100467725,
       "metric": "watch_time_minutes"
     },
     {
       "type": "mood",
       "name": "deep_focus",
       "avg": 190.5,
-      "delta": 99.97826086956522,
+      "delta": 77.06818181818181,
       "count": 2,
       "total": 14,
-      "group_views": 201,
+      "group_views": 202,
       "std_dev": 153.4421715174808,
       "metric": "watch_time_minutes"
     },
@@ -903,12 +903,12 @@
     {
       "type": "mood",
       "name": "ceremony",
-      "avg": 40.333333333333336,
-      "delta": -50.188405797101446,
+      "avg": 42.333333333333336,
+      "delta": -71.09848484848484,
       "count": 3,
       "total": 11,
-      "group_views": 105,
-      "std_dev": 30.43572462310259,
+      "group_views": 110,
+      "std_dev": 29.39954648176283,
       "metric": "watch_time_minutes"
     }
   ]

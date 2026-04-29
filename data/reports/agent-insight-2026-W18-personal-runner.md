@@ -4,20 +4,25 @@
 
 ---
 ## What I reviewed
+- **Channel totals JSON**: 783 views, 4991 watch time, 44 videos with views.
+- **Run-next snapshot**: 21.63% overall avg retention, 113.432 avg watch time per video.
+- **Run-next tail**: -2.4% vs channel avg for "piano_deep_calm" retention, +360.2 min vs channel avg for "piano_deep_calm" watch time.
 
-- deterministic facts (computed by script): 753 views, 4164 watch minutes, 46 videos with views
 ## Summary
-Channel totals: 753 views, 4164 watch minutes, 46 videos with views.
-The channel has tracked 114 videos with analytics, generating an overall average retention of 21.63% and an average watch time of 90.522 minutes per video. The videos with analytics are 46 out of 114 total.
+The channel has 783 views, 4991 watch time, and 44 videos with views. The overall retention is 21.63%, and the average watch time per video is 113.432 minutes.
 
 ## Insights
-1. The channel has a high average retention of 21.63%, indicating that the videos are well-liked and retained by viewers.
-2. The videos with analytics have an average watch time of 90.522 minutes, suggesting that the videos are engaging and well-received by viewers.
+- **Top videos by views**: "Enter Flow State · 1 Hour Zero Distraction Focus | Continuous" with 121 views and 299 minutes watched.
+- **Top videos by retention**: "Sounds for an Overactive Mind · 1 Hour Evolving Focus Music | No Loops [Pure Ambience]" with 81 views and 82 minutes watched.
+- **Top videos by watch time**: "Calm Anxiety Fast | 1 Hour Deep Piano Relief | No Loops" with 60 views and 992 minutes watched.
+- **Top videos by average view percentage**: "Calm Anxiety Fast | 1 Hour Deep Piano Relief | No Loops" with 62.35% average view percentage and 0 minutes watched.
 
 ## Risks
-- The high retention rate may indicate that the videos are too popular and may need to be moderated to prevent abuse.
-- The average watch time may be too high, suggesting that the videos are too long and may need to be trimmed to improve viewer engagement.
+- **Insufficient data**: The retention and watch time metrics are based on a small sample size of 44 videos.
+- **Underperforming videos**: "ceremony" has a low retention of -19.3% and a low watch time of -71.1 minutes.
 
 ## Next tries
-- To improve viewer engagement, the channel should consider trimming videos to reduce their watch time.
-- To prevent abuse, the channel should monitor the videos with high retention and average watch time and take appropriate action if necessary.
+- **Reduce "piano_deep_calm" retention**: "piano_deep_calm" videos have a 2.4% lower retention compared to the channel average.
+- **Increase "piano_deep_calm" watch time**: "piano_deep_calm" videos have a 360.2 minutes higher watch time compared to the channel average.
+- **Reduce "ceremony" retention**: "ceremony" videos have a 19.3% lower retention compared to the channel average.
+- **Increase "ceremony" watch time**: "ceremony" videos have a 71.1 minutes higher watch time compared to the channel average.
