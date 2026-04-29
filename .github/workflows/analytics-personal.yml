@@ -116,9 +116,10 @@ jobs:
       - name: Run-next advisory personal (deterministic v0)
         run: |
           echo "🧭 Writing personal run-next markdown..."
-          python scripts/run_next_report.py --lane personal
+          WEEK=$(python -c "from datetime import datetime, timezone; n=datetime.now(timezone.utc); y,w,_=n.isocalendar(); print(f'{y}-W{w:02d}')")
+          python scripts/run_next_report.py --lane personal --week "$WEEK"
           echo "🔎 Validating personal run-next snapshot vs suggestions_personal.json..."
-          python scripts/validate_run_next.py --lane personal --week "$(date +%Y-W%V)" --suggestions data/suggestions_personal.json
+          python scripts/validate_run_next.py --lane personal --week "$WEEK" --suggestions data/suggestions_personal.json
 
       - name: Cache runner GGUF (dual advisory)
         uses: actions/cache@v4
