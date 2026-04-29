@@ -4,24 +4,27 @@
 
 ---
 ## What I reviewed
-- **Channel totals JSON**: 783 views, 4991 watch time, 44 videos with views.
-- **Run-next snapshot**: 21.63% avg retention, 113.432 min avg watch time per video.
-- **Run-next tail**: -2.4% vs channel avg for mood "piano_deep_calm", +360.2 min vs channel avg for mood "ceremony".
+- **Channel totals JSON:** 753 views, 4793 minutes watched, 43 videos with views.
+- **Weekly report excerpt:** 114 videos analyzed, 43 with views.
+- **Run-next digest snapshot:** 21.87% overall avg retention, 111.465 avg watch time per video.
+- **Run-next tail actionable:** medium confidence increase in watch time from 21.87% to 25.57% (401.5 min vs channel avg).
 
 ## Summary
-- **Total videos tracked**: 114
-- **Videos with analytics**: 114
-- **Total views**: 783
-- **Total watch time**: 4,991 minutes
+- **Total views:** 753
+- **Total watch time:** 4,793 minutes
+- **Videos analyzed:** 43 with views / 114 total
 
 ## Insights
-- **Top 5 by Retention**: "Find Your Strength · 30 Seconds Power Dr" has 96.8% retention.
-- **Top 5 by Views**: "Sounds for an Overactive Mind · 1 Hour Evolving Focus Music" has 81 views and 82 minutes watch time.
+- **Top videos by views:** 121 views, 4.12% retention, 299 minutes watched.
+- **Top videos by retention:** 96.8% retention, 121 views, 299 minutes watched.
+- **Top videos by watch time:** 81 views, 1.70% retention, 82 minutes watched.
+- **Top videos by average view percentage:** 62.35% retention, 4 views, 0 minutes watched.
 
 ## Risks
-- **Insufficient data for mood "ceremony"**.
-- **Insufficient data for mood "piano_deep_calm"**.
+- **Insufficient data for analysis:** 43 videos with views, 71.9% of videos analyzed.
+- **Insufficient data for analysis:** 3 videos with views, 31.6% of videos analyzed.
 
 ## Next tries
-- **Reduce mood "ceremony" retention**.
-- **Increase mood "piano_deep_calm" watch time**.
+- **Reduce retention for 'ceremony' mood:** -19.6% vs channel avg (n=3, views=110, exploratory).
+- **Increase watch time for 'piano_deep_calm' mood:** +401.5 min vs channel avg (n=7, views=265).
+- **Reduce watch time for 'ceremony' mood:** -69.1 min vs channel avg (n=3, views=110, exploratory).
