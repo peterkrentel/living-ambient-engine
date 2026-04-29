@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Validate deterministic `run-next` markdown against JSON inputs.
 
-This is intentionally strict about a small set of headline snapshot numbers so downstream
-automation can trust that the human-facing `run-next` file is consistent with the correlate bundle.
+Checks **headline snapshot** bullets (retention %, watch min/video, videos with views / analyzed) and
+the **Correlate bundle ``generated_at``** line against ``suggestions*.json`` so the committed
+``run-next`` file cannot drift from the correlate bundle that produced it.
 """
 
 from __future__ import annotations
@@ -23,6 +24,7 @@ class RunNextSnapshot:
     overall_avg_watch_minutes_per_video: float | None
     videos_with_views: int | None
     videos_analyzed: int | None
+    correlate_generated_at: str | None
 
 
 def _read_text(path: Path) -> str:
@@ -62,11 +64,14 @@ def parse_run_next_snapshot(md: str) -> RunNextSnapshot:
         overall_avg_watch_minutes_per_video=_parse_float(m_oaw.group(1)) if m_oaw else None,
         videos_with_views=_parse_int(m_videos.group(1)) if m_videos else None,
         videos_analyzed=_parse_int(m_videos.group(2)) if m_videos else None,
+        correlate_generated_at=parse_correlate_generated_at_line(t),
     )
 
 
 def parse_suggestions_snapshot(data: dict) -> RunNextSnapshot:
     """Extract the same snapshot values from suggestions JSON."""
+    gen = data.get("generated_at")
+    gen_s = str(gen).strip() if gen is not None else None
     return RunNextSnapshot(
         overall_avg_retention=_parse_float(str(data.get("overall_avg_retention"))) if data.get("overall_avg_retention") is not None else None,
         overall_avg_watch_minutes_per_video=_parse_float(str(data.get("overall_avg_watch_minutes_per_video")))
@@ -74,6 +79,7 @@ def parse_suggestions_snapshot(data: dict) -> RunNextSnapshot:
         else None,
         videos_with_views=_parse_int(str(data.get("videos_with_views"))) if data.get("videos_with_views") is not None else None,
         videos_analyzed=_parse_int(str(data.get("videos_analyzed"))) if data.get("videos_analyzed") is not None else None,
+        correlate_generated_at=gen_s,
     )
 
 
@@ -83,11 +89,39 @@ def _float_close(a: float | None, b: float | None, tol: float = 1e-3) -> bool:
     return abs(a - b) <= tol
 
 
+def _normalize_generated_at(s: str) -> str:
+    """Loosen Z vs +00:00 and whitespace for correlate timestamp comparison."""
+    t = (s or "").strip()
+    if t.endswith("Z"):
+        t = t[:-1] + "+00:00"
+    return t
+
+
+def parse_correlate_generated_at_line(md: str) -> str | None:
+    """Value after ``**Correlate bundle `generated_at`:**`` if present."""
+    m = re.search(
+        r"^\*\*Correlate bundle `generated_at`:\*\*\s*(.+?)\s*$",
+        md or "",
+        re.M,
+    )
+    return m.group(1).strip() if m else None
+
+
 def validate_run_next(*, run_next_text: str, suggestions_data: dict) -> list[str]:
     """Return a list of human-readable errors (empty means OK)."""
     errs: list[str] = []
     md = parse_run_next_snapshot(run_next_text)
     js = parse_suggestions_snapshot(suggestions_data)
+
+    if md.correlate_generated_at is None:
+        errs.append("run-next missing line: **Correlate bundle `generated_at`:** …")
+    elif not js.correlate_generated_at:
+        errs.append("suggestions JSON missing: generated_at (run-next cites correlate bundle timestamp)")
+    elif _normalize_generated_at(md.correlate_generated_at) != _normalize_generated_at(js.correlate_generated_at):
+        errs.append(
+            "generated_at mismatch: run-next correlate line vs suggestions.json "
+            f"({md.correlate_generated_at!r} vs {js.correlate_generated_at!r})"
+        )
 
     if md.overall_avg_retention is None:
         errs.append("run-next snapshot missing: overall_avg_retention")
