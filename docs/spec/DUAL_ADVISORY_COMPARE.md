@@ -79,5 +79,5 @@ Use the same **dimensions** for brand and personal so weeks are comparable.
 |-----|------|
 | [`START_HERE.md`](../START_HERE.md) § Plan checklist | **Dual advisory refinement** row — human compare (this playbook). |
 | [`HANDOFF.md`](../HANDOFF.md) **#9** | Refinement backlog (lane CONTEXT, decoding, validators). |
-| [`COHESION_ROADMAP.md`](../COHESION_ROADMAP.md) Phase 6 | Shipped prototype + iteration order + autonomy horizon. |
+| [`COHESION_ROADMAP.md`](../COHESION_ROADMAP.md) Phase 6 | Shipped prototype + iteration order + autonomy horizon + **LLM advisory → production (contract bridge)** (dual MD does not trigger consumer). |
 | [`workflows.md`](./workflows.md) | CI steps, secrets, stubs, logs (`[gemini-advisory]`, `[runner-advisory]`). |
