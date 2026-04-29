@@ -4,7 +4,7 @@
 
 ## Updated
 
-2026-04-28
+2026-04-29
 
 ## Branch / PR
 
@@ -25,7 +25,7 @@
 - **Personal analytics v1** in CI (token scopes, `analytics_personal.json`, `*-personal.md`, Studio cross-read).
 - **Brand + personal push race** fixed (`git pull --rebase origin main` before `git push` in both analytics workflows).
 - **Weekly reports** include **Analytics window** line ([`agent/report.py`](../agent/report.py)); pipe-table cells sanitize **`|`** / newlines so Top 5 and mood tables render on GitHub; merge on `main`.
-- **`run-next` v0:** [`scripts/run_next_report.py`](../scripts/run_next_report.py) on **brand + personal** workflows → `run-next-YYYY-WW.md` / `run-next-YYYY-WW-personal.md` (deterministic; **actionable** vs **exploratory**; packaging caveat). **Next:** validators → optional LLM → automation — [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6.
+- **`run-next` v0:** [`scripts/run_next_report.py`](../scripts/run_next_report.py) on **brand + personal** workflows → `run-next-YYYY-WW.md` / `run-next-YYYY-WW-personal.md` (deterministic; **actionable** vs **exploratory**; packaging caveat). **Shipped (tranche 1):** [`validate_run_next.py`](../scripts/validate_run_next.py) after each write — snapshot + **`generated_at`** vs **`suggestions*.json`**, **Python ISO week** for `--week` (**PR #124**). **Next:** cited-indices / deeper validators → optional LLM → automation — [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6.
 
 ## Goal (this phase — in flight)
 
@@ -51,8 +51,8 @@
 7. **Spec phases:** **`AGENT.md`** Phase **3** when volume **and** interpretation guardrails justify it; **`COHESION_ROADMAP.md`** Phase **6** only after joins/trust feel right.
 8. **Title / packaging (defer):** same **mood × duration × dual** matrix on **brand + personal** reuses templates → **identical `video_title` strings** on two channels (different `video_id`s). Fine for smoke; before **high volume** or sharp **channel positioning**, tweak metadata (e.g. per-channel suffix or description line), rotation policy, or later **run intent** rules so packs are not unintentional clones — [`START_HERE.md`](START_HERE.md) checklist.
 
-9. **Autonomy next step (recommended):** move from advisory prose toward **validated structured intent**: add **validators** for `run-next` / inputs (numbers match JSON; cited evidence), then expand/strengthen the **`run_intent*.json`** door (contract + consumer) so it can safely drive **generation/upload** with caps — see [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6 *Two doors*, **LLM advisory → production (contract bridge)** (what dual MD does *not* do today), and *Autonomy horizon*.
-10. **`run-next` + dual-advisory (quality phase):** **CI** runs **`validate_agent_insight_runner.py`** (totals vs **analytics** + WIR placeholder ban + ≥2 Insights items — numbered lists, `-`/`*` bullets, or `###` subheads); **`agent_dual_advisory.py`** strips rubric-echo WIR lines before write. Next: runner **completion reliability** (avoid routine `finish_reason=length`); stronger concreteness / optional Gemini checks before anything consumes prose.
+9. **Autonomy next step (recommended):** move from advisory prose toward **validated structured intent**: **`run-next` tranche 1** is **landed** (headline snapshot + **`generated_at`** vs JSON — **PR #124**); **tranche 2** is cited **`suggestions[i]`** / audit traceability and stronger **`run_intent*.json`** door (contract + consumer) so generation/upload can run with caps — see [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6 *Two doors*, **LLM advisory → production (contract bridge)** (**PR #122**), and *Autonomy horizon*.
+10. **`run-next` + dual-advisory (quality phase):** **CI** runs **`validate_agent_insight_runner.py`** (totals vs **analytics** + WIR placeholder ban + ≥2 Insights — flexible shapes — **PR #121**); **`agent_dual_advisory.py`** strips rubric-echo WIR lines before write. **Shipped:** leaner runner bundle + **2–4** Insights prompt (**PR #123**). **Next:** monitor **`finish_reason=length`** in analytics logs; optional Gemini grounding checks before anything consumes prose.
 11. **Autonomy horizon (north star):** after trust gates, move from advisory prose toward **validated structured intent** → consumer → generate → publish → complete catalog/ledger feedback; supervised **Phase 3** models only when data justify them — [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6 **Autonomy horizon (post-trust north star)**.
 
 ## Risks / open questions

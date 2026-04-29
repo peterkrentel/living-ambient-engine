@@ -193,10 +193,10 @@ Videos published **before** `generations.json` exists have **no** joined params 
 
 **`run-next` implementation order (agreed):**
 
-1. **v0 deterministic** — **Done on `main`:** [`scripts/run_next_report.py`](../scripts/run_next_report.py) after audit; brand + personal filenames as above; **no** LLM; **no** `batch_generate` / upload. **Next:** step **2** (validators).
-2. **Validators** — CI or script checks: every claim traceable to `suggestions.json` / `suggestions_personal.json` / audit; numeric parity; fail the step on drift.
-3. **Optional LLM prose** — only after (1)(2) are boring: model consumes **fixed JSON bundle** + prompt from git; output still schema-validated. **Preferred:** open-weight on **self-hosted** runner or hardware you control (**MLOps / AI-ops**, no third-party inference). **Optional prototype:** vendor API (e.g. Gemini free tier) for speed **only** until a local path exists; document in `workflows.md` + secrets policy.
-4. **Automation** — optional `workflow_run` / scheduled consumer, richer `run_intent`, etc., **only** after `run-next` is trusted; keep Phase 6 steps **2–3** (human dispatch → later caps).
+1. **v0 deterministic** — **Done on `main`:** [`scripts/run_next_report.py`](../scripts/run_next_report.py) after audit; brand + personal filenames as above; **no** LLM; **no** `batch_generate` / upload.
+2. **Validators (tranche 1 — done on `main`):** [`validate_run_next.py`](../scripts/validate_run_next.py) in both analytics workflows — headline **snapshot** parity + **`generated_at`** vs correlate **`suggestions*.json`**; **`--week`** aligned to **Python UTC ISO week** (**PR #124**). **Tranche 2 (next):** cited **`suggestions[i]`** / audit excerpt traceability; fail on drift beyond the headline block.
+3. **Optional LLM prose** — only after validator tranches feel boring: model consumes **fixed JSON bundle** + prompt from git; output still schema-validated. **Preferred:** open-weight on **self-hosted** runner or hardware you control (**MLOps / AI-ops**, no third-party inference). **Optional prototype:** vendor API (e.g. Gemini free tier) for speed **only** until a local path exists; document in `workflows.md` + secrets policy.
+4. **Automation** — optional `workflow_run` / scheduled consumer, richer `run_intent`, etc., **only** after `run-next` validators + policy feel trusted; keep Phase 6 human dispatch → later caps.
 
 ### Dual advisory refinement (runner + optional Gemini)
 
@@ -212,7 +212,8 @@ Videos published **before** `generations.json` exists have **no** joined params 
 |--------|------|
 | Shipped | Deterministic **facts** JSON (views / watch minutes / count-with-views); default **temperature 0.15**; env **`RUNNER_BUNDLE_MAX_CHARS`**, **`AGENT_LLAMA_N_CTX`**, **`AGENT_RUNNER_TEMPERATURE`**. |
 | Shipped (runner PR) | **Lean bundle v2:** deterministic **run-next digest** (snapshot + actionable tail, cross-lane stripped in tail); **stricter Insights prompt**; **post-sanitize** tautology lines (`X` “slightly higher than” `X`). |
-| Next | Week-over-week **human** read of `*-runner.md`; **CI:** [`validate_agent_insight_runner.py`](../scripts/validate_agent_insight_runner.py) after dual advisory (totals vs `analytics*.json`; ≥2 **Insights** items — numbered, bullets, or `###`); **runner** avoid routine **`finish_reason=length`** (bundle / prompt / env); optional banned phrases / Gemini checks; optional **3B** GGUF (`AGENT_GGUF_URL` + new `AGENT_GGUF_PATH` + **cache key** bump) **after** prompt/bundle stable. |
+| Shipped (#123) | Further **runner CONTEXT** compaction + **2–4** Insights prompt + brevity line to reduce routine **`finish_reason=length`** under **`n_ctx` 8192** in CI. |
+| Next | Week-over-week **human** read of `*-runner.md`; **CI:** [`validate_agent_insight_runner.py`](../scripts/validate_agent_insight_runner.py) after dual advisory (totals vs `analytics*.json`; ≥2 **Insights** items — numbered, bullets, or `###`); **monitor** **`finish_reason=length`** after #123 bundle changes; optional banned phrases / Gemini checks; optional **3B** GGUF (`AGENT_GGUF_URL` + new `AGENT_GGUF_PATH` + **cache key** bump) **after** prompt/bundle stable. |
 
 #### Runner tuning notes (human — append as you learn)
 
@@ -255,7 +256,7 @@ Videos published **before** `generations.json` exists have **no** joined params 
 | **Gemini vs runner when they disagree** | e.g. require **agreement**, prefer one model, or **human** picks — today there is **no** in-repo auto-merge ([`spec/DUAL_ADVISORY_COMPARE.md`](spec/DUAL_ADVISORY_COMPARE.md)). |
 | **Consumer trigger** | Stay **manual** `workflow_dispatch` on [`run-intent-consumer.yml`](../.github/workflows/run-intent-consumer.yml) until validators are boring; only then **`workflow_run`** / schedules — with **caps** (Phase 6 order above). |
 
-**Prerequisite before unattended consumer:** Runner **completion reliability** — avoid routine **`finish_reason=length`** (truncated prose). Tighten **runner bundle** / prompts / env (`RUNNER_BUNDLE_MAX_CHARS`, `AGENT_LLAMA_N_CTX`, `MAX_RUNNER_TOKENS` — see [`spec/workflows.md`](spec/workflows.md)); keep intent + **`run-next`** validators about **signal**, not wiring gaps.
+**Prerequisite before unattended consumer:** Runner **completion reliability** — avoid routine **`finish_reason=length`** (truncated prose). **Shipped mitigations:** tighter lean bundle + **2–4** Insights prompt (**PR #123**); env knobs unchanged (`RUNNER_BUNDLE_MAX_CHARS`, `AGENT_LLAMA_N_CTX`, `MAX_RUNNER_TOKENS` — see [`spec/workflows.md`](spec/workflows.md)). **`run-next` headline parity + `generated_at`** validation (**PR #124**). **Still watch logs** before auto-chaining consumer.
 
 ### Autonomy horizon (post-trust north star)
 
