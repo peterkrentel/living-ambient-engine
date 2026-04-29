@@ -193,7 +193,7 @@ def test_runner_output_is_template_echo_detects_instruction_only():
         "## What I reviewed — **exactly 3** short bullets: name deterministic facts, run-next digest/tail, "
         "and one of (weekly / suggestions compact / analytics compact). No long pasted lists.\n"
         "## Summary — **2–3** sentences only: main story from metrics (thin data is OK to name).\n"
-        "## Insights — numbered **1–5**. Each item: **at most 2 sentences**.\n"
+        "## Insights — numbered **2–4**. Each item: **at most 2 sentences**.\n"
         "## Risks — **2–4** short bullets (thin data, confounders); **do not** duplicate the same risk sentence.\n"
         "## Next tries — **2–5** bullets: concrete experiments tied to moods/styles named in CONTEXT.\n"
     )
@@ -221,7 +221,7 @@ def test_runner_output_is_template_echo_detects_system_rubric_echo():
         "## Summary\n"
         "**2–3** sentences: main story from metrics (thin data is OK to name).\n"
         "## Insights\n"
-        "Numbered **1–5**. Each item: **at most 2 sentences**.\n"
+        "Numbered **2–4**. Each item: **at most 2 sentences**.\n"
         "## Risks\n"
         "**2–4** short `-` bullets (thin data, confounders); **do not** duplicate the same risk sentence.\n"
         "## Next tries\n"

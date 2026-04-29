@@ -4,8 +4,8 @@
 Both run **in parallel** (threads) after deterministic ``run-next``. **Gemini** sees the full
 file bundle; **runner GGUF** uses a **lean** bundle: **deterministic facts** JSON, a **trimmed
 run-next** (snapshot digest + actionable tail, cross-lane stripped in the tail), compact JSON,
-short weekly/blocked caps, **coverage_summary** + compact analytics slices — so small ``n_ctx``
-fits and the small model does not blend brand vs personal numbers.
+short weekly/blocked caps, **coverage_summary** + compact analytics slices (capped row counts and
+char budgets per part) — so small ``n_ctx`` fits and the small model does not blend brand vs personal numbers.
 Advisory only — not ``run_intent`` / ``batch_generate``.
 
 Outputs (per lane ``brand`` | ``personal``):
@@ -315,7 +315,7 @@ def _dim_coverage_stats(block: object) -> dict[str, int]:
     }
 
 
-def _compact_suggestions(path: Path, max_chars: int = 3400) -> str:
+def _compact_suggestions(path: Path, max_chars: int = 2900) -> str:
     """Correlate JSON without huge ``coverage`` grids — top rows + stats + coverage_summary."""
     if not path.exists():
         rel = path.relative_to(_REPO) if path.is_relative_to(_REPO) else path
@@ -330,7 +330,7 @@ def _compact_suggestions(path: Path, max_chars: int = 3400) -> str:
         "overall_avg_watch_minutes_per_video": data.get("overall_avg_watch_minutes_per_video"),
         "videos_analyzed": data.get("videos_analyzed"),
         "videos_with_views": data.get("videos_with_views"),
-        "suggestions": (data.get("suggestions") or [])[:25],
+        "suggestions": (data.get("suggestions") or [])[:18],
     }
     cov = data.get("coverage")
     if isinstance(cov, dict):
@@ -346,7 +346,7 @@ def _compact_suggestions(path: Path, max_chars: int = 3400) -> str:
     return text
 
 
-def _compact_analytics(path: Path, max_chars: int = 2400) -> str:
+def _compact_analytics(path: Path, max_chars: int = 2000) -> str:
     """Top videos by views + by retention (small rows; analytics JSON is huge on disk)."""
     if not path.exists():
         rel = path.relative_to(_REPO) if path.is_relative_to(_REPO) else path
@@ -377,10 +377,10 @@ def _compact_analytics(path: Path, max_chars: int = 2400) -> str:
             "watch_min": m.get("watch_time_minutes"),
         }
 
-    top_views = sorted(videos, key=_views, reverse=True)[:12]
+    top_views = sorted(videos, key=_views, reverse=True)[:8]
     min_views = 2
     qualified = [v for v in videos if _views(v) >= min_views]
-    top_ret = sorted(qualified, key=_avg_pct, reverse=True)[:8]
+    top_ret = sorted(qualified, key=_avg_pct, reverse=True)[:6]
     slim = {
         "fetched_at": data.get("fetched_at"),
         "n_videos": len(videos),
@@ -502,7 +502,7 @@ def _runner_run_next_for_qwen(run_next: Path, lane: str) -> str:
     i1 = body.find(ev_h)
     if i0 != -1 and i1 != -1 and i1 > i0:
         digest = body[i0:i1].strip()
-        cap_d = 900
+        cap_d = 750
         if len(digest) > cap_d:
             digest = digest[:cap_d] + "\n…\n"
     else:
@@ -519,7 +519,7 @@ def _runner_run_next_for_qwen(run_next: Path, lane: str) -> str:
             i1 = tail.find(_RUN_NEXT_PRODUCTION_HOOKS, i0 + len(cross)) if i0 != -1 else -1
             if i0 != -1 and i1 != -1:
                 tail = (tail[:i0].rstrip() + "\n\n" + tail[i1:].lstrip()).strip()
-        cap_t = 2400
+        cap_t = 1850
         if len(tail) > cap_t:
             tail = tail[:cap_t] + "\n… truncated run-next tail\n"
     else:
@@ -629,8 +629,8 @@ def build_runner_bundle(lane: str, week: str) -> str:
 
     facts = _runner_facts_block(ana_path, sug_path)
     run_next_trimmed = _runner_run_next_for_qwen(run_next, lane)
-    weekly_body = _read(weekly, 1800)
-    blocked_body = _read(blocked, 900)
+    weekly_body = _read(weekly, 1400)
+    blocked_body = _read(blocked, 600)
     sug_compact = _compact_suggestions(sug_path)
     ana_compact = _compact_analytics(ana_path)
 
@@ -991,7 +991,9 @@ def _runner_output_is_instruction_scaffold_echo(prose: str) -> bool:
     first = nonempty[0]
     if first.startswith("## Summary — **2–3** sentences only"):
         return True
-    if first.startswith("## Insights — numbered **1–5**"):
+    if first.startswith("## Insights — numbered **1–5**") or first.startswith(
+        "## Insights — numbered **2–4**"
+    ):
         return True
     if first.startswith("## What I reviewed — **exactly 3** short bullets"):
         for ln in raw_lines[1:10]:
@@ -1014,6 +1016,7 @@ def _runner_output_is_system_rubric_echo(prose: str) -> bool:
         "Three short `-` bullets:",
         "**2–3** sentences: main story from metrics",
         "Numbered **1–5**.",
+        "Numbered **2–4**.",
         "**2–4** short `-` bullets",
         "**2–5** `-` bullets:",
         "Do not paste large tables;",
@@ -1491,7 +1494,8 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
         "'### Personal snapshot', '### Brand snapshot', '## Actionable (correlate gates passed)', "
         "'### run-next tail', or the footer line mentioning `run_next_report.py`. "
         "Those exist only inside CONTEXT; your job is a short human advisory, not a paste.\n"
-        "Required shape (GitHub-flavored markdown, use `##` section headings only; stay concise; "
+        "Required shape (GitHub-flavored markdown, use `##` section headings only; **stay concise** — "
+        "short bullets, no padding; finish within the reply budget; "
         "no outer ``` fences). Do **not** begin your answer by repeating these rule lines verbatim.\n"
         "**Critical:** Your reply body MUST use exactly these five headings as the **first** markdown "
         "headings in your answer, in this **exact order** — each on its own line starting with `## ` "
@@ -1510,10 +1514,10 @@ def write_runner_gguf(lane: str, week: str, bundle: str) -> Path:
         "## Summary\n"
         "**2–3** sentences: main story from metrics (thin data is OK to name).\n"
         "## Insights\n"
-        "Numbered **1–5**. Each item: **at most 2 sentences**. "
+        "Numbered **2–4** items (minimum **2**, maximum **4**). Each item: **at most 2 sentences**. "
         "Each item must name at least one **concrete** label from CONTEXT: a **mood**, **music_style**, **art_period**, "
         "or a **video title** from analytics compact / run-next tail — not generic praise like 'well-received'.\n"
-        "Use **at least three distinct numeric facts** across the five items (prefer deterministic JSON for channel totals). "
+        "Use **at least three distinct numeric facts** across those items (prefer deterministic JSON for channel totals). "
         "Every number must appear verbatim in CONTEXT (no invented totals).\n"
         "**Forbidden:** saying a metric is 'higher', 'lower', or 'slightly higher/lower than' **the same numeric value** "
         "(e.g. '24.67% is slightly higher than 24.67%'). **Forbidden:** comparing a count to itself.\n"
