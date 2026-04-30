@@ -27,8 +27,8 @@ Twelve workflow files automate video generation, YouTube deployment, analytics, 
 | WF-BATCH | `art-creator-batch.yml` | Manual (+ optional schedule) | Matrix generation (cron may be off) | Brand |
 | WF-PIANO | `piano-batch.yml` | Manual only | Batch piano videos + upload | Brand |
 | WF-TEST | `test-art-creator.yml` | Manual + PR (path filter) | CI: spec validation + contract tests + 7× `art-creator` matrix (no production upload) | None |
-| WF-AGENT | `analytics-agent.yml` | Schedule (weekly) + Manual | Fetch YouTube stats, reports, correlate, **plan run intent**, channel audit, **`run-next` v0**, optional **dual LLM advisory** (Gemini API + runner GGUF via `scripts/agent_dual_advisory.py`) | Brand |
-| WF-AGENT-P | `analytics-personal.yml` | Schedule (weekly) + Manual | Fetch personal stats + report + `analyze_data` + audit + correlate → `suggestions_personal.json` + **plan intent** (`run_intent_personal.json` / blocked) + `run-next-*-personal.md` + optional **dual LLM advisory** (never writes brand `suggestions.json`) | Personal |
+| WF-AGENT | `analytics-agent.yml` | Schedule (weekly) + Manual | Fetch, weekly report, **`analyze_data`**, correlate, **plan run intent**, channel audit, **`run-next` v0** + **`validate_run_next`**, optional **dual LLM advisory** (`agent_dual_advisory.py`) + **`validate_agent_insight_runner`** → `agent-insight-*-brand-*.md` | Brand |
+| WF-AGENT-P | `analytics-personal.yml` | Schedule (weekly) + Manual | Fetch + report + **`analyze_data`** + **audit → correlate** → `suggestions_personal.json` + plan intent (`run_intent_personal.json` / blocked) + `run-next-*-personal.md` + **`validate_run_next`** + optional dual advisory + **`validate_agent_insight_runner`** → `agent-insight-*-personal-*.md` (never writes brand `suggestions.json`) | Personal |
 | WF-RIC | `run-intent-consumer.yml` | Manual only | Validate intent JSON (default `data/run_intent.json`; personal: `data/run_intent_personal.json`) → `batch_generate` → optional gated `youtube_upload` (brand or personal per intent `channel`) | Brand or personal |
 
 ## Gating Rules
@@ -567,6 +567,8 @@ See [GUARDRAILS.md](./GUARDRAILS.md) § Metadata Consistency Violations for rati
 
 **Purpose:** Fetch YouTube Analytics data and generate performance reports.
 
+**Lane note (brand vs personal):** On **brand**, the job runs **correlate → plan run intent → audit → run-next** so the planner reads `suggestions.json` before the weekly audit file exists; **run-next** still runs **after** audit. On **personal**, the job runs **audit → correlate** (same inputs; order differs only in YAML). See § [analytics-personal.yml](#analytics-personalyml).
+
 **Spec:** [AGENT.md](./AGENT.md)
 
 ### Trigger
@@ -649,6 +651,8 @@ See: [GUARDRAILS.md](./GUARDRAILS.md) § Analytics Agent Guardrails
 ## analytics-personal.yml
 
 **Purpose:** Same *family* of metrics as the brand fetcher, but as a **separate experiment**: personal OAuth only, `data/analytics_personal.json`, reports named `data/reports/YYYY-WW-personal.md`, and **`scripts/audit_channel.py`** with `ANALYTICS_JSON_PATH` / `ANALYTICS_CHANNEL=personal` / `ANALYTICS_REPORT_SUFFIX=-personal` → `data/reports/audit-YYYY-WW-personal.md`. Then **`scripts/correlate.py`** with `ANALYTICS_JSON_PATH` + **`SUGGESTIONS_JSON_PATH=data/suggestions_personal.json`** (never overwrites brand `data/suggestions.json`), then **`scripts/run_next_report.py --lane personal`** → `data/reports/run-next-YYYY-WW-personal.md`.
+
+**Order vs brand:** Personal YAML runs **audit before correlate**; brand runs **correlate before audit** (see § [analytics-agent.yml](#analytics-agentyml)). **run-next** runs after audit in both lanes.
 
 **Spec:** [PERSONAL_ANALYTICS.md](../PERSONAL_ANALYTICS.md), [AGENT.md](./AGENT.md)
 
