@@ -1,19 +1,19 @@
 # Personal channel — Analytics Report (2026-W18)
 
-Generated: 2026-04-29T17:12:16.856348+00:00
+Generated: 2026-04-30T19:28:41.249185+00:00
 
 > **Channel scope:** Personal YouTube only. Data file: `data/analytics_personal.json`. Brand metrics live in `data/analytics.json` (main Analytics Agent workflow).
 
 ## Summary
 
-- **Analytics window:** `2026-04-01` → `2026-04-28` (YouTube Analytics API range for metrics below. In Studio, pick the **same** custom dates when comparing totals — not e.g. “Last 28 days” unless `fetch_analytics` used `--days 28`.)
+- **Analytics window:** `2026-04-02` → `2026-04-29` (YouTube Analytics API range for metrics below. In Studio, pick the **same** custom dates when comparing totals — not e.g. “Last 28 days” unless `fetch_analytics` used `--days 28`.)
 - **Total videos tracked:** 114
-- **Videos with analytics:** 111
+- **Videos with analytics:** 114
 
 ## Totals
 
-- **Total views:** 753
-- **Total watch time:** 4,793 minutes
+- **Total views:** 819
+- **Total watch time:** 5,901 minutes
 - **Subscribers gained:** 4
 
 ## Top 5 by Retention
@@ -24,7 +24,7 @@ Generated: 2026-04-29T17:12:16.856348+00:00
 | Sounds for an Overactive Mind · 30 Secon | deep_focus | 96.8% | 1 |
 | sleep_30s_20260124_031441 | sleep | 83.6% | 1 |
 | trance_30s_20260124_055344 | trance | 78.3% | 1 |
-| Journey Inward · 30 Seconds Hypnotic Tra | trance | 62.4% | 2 |
+| Find Your Strength · 30 Seconds Power Dr | warrior | 74.5% | 1 |
 
 ## Top 5 by Views
 
@@ -32,21 +32,21 @@ Generated: 2026-04-29T17:12:16.856348+00:00
 |-------|------|-------|------------------|
 | Enter Flow State · 1 Hour Zero Distracti | deep_focus | 121 | 299 |
 | Sounds for an Overactive Mind · 1 Hour E | deep_focus | 81 | 82 |
+| Calm Anxiety Fast · 1 Hour Deep Piano Re | piano_deep_calm | 65 | 1,114 |
 | Ground Yourself Instantly · 1 Hour Deep | ceremony | 61 | 34 |
-| Calm Anxiety Fast · 1 Hour Deep Piano Re | piano_deep_calm | 60 | 992 |
-| Calm Anxiety Fast · 1 Hour Deep Piano Re | piano_deep_calm | 52 | 1,034 |
+| Calm Anxiety Fast · 1 Hour Deep Piano Re | piano_deep_calm | 55 | 1,052 |
 
 ## Performance by Mood
 
 | Mood | Videos | Total Views | Avg Retention |
 |------|--------|-------------|---------------|
-| piano_deep_calm | 14 | 296 | 19.9% |
-| deep_focus | 10 | 245 | 18.7% |
+| piano_deep_calm | 14 | 361 | 20.5% |
+| deep_focus | 10 | 246 | 18.7% |
 | ceremony | 11 | 136 | 1.5% |
 | energize | 10 | 25 | 10.7% |
 | rain_sleep | 4 | 24 | 2.0% |
 | trance | 10 | 7 | 40.5% |
-| warrior | 11 | 5 | 78.0% |
+| warrior | 11 | 5 | 81.4% |
 | study | 6 | 5 | 20.2% |
 | unknown | 8 | 5 | 25.2% |
 | piano_relax | 2 | 2 | 9.4% |
