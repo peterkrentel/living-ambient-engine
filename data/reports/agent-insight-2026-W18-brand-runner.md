@@ -4,21 +4,27 @@
 
 ---
 ## What I reviewed
-- **Channel totals JSON**: 1191 views, 836 minutes watched, 122 videos with views.
-- **Run-next digest**: 24.85% overall avg retention, 6.852 avg watch time per video.
-- **Run-next tail**: 122 videos analyzed, 4 subscribers gained.
+- **Channel totals JSON**: `analytics_totals`
+- **Run-next digest**: `run-next digest`
+- **Run-next tail**: `run-next tail`
+- **Weekly report excerpt**: `weekly report`
+- **Suggestions compact**: `suggestions`
+- **Analytics compact top videos + retention slice**: `analytics`
 
+- deterministic facts (computed by script): 1214 views, 886 watch minutes, 114 videos with views
 ## Summary
+Channel totals: 1214 views, 886 watch minutes, 114 videos with views.
 - **Total videos tracked**: 354
-- **Videos with analytics**: 352
+- **Videos with analytics**: 354
+- **Total views**: 1,214
+- **Total watch time**: 886 minutes
 
 ## Insights
-- **Top 5 by Retention**: 559.0% retention for "30 Seconds to Enter Flow State", 99.7% for "Ambient medieval · 5 Mins · Evolving bam".
-- **Top 5 by Views**: 224 views for "Ambient ancient · 5 Mins · Evolving taiko Soundscape", 105 views for "Ambient contemporary · 5 Mins · Evolving burundi Soundscape".
+- **Top 5 by Retention**: 5 videos with a 559.0% retention
+- **Top 5 by Views**: 5 videos with 240 views
 
 ## Risks
-- **No actionable mood increases** in suggestions passed the planner gate.
+- **No actionable mood increases**: 354 videos analyzed, 114 with views, no qualifying mood suggestion rows
 
 ## Next tries
-- **Re-run with `--force-moods trance,sleep`** to emit `data/run_intent.json` without using suggestions.
-- **Monitor mood trends** and adjust batch strategy accordingly.
+- **Re-run with `--force-moods trance,sleep`**: re-run with specific mood suggestions to emit `data/run_intent.json`
