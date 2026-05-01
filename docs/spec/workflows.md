@@ -27,9 +27,9 @@ Twelve workflow files automate video generation, YouTube deployment, analytics, 
 | WF-BATCH | `art-creator-batch.yml` | Manual (+ optional schedule) | Matrix generation (cron may be off) | Brand |
 | WF-PIANO | `piano-batch.yml` | Manual only | Batch piano videos + upload | Brand |
 | WF-TEST | `test-art-creator.yml` | Manual + PR (path filter) | CI: spec validation + contract tests + 7× `art-creator` matrix (no production upload) | None |
-| WF-AGENT | `analytics-agent.yml` | Schedule (weekly) + Manual | Fetch, weekly report, **`analyze_data`**, correlate, **plan run intent**, channel audit, **`run-next` v0** + **`validate_run_next`** (snapshot, **`suggestions[i]`** citations, audit overview excerpt), optional **dual LLM advisory** (`agent_dual_advisory.py`) + **`validate_agent_insight_runner`** → `agent-insight-*-brand-*.md` | Brand |
+| WF-AGENT | `analytics-agent.yml` | Schedule (weekly) + Manual | Fetch, weekly report, **`analyze_data`**, correlate, **plan run intent** (**`--upload`**), channel audit, **`run-next` v0** + **`validate_run_next`** (snapshot, **`suggestions[i]`** citations, audit overview excerpt), optional **dual LLM advisory** (`agent_dual_advisory.py`) + **`validate_agent_insight_runner`** → `agent-insight-*-brand-*.md`; on **`main`** success may chain **[`run-intent-consumer.yml`](../../.github/workflows/run-intent-consumer.yml)** (auto) | Brand |
 | WF-AGENT-P | `analytics-personal.yml` | Schedule (weekly) + Manual | Fetch + report + **`analyze_data`** + **audit → correlate** → `suggestions_personal.json` + plan intent (`run_intent_personal.json` / blocked) + `run-next-*-personal.md` + **`validate_run_next`** (same checks, personal audit path) + optional dual advisory + **`validate_agent_insight_runner`** → `agent-insight-*-personal-*.md` (never writes brand `suggestions.json`) | Personal |
-| WF-RIC | `run-intent-consumer.yml` | Manual + **auto after personal analytics** | Validate intent JSON → `batch_generate` → optional `youtube_upload`. **Brand:** manual `workflow_dispatch` only. **Personal:** also runs on successful [`analytics-personal.yml`](../../.github/workflows/analytics-personal.yml) on `main` (fixed paths; upload without `confirm_upload` when intent `upload: true`) | Brand or personal |
+| WF-RIC | `run-intent-consumer.yml` | Manual + **auto after analytics on `main`** | Validate intent → `batch_generate` → optional `youtube_upload`. **Auto:** successful **Analytics Agent** or **Analytics Agent (Personal)** on `main` (fixed paths per lane; **`confirm_upload`** not required on auto path when intent **`upload`: true`). **Manual:** `workflow_dispatch` unchanged | Brand or personal |
 
 ## Gating Rules
 
@@ -259,7 +259,7 @@ permissions:
 
 ## run-intent-consumer.yml
 
-**Purpose:** Validate committed run intent JSON against [`contracts/production-run-intent.md`](./contracts/production-run-intent.md) v1, then run **`batch_generate.py`** (`--moods`, `--durations`, optional **`--dual`**). Optionally upload via **`youtube_upload.py --batch`** with **`--catalog-channel`** from intent `channel`. **Brand:** manual dispatch; defaults **`data/run_intent.json`** + **`data/reports/run-intent-blocked.md`**. **Personal manual:** set **`intent_path`** = `data/run_intent_personal.json` and **`blocked_report_path`** = `data/reports/run-intent-blocked-personal.md`. **Personal automatic:** after a successful **Analytics Agent (Personal)** run on **`main`**, this workflow runs with those paths fixed; **`git reset --hard origin/main`** in **`parse`** picks up the commit analytics just pushed. **Upload gate:** manual runs still require **`confirm_upload`** *and* intent **`upload`: true`**. **Personal auto-run** skips **`confirm_upload`** when the triggering analytics concluded successfully on **`main`** (same-repo only); intent must still have **`upload`: true** (personal analytics runs **`plan_run_intent.py --upload`**).
+**Purpose:** Validate committed run intent JSON against [`contracts/production-run-intent.md`](./contracts/production-run-intent.md) v1, then run **`batch_generate.py`** (`--moods`, `--durations`, optional **`--dual`**). Optionally upload via **`youtube_upload.py --batch`** with **`--catalog-channel`** from intent `channel`. **Manual dispatch:** set **`intent_path`** / **`blocked_report_path`** (defaults are brand paths; use personal paths for personal lane). **Automatic:** after a successful **Analytics Agent** or **Analytics Agent (Personal)** run on **`main`**, **`parse`** uses fixed paths per triggering workflow name and **`git reset --hard origin/main`** so the consumer sees the commit analytics just pushed. **Upload gate:** manual runs require **`confirm_upload`** *and* intent **`upload`: true`**. **Auto path** skips **`confirm_upload`** when analytics succeeded on **`main`** (same-repo only); the intent JSON must still set **`upload`** to **true** (both analytics workflows run **`plan_run_intent.py --upload`**).
 
 **Spec:** [`contracts/production-run-intent.md`](./contracts/production-run-intent.md) · Validator: [`scripts/consume_run_intent.py`](../../scripts/consume_run_intent.py)
 
@@ -268,12 +268,12 @@ permissions:
 ```yaml
 on:
   workflow_run:
-    workflows: [Analytics Agent (Personal)]
+    workflows: [Analytics Agent, Analytics Agent (Personal)]
     types: [completed]
   workflow_dispatch:
     inputs:
       validate_only: boolean   # default false — if true, only parse/validate + Step Summary
-      confirm_upload: boolean  # default false — required (with intent.upload) for manual upload job; not used on workflow_run personal auto path
+      confirm_upload: boolean  # default false — required (with intent.upload) for manual upload job; not used on workflow_run auto path
       intent_path: string       # default data/run_intent.json — use data/run_intent_personal.json for personal lane
       blocked_report_path: string  # default data/reports/run-intent-blocked.md — pair with intent_path
 ```
@@ -286,7 +286,7 @@ When **`validate_only`** is true, `parse` passes **`--allow-planner-blocked`**: 
 |-----|---------|
 | `parse` | Checkout; `pip install pyyaml`; run `consume_run_intent.py --intent "$INTENT_PATH" --blocked-report "$BLOCKED_PATH" --emit-github-output` (adds **`--allow-planner-blocked`** when `validate_only`). Validates intent or records planner BLOCKED; sets outputs when intent exists. |
 | `generate` | Skipped when `validate_only`; else FFmpeg + `requirements.txt`, `batch_generate.py`, artifact `run-intent-generated-{channel}`. |
-| `upload` | Skipped unless `generate` succeeded **and** `parse.outputs.upload == 'true'` **and** either (**manual:** `validate_only` false **and** `confirm_upload`) **or** (**auto personal:** `workflow_run` from personal analytics on `main`, same-repo). Restores **brand** or **personal** OAuth secret by `channel`; `youtube_upload.py --batch ./generated --catalog-channel …`; commits catalog / ledger via `scripts/ci_merge_main_after_data_commit.sh`. |
+| `upload` | Skipped unless `generate` succeeded **and** `parse.outputs.upload == 'true'` **and** either (**manual:** `validate_only` false **and** `confirm_upload`) **or** (**auto:** `workflow_run` from brand or personal analytics on `main`, same-repo). Restores **brand** or **personal** OAuth secret by `channel`; `youtube_upload.py --batch ./generated --catalog-channel …`; commits catalog / ledger via `scripts/ci_merge_main_after_data_commit.sh`. |
 
 ### Secrets
 
@@ -600,7 +600,7 @@ on:
 5. Generate weekly report (`python -m agent.report`)
 6. Run performance analysis (`scripts/analyze_data.py`)
 7. Run ML correlation (`scripts/correlate.py`) — suggests bucket-level **increase/reduce** using **retention %** and **watch minutes per video** (in the fetch window); see [AGENT.md](./AGENT.md) Phase 2
-8. Plan run intent (`scripts/plan_run_intent.py`) — gated v0: writes `data/run_intent.json` when actionable **mood** increases exist, else `data/reports/run-intent-blocked.md`; **`upload` defaults false**; execution is **manual** via [`run-intent-consumer.yml`](../../.github/workflows/run-intent-consumer.yml); see [`contracts/production-run-intent.md`](./contracts/production-run-intent.md)
+8. Plan run intent (`scripts/plan_run_intent.py --week "$WEEK" --upload`) — gated v0: writes `data/run_intent.json` when actionable **mood** increases exist, else `data/reports/run-intent-blocked.md`; **[`run-intent-consumer.yml`](../../.github/workflows/run-intent-consumer.yml)** may run automatically after this workflow succeeds on **`main`** (see § **run-intent-consumer.yml**); see [`contracts/production-run-intent.md`](./contracts/production-run-intent.md)
 9. Run channel coverage audit (`scripts/audit_channel.py`) — read-only markdown from committed analytics; summarizes 14-mood and 9×9 art×music grid coverage plus generations ledger join stats (no API calls)
 10. Write **`run-next`** advisory (`scripts/run_next_report.py --week "$WEEK"`) — deterministic markdown from **`suggestions.json`** + **`audit-YYYY-WW.md`** + optional personal-lane pointers (**no** LLM, **no** `batch_generate` / upload); **`$WEEK`** is **UTC ISO week** from Python `isocalendar()` (same as `plan_run_intent`). **Then** **`scripts/validate_run_next.py`** checks snapshot numbers and **`generated_at`** vs `suggestions.json`, **`suggestions[i]`** citations under Actionable / Exploratory (type, name, action icon), and the **Audit — overview excerpt** vs the audit file’s **`## Overview`** body when both are present.
 11. **Cache runner GGUF** — `actions/cache` on `~/.cache/living-agent` (default Qwen2.5-1.5B Instruct q4 GGUF path used by the script; cache key bumps when the default model file changes)

@@ -4,11 +4,12 @@
 
 name: Run intent consumer
 
-# Manual: workflow_dispatch. Personal autonomy: after a successful "Analytics Agent (Personal)"
-# run on main, validate personal intent → generate → upload (no confirm_upload checkbox).
+# Manual: workflow_dispatch. Autonomy: after a successful brand or personal analytics run on main,
+# validate lane intent → generate → upload when intent.upload is true (no confirm_upload on auto path).
 on:
   workflow_run:
     workflows:
+      - Analytics Agent
       - Analytics Agent (Personal)
     types:
       - completed
@@ -68,7 +69,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Catch up to main (personal analytics may have just pushed)
+      - name: Catch up to main (analytics may have just pushed)
         if: github.event_name == 'workflow_run'
         run: git fetch origin main && git reset --hard origin/main
 
@@ -85,9 +86,22 @@ jobs:
         run: |
           set -euo pipefail
           if [ "${{ github.event_name }}" = "workflow_run" ]; then
-            INTENT_PATH="data/run_intent_personal.json"
-            BLOCKED_PATH="data/reports/run-intent-blocked-personal.md"
-            echo "🤖 Autonomous personal path: intent=$INTENT_PATH"
+            case "${{ github.event.workflow_run.name }}" in
+              "Analytics Agent (Personal)")
+                INTENT_PATH="data/run_intent_personal.json"
+                BLOCKED_PATH="data/reports/run-intent-blocked-personal.md"
+                echo "🤖 Autonomous personal path: intent=$INTENT_PATH"
+                ;;
+              "Analytics Agent")
+                INTENT_PATH="data/run_intent.json"
+                BLOCKED_PATH="data/reports/run-intent-blocked.md"
+                echo "🤖 Autonomous brand path: intent=$INTENT_PATH"
+                ;;
+              *)
+                echo "Unexpected workflow_run name: ${{ github.event.workflow_run.name }}" >&2
+                exit 1
+                ;;
+            esac
             python scripts/consume_run_intent.py --intent "$INTENT_PATH" --blocked-report "$BLOCKED_PATH" --emit-github-output
           else
             INTENT_PATH="${{ github.event.inputs.intent_path }}"

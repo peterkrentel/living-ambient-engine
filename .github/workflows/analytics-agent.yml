@@ -87,9 +87,9 @@ jobs:
 
       - name: Plan run intent (gated)
         run: |
-          echo "🧭 Planning run intent from suggestions (no upload)..."
+          echo "🧭 Planning run intent from suggestions (upload armed in JSON; consumer + gates still required)..."
           WEEK=$(python -c "from datetime import datetime, timezone; n=datetime.now(timezone.utc); y,w,_=n.isocalendar(); print(f'{y}-W{w:02d}')")
-          python scripts/plan_run_intent.py --week "$WEEK"
+          python scripts/plan_run_intent.py --week "$WEEK" --upload
 
       - name: Channel coverage audit
         run: |
