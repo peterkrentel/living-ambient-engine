@@ -1,10 +1,52 @@
 # Living Ambient Engine
 
-*Procedural ambient audiovisual generator producing long-form, continuously evolving, non-repeating pieces.*
+> An autonomous content engine that decides what to create next based on what performed last.
 
-> **🤖 AI Agents:** [`docs/START_HERE.md`](docs/START_HERE.md) → [`.github/AGENT_INSTRUCTIONS.md`](.github/AGENT_INSTRUCTIONS.md) (includes [`GUARDRAILS`](docs/spec/GUARDRAILS.md) before changing generation).
+A Python + FFmpeg procedural generation pipeline with a closed-loop analytics → statistical correlation → intent → generate → publish system. Dual channel (brand + personal). Runs headlessly on GitHub Actions. Specs and contracts in `docs/spec/`.
 
-> **New User?** Start here: [📚 Getting Started Guide](docs/GETTING_STARTED.md) | [⚡ Quick Reference](docs/QUICK_REFERENCE.md) | [🎨 Art Creator](docs/ART_CREATOR.md) | [❓ FAQ](docs/FAQ.md)
+## How It Works
+
+```mermaid
+graph LR
+    A[Generate] --> B[Publish]
+    B --> C[Measure]
+    C --> D[Correlate]
+    D --> E[Intent]
+    E --> A
+```
+
+On schedule, when the planner emits a valid intent file, the engine generates parameterized ambient audiovisual content, publishes to YouTube, collects analytics, runs statistical correlation to find what's performing, and autonomously triggers the next generation batch. When signal is insufficient the planner emits BLOCKED and no upload occurs.
+
+## Operating Model
+
+- **Local:** `run_job.py`, `batch_generate.py`, `library_cli.py`
+- **CI/CD:** GitHub Actions — Art Creator, Content Factory, scheduled analytics
+- **Data loop:** Analytics JSON → reports → correlate → suggestions → plan intent (`run_intent`) → generate → upload
+- **Dual advisory:** Parallel LLM synthesis (Gemini API + local Qwen GGUF) for report analysis and parameter-tuning suggestions
+- **Autonomous upload:** Triggers automatically when planner emits a valid intent and signal clears trust gates. BLOCKED weeks produce no upload.
+
+## 🤖 Agent-Ready
+
+Built to be operated by AI agents. Specs, guardrails, and contracts in `docs/spec/`:
+
+> **AI Agents:** [`docs/START_HERE.md`](docs/START_HERE.md) → [`.github/AGENT_INSTRUCTIONS.md`](.github/AGENT_INSTRUCTIONS.md) (includes [`GUARDRAILS`](docs/spec/GUARDRAILS.md) before changing generation).
+
+> **New User?** [📚 Getting Started Guide](docs/GETTING_STARTED.md) | [⚡ Quick Reference](docs/QUICK_REFERENCE.md) | [🎨 Art Creator](docs/ART_CREATOR.md) | [❓ FAQ](docs/FAQ.md)
+
+## Origin Story
+
+This started as an art project — “can I generate ambient videos and auto-publish them with GitHub Actions?”
+
+Then it became an MLOps learning lab. Then an LLM agent experiment. Each phase added a layer:
+
+- **Phase 1** — Procedural generation + automated publishing
+- **Phase 2** — Analytics pipeline + statistical correlation
+- **Phase 3** — Dual LLM advisory (Gemini + local Qwen GGUF)
+- **Phase 4** — Autonomous closed-loop content creation ← now
+
+The videos are the experiment. The engine is the result.
+
+---
 
 ## 🎬 Gallery
 
