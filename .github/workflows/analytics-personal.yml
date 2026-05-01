@@ -104,12 +104,13 @@ jobs:
 
       - name: Plan run intent (personal, gated)
         run: |
-          echo "🧭 Planning personal run intent from suggestions_personal.json (no upload)..."
+          echo "🧭 Planning personal run intent from suggestions_personal.json (upload armed in JSON; consumer + gates still required)..."
           WEEK=$(python -c "from datetime import datetime, timezone; n=datetime.now(timezone.utc); y,w,_=n.isocalendar(); print(f'{y}-W{w:02d}')")
           python scripts/plan_run_intent.py \
             --suggestions data/suggestions_personal.json \
             --channel personal \
             --week "$WEEK" \
+            --upload \
             --intent-output data/run_intent_personal.json \
             --blocked-output data/reports/run-intent-blocked-personal.md
 

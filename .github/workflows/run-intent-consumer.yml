@@ -4,7 +4,14 @@
 
 name: Run intent consumer
 
+# Manual: workflow_dispatch. Personal autonomy: after a successful "Analytics Agent (Personal)"
+# run on main, validate personal intent → generate → upload (no confirm_upload checkbox).
 on:
+  workflow_run:
+    workflows:
+      - Analytics Agent (Personal)
+    types:
+      - completed
   workflow_dispatch:
     inputs:
       validate_only:
@@ -42,6 +49,14 @@ jobs:
   parse:
     name: Validate run intent
     runs-on: ubuntu-latest
+    if: >-
+      ${{
+        github.event_name == 'workflow_dispatch' ||
+        (github.event_name == 'workflow_run' &&
+          github.event.workflow_run.conclusion == 'success' &&
+          github.event.workflow_run.head_branch == 'main' &&
+          github.event.workflow_run.head_repository.full_name == github.repository)
+      }}
     outputs:
       moods: ${{ steps.intent.outputs.moods }}
       duration: ${{ steps.intent.outputs.duration }}
@@ -53,6 +68,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Catch up to main (personal analytics may have just pushed)
+        if: github.event_name == 'workflow_run'
+        run: git fetch origin main && git reset --hard origin/main
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -63,20 +82,31 @@ jobs:
 
       - name: Validate and export outputs
         id: intent
-        env:
-          INTENT_PATH: ${{ github.event.inputs.intent_path }}
-          BLOCKED_PATH: ${{ github.event.inputs.blocked_report_path }}
         run: |
-          if [ "${{ github.event.inputs.validate_only }}" = "true" ] || [ "${{ github.event.inputs.validate_only }}" = "True" ]; then
-            python scripts/consume_run_intent.py --intent "$INTENT_PATH" --blocked-report "$BLOCKED_PATH" --emit-github-output --allow-planner-blocked
-          else
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_run" ]; then
+            INTENT_PATH="data/run_intent_personal.json"
+            BLOCKED_PATH="data/reports/run-intent-blocked-personal.md"
+            echo "🤖 Autonomous personal path: intent=$INTENT_PATH"
             python scripts/consume_run_intent.py --intent "$INTENT_PATH" --blocked-report "$BLOCKED_PATH" --emit-github-output
+          else
+            INTENT_PATH="${{ github.event.inputs.intent_path }}"
+            BLOCKED_PATH="${{ github.event.inputs.blocked_report_path }}"
+            if [ "${{ github.event.inputs.validate_only }}" = "true" ] || [ "${{ github.event.inputs.validate_only }}" = "True" ]; then
+              python scripts/consume_run_intent.py --intent "$INTENT_PATH" --blocked-report "$BLOCKED_PATH" --emit-github-output --allow-planner-blocked
+            else
+              python scripts/consume_run_intent.py --intent "$INTENT_PATH" --blocked-report "$BLOCKED_PATH" --emit-github-output
+            fi
           fi
 
   generate:
     name: Generate from intent
     needs: parse
-    if: ${{ github.event.inputs.validate_only != true && github.event.inputs.validate_only != 'true' }}
+    if: >-
+      ${{
+        github.event_name == 'workflow_run' ||
+        (github.event.inputs.validate_only != true && github.event.inputs.validate_only != 'true')
+      }}
     runs-on: ubuntu-latest
     timeout-minutes: 360
 
@@ -153,10 +183,22 @@ jobs:
     needs: [parse, generate]
     if: >-
       ${{
-        github.event.inputs.validate_only != true &&
-        github.event.inputs.validate_only != 'true' &&
-        (github.event.inputs.confirm_upload == true || github.event.inputs.confirm_upload == 'true') &&
-        needs.parse.outputs.upload == 'true'
+        needs.generate.result == 'success' &&
+        needs.parse.outputs.upload == 'true' &&
+        (
+          (
+            github.event_name == 'workflow_dispatch' &&
+            github.event.inputs.validate_only != true &&
+            github.event.inputs.validate_only != 'true' &&
+            (github.event.inputs.confirm_upload == true || github.event.inputs.confirm_upload == 'true')
+          ) ||
+          (
+            github.event_name == 'workflow_run' &&
+            github.event.workflow_run.conclusion == 'success' &&
+            github.event.workflow_run.head_branch == 'main' &&
+            github.event.workflow_run.head_repository.full_name == github.repository
+          )
+        )
       }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
