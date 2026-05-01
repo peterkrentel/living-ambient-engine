@@ -1,19 +1,19 @@
 # Personal channel — Analytics Report (2026-W18)
 
-Generated: 2026-04-30T19:28:41.249185+00:00
+Generated: 2026-05-01T13:38:31.516998+00:00
 
 > **Channel scope:** Personal YouTube only. Data file: `data/analytics_personal.json`. Brand metrics live in `data/analytics.json` (main Analytics Agent workflow).
 
 ## Summary
 
-- **Analytics window:** `2026-04-02` → `2026-04-29` (YouTube Analytics API range for metrics below. In Studio, pick the **same** custom dates when comparing totals — not e.g. “Last 28 days” unless `fetch_analytics` used `--days 28`.)
+- **Analytics window:** `2026-04-03` → `2026-04-30` (YouTube Analytics API range for metrics below. In Studio, pick the **same** custom dates when comparing totals — not e.g. “Last 28 days” unless `fetch_analytics` used `--days 28`.)
 - **Total videos tracked:** 114
 - **Videos with analytics:** 114
 
 ## Totals
 
-- **Total views:** 819
-- **Total watch time:** 5,901 minutes
+- **Total views:** 816
+- **Total watch time:** 5,889 minutes
 - **Subscribers gained:** 4
 
 ## Top 5 by Retention
@@ -42,16 +42,16 @@ Generated: 2026-04-30T19:28:41.249185+00:00
 |------|--------|-------------|---------------|
 | piano_deep_calm | 14 | 361 | 20.5% |
 | deep_focus | 10 | 246 | 18.7% |
-| ceremony | 11 | 136 | 1.5% |
+| ceremony | 11 | 135 | 1.5% |
 | energize | 10 | 25 | 10.7% |
 | rain_sleep | 4 | 24 | 2.0% |
-| trance | 10 | 7 | 40.5% |
+| trance | 10 | 6 | 54.0% |
 | warrior | 11 | 5 | 81.4% |
 | study | 6 | 5 | 20.2% |
 | unknown | 8 | 5 | 25.2% |
-| piano_relax | 2 | 2 | 9.4% |
 | piano_ambient | 2 | 1 | 0.4% |
 | sleep | 9 | 1 | 83.6% |
+| piano_relax | 2 | 1 | 0.3% |
 | fireplace | 3 | 1 | 47.8% |
 | piano_evening | 2 | 0 | 0.0% |
 | rain_piano | 2 | 0 | 0.0% |

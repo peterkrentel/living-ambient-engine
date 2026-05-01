@@ -2,13 +2,13 @@
   "schema_version": 2,
   "channel": "personal",
   "week": "2026-W18",
-  "generated_at": "2026-04-30T19:28:41.583138+00:00",
-  "suggestions_generated_at": "2026-04-30T19:28:41.375951Z",
+  "generated_at": "2026-05-01T13:38:31.868621+00:00",
+  "suggestions_generated_at": "2026-05-01T13:38:31.657617Z",
   "moods": [
     "piano_deep_calm"
   ],
   "duration": "10min",
   "dual": true,
-  "upload": false,
+  "upload": true,
   "max_videos": null
 }
