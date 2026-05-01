@@ -33,6 +33,19 @@ Built to be operated by AI agents. Specs, guardrails, and contracts in `docs/spe
 
 > **New User?** [📚 Getting Started Guide](docs/GETTING_STARTED.md) | [⚡ Quick Reference](docs/QUICK_REFERENCE.md) | [🎨 Art Creator](docs/ART_CREATOR.md) | [❓ FAQ](docs/FAQ.md)
 
+## Origin Story
+
+This started as an art project — “can I generate ambient videos and auto-publish them with GitHub Actions?”
+
+Then it became an MLOps learning lab. Then an LLM agent experiment. Each phase added a layer:
+
+- **Phase 1** — Procedural generation + automated publishing
+- **Phase 2** — Analytics pipeline + statistical correlation
+- **Phase 3** — Dual LLM advisory (Gemini + local Qwen GGUF)
+- **Phase 4** — Autonomous closed-loop content creation ← now
+
+The videos are the experiment. The engine is the result.
+
 ---
 
 ## 🎬 Gallery
