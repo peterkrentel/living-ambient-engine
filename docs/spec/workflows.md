@@ -29,7 +29,7 @@ Twelve workflow files automate video generation, YouTube deployment, analytics, 
 | WF-TEST | `test-art-creator.yml` | Manual + PR (path filter) | CI: spec validation + contract tests + 7× `art-creator` matrix (no production upload) | None |
 | WF-AGENT | `analytics-agent.yml` | Schedule (weekly) + Manual | Fetch, weekly report, **`analyze_data`**, correlate, **plan run intent**, channel audit, **`run-next` v0** + **`validate_run_next`** (snapshot, **`suggestions[i]`** citations, audit overview excerpt), optional **dual LLM advisory** (`agent_dual_advisory.py`) + **`validate_agent_insight_runner`** → `agent-insight-*-brand-*.md` | Brand |
 | WF-AGENT-P | `analytics-personal.yml` | Schedule (weekly) + Manual | Fetch + report + **`analyze_data`** + **audit → correlate** → `suggestions_personal.json` + plan intent (`run_intent_personal.json` / blocked) + `run-next-*-personal.md` + **`validate_run_next`** (same checks, personal audit path) + optional dual advisory + **`validate_agent_insight_runner`** → `agent-insight-*-personal-*.md` (never writes brand `suggestions.json`) | Personal |
-| WF-RIC | `run-intent-consumer.yml` | Manual only | Validate intent JSON (default `data/run_intent.json`; personal: `data/run_intent_personal.json`) → `batch_generate` → optional gated `youtube_upload` (brand or personal per intent `channel`) | Brand or personal |
+| WF-RIC | `run-intent-consumer.yml` | Manual + **auto after personal analytics** | Validate intent JSON → `batch_generate` → optional `youtube_upload`. **Brand:** manual `workflow_dispatch` only. **Personal:** also runs on successful [`analytics-personal.yml`](../../.github/workflows/analytics-personal.yml) on `main` (fixed paths; upload without `confirm_upload` when intent `upload: true`) | Brand or personal |
 
 ## Gating Rules
 
@@ -259,7 +259,7 @@ permissions:
 
 ## run-intent-consumer.yml
 
-**Purpose:** Validate committed run intent JSON (defaults **`data/run_intent.json`** + blocked report **`data/reports/run-intent-blocked.md`**) against [`contracts/production-run-intent.md`](./contracts/production-run-intent.md) v1, then run **`batch_generate.py`** with the same flags Content Factory would use (`--moods`, `--durations`, optional `--dual`). Optionally upload via **`youtube_upload.py --batch`** with **`--catalog-channel`** set from intent `channel`. **Personal lane:** dispatch with **`intent_path`** = `data/run_intent_personal.json` and **`blocked_report_path`** = `data/reports/run-intent-blocked-personal.md` (pair produced by [`analytics-personal.yml`](../../.github/workflows/analytics-personal.yml)). **Planner v0** still commits **`upload`: false**; uploads require intent **`upload`: true** *and* dispatcher **`confirm_upload`** (double gate).
+**Purpose:** Validate committed run intent JSON against [`contracts/production-run-intent.md`](./contracts/production-run-intent.md) v1, then run **`batch_generate.py`** (`--moods`, `--durations`, optional **`--dual`**). Optionally upload via **`youtube_upload.py --batch`** with **`--catalog-channel`** from intent `channel`. **Brand:** manual dispatch; defaults **`data/run_intent.json`** + **`data/reports/run-intent-blocked.md`**. **Personal manual:** set **`intent_path`** = `data/run_intent_personal.json` and **`blocked_report_path`** = `data/reports/run-intent-blocked-personal.md`. **Personal automatic:** after a successful **Analytics Agent (Personal)** run on **`main`**, this workflow runs with those paths fixed; **`git reset --hard origin/main`** in **`parse`** picks up the commit analytics just pushed. **Upload gate:** manual runs still require **`confirm_upload`** *and* intent **`upload`: true`**. **Personal auto-run** skips **`confirm_upload`** when the triggering analytics concluded successfully on **`main`** (same-repo only); intent must still have **`upload`: true** (personal analytics runs **`plan_run_intent.py --upload`**).
 
 **Spec:** [`contracts/production-run-intent.md`](./contracts/production-run-intent.md) · Validator: [`scripts/consume_run_intent.py`](../../scripts/consume_run_intent.py)
 
@@ -267,10 +267,13 @@ permissions:
 
 ```yaml
 on:
+  workflow_run:
+    workflows: [Analytics Agent (Personal)]
+    types: [completed]
   workflow_dispatch:
     inputs:
       validate_only: boolean   # default false — if true, only parse/validate + Step Summary
-      confirm_upload: boolean  # default false — required (with intent.upload) to run upload job
+      confirm_upload: boolean  # default false — required (with intent.upload) for manual upload job; not used on workflow_run personal auto path
       intent_path: string       # default data/run_intent.json — use data/run_intent_personal.json for personal lane
       blocked_report_path: string  # default data/reports/run-intent-blocked.md — pair with intent_path
 ```
@@ -283,7 +286,7 @@ When **`validate_only`** is true, `parse` passes **`--allow-planner-blocked`**: 
 |-----|---------|
 | `parse` | Checkout; `pip install pyyaml`; run `consume_run_intent.py --intent "$INTENT_PATH" --blocked-report "$BLOCKED_PATH" --emit-github-output` (adds **`--allow-planner-blocked`** when `validate_only`). Validates intent or records planner BLOCKED; sets outputs when intent exists. |
 | `generate` | Skipped when `validate_only`; else FFmpeg + `requirements.txt`, `batch_generate.py`, artifact `run-intent-generated-{channel}`. |
-| `upload` | Skipped unless `validate_only` is false **and** `confirm_upload` **and** `parse.outputs.upload == 'true'`; restores **brand** or **personal** OAuth secret by `channel`; `youtube_upload.py --batch ./generated --catalog-channel …`; commits catalog / ledger via `scripts/ci_merge_main_after_data_commit.sh`. |
+| `upload` | Skipped unless `generate` succeeded **and** `parse.outputs.upload == 'true'` **and** either (**manual:** `validate_only` false **and** `confirm_upload`) **or** (**auto personal:** `workflow_run` from personal analytics on `main`, same-repo). Restores **brand** or **personal** OAuth secret by `channel`; `youtube_upload.py --batch ./generated --catalog-channel …`; commits catalog / ledger via `scripts/ci_merge_main_after_data_commit.sh`. |
 
 ### Secrets
 
@@ -680,7 +683,7 @@ on:
 5. Performance analysis (`scripts/analyze_data.py` with `ANALYTICS_JSON_PATH=data/analytics_personal.json`)
 6. Channel audit (`scripts/audit_channel.py` with same env as report)
 7. ML correlation (`scripts/correlate.py` with `ANALYTICS_JSON_PATH` + `SUGGESTIONS_JSON_PATH=data/suggestions_personal.json`)
-8. Plan run intent (`scripts/plan_run_intent.py` with `--suggestions data/suggestions_personal.json`, `--channel personal`, `--intent-output data/run_intent_personal.json`, `--blocked-output data/reports/run-intent-blocked-personal.md`)
+8. Plan run intent (`scripts/plan_run_intent.py` with `--suggestions data/suggestions_personal.json`, `--channel personal`, **`--upload`**, `--intent-output data/run_intent_personal.json`, `--blocked-output data/reports/run-intent-blocked-personal.md`) — when an intent file is written, **[`run-intent-consumer.yml`](../../.github/workflows/run-intent-consumer.yml)** can also run automatically after this workflow succeeds on **`main`** (generate + upload if intent **`upload`: true**; see § **run-intent-consumer.yml**).
 9. Run-next advisory personal (`scripts/run_next_report.py --lane personal --week "$WEEK"`) then **`validate_run_next.py --lane personal`** (same **`$WEEK`**, `data/suggestions_personal.json`; default audit `audit-YYYY-WW-personal.md`; same citation + excerpt checks as brand)
 10. **Cache runner GGUF** — same cache key family as brand (`~/.cache/living-agent`)
 11. **Dual LLM advisory personal:** `pip install llama-cpp-python` + `scripts/agent_dual_advisory.py --lane personal` → `agent-insight-YYYY-WW-personal-gemini.md` and `agent-insight-YYYY-WW-personal-runner.md` (Gemini full bundle + runner lean bundle: **deterministic facts** JSON, **run-next digest + tail**, **`coverage_summary`** and analytics **views + retention** slices, same runner env knobs as brand; logs **`[runner-advisory]`** + **`[gemini-advisory]`** in the folded **Dual advisory** group). Secret **`GEMINI_API_KEY_PERSONAL`** → env `GEMINI_API_KEY_PERSONAL` (separate Google AI project from brand `GEMINI_API_KEY`). Step **`env`** sets **`GEMINI_MIN_INTERVAL_SEC`**, **`GEMINI_MAX_RETRIES`**, **`GEMINI_429_MIN_SLEEP_SEC`** so a single job stays under typical **free-tier RPM** for **Gemini 2.5 Flash** (check [rate limits](https://ai.google.dev/gemini-api/docs/rate-limits) and AI Studio usage — **RPD** can still 429 if the daily cap is exhausted). **Then** **`scripts/validate_agent_insight_runner.py --lane personal --week …`** checks runner output against **`data/analytics_personal.json`** with the same rules as brand step 12 (totals + WIR hygiene + Insights count).
