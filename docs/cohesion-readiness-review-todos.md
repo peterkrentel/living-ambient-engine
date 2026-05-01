@@ -2,7 +2,7 @@
 
 > **Purpose:** Preserve a **risk / readiness** audit (code-first, not roadmap brainstorming) so work can resume **one item at a time** after a break.  
 > **Origin:** Repo assessment prompt (VS Code / Copilot style), executed against the codebase **April 2026**.  
-> **How to use:** Work **CR-1** → **CR-6** in order unless a dependency says otherwise; check boxes when merged to `main`. Lower items (**CR-L***) are optional polish.
+> **How to use:** Work **CR-1** → **CR-7** in order unless a dependency says otherwise; check boxes when merged to `main`. Lower items (**CR-L***) are optional polish.
 
 **Related:** [`HANDOFF.md`](HANDOFF.md) · [`START_HERE.md` § Plan checklist](START_HERE.md#plan-checklist-living-as-of-2026-04) · [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md)
 
@@ -18,6 +18,7 @@
 | [ ] **CR-4** | Fix **`docs/spec/AGENT.md`** **Data Schemas** drift: header/examples say **schema_version 2** while **`agent/log_generation.py`** implements **`SCHEMA_VERSION = 1`** — align docs to truth or split “target vs implemented.” | S |
 | [ ] **CR-5** | **`analytics-agent.yml`** commit step: **`git add … || true`** — remove or scope so failures are visible; align with **`analytics-personal.yml`** (no `|| true` on required adds). | S |
 | [ ] **CR-6** | **Optional:** Improve **visibility** when dual-advisory Gemini writes an error stub (e.g. 503) — e.g. `GITHUB_STEP_SUMMARY` line or job annotation so green runs are not misread as “full Gemini prose.” | S |
+| [ ] **CR-7** | **`run-intent-consumer.yml` (`workflow_run`):** when analytics ends **BLOCKED** (no `run_intent*.json`, paired `run-intent-blocked*.md` present), consumer must **no-op green** and **skip** `generate` / `upload` — not `consume_run_intent` **exit 1**. Gate on intent file presence **or** `--allow-planner-blocked` **plus** a `has_intent` / job-output guard so `generate` never runs without validated `GITHUB_OUTPUT` from intent. | S–M |
 
 ### Optional follow-ups (lower priority)
 
@@ -102,7 +103,7 @@
 | Test coverage sufficiency | **Moderate** (contracts + run-next + consumer; thin on correlate + ledger) |
 | Security / secret hygiene | **Moderate** (ignore rules good; human discipline) |
 
-**Overall: B** — Solid spine and partial guardrails; finish **CR-1**–**CR-3** before treating automation / joins as “fully trusted.”
+**Overall: B** — Solid spine and partial guardrails; finish **CR-1**–**CR-3** before treating automation / joins as “fully trusted.” **CR-7** closes a gap: auto consumer vs planner **BLOCKED**.
 
 ---
 
@@ -116,7 +117,7 @@ Use before treating a release or “cohesion loop complete” as trusted.
 | 2 | Post-commit push | No silent **`|| true`** on merge/push unless explicitly justified and logged. |
 | 3 | Ledger on `main` | Upload workflows update **`data/generations.json`** as documented; Art Creator catalog exception understood. |
 | 4 | Analytics window | Report **`date_range`** matches how you compare to Studio. |
-| 5 | Run intent | `run_intent*.json` or blocked md; consumer behavior unchanged if relied on. |
+| 5 | Run intent | `run_intent*.json` or blocked md; **auto** consumer after analytics must **not** fail when planner **BLOCKED** (see **CR-7**). |
 | 6 | Dual advisory | Stubs acceptable **or** summary marks Gemini failure. |
 | 7 | CI tests | `pytest` + contracts green; correlate/ledger tests present if claiming join safety. |
 | 8 | Secrets | No keys in repo; GitHub Secrets only. |

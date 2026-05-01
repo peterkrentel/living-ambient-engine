@@ -98,7 +98,7 @@ This spec is enforced at multiple levels:
 
 **Verify:** `python scripts/verify_ledger_catalog.py` — catalog `youtube_id` set must equal ledger `video_id` set; warns when no `Content Factory (Personal)` rows exist.
 
-**Precision runs:** Large or agent-driven matrices should use the **validated run intent** contract ([`contracts/production-run-intent.md`](./contracts/production-run-intent.md)) consumed by CI—not unbounded extra `workflow_dispatch` inputs alone. **Consumer:** [`run-intent-consumer.yml`](../../.github/workflows/run-intent-consumer.yml) (`workflow_dispatch`; optional `validate_only`).
+**Precision runs:** Large or agent-driven matrices should use the **validated run intent** contract ([`contracts/production-run-intent.md`](./contracts/production-run-intent.md)) consumed by CI—not unbounded extra `workflow_dispatch` inputs alone. **Consumer:** [`run-intent-consumer.yml`](../../.github/workflows/run-intent-consumer.yml) — **`workflow_dispatch`** (optional `validate_only`) **and** **`workflow_run`** after successful **Analytics Agent** / **Analytics Agent (Personal)** on `main` (see § [run-intent-consumer.yml](#run-intent-consumeryml); **CR-7** in [`cohesion-readiness-review-todos.md`](../cohesion-readiness-review-todos.md) tracks graceful handling when planner **BLOCKED**).
 
 ## content-factory.yml
 

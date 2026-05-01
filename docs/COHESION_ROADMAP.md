@@ -179,13 +179,13 @@ Videos published **before** `generations.json` exists have **no** joined params 
 
 ## Phase 6 — Future: “agent decides next step”
 
-**Order (non-negotiable for safety):**
+**Order (safety spine — mostly shipped for intent path):**
 
-1. Workflow or script emits a **recommendation artifact** (markdown/JSON) from `data/*` — **no** auto-generation.
-2. **`workflow_dispatch`** with suggested inputs — **human** runs.
-3. Only later: optional auto-trigger with **caps**, **guardrails**, and **spec updates**.
+1. Workflow or script emits a **recommendation artifact** (markdown/JSON) from `data/*` — **no** auto-generation from LLM markdown alone.
+2. **`workflow_dispatch`** remains for **manual** precision runs and **`confirm_upload`** double-gate.
+3. **Shipped:** **`workflow_run`** on [`run-intent-consumer.yml`](../.github/workflows/run-intent-consumer.yml) after successful **Analytics Agent** / **Analytics Agent (Personal)** on **`main`** — validate committed intent → **`batch_generate`** / **`youtube_upload`** when intent **`upload`: true** (auto path skips **`confirm_upload`**). **Todo:** planner **BLOCKED** must **no-op** consumer cleanly — [`cohesion-readiness-review-todos.md`](cohesion-readiness-review-todos.md) **CR-7**. **Still apply:** caps, rate limits, and spec updates as volume grows.
 
-**Two doors (keep both):** **(A)** Small manual **`workflow_dispatch`** on Content Factory workflows for smoke and hand-picked runs (fixed form fields). **(B) Precision path:** versioned **run intent JSON** — [`spec/contracts/production-run-intent.md`](spec/contracts/production-run-intent.md) — **validated in CI** then mapped to `batch_generate` / `youtube_upload` flags; a gated planner or future LLM emits **only** that shape (no ad-hoc shell, no unbounded growth of dropdown inputs). *Workflow reader:* [`run-intent-consumer.yml`](../.github/workflows/run-intent-consumer.yml) + [`scripts/consume_run_intent.py`](../scripts/consume_run_intent.py). **Planner v0:** [`scripts/plan_run_intent.py`](../scripts/plan_run_intent.py) (after brand correlate) writes intent or a **BLOCKED** report; execution is **manual** `workflow_dispatch` on the consumer workflow.
+**Two doors (keep both):** **(A)** Small manual **`workflow_dispatch`** on Content Factory workflows for smoke and hand-picked runs (fixed form fields). **(B) Precision path:** versioned **run intent JSON** — [`spec/contracts/production-run-intent.md`](spec/contracts/production-run-intent.md) — **validated in CI** then mapped to `batch_generate` / `youtube_upload` flags; a gated planner or future LLM emits **only** that shape (no ad-hoc shell, no unbounded growth of dropdown inputs). *Workflow reader:* [`run-intent-consumer.yml`](../.github/workflows/run-intent-consumer.yml) + [`scripts/consume_run_intent.py`](../scripts/consume_run_intent.py). **Planner v0:** [`scripts/plan_run_intent.py`](../scripts/plan_run_intent.py) (after correlate, **`--upload`** in both analytics workflows) writes intent or a **BLOCKED** report. **Consumer:** **manual** `workflow_dispatch` **or** **`workflow_run`** after analytics on **`main`** (see `docs/spec/workflows.md` § run-intent-consumer); **CR-7** for BLOCKED no-op.
 
 **Explainability:** Recommendations must cite **evidence** (e.g. “top retention cluster: `mood=X`, `tempo` band Y, *n*=…”) — not vague “make more calm stuff.” Otherwise you won’t trust the loop.
 
@@ -194,9 +194,9 @@ Videos published **before** `generations.json` exists have **no** joined params 
 **`run-next` implementation order (agreed):**
 
 1. **v0 deterministic** — **Done on `main`:** [`scripts/run_next_report.py`](../scripts/run_next_report.py) after audit; brand + personal filenames as above; **no** LLM; **no** `batch_generate` / upload.
-2. **Validators (tranche 1 — done on `main`):** [`validate_run_next.py`](../scripts/validate_run_next.py) in both analytics workflows — headline **snapshot** parity + **`generated_at`** vs correlate **`suggestions*.json`**; **`--week`** aligned to **Python UTC ISO week** (**PR #124**). **Tranche 2 (next):** cited **`suggestions[i]`** / audit excerpt traceability; fail on drift beyond the headline block.
+2. **Validators (tranche 1 + 2 — done on `main`):** [`validate_run_next.py`](../scripts/validate_run_next.py) in both analytics workflows — headline **snapshot** + **`generated_at`**, cited **`suggestions[i]`** rows, audit **overview excerpt** vs audit `## Overview`; **`--week`** = **Python UTC ISO week**.
 3. **Optional LLM prose** — only after validator tranches feel boring: model consumes **fixed JSON bundle** + prompt from git; output still schema-validated. **Preferred:** open-weight on **self-hosted** runner or hardware you control (**MLOps / AI-ops**, no third-party inference). **Optional prototype:** vendor API (e.g. Gemini free tier) for speed **only** until a local path exists; document in `workflows.md` + secrets policy.
-4. **Automation** — optional `workflow_run` / scheduled consumer, richer `run_intent`, etc., **only** after `run-next` validators + policy feel trusted; keep Phase 6 human dispatch → later caps.
+4. **Automation** — **partially shipped:** **`workflow_run`** consumer after analytics on **`main`** (brand + personal) when intent exists; **CR-7** (BLOCKED → green skip) + richer `run_intent` / schedules / caps as trust grows.
 
 ### Dual advisory refinement (runner + optional Gemini)
 
@@ -254,16 +254,16 @@ Videos published **before** `generations.json` exists have **no** joined params 
 |-------|-----|
 | **Who owns `moods` / `duration` / `dual`** | Keep **planner-from-suggestions** as source of truth with dual MD as **hints only**, vs **LLM-derived draft** merged into intent (and **who approves** before consumer). |
 | **Gemini vs runner when they disagree** | e.g. require **agreement**, prefer one model, or **human** picks — today there is **no** in-repo auto-merge ([`spec/DUAL_ADVISORY_COMPARE.md`](spec/DUAL_ADVISORY_COMPARE.md)). |
-| **Consumer trigger** | Stay **manual** `workflow_dispatch` on [`run-intent-consumer.yml`](../.github/workflows/run-intent-consumer.yml) until validators are boring; only then **`workflow_run`** / schedules — with **caps** (Phase 6 order above). |
+| **Consumer trigger** | **Shipped:** **`workflow_run`** after successful analytics on **`main`** (lane-fixed paths; auto upload when intent **`upload`: true**; manual dispatch retains **`confirm_upload`**). **Todo:** **CR-7** — no red run when planner **BLOCKED**. **Later:** schedules, stricter **caps** — [`cohesion-readiness-review-todos.md`](cohesion-readiness-review-todos.md). |
 
-**Prerequisite before unattended consumer:** Runner **completion reliability** — avoid routine **`finish_reason=length`** (truncated prose). **Shipped mitigations:** tighter lean bundle + **2–4** Insights prompt (**PR #123**); env knobs unchanged (`RUNNER_BUNDLE_MAX_CHARS`, `AGENT_LLAMA_N_CTX`, `MAX_RUNNER_TOKENS` — see [`spec/workflows.md`](spec/workflows.md)). **`run-next` headline parity + `generated_at`** validation (**PR #124**). **Still watch logs** before auto-chaining consumer.
+**Prerequisite before widening automation:** Runner **completion reliability** — avoid routine **`finish_reason=length`** (truncated prose). **Shipped mitigations:** tighter lean bundle + **2–4** Insights prompt (**PR #123**); env knobs unchanged (`RUNNER_BUNDLE_MAX_CHARS`, `AGENT_LLAMA_N_CTX`, `MAX_RUNNER_TOKENS` — see [`spec/workflows.md`](spec/workflows.md)). **`run-next` validators tranche 1 + 2**. **Intent consumer** auto-chains after analytics on **`main`** when intent exists — **CR-7** closes BLOCKED noise. **Still watch logs** as volume grows.
 
 ### Autonomy horizon (post-trust north star)
 
 **Goal:** evolve from **measure → analyze → suggest → human → generate** toward **measure → analyze → validated plan → generate → publish → ledger**, without treating free-form LLM markdown as the only gate.
 
 - **Structured plan output** — A future actor (planner vN and/or LLM) reads committed artifacts (`suggestions*.json`, `analytics*.json`, [`data/generations.json`](../data/generations.json) / catalog, `config/moods.yaml`, [`spec/GUARDRAILS.md`](spec/GUARDRAILS.md), [`AGENT.md`](spec/AGENT.md)) and emits **machine-checkable** intent in the same family as [`spec/contracts/production-run-intent.md`](spec/contracts/production-run-intent.md); advisory prose stays optional, **schema + validators** are not.
-- **Validators before wider automation** — Numeric parity with correlate inputs, cited evidence, policy checks; optional consumer or schedules **only** after gates pass for **signal** reasons (volume, thresholds), not missing wiring or silent catalog gaps.
+- **Validators + policy before scaling** — Numeric parity, cited evidence, **`run-next`** tranche 2 checks; widen schedules / caps for **signal** reasons (volume, thresholds), not missing wiring. **CR-7** when auto consumer runs after every analytics success.
 - **Tight feedback loop** — Every publish path keeps catalog + ledger fields correlate and audit need (incl. catalog **`channel`** for multi-lane joins). Known friction: Art Creator **`--no-update-catalog`** skips catalog — see [`HANDOFF.md`](HANDOFF.md) *Risks / open questions*.
 - **Predictive modeling ([`AGENT.md`](spec/AGENT.md) Phase 3)** — When row counts and label quality justify it, supervised models on ledger-backed features; until then **group stats + Phase 2.5** (CIs / hygiene, confounder language) remain the inference spine—not a fixed video-count promise.
 
