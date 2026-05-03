@@ -1,7 +1,7 @@
 # Run next — advisory (2026-W18)
 
-Generated (report): 2026-05-01T14:11:10.068075+00:00
-**Correlate bundle `generated_at`:** 2026-05-01T14:11:09.723301Z
+Generated (report): 2026-05-03T02:44:16.703201+00:00
+**Correlate bundle `generated_at`:** 2026-05-03T02:44:16.361191Z
 
 ## How to read this
 
@@ -13,9 +13,9 @@ This file is **machine-assembled** from `data/suggestions.json` and the **brand*
 
 ## Brand snapshot (this run)
 
-- **Overall avg retention:** 25.77%
-- **Overall avg watch min / video (window):** 7.772
-- **Videos analyzed:** 114 with views / 354 total
+- **Overall avg retention:** 22.69%
+- **Overall avg watch min / video (window):** 7.604
+- **Videos analyzed:** 111 with views / 354 total
 
 ## Evidence (paths)
 
@@ -45,7 +45,7 @@ _No exploratory "reduce" rows._
 ## Personal lane (context only)
 
 - `data/analytics_personal.json` — **114** videos in snapshot; `fetched_at`: 2026-05-01T13:38:31.365881+00:00
-- **Latest personal markdown report:** `data/reports/run-next-2026-W17-personal.md`
+- **Latest personal markdown report:** `data/reports/audit-2026-W16-personal.md`
 - **Not merged** into brand `suggestions.json` / correlate — use for cross-read only ([`docs/PERSONAL_ANALYTICS.md`](../../docs/PERSONAL_ANALYTICS.md)).
 
 ## Production hooks (manual)

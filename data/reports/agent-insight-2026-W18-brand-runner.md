@@ -4,27 +4,26 @@
 
 ---
 ## What I reviewed
-- **Channel totals JSON**: `analytics_totals`
-- **Run-next digest**: `run-next digest`
-- **Run-next tail**: `run-next tail`
-- **Weekly report excerpt**: `weekly report`
-- **Suggestions compact**: `suggestions`
-- **Analytics compact top videos + retention slice**: `analytics`
+- **Channel totals JSON**: 1189 views, 844 minutes watched, 111 videos with views.
+- **Run-next digest**: 22.69% overall avg retention, 7.604 avg watch time per video.
+- **Run-next tail**: 111 videos analyzed, 354 total videos tracked.
 
-- deterministic facts (computed by script): 1214 views, 886 watch minutes, 114 videos with views
 ## Summary
-Channel totals: 1214 views, 886 watch minutes, 114 videos with views.
-- **Total videos tracked**: 354
-- **Videos with analytics**: 354
-- **Total views**: 1,214
-- **Total watch time**: 886 minutes
+- **Total views:** 1,189
+- **Total watch time:** 844 minutes
+- **Videos analyzed:** 111 with views / 354 total
 
 ## Insights
-- **Top 5 by Retention**: 5 videos with a 559.0% retention
-- **Top 5 by Views**: 5 videos with 240 views
+- **Top videos by retention**: 30 Seconds to Enter Flow State (383.9%), Let Go of Stress · 30 Seconds Soft Piano (94.9%).
+- **Top videos by views**: Ambient ancient · 5 Mins · Evolving taiko (231 views), Ambient contemporary · 5 Mins · Evolving burundi (118 views), Ambient ancient · 5 Mins · Evolving kuku (109 views), Ambient future · 5 Mins · Evolving none (88 views), Ambient baroque · 5 Mins · Evolving gamelan (75 views), Ambient future · 5 Mins · Evolving taiko (31 views), Ambient renaissance · 5 Mins · Evolving none (7 views), Ambient medieval · 5 Mins · Evolving bamboula (21 views).
+- **Top videos by watch time**: Ambient ancient · 5 Mins · Evolving taiko (177 min), Ambient contemporary · 5 Mins · Evolving burundi (59 min), Ambient ancient · 5 Mins · Evolving kuku (52 min), Ambient future · 5 Mins · Evolving none (46 min), Ambient baroque · 5 Mins · Evolving gamelan (45 min), Ambient future · 5 Mins · Evolving taiko (10 min), Ambient renaissance · 5 Mins · Evolving none (2 min), Ambient medieval · 5 Mins · Evolving bamboula (13 min).
 
 ## Risks
-- **No actionable mood increases**: 354 videos analyzed, 114 with views, no qualifying mood suggestion rows
+- **Insufficient data**: 111 videos analyzed, 354 total videos tracked.
+- **Insufficient retention**: 22.69% overall avg retention, 7.604 avg watch time per video.
 
 ## Next tries
-- **Re-run with `--force-moods trance,sleep`**: re-run with specific mood suggestions to emit `data/run_intent.json`
+- **Increase mood retention**: 30 Seconds to Enter Flow State (383.9%).
+- **Reduce views**: Ambient ancient · 5 Mins · Evolving taiko (231 views).
+- **Tread carefully**: 5 Seconds to Quiet Mental Noise (77.46%).
+- **Tread carefully**: Ambient medieval · 5 Mins · Evolving bamboula (21 views).
