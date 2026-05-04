@@ -1,8 +1,8 @@
 {
   "catalog_version": "1.0",
   "created_at": "2026-01-30T01:38:24.843138",
-  "last_updated": "2026-05-01T13:48:53.736760",
-  "total_videos": 102,
+  "last_updated": "2026-05-04T14:06:35.682114",
+  "total_videos": 104,
   "videos": [
     {
       "catalog_id": "video_0001_20260130_013826_32197db7",
@@ -3913,6 +3913,80 @@
       "rhythm_name": "",
       "uploaded_at": "2026-05-01T13:48:53.736695",
       "generated_at": "2026-05-01T13:48:53.736695",
+      "metadata": {
+        "video_title": "Calm Anxiety Fast | 10 Mins Deep Piano Relief | No Loops [With Music]",
+        "mood": "piano_deep_calm",
+        "duration": 600,
+        "description": "Deep calm piano - Dark blue night starfield visual",
+        "tags": [
+          "ASMR",
+          "piano music",
+          "relaxing piano",
+          "deep calm",
+          "stress relief music",
+          "calm piano",
+          "soft piano",
+          "piano for sleep",
+          "meditation piano",
+          "piano ambient",
+          "piano atmosphere",
+          "soothing piano",
+          "theta waves"
+        ]
+      },
+      "channel": "personal"
+    },
+    {
+      "catalog_id": "video_0103_20260504_140628_04a4e2fc",
+      "youtube_id": "IRfSUxejRCg",
+      "youtube_url": "https://youtube.com/watch?v=IRfSUxejRCg",
+      "title": "Calm Anxiety Fast | 10 Mins Deep Piano Relief | No Loops [Pure Ambience]",
+      "mood": "piano_deep_calm",
+      "duration": 600,
+      "duration_str": "",
+      "seed": null,
+      "version": "standard",
+      "rhythm": "ambient",
+      "rhythm_name": "",
+      "uploaded_at": "2026-05-04T14:06:28.353445",
+      "generated_at": "2026-05-04T14:06:28.353445",
+      "metadata": {
+        "video_title": "Calm Anxiety Fast | 10 Mins Deep Piano Relief | No Loops [Pure Ambience]",
+        "mood": "piano_deep_calm",
+        "duration": 600,
+        "description": "Deep calm piano - Dark blue night starfield visual",
+        "tags": [
+          "ASMR",
+          "piano music",
+          "relaxing piano",
+          "deep calm",
+          "stress relief music",
+          "calm piano",
+          "soft piano",
+          "piano for sleep",
+          "meditation piano",
+          "piano ambient",
+          "piano atmosphere",
+          "soothing piano",
+          "theta waves"
+        ]
+      },
+      "channel": "personal"
+    },
+    {
+      "catalog_id": "video_0104_20260504_140635_6b461230",
+      "youtube_id": "q2JLle6N7so",
+      "youtube_url": "https://youtube.com/watch?v=q2JLle6N7so",
+      "title": "Calm Anxiety Fast | 10 Mins Deep Piano Relief | No Loops [With Music]",
+      "mood": "piano_deep_calm",
+      "duration": 600,
+      "duration_str": "",
+      "seed": null,
+      "version": "standard",
+      "rhythm": "ambient",
+      "rhythm_name": "",
+      "uploaded_at": "2026-05-04T14:06:35.682012",
+      "generated_at": "2026-05-04T14:06:35.682012",
       "metadata": {
         "video_title": "Calm Anxiety Fast | 10 Mins Deep Piano Relief | No Loops [With Music]",
         "mood": "piano_deep_calm",

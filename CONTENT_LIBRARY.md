@@ -1,12 +1,12 @@
 # Content Library
 
-*Last updated: 2026-05-01T13:48:53.736760*
+*Last updated: 2026-05-04T14:06:35.682114*
 
 ## Statistics
 
-- **Total Videos:** 102
-- **Total Duration:** 78.58 hours
-- **Average Duration:** 46.23 minutes
+- **Total Videos:** 104
+- **Total Duration:** 78.92 hours
+- **Average Duration:** 45.53 minutes
 
 ### Videos by Mood
 
@@ -19,7 +19,7 @@
 - **Lofi Study:** 2 videos
 - **Ocean Waves:** 5 videos
 - **Piano Ambient:** 2 videos
-- **Piano Deep Calm:** 6 videos
+- **Piano Deep Calm:** 8 videos
 - **Piano Evening:** 2 videos
 - **Piano Gentle:** 2 videos
 - **Piano Relax:** 4 videos
@@ -531,6 +531,26 @@
 - **Uploaded:** 2026-05-01
 - **Seed:** `None`
 - **Catalog ID:** `video_0102_20260501_134853_97c310b0`
+
+#### Calm Anxiety Fast | 10 Mins Deep Piano Relief | No Loops [Pure Ambience]
+
+🔗 **Watch:** [https://youtube.com/watch?v=IRfSUxejRCg](https://youtube.com/watch?v=IRfSUxejRCg)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-05-04
+- **Seed:** `None`
+- **Catalog ID:** `video_0103_20260504_140628_04a4e2fc`
+
+#### Calm Anxiety Fast | 10 Mins Deep Piano Relief | No Loops [With Music]
+
+🔗 **Watch:** [https://youtube.com/watch?v=q2JLle6N7so](https://youtube.com/watch?v=q2JLle6N7so)
+
+- **Duration:** 
+- **Rhythm:** 
+- **Uploaded:** 2026-05-04
+- **Seed:** `None`
+- **Catalog ID:** `video_0104_20260504_140635_6b461230`
 
 ### Piano Evening
 

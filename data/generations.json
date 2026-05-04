@@ -4184,6 +4184,78 @@
       "updated_at": "2026-05-01T13:48:53.740747+00:00",
       "commit_sha": "08dafec27b960073a401393cc8a78f6366d56e2f",
       "channel": "personal"
+    },
+    {
+      "generation_id": "f726c78b-b762-44cd-977f-1d4523276dc7",
+      "video_id": "IRfSUxejRCg",
+      "workflow": "Run intent consumer",
+      "mood": "piano_deep_calm",
+      "duration_seconds": 600,
+      "params": {
+        "seed": 255429149,
+        "variant": "ambience"
+      },
+      "metadata": {
+        "title": "Calm Anxiety Fast | 10 Mins Deep Piano Relief | No Loops [Pure Ambience]",
+        "video_title": "Calm Anxiety Fast | 10 Mins Deep Piano Relief | No Loops [Pure Ambience]",
+        "description": "Deep calm piano - Dark blue night starfield visual",
+        "tags": [
+          "ASMR",
+          "piano music",
+          "relaxing piano",
+          "deep calm",
+          "stress relief music",
+          "calm piano",
+          "soft piano",
+          "piano for sleep",
+          "meditation piano",
+          "piano ambient",
+          "piano atmosphere",
+          "soothing piano",
+          "theta waves"
+        ]
+      },
+      "generated_at": "2026-05-04T14:05:37.025778",
+      "uploaded_at": "2026-05-04T14:06:28.357734+00:00",
+      "updated_at": "2026-05-04T14:06:28.357734+00:00",
+      "commit_sha": "ecdb75f896c00b13391d45d72c91d5078626bcac",
+      "channel": "personal"
+    },
+    {
+      "generation_id": "d8158e34-1e99-4979-bd30-f4c17b5d2b77",
+      "video_id": "q2JLle6N7so",
+      "workflow": "Run intent consumer",
+      "mood": "piano_deep_calm",
+      "duration_seconds": 600,
+      "params": {
+        "seed": 255429149,
+        "variant": "melody"
+      },
+      "metadata": {
+        "title": "Calm Anxiety Fast | 10 Mins Deep Piano Relief | No Loops [With Music]",
+        "video_title": "Calm Anxiety Fast | 10 Mins Deep Piano Relief | No Loops [With Music]",
+        "description": "Deep calm piano - Dark blue night starfield visual",
+        "tags": [
+          "ASMR",
+          "piano music",
+          "relaxing piano",
+          "deep calm",
+          "stress relief music",
+          "calm piano",
+          "soft piano",
+          "piano for sleep",
+          "meditation piano",
+          "piano ambient",
+          "piano atmosphere",
+          "soothing piano",
+          "theta waves"
+        ]
+      },
+      "generated_at": "2026-05-04T14:05:37.025805",
+      "uploaded_at": "2026-05-04T14:06:35.686280+00:00",
+      "updated_at": "2026-05-04T14:06:35.686280+00:00",
+      "commit_sha": "ecdb75f896c00b13391d45d72c91d5078626bcac",
+      "channel": "personal"
     }
   ]
 }
