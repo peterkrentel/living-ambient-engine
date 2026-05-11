@@ -4,7 +4,7 @@
 
 ## Updated
 
-2026-05-01
+2026-05-11
 
 ## Branch / PR
 
@@ -30,6 +30,7 @@
 ## Goal (this phase — in flight)
 
 - **Catalog / channel:** **`channel`** on new rows + ADR are **landed**; remaining work is optional **backfill** and **consumers** (audit, tooling) that filter by channel.
+- **Planner execution variety (phase 1 — landing in current PR):** **`plan_run_intent.py`** reads **`data/generations.json`** when **`RUN_INTENT_ANTI_REPEAT_WEEKS` > 0** (both analytics workflows use **4**) and drops **mood × duration_seconds** pairs already uploaded on that **channel** inside the window; legacy rows without **`channel`** / **`uploaded_at`** are ignored. **Next:** packaging **angle** matrix + constrained title LLM **before** upload — separate small PRs.
 - **Iron out cross-read:** brand vs personal reports + same `date_range` as Studio when sanity-checking totals.
 - **Dual advisory runner (Qwen) contract (done):** both lanes now reliably emit a **non-stub** `agent-insight-*-runner.md` with the five required `##` sections and deterministic totals anchored to JSON (guardrail retry + grounding retry + deterministic totals injection when needed).
 
@@ -50,7 +51,7 @@
 5. **Phase 2.5 + inference hygiene:** extend **`correlate.py`** with CIs / z-scores / effect sizes **and** Step Summary + doc language that **CIs address noise, not confounders** (title/thumbnail/CTR vs params — **`AGENT.md`** § *Confounders & packaging*).
 6. **Packaging telemetry (later slice):** joinable **fingerprints** on ledger/catalog **before** CTR-heavy automation; optional ADR if schema grows.
 7. **Spec phases:** **`AGENT.md`** Phase **3** when volume **and** interpretation guardrails justify it; **`COHESION_ROADMAP.md`** Phase **6** only after joins/trust feel right.
-8. **Title / packaging (defer):** same **mood × duration × dual** matrix on **brand + personal** reuses templates → **identical `video_title` strings** on two channels (different `video_id`s). Fine for smoke; before **high volume** or sharp **channel positioning**, tweak metadata (e.g. per-channel suffix or description line), rotation policy, or later **run intent** rules so packs are not unintentional clones — [`START_HERE.md`](START_HERE.md) checklist.
+8. **Title / packaging:** **Anti-repeat** (mood×duration per channel, ledger window) is **in** [`plan_run_intent.py`](../scripts/plan_run_intent.py). Still open: **angle matrix** (deterministic promise variants), **constrained LLM** titles from forbidden recent phrases, and sharper **per-channel positioning** so brand vs personal are not unintentional clones — [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6 *Execution variety*.
 
 9. **Autonomy follow-ups:** optional **LLM** on fixed bundle; **`duration`** / caps policy vs correlate (planner still defaults **`10min`** unless env/CLI set) — [`COHESION_ROADMAP.md`](COHESION_ROADMAP.md) Phase 6, **LLM advisory → production (contract bridge)** (**PR #122**). **Immediate:** **CR-7** under **#4** above.
 10. **`run-next` + dual-advisory (quality phase):** **CI** runs **`validate_agent_insight_runner.py`** (totals vs **analytics** + WIR placeholder ban + ≥2 Insights — flexible shapes — **PR #121**); **`agent_dual_advisory.py`** strips rubric-echo WIR lines before write. **Shipped:** leaner runner bundle + **2–4** Insights prompt (**PR #123**). **Next:** monitor **`finish_reason=length`** in analytics logs; optional Gemini grounding checks before anything consumes prose.

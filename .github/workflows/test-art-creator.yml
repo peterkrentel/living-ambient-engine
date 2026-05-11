@@ -29,6 +29,7 @@ on:
       - 'tests/test_agent_dual_advisory.py'
       - 'tests/test_validate_agent_insight_runner.py'
       - 'tests/test_validate_run_next.py'
+      - 'tests/test_plan_run_intent_anti_repeat.py'
       - 'docs/spec/**'
 
 # workflow_call into art-creator.yml must allow that workflow's job permissions.
@@ -203,6 +204,7 @@ jobs:
             tests/test_agent_dual_advisory.py \
             tests/test_validate_agent_insight_runner.py \
             tests/test_validate_run_next.py \
+            tests/test_plan_run_intent_anti_repeat.py \
             -v --tb=short
 
   # Run art-creator matrix tests (slower, needs contract tests to pass)

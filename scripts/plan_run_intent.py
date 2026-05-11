@@ -15,6 +15,12 @@ Reads suggestions JSON (default ``data/suggestions.json`` for brand). Emits eith
 **Overrides (explicit human / CI smoke):** ``--force-moods a,b`` skips suggestion mining and
 writes intent if moods validate against ``config/moods.yaml``.
 
+**Anti-repeat (optional):** When ``--anti-repeat-weeks N`` is positive (or env
+``RUN_INTENT_ANTI_REPEAT_WEEKS``), drop any mood whose **(mood, duration_seconds)** matches a row
+in ``data/generations.json`` for the **same** ``channel`` with ``uploaded_at`` in the last **N×7**
+days. Rows **without** ``channel`` or ``uploaded_at`` are ignored (safe for legacy ledger).
+Default **N=0** (off). **Brand** and **personal** lanes each use their own channel filter.
+
 Spec: ``docs/spec/contracts/production-run-intent.md`` · Roadmap: ``docs/COHESION_ROADMAP.md`` Phase 6.
 """
 from __future__ import annotations
@@ -24,7 +30,7 @@ import json
 import os
 import re
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 try:
@@ -74,6 +80,112 @@ def validate_duration(label: str) -> str:
     if s not in ALLOWED_DURATIONS:
         raise SystemExit(f"Unknown duration {s!r}; allowed: {sorted(ALLOWED_DURATIONS)}")
     return s
+
+
+def duration_label_to_seconds(label: str) -> int:
+    """Parse intent duration label to seconds (aligned with ``batch_generate.parse_duration``)."""
+    duration_str = label.strip().lower()
+    match = re.match(
+        r"^(\d+(?:\.\d+)?)\s*(h|hr|hour|hours|m|min|mins|minutes|s|sec|secs|seconds)?$",
+        duration_str,
+    )
+    if not match:
+        raise ValueError(f"Invalid duration format: {label!r}")
+    value = float(match.group(1))
+    unit = match.group(2) or "s"
+    if unit in ("h", "hr", "hour", "hours"):
+        return int(value * 3600)
+    if unit in ("m", "min", "mins", "minutes"):
+        return int(value * 60)
+    if unit in ("s", "sec", "secs", "seconds"):
+        return int(value)
+    return int(value)
+
+
+def parse_iso_datetime(value: object) -> datetime | None:
+    """Parse ledger ISO timestamps to timezone-aware UTC."""
+    if not isinstance(value, str) or not value.strip():
+        return None
+    raw = value.strip()
+    if raw.endswith("Z"):
+        raw = raw[:-1] + "+00:00"
+    try:
+        dt = datetime.fromisoformat(raw)
+    except ValueError:
+        return None
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(timezone.utc)
+
+
+def recent_blocked_mood_duration_keys(
+    generations_path: Path,
+    *,
+    channel: str,
+    weeks: int,
+    now_utc: datetime | None = None,
+) -> set[tuple[str, int]]:
+    """(mood, duration_seconds) keys uploaded on ``channel`` within the last ``weeks``×7 days."""
+    if weeks <= 0:
+        return set()
+    path = _resolve_repo_path(generations_path)
+    if not path.is_file():
+        return set()
+    try:
+        with open(path, encoding="utf-8") as f:
+            data = json.load(f)
+    except (OSError, json.JSONDecodeError):
+        return set()
+    videos = data.get("videos") if isinstance(data, dict) else None
+    if not isinstance(videos, list):
+        return set()
+    now = now_utc or datetime.now(timezone.utc)
+    cutoff = now - timedelta(days=7 * weeks)
+    out: set[tuple[str, int]] = set()
+    for row in videos:
+        if not isinstance(row, dict):
+            continue
+        row_ch = row.get("channel")
+        if not isinstance(row_ch, str) or row_ch.strip().lower() != channel:
+            continue
+        mood = row.get("mood")
+        if not isinstance(mood, str) or not mood.strip():
+            continue
+        dur_raw = row.get("duration_seconds")
+        if isinstance(dur_raw, bool):
+            continue
+        if isinstance(dur_raw, float) and dur_raw.is_integer():
+            dur = int(dur_raw)
+        elif isinstance(dur_raw, int):
+            dur = dur_raw
+        else:
+            continue
+        ts = parse_iso_datetime(row.get("uploaded_at"))
+        if ts is None:
+            continue
+        if ts < cutoff:
+            continue
+        out.add((mood.strip(), dur))
+    return out
+
+
+def filter_moods_anti_repeat(
+    moods: list[str],
+    *,
+    duration_seconds: int,
+    blocked: set[tuple[str, int]],
+) -> tuple[list[str], list[str]]:
+    """Drop moods that collide with ``blocked``; return (kept, skip_reason_lines)."""
+    kept: list[str] = []
+    skipped: list[str] = []
+    for m in moods:
+        if (m, duration_seconds) in blocked:
+            skipped.append(
+                f"- {m!r} @ {duration_seconds}s — same mood×duration uploaded on this channel inside the anti-repeat window."
+            )
+        else:
+            kept.append(m)
+    return kept, skipped
 
 
 def moods_from_suggestions(data: dict) -> tuple[list[str], list[str]]:
@@ -218,6 +330,19 @@ def main() -> int:
         default=os.environ.get("RUN_INTENT_WEEK", ""),
         help="ISO week label e.g. 2026-W18 (default: current UTC ISO week)",
     )
+    parser.add_argument(
+        "--generations-json",
+        type=Path,
+        default=Path(os.environ.get("RUN_INTENT_GENERATIONS_JSON", "data/generations.json")),
+        help="Ledger path for anti-repeat (default: data/generations.json).",
+    )
+    parser.add_argument(
+        "--anti-repeat-weeks",
+        type=int,
+        default=int(os.environ.get("RUN_INTENT_ANTI_REPEAT_WEEKS", "0")),
+        metavar="N",
+        help="Drop mood×duration if present on this channel in generations.json within N×7 days (0=off).",
+    )
     args = parser.parse_args()
 
     intent_out = _resolve_repo_path(args.intent_output)
@@ -243,6 +368,28 @@ def main() -> int:
         print(e, file=sys.stderr)
         return 1
 
+    anti_weeks = max(0, args.anti_repeat_weeks)
+    gen_path = _resolve_repo_path(args.generations_json)
+
+    try:
+        dur_sec = duration_label_to_seconds(duration)
+    except ValueError as e:
+        print(e, file=sys.stderr)
+        return 1
+
+    def anti_filter(moods_in: list[str]) -> tuple[list[str], list[str]]:
+        if anti_weeks <= 0:
+            return moods_in, []
+        if not gen_path.is_file():
+            print(
+                "⚠️ Anti-repeat enabled but generations.json missing — using an empty ledger.",
+                file=sys.stderr,
+            )
+        blocked = recent_blocked_mood_duration_keys(
+            gen_path, channel=args.channel, weeks=anti_weeks
+        )
+        return filter_moods_anti_repeat(moods_in, duration_seconds=dur_sec, blocked=blocked)
+
     valid_moods = set(load_factory_moods())
 
     if args.force_moods.strip():
@@ -263,8 +410,23 @@ def main() -> int:
                 blocked_path=blocked_out,
             )
             return 0
+        moods, anti_skips = anti_filter(moods)
+        moods = moods[: args.max_moods]
+        if not moods:
+            write_blocked(
+                "**Anti-repeat (generations ledger)** removed every `--force-moods` candidate for this "
+                f"channel×duration (`{duration}`).\n\n"
+                f"Window: last **{anti_weeks}** week(s), channel=`{args.channel}`.\n\n"
+                "**Skipped:**\n"
+                + "\n".join(anti_skips)
+                + "\n\n**Mitigations:** lower `--anti-repeat-weeks`, change `--duration`, or pick moods "
+                "not recently uploaded on this channel.\n",
+                intent_path=intent_out,
+                blocked_path=blocked_out,
+            )
+            return 0
         write_intent(
-            moods=moods[: args.max_moods],
+            moods=moods,
             channel=args.channel,
             week=week,
             suggestions_generated_at=None,
@@ -290,9 +452,29 @@ def main() -> int:
 
     moods, reasons = moods_from_suggestions(data)
     moods = [m for m in moods if m in valid_moods]
+    moods, anti_skips = anti_filter(moods)
     moods = moods[: args.max_moods]
 
     if not moods:
+        if anti_skips and anti_weeks > 0:
+            lines = [
+                "**Anti-repeat (generations ledger)** removed every actionable candidate for this "
+                f"channel×duration (`{duration}`).\n",
+                f"Window: last **{anti_weeks}** week(s), channel=`{args.channel}`.\n",
+                "",
+                "**Skipped:**",
+                *anti_skips,
+                "",
+                "**Mitigations:** lower `--anti-repeat-weeks`, change `--duration`, wait for new uploads "
+                "to age out of the window, or use `--force-moods` for an explicit mood not in the window.",
+                "",
+            ]
+            if reasons:
+                lines.append("**Context — non-actionable mood rows from correlate (sample):**")
+                lines.extend(f"- {r}" for r in reasons[:8])
+                lines.append("")
+            write_blocked("\n".join(lines), intent_path=intent_out, blocked_path=blocked_out)
+            return 0
         lines = [
             f"**No actionable mood increases** in `{sug_rel}` passed the planner gate.",
             "",

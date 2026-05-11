@@ -103,6 +103,8 @@ jobs:
           python scripts/correlate.py
 
       - name: Plan run intent (personal, gated)
+        env:
+          RUN_INTENT_ANTI_REPEAT_WEEKS: "4"
         run: |
           echo "🧭 Planning personal run intent from suggestions_personal.json (upload armed in JSON; consumer + gates still required)..."
           WEEK=$(python -c "from datetime import datetime, timezone; n=datetime.now(timezone.utc); y,w,_=n.isocalendar(); print(f'{y}-W{w:02d}')")
