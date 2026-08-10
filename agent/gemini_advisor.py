@@ -37,9 +37,11 @@ except ImportError:
 DATA_DIR = Path("data")
 DEFAULT_ANALYTICS_JSON = str(DATA_DIR / "analytics.json")
 DEFAULT_OUT = str(DATA_DIR / "gemini_recommendation.json")
+DEFAULT_GEMINI_MODEL = "gemini-2.5-flash"
 
-# Gemini model to use (free-tier compatible)
-GEMINI_MODEL = os.environ.get("GEMINI_MODEL", "gemini-1.5-flash")
+
+def _gemini_model() -> str:
+    return (os.environ.get("GEMINI_MODEL") or DEFAULT_GEMINI_MODEL).strip() or DEFAULT_GEMINI_MODEL
 
 
 # ---------------------------------------------------------------------------
@@ -192,7 +194,7 @@ Respond in structured JSON using this schema:
 class GeminiAdvisor:
     """Ask Gemini Lite for content strategy recommendations."""
 
-    def __init__(self, api_key: Optional[str] = None, model: str = GEMINI_MODEL):
+    def __init__(self, api_key: Optional[str] = None, model: Optional[str] = None):
         if not HAS_GENAI:
             raise ImportError(
                 "google-generativeai not installed. "
@@ -204,8 +206,8 @@ class GeminiAdvisor:
                 "Gemini API key required. Set GEMINI_API_KEY environment variable or pass api_key."
             )
         genai.configure(api_key=self.api_key)
-        self.model = genai.GenerativeModel(model)
-        self._model_name = model
+        self._model_name = model or _gemini_model()
+        self.model = genai.GenerativeModel(self._model_name)
 
     def get_recommendation(
         self,
@@ -272,8 +274,8 @@ def main() -> None:
     )
     parser.add_argument(
         "--model",
-        default=GEMINI_MODEL,
-        help=f"Gemini model to use (default: {GEMINI_MODEL})",
+        default=_gemini_model(),
+        help=f"Gemini model to use (default: {_gemini_model()})",
     )
     args = parser.parse_args()
 

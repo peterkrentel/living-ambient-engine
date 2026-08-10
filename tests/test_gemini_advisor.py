@@ -16,6 +16,7 @@ if str(_REPO) not in sys.path:
 
 from agent.gemini_advisor import (  # noqa: E402
     _build_prompt,
+    _gemini_model,
     _load_analytics,
     _load_trends,
     _top_performers,
@@ -168,6 +169,16 @@ def test_load_trends_reads_list(tmp_path) -> None:
     result = _load_trends(str(p))
     assert len(result) == 2
     assert result[0]["video_id"] == "t1"
+
+
+def test_gemini_model_defaults_to_supported_flash(monkeypatch) -> None:
+    monkeypatch.delenv("GEMINI_MODEL", raising=False)
+    assert _gemini_model() == "gemini-2.5-flash"
+
+
+def test_gemini_model_respects_env_override(monkeypatch) -> None:
+    monkeypatch.setenv("GEMINI_MODEL", "gemini-2.0-flash")
+    assert _gemini_model() == "gemini-2.0-flash"
 
 
 # ---------------------------------------------------------------------------
