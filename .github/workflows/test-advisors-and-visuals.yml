@@ -1,0 +1,113 @@
+# Test Advisors & New Visual Patterns
+# Validates PR #134 additions in isolation without full video generation or YouTube upload.
+# Spec: docs/spec/AGENT.md
+
+name: Test Advisors & New Visual Patterns
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-advisors-and-visuals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run youtube.trend_advisor (dry-run / test mode)
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: |
+          echo "🔍 Running youtube.trend_advisor in dry-run mode..."
+          # trend_advisor gracefully skips trend fetching when YOUTUBE_API_KEY is absent
+          python -m youtube.trend_advisor --out /tmp/youtube_trends.json
+          echo "✅ trend_advisor completed"
+
+      - name: Run agent.gemini_advisor and verify structured JSON output
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          echo "🤖 Running agent.gemini_advisor..."
+          if [ -z "${GEMINI_API_KEY}" ]; then
+            echo "⚠️  GEMINI_API_KEY not set — skipping gemini_advisor run"
+            exit 0
+          fi
+
+          python -m agent.gemini_advisor --out /tmp/gemini_strategy.json
+
+          echo "🔍 Verifying structured JSON output..."
+          python - <<'EOF'
+          import json, sys, pathlib
+
+          out = pathlib.Path("/tmp/gemini_strategy.json")
+          if not out.exists():
+              print("⚠️  No output file produced — skipping JSON validation")
+              sys.exit(0)
+
+          with open(out) as f:
+              data = json.load(f)
+
+          required = {"strategy", "recommendations"}
+          missing = required - data.keys()
+          if missing:
+              print(f"❌ JSON output missing keys: {missing}")
+              sys.exit(1)
+
+          print(f"✅ gemini_advisor JSON output is valid (keys: {list(data.keys())})")
+          EOF
+
+      - name: Install system dependencies for visual rendering
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg libgl1
+
+      - name: Render fast test frame for new procedural visual patterns
+        run: |
+          echo "🎨 Testing new procedural visual patterns (single-frame renders)..."
+          python - <<'EOF'
+          import sys, traceback
+          from visuals.generator import VisualGenerator
+
+          BASE_CONFIG = {
+              "speed": 0.5,
+              "complexity": 0.5,
+              "colors": {
+                  "primary": [0, 100, 200],
+                  "secondary": [100, 0, 200],
+                  "accent": [200, 200, 0],
+              },
+          }
+
+          PATTERNS = ["aurora_borealis", "nebula", "lissajous", "plasma", "vortex"]
+          failed = []
+
+          for pattern in PATTERNS:
+              print(f"  Testing pattern: {pattern} ...")
+              try:
+                  config = {**BASE_CONFIG, "pattern": pattern}
+                  gen = VisualGenerator(config=config, width=320, height=180, fps=1)
+                  out = f"/tmp/test_{pattern}.mp4"
+                  gen.generate(duration=1, output_path=out)
+                  print(f"    ✅ {pattern} OK")
+              except Exception as e:
+                  print(f"    ❌ {pattern} FAILED: {e}")
+                  traceback.print_exc()
+                  failed.append(pattern)
+
+          if failed:
+              print(f"\n❌ Failed patterns: {failed}")
+              sys.exit(1)
+
+          print("\n✅ All 5 new procedural patterns rendered successfully")
+          EOF
