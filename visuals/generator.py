@@ -227,6 +227,12 @@ class VisualGenerator:
             'rain_window': self._generate_rain_window,
             'fireplace': self._generate_fireplace,
             'starfield': self._generate_starfield,
+            # New custom patterns
+            'aurora_borealis': self._generate_aurora_borealis,
+            'nebula': self._generate_nebula,
+            'lissajous': self._generate_lissajous,
+            'plasma': self._generate_plasma,
+            'vortex': self._generate_vortex,
         }
         
         generator = generators.get(pattern_type, self._generate_sacred_geometry)
@@ -1212,6 +1218,449 @@ class VisualGenerator:
             'size': np.random.uniform(8, 25),
             'life': np.random.randint(40, 120)
         }
+
+    # ------------------------------------------------------------------
+    # New custom visual patterns
+    # ------------------------------------------------------------------
+
+    def _generate_aurora_borealis(self, duration: int, output_path: str) -> str:
+        """Generate aurora borealis (northern lights) with flowing ribbons of colour.
+
+        Layered sinusoidal bands shift and breathe slowly across a deep-space
+        gradient background for an ethereal, hypnotic effect.  Journey-aware:
+        speed controls ribbon flow rate.
+        """
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        out = cv2.VideoWriter(output_path, fourcc, self.fps, (self.width, self.height))
+
+        loop_duration = min(30, duration)
+        loop_frames = loop_duration * self.fps
+        total_frames = duration * self.fps
+
+        base_speed = self.config.get('speed', 0.15)
+
+        print(f"  Rendering {loop_duration}s aurora borealis loop...")
+        loop_buffer = []
+
+        primary = np.array(self.config['colors']['primary'], dtype=np.float32)
+        secondary = np.array(self.config['colors']['secondary'], dtype=np.float32)
+        accent = np.array(self.config['colors']['accent'], dtype=np.float32)
+
+        # Pre-compute coordinate grids
+        y_coords = np.linspace(0, 1, self.height).reshape(-1, 1)
+        x_coords = np.linspace(0, 1, self.width).reshape(1, -1)
+
+        cumulative_phase = 0.0
+
+        # Pre-compute star positions for the aurora background
+        _aurora_rng = np.random.default_rng(42)
+        aurora_sx = _aurora_rng.integers(0, self.width, 200)
+        aurora_sy = _aurora_rng.integers(0, self.height // 2, 200)
+
+        for frame in tqdm(range(loop_frames), desc="Rendering aurora", unit="frame", disable=TQDM_DISABLE):
+            progress = frame / max(loop_frames - 1, 1)
+            speed = self._get_journey_speed_at(progress, base_speed)
+            cumulative_phase += speed * 0.04
+
+            # Deep night-sky gradient background (vectorized)
+            bg = np.zeros((self.height, self.width, 3), dtype=np.float32)
+            sky_ratio = y_coords  # 0 at top, 1 at bottom
+            for c in range(3):
+                bg[:, :, c] = (10 * (1 - sky_ratio) + 5 * sky_ratio)
+
+            # Aurora ribbons — 4 overlapping sinusoidal bands
+            num_bands = 4
+            for band in range(num_bands):
+                band_offset = band * math.pi / 2
+                # Vertical centre of this ribbon (oscillates slowly)
+                centre_y = 0.25 + 0.15 * math.sin(cumulative_phase * 0.7 + band_offset)
+                # Ribbon half-width varies with time
+                half_w = 0.08 + 0.05 * math.sin(cumulative_phase * 0.5 + band_offset * 1.3)
+
+                # Horizontal undulation
+                wave = np.sin(x_coords * 6 + cumulative_phase * 1.2 + band_offset) * 0.04
+                effective_y = y_coords - centre_y - wave
+
+                # Gaussian cross-section for soft ribbon edges
+                ribbon_mask = np.exp(-0.5 * (effective_y / max(half_w, 0.001)) ** 2)
+                ribbon_mask = ribbon_mask.astype(np.float32)
+
+                # Colour for this band (cycle through palette)
+                t_col = (band / num_bands + cumulative_phase * 0.1) % 1.0
+                if t_col < 0.33:
+                    ribbon_color = primary * (1 - t_col * 3) + secondary * (t_col * 3)
+                elif t_col < 0.66:
+                    ribbon_color = secondary * (1 - (t_col - 0.33) * 3) + accent * ((t_col - 0.33) * 3)
+                else:
+                    ribbon_color = accent * (1 - (t_col - 0.66) * 3) + primary * ((t_col - 0.66) * 3)
+
+                # Brightness pulse
+                pulse = 0.6 + 0.4 * math.sin(cumulative_phase * 2.1 + band_offset)
+                ribbon_color = ribbon_color * pulse
+
+                for c in range(3):
+                    bg[:, :, c] += ribbon_mask * float(ribbon_color[c]) * 0.7
+
+            # Stars in the background
+            twinkle = 0.5 + 0.5 * math.sin(frame * 0.07)
+            for i in range(200):
+                brightness = twinkle * 180
+                for c in range(3):
+                    if 0 <= aurora_sy[i] < self.height and 0 <= aurora_sx[i] < self.width:
+                        bg[aurora_sy[i], aurora_sx[i], c] = min(255, bg[aurora_sy[i], aurora_sx[i], c] + brightness)
+
+            img = np.clip(bg, 0, 255).astype(np.uint8)
+            img_pil = Image.fromarray(img)
+            img_pil = img_pil.filter(ImageFilter.GaussianBlur(radius=1.5))
+            frame_cv = cv2.cvtColor(np.array(img_pil), cv2.COLOR_RGB2BGR)
+            loop_buffer.append(frame_cv)
+
+        # Write loops
+        num_loops = (total_frames + loop_frames - 1) // loop_frames
+        print(f"  Writing {num_loops} loops to fill {duration}s...")
+        frames_written = 0
+        for _ in tqdm(range(num_loops), desc="Writing loops", unit="loop", disable=TQDM_DISABLE):
+            for frame_cv in loop_buffer:
+                if frames_written >= total_frames:
+                    break
+                out.write(frame_cv)
+                frames_written += 1
+
+        out.release()
+        return output_path
+
+    def _generate_nebula(self, duration: int, output_path: str) -> str:
+        """Generate a cosmic nebula effect with layered particle clouds and glow.
+
+        Combines a multi-layer noise-based cloud with drifting star particles
+        for a deep-space feel.  Journey-aware (speed + complexity).
+        """
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        out = cv2.VideoWriter(output_path, fourcc, self.fps, (self.width, self.height))
+
+        loop_duration = min(20, duration)
+        loop_frames = loop_duration * self.fps
+        total_frames = duration * self.fps
+
+        base_speed = self.config.get('speed', 0.1)
+        base_complexity = self.config.get('complexity', 0.6)
+
+        print(f"  Rendering {loop_duration}s nebula loop...")
+        loop_buffer = []
+
+        primary = np.array(self.config['colors']['primary'], dtype=np.float32)
+        secondary = np.array(self.config['colors']['secondary'], dtype=np.float32)
+        accent = np.array(self.config['colors']['accent'], dtype=np.float32)
+
+        # Low-res cloud layer (upscaled)
+        cloud_w, cloud_h = self.width // 8, self.height // 8
+
+        cumulative_drift = 0.0
+
+        # Stable star field
+        rng = np.random.default_rng(0)
+        star_x = rng.integers(0, self.width, 500)
+        star_y = rng.integers(0, self.height, 500)
+        star_b = rng.uniform(0.3, 1.0, 500).astype(np.float32)
+        star_phase = rng.uniform(0, 2 * math.pi, 500).astype(np.float32)
+
+        for frame in tqdm(range(loop_frames), desc="Rendering nebula", unit="frame", disable=TQDM_DISABLE):
+            t = frame / max(loop_frames - 1, 1)
+            speed = self._get_journey_speed_at(t, base_speed)
+            complexity = self._get_journey_complexity_at(t, base_complexity)
+            cumulative_drift += speed * 0.02
+
+            # --- Cloud layer (vectorized noise approximation via sinusoids) ---
+            cx = np.linspace(0, 4 * math.pi, cloud_w) + cumulative_drift
+            cy = np.linspace(0, 3 * math.pi, cloud_h)
+            CX, CY = np.meshgrid(cx, cy)
+
+            layers = int(3 + complexity * 4)
+            cloud = np.zeros((cloud_h, cloud_w), dtype=np.float32)
+            for layer in range(layers):
+                freq = 1.0 + layer * 0.8
+                phase = layer * 1.3 + cumulative_drift * (0.3 + layer * 0.1)
+                cloud += (
+                    np.sin(CX * freq + phase) *
+                    np.cos(CY * freq * 0.7 + phase * 0.5) *
+                    (1.0 / (layer + 1))
+                )
+
+            # Normalise to 0-1
+            cmin, cmax = cloud.min(), cloud.max()
+            if cmax > cmin:
+                cloud = (cloud - cmin) / (cmax - cmin)
+            else:
+                cloud = np.zeros_like(cloud)
+
+            # Colour mapping: two-tone gradient
+            colour_ratio = (math.sin(cumulative_drift * 0.5) + 1) / 2
+            base_col = primary * (1 - colour_ratio) + secondary * colour_ratio
+            high_col = secondary * (1 - colour_ratio) + accent * colour_ratio
+
+            cloud_rgb = np.zeros((cloud_h, cloud_w, 3), dtype=np.float32)
+            for c in range(3):
+                cloud_rgb[:, :, c] = base_col[c] * (1 - cloud) + high_col[c] * cloud
+
+            cloud_rgb = np.clip(cloud_rgb, 0, 255).astype(np.uint8)
+            cloud_img = Image.fromarray(cloud_rgb)
+            cloud_img = cloud_img.resize((self.width, self.height), Image.BILINEAR)
+
+            # Glow pass
+            cloud_img = cloud_img.filter(ImageFilter.GaussianBlur(radius=8))
+
+            img = np.array(cloud_img).astype(np.float32) * 0.6
+
+            # --- Star particles ---
+            twinkle = np.sin(frame * star_phase * 0.05 + star_phase)
+            brightness_arr = star_b * (0.6 + 0.4 * twinkle)
+            for i in range(len(star_x)):
+                bval = float(brightness_arr[i]) * 220
+                sy, sx = star_y[i], star_x[i]
+                if 0 <= sy < self.height and 0 <= sx < self.width:
+                    for c in range(3):
+                        img[sy, sx, c] = min(255, img[sy, sx, c] + bval)
+
+            frame_cv = cv2.cvtColor(np.clip(img, 0, 255).astype(np.uint8), cv2.COLOR_RGB2BGR)
+            loop_buffer.append(frame_cv)
+
+        num_loops = (total_frames + loop_frames - 1) // loop_frames
+        print(f"  Writing {num_loops} loops to fill {duration}s...")
+        frames_written = 0
+        for _ in tqdm(range(num_loops), desc="Writing loops", unit="loop", disable=TQDM_DISABLE):
+            for frame_cv in loop_buffer:
+                if frames_written >= total_frames:
+                    break
+                out.write(frame_cv)
+                frames_written += 1
+
+        out.release()
+        return output_path
+
+    def _generate_lissajous(self, duration: int, output_path: str) -> str:
+        """Generate animated Lissajous curves — mathematical beauty in motion.
+
+        Multiple overlapping curves with slowly shifting frequency ratios create
+        evolving interference patterns. Journey-aware (speed).
+        """
+        total_frames = duration * self.fps
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        out = cv2.VideoWriter(output_path, fourcc, self.fps, (self.width, self.height))
+
+        base_speed = self.config.get('speed', 0.2)
+        base_complexity = self.config.get('complexity', 0.6)
+
+        cumulative_phase = 0.0
+        margin = min(self.width, self.height) * 0.44
+
+        for frame in range(total_frames):
+            progress = frame / max(total_frames - 1, 1)
+            speed = self._get_journey_speed_at(progress, base_speed)
+            complexity = self._get_journey_complexity_at(progress, base_complexity)
+            cumulative_phase += speed * 0.015
+
+            img = self._create_gradient_background(frame, total_frames)
+            draw = ImageDraw.Draw(img)
+
+            num_curves = int(3 + complexity * 4)
+            for curve_idx in range(num_curves):
+                offset = curve_idx * math.pi / num_curves
+
+                # Slowly evolving frequency ratios
+                a = 2 + math.sin(cumulative_phase * 0.3 + offset) * 1.5
+                b = 3 + math.cos(cumulative_phase * 0.2 + offset * 0.7) * 1.5
+                delta = cumulative_phase + offset
+
+                # Sample parametric curve
+                n_points = 800
+                t_vals = np.linspace(0, 2 * math.pi, n_points)
+                x_vals = self.center[0] + margin * np.sin(a * t_vals + delta)
+                y_vals = self.center[1] + margin * np.sin(b * t_vals)
+
+                points = list(zip(x_vals.tolist(), y_vals.tolist()))
+
+                # Colour for this curve
+                col_t = (curve_idx / num_curves + cumulative_phase * 0.05) % 1.0
+                base_color = self._get_color_at_time(frame, total_frames)
+                accent_color = tuple(self.config['colors']['accent'])
+                curve_color = self._blend_colors(base_color, accent_color, col_t)
+
+                # Draw in segments for thickness variation
+                seg_size = 80
+                for seg in range(len(points) // seg_size):
+                    seg_pts = points[seg * seg_size:(seg + 1) * seg_size + 1]
+                    if len(seg_pts) > 1:
+                        alpha = 0.5 + 0.5 * (seg / (len(points) // seg_size))
+                        col = tuple(int(c * alpha) for c in curve_color)
+                        draw.line(seg_pts, fill=col, width=2)
+
+            img = img.filter(ImageFilter.GaussianBlur(radius=1.5))
+            frame_array = np.array(img)
+            frame_array = self._apply_opacity_variation(frame_array, frame, total_frames)
+            frame_cv = cv2.cvtColor(frame_array, cv2.COLOR_RGB2BGR)
+            out.write(frame_cv)
+
+        out.release()
+        return output_path
+
+    def _generate_plasma(self, duration: int, output_path: str) -> str:
+        """Generate classic plasma effect — smooth, vibrant, psychedelic colour fields.
+
+        Uses vectorised sinusoidal interference for speed.  Journey-aware (speed).
+        """
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        out = cv2.VideoWriter(output_path, fourcc, self.fps, (self.width, self.height))
+
+        loop_duration = min(20, duration)
+        loop_frames = loop_duration * self.fps
+        total_frames = duration * self.fps
+
+        base_speed = self.config.get('speed', 0.25)
+        render_w, render_h = self.width // 4, self.height // 4
+
+        print(f"  Rendering {loop_duration}s plasma loop...")
+        loop_buffer = []
+
+        primary = np.array(self.config['colors']['primary'], dtype=np.float32) / 255.0
+        secondary = np.array(self.config['colors']['secondary'], dtype=np.float32) / 255.0
+        accent = np.array(self.config['colors']['accent'], dtype=np.float32) / 255.0
+
+        x_grid = np.linspace(0, 4 * math.pi, render_w, dtype=np.float32)
+        y_grid = np.linspace(0, 4 * math.pi, render_h, dtype=np.float32)
+        X, Y = np.meshgrid(x_grid, y_grid)
+
+        cumulative_time = 0.0
+
+        for frame in tqdm(range(loop_frames), desc="Rendering plasma", unit="frame", disable=TQDM_DISABLE):
+            t = frame / max(loop_frames - 1, 1)
+            speed = self._get_journey_speed_at(t, base_speed)
+            cumulative_time += speed * 0.08
+
+            # Classic plasma: superposition of sine waves
+            v1 = np.sin(X + cumulative_time)
+            v2 = np.sin(Y * 0.5 + cumulative_time * 1.3)
+            v3 = np.sin((X + Y) * 0.5 + cumulative_time * 0.9)
+            cx = X / 2 + math.sin(cumulative_time * 0.5) * 2
+            cy = Y / 2 + math.cos(cumulative_time * 0.4) * 2
+            v4 = np.sin(np.sqrt(np.maximum((X - cx) ** 2 + (Y - cy) ** 2, 0)) + cumulative_time)
+
+            plasma = (v1 + v2 + v3 + v4) / 4.0  # Range: roughly -1..1
+            plasma = (plasma + 1) / 2  # 0..1
+
+            # Map to colour using palette
+            r_ch = primary[0] * (1 - plasma) + secondary[0] * plasma
+            g_ch = secondary[1] * (1 - plasma) + accent[1] * plasma
+            b_ch = accent[2] * (1 - plasma) + primary[2] * plasma
+
+            # Additional hue rotation for psychedelic cycling
+            hue_shift = (math.sin(cumulative_time * 0.3) + 1) / 2
+            r_ch, g_ch, b_ch = (
+                r_ch * (1 - hue_shift) + g_ch * hue_shift,
+                g_ch * (1 - hue_shift) + b_ch * hue_shift,
+                b_ch * (1 - hue_shift) + r_ch * hue_shift,
+            )
+
+            img_small = np.stack([
+                np.clip(r_ch * 255, 0, 255),
+                np.clip(g_ch * 255, 0, 255),
+                np.clip(b_ch * 255, 0, 255),
+            ], axis=-1).astype(np.uint8)
+
+            img_full = cv2.resize(img_small, (self.width, self.height), interpolation=cv2.INTER_CUBIC)
+            img_pil = Image.fromarray(img_full)
+            img_pil = self._add_bloom(img_pil)
+
+            frame_cv = cv2.cvtColor(np.array(img_pil), cv2.COLOR_RGB2BGR)
+            loop_buffer.append(frame_cv)
+
+        num_loops = (total_frames + loop_frames - 1) // loop_frames
+        print(f"  Writing {num_loops} loops to fill {duration}s...")
+        frames_written = 0
+        for _ in tqdm(range(num_loops), desc="Writing loops", unit="loop", disable=TQDM_DISABLE):
+            for frame_cv in loop_buffer:
+                if frames_written >= total_frames:
+                    break
+                out.write(frame_cv)
+                frames_written += 1
+
+        out.release()
+        return output_path
+
+    def _generate_vortex(self, duration: int, output_path: str) -> str:
+        """Generate a hypnotic rotating vortex / tunnel effect.
+
+        Concentric rings spin at different rates to create the illusion of
+        flying through an infinite portal.  Journey-aware (speed + complexity).
+        """
+        total_frames = duration * self.fps
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        out = cv2.VideoWriter(output_path, fourcc, self.fps, (self.width, self.height))
+
+        base_speed = self.config.get('speed', 0.3)
+        base_complexity = self.config.get('complexity', 0.7)
+
+        # Pre-compute polar coordinate grids (vectorized)
+        y_idx, x_idx = np.mgrid[0:self.height, 0:self.width]
+        dx = (x_idx - self.center[0]).astype(np.float32)
+        dy = (y_idx - self.center[1]).astype(np.float32)
+        radius_grid = np.sqrt(dx ** 2 + dy ** 2).astype(np.float32)
+        angle_grid = np.arctan2(dy, dx).astype(np.float32)
+
+        cumulative_rotation = 0.0
+        cumulative_depth = 0.0
+
+        primary = np.array(self.config['colors']['primary'], dtype=np.float32)
+        secondary = np.array(self.config['colors']['secondary'], dtype=np.float32)
+        accent = np.array(self.config['colors']['accent'], dtype=np.float32)
+
+        for frame in range(total_frames):
+            progress = frame / max(total_frames - 1, 1)
+            speed = self._get_journey_speed_at(progress, base_speed)
+            complexity = self._get_journey_complexity_at(progress, base_complexity)
+
+            cumulative_rotation += speed * 0.03
+            cumulative_depth += speed * 0.15
+
+            num_rings = int(8 + complexity * 16)
+
+            # Normalise radius to 0..1
+            max_r = max(
+                math.sqrt(self.center[0] ** 2 + self.center[1] ** 2),
+                1.0,
+            )
+            norm_r = radius_grid / max_r  # 0..1
+
+            # Ring pattern: each ring has a different rotation speed
+            ring_index = (norm_r * num_rings + cumulative_depth) % num_rings
+            # Add spiral: angle contribution
+            spiral = (angle_grid / (2 * math.pi) + cumulative_rotation) % 1.0
+            pattern = (ring_index / num_rings + spiral * 0.3) % 1.0
+
+            # Map pattern to colour
+            col_t = pattern
+            r_ch = primary[0] * (1 - col_t) + accent[0] * col_t
+            g_ch = primary[1] * (1 - col_t) + accent[1] * col_t
+            b_ch = secondary[2] * (1 - col_t) + accent[2] * col_t
+
+            # Brightness falloff toward edges (tunnel depth cue)
+            depth_fade = np.clip(1.0 - norm_r * 0.4, 0.3, 1.0)
+            r_ch = np.clip(r_ch * depth_fade, 0, 255).astype(np.uint8)
+            g_ch = np.clip(g_ch * depth_fade, 0, 255).astype(np.uint8)
+            b_ch = np.clip(b_ch * depth_fade, 0, 255).astype(np.uint8)
+
+            img = np.stack([r_ch, g_ch, b_ch], axis=-1)
+
+            # Apply soft blur for smooth rings
+            img_pil = Image.fromarray(img)
+            img_pil = img_pil.filter(ImageFilter.GaussianBlur(radius=1))
+            frame_array = np.array(img_pil)
+            frame_array = self._apply_opacity_variation(frame_array, frame, total_frames)
+
+            frame_cv = cv2.cvtColor(frame_array, cv2.COLOR_RGB2BGR)
+            out.write(frame_cv)
+
+        out.release()
+        return output_path
 
     def _generate_starfield(self, duration: int, output_path: str) -> str:
         """Generate very slow-moving starfield with gentle twinkling - calming, sleep-inducing.

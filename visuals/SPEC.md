@@ -34,6 +34,11 @@ class VisualGenerator:
 | `fireplace` | Flickering fire | ❌ Static |
 | `human_silhouette` | Meditation figure | ❌ Static |
 | `nature_frame` | Natural border elements | ❌ Static |
+| `aurora_borealis` | Northern lights ribbons | ✅ Speed |
+| `nebula` | Cosmic cloud + particles | ✅ Speed, Complexity |
+| `lissajous` | Mathematical interference curves | ✅ Speed, Complexity |
+| `plasma` | Sinusoidal colour-field | ✅ Speed |
+| `vortex` | Rotating tunnel portal | ✅ Speed, Complexity |
 
 ## Color Configuration
 

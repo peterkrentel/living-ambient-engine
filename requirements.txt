@@ -27,3 +27,6 @@ numba>=0.60.0
 google-auth-oauthlib>=1.0.0
 google-api-python-client>=2.100.0
 
+# Gemini AI (optional - for content recommendations)
+google-generativeai>=0.7.0
+
