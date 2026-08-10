@@ -274,8 +274,11 @@ def main() -> None:
     )
     parser.add_argument(
         "--model",
-        default=_gemini_model(),
-        help=f"Gemini model to use (default: {_gemini_model()})",
+        default=None,
+        help=(
+            "Gemini model to use "
+            f"(default: GEMINI_MODEL env or {DEFAULT_GEMINI_MODEL})"
+        ),
     )
     args = parser.parse_args()
 
